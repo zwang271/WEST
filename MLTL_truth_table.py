@@ -1,4 +1,4 @@
-from LTL_semantics import *
+from MLTL_semantics import *
 
 '''
 Given input: wff, num_states, current_state, end_state
@@ -39,7 +39,7 @@ def next_finite_model(num_prop, num_states, finite_model):
 # Test next_finite_model function on input: wff, num_states, current_state,
 # and end_state.
 if __name__ == "__main__":
-    wff = input ("Enter LTL formula : ")
+    wff = input ("Enter MLTL formula : ")
     wff = strip_whitespace(wff)
     assert (Wff_check(wff)), "Not a well-formed formula"
 
@@ -52,7 +52,7 @@ if __name__ == "__main__":
     assert (0 <= current_state and current_state <= end_state), "0 <= current_state <= end_state"
 
 
-    print()    
+    print()
     print("Prop array: ", end = '')
     print_array(Prop_array)
     print()

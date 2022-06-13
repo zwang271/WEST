@@ -1,5 +1,5 @@
 from Custom_notation import *
-from LTL_wff import *
+from MLTL_wff import *
 
 
 def array_To_string(array):
