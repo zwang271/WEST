@@ -51,18 +51,22 @@ if __name__ == "__main__":
     end_state = int(input ("Enter end state : "))
     assert (0 <= current_state and current_state <= end_state), "0 <= current_state <= end_state"
 
+    f = open('output.txt', 'w')
+    f.write(f"Formula: " + wff)
+    f.write("\nProp array: " + print_array(Prop_array) + '\n\n')
 
-    print()
-    print("Prop array: ", end = '')
-    print_array(Prop_array)
-    print()
-    print()
+    # print()
+    # print("Prop array: ", end = '')
+    # print(print_array(Prop_array))
+    # print()
+    # print()
 
 
     finite_model = ['0' * num_prop] * (num_states)
 
     for i in Range(1, 2**(num_prop * num_states), 1):
         eval = Interpretation(wff, Prop_array, current_state, end_state, finite_model)
-        print_array(finite_model)
-        print('   ' + str(eval))
+        # print(print_array(finite_model), end = '')
+        # print('   ' + str(eval))
+        f.write(print_array(finite_model) + '   ' + str(eval) + '\n')
         finite_model = next_finite_model(num_prop, num_states, finite_model)
