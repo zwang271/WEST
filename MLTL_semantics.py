@@ -107,7 +107,7 @@ def Interpretation (wff, Prop_array, current_state, end_state, finite_model):
         char = Slice_char(wff, 0)
         alpha = Slice(wff, interval_tuple[2]+1, len_wff-1)
 
-        print(char + ", interval tuple: " + str(current_state) + ", " + str(end_state))
+        # print(char + ", interval tuple: " + str(current_state) + ", " + str(end_state))
 
         if (char == 'E'):
             # Allow NO Out-Of-Bounds Behavior for E:
@@ -182,7 +182,7 @@ def Interpretation (wff, Prop_array, current_state, end_state, finite_model):
         alpha = Slice(wff, 1, binary_conn-1)
         beta = Slice(wff, interval_tuple[2]+1, len_wff-2)
 
-        print( char + ", interval tuple: " + str(current_state) + ", " + str(end_state))
+        # print( char + ", interval tuple: " + str(current_state) + ", " + str(end_state))
 
         if(char == 'U'):
             # Allow NO Out-Of-Bounds Behavior for U:
@@ -252,4 +252,4 @@ if __name__ == "__main__":
     finite_model = string_To_finite_model(finite_model_string, Prop_array)
 
 
-    print(Interpretation(wff, Prop_array, current_state, end_state, finite_model))
+    # print(Interpretation(wff, Prop_array, current_state, end_state, finite_model))

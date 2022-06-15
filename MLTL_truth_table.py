@@ -34,14 +34,15 @@ def next_finite_model(num_prop, num_states, finite_model):
 
     return finite_model
 
-
-
-# Test next_finite_model function on input: wff, num_states, current_state,
-# and end_state.
-if __name__ == "__main__":
+def execute_truth_table_program():
     wff = input ("Enter MLTL formula : ")
     wff = strip_whitespace(wff)
-    assert (Wff_check(wff)), "Not a well-formed formula"
+
+    try:
+        assert (Wff_check(wff))
+    except AssertionError:
+        print("Not a well-formed formula")
+        return -1
 
     Prop_array = string_To_Prop_array(wff)
     num_prop = len(Prop_array)
@@ -49,11 +50,20 @@ if __name__ == "__main__":
     num_states = int(input ("Enter number of states for finite_model : "))
     current_state = int(input ("Enter current state : "))
     end_state = int(input ("Enter end state : "))
-    assert (0 <= current_state and current_state <= end_state), "0 <= current_state <= end_state"
+
+    try:
+        assert (0 <= current_state and current_state <= end_state)
+    except AssertionError:
+        print("0 <= current_state <= end_state")
+        return -2
 
     f = open('output.txt', 'w')
     f.write(f"Formula: " + wff)
     f.write("\nProp array: " + print_array(Prop_array) + '\n\n')
+
+    true_output = open('true_output.txt', 'w')
+    true_output.write(f"Formula: " + wff)
+    true_output.write("\nProp array: " + print_array(Prop_array) + '\n\n')
 
     # print()
     # print("Prop array: ", end = '')
@@ -66,7 +76,27 @@ if __name__ == "__main__":
 
     for i in Range(1, 2**(num_prop * num_states), 1):
         eval = Interpretation(wff, Prop_array, current_state, end_state, finite_model)
+
         # print(print_array(finite_model), end = '')
         # print('   ' + str(eval))
         f.write(print_array(finite_model) + '   ' + str(eval) + '\n')
-        finite_model = next_finite_model(num_prop, num_states, finite_model)
+        if eval:
+            true_output.write(print_array(finite_model) + '   ' + str(eval) + '\n')
+
+        finite_model = next_finite_model(num_prop, num_states, finite_model)   
+
+    return 0 
+
+# Test next_finite_model function on input: wff, num_states, current_state,
+# and end_state.
+if __name__ == "__main__":
+    running = True
+    while(running):
+        error_code = -1
+        while error_code != 0:
+            error_code = execute_truth_table_program()
+        
+        print("Enter 'q' to quit or 'r' to re-enter another formula:")
+        choice = input()
+        running = False if choice == 'q' else True
+
