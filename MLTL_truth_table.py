@@ -34,6 +34,9 @@ def next_finite_model(num_prop, num_states, finite_model):
 
     return finite_model
 
+
+# Test next_finite_model function on input: wff, num_states, current_state,
+# and end_state.
 def execute_truth_table_program():
     wff = input ("Enter MLTL formula : ")
     wff = strip_whitespace(wff)
@@ -59,44 +62,34 @@ def execute_truth_table_program():
 
     f = open('output.txt', 'w')
     f.write(f"Formula: " + wff)
-    f.write("\nProp array: " + print_array(Prop_array) + '\n\n')
+    f.write("\nProp array: " + array_To_string(Prop_array) + '\n\n')
 
     true_output = open('true_output.txt', 'w')
     true_output.write(f"Formula: " + wff)
-    true_output.write("\nProp array: " + print_array(Prop_array) + '\n\n')
-
-    # print()
-    # print("Prop array: ", end = '')
-    # print(print_array(Prop_array))
-    # print()
-    # print()
-
+    true_output.write("\nProp array: " + array_To_string(Prop_array) + '\n\n')
 
     finite_model = ['0' * num_prop] * (num_states)
 
     for i in Range(1, 2**(num_prop * num_states), 1):
         eval = Interpretation(wff, Prop_array, current_state, end_state, finite_model)
 
-        # print(print_array(finite_model), end = '')
-        # print('   ' + str(eval))
-        f.write(print_array(finite_model) + '   ' + str(eval) + '\n')
+        f.write(array_To_string(finite_model) + '   ' + str(eval) + '\n')
         if eval:
-            true_output.write(print_array(finite_model) + '   ' + str(eval) + '\n')
+            true_output.write(array_To_string(finite_model) + '   ' + str(eval) + '\n')
 
-        finite_model = next_finite_model(num_prop, num_states, finite_model)   
+        finite_model = next_finite_model(num_prop, num_states, finite_model)
 
-    return 0 
+    return 0
 
-# Test next_finite_model function on input: wff, num_states, current_state,
-# and end_state.
+
+# Driver code
 if __name__ == "__main__":
     running = True
     while(running):
         error_code = -1
         while error_code != 0:
             error_code = execute_truth_table_program()
-        
+
         print("Enter 'q' to quit or 'r' to re-enter another formula:")
         choice = input()
         running = False if choice == 'q' else True
-
