@@ -68,6 +68,10 @@ def execute_truth_table_program():
     true_output.write(f"Formula: " + wff)
     true_output.write("\nProp array: " + array_To_string(Prop_array) + '\n\n')
 
+    false_output = open('false_output.txt', 'w')
+    false_output.write(f"Formula: " + wff)
+    false_output.write("\nProp array: " + array_To_string(Prop_array) + '\n\n')
+
     finite_model = ['0' * num_prop] * (num_states)
 
     for i in Range(1, 2**(num_prop * num_states), 1):
@@ -76,9 +80,15 @@ def execute_truth_table_program():
         f.write(array_To_string(finite_model) + '   ' + str(eval) + '\n')
         if eval:
             true_output.write(array_To_string(finite_model) + '   ' + str(eval) + '\n')
+        else:
+            false_output.write(array_To_string(finite_model) + '   ' + str(eval) + '\n')
 
         finite_model = next_finite_model(num_prop, num_states, finite_model)
 
+
+    f.close()
+    true_output.close()
+    false_output.close()
     return 0
 
 
