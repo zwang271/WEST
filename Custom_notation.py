@@ -18,20 +18,19 @@ def Range(a, b, n):
 
 
 def print_array(array):
-    ret = ""
     len_array = len(array)
     if (array == []):
-        ret += '[]'
+        print('[]')
         return
 
-    ret += '['
+    print('[', end = '')
     for i in Range(0, len_array-2, 1):
-        ret += array[i]
-        ret += ', '
+        print(array[i], end = '')
+        print(', ', end = '')
 
-    ret += array[len_array-1]
-    ret += ']'
-    return ret
+    print(array[len_array-1], end = '')
+    print(']', end = '')
+    return
 
 
 # Removes all whitespace from a string s.

@@ -251,5 +251,4 @@ if __name__ == "__main__":
     assert (Finite_model_check(finite_model_string, Prop_array)), "Not a Finite model for " + array_To_string(string_To_Prop_array(wff))
     finite_model = string_To_finite_model(finite_model_string, Prop_array)
 
-
-    # print(Interpretation(wff, Prop_array, current_state, end_state, finite_model))
+    print(Interpretation(wff, Prop_array, current_state, end_state, finite_model))
