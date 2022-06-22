@@ -5,7 +5,7 @@ using namespace std;
 
 int main() {
 	
-	cout << string_intersect("abcd", "efghijkl", 2) << endl;
+	cout << string_intersect("", "1ss, sss, sss, sss", 3) << endl;
 
 	return 0;
 }
