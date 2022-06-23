@@ -74,11 +74,44 @@ vector<string> set_intersect(vector<string> v1, vector<string> v2, int n){
 	return v;
 }
 
+vector<string> pad(vector<string> unpadded_v) {
+    //TO DO
+    vector<string> padded_v = unpadded_v;
+    return padded_v;
+}
+
+//entries in index counts how many char are remaining after removing consecutive sigmas at front
+//parse from left, count from the right
+//j is first non-sigma
+vector<int> right_or_aux(vector<string> v) {
+    int len_w = int(v[0].size());
+    vector<int> indexes;
+    for (int i = 0; i < v.size(); ++i) {
+        if (v[i][0] == 's') {
+            for (int j = 1; j < len_w; ++j) {
+                if (v[i][j] != 's') {
+                    indexes.push_back(len_w - j);
+                    break;
+                }
+            }
+        }
+    }
+  
+return indexes;
+}
+
+vector<string> right_or(vector<string> v, int iteration) {
+    int len_w = int(v[0].size());
+    
+    
+    
+}
 
 vector<string> set_union(vector<string> v1, vector<string> v2){
 	vector<string> v = vector<string>();
 
 	// Union all elements of v1,v2 into v
+    /*
 	for (int i = 0; i < v1.size(); ++i){
 		for (int j = 0; j < v2.size(); ++j){
 			string s = string_intersect(v1[i], v2[j], n);
@@ -87,6 +120,9 @@ vector<string> set_union(vector<string> v1, vector<string> v2){
 			}
 		}
 	}
+     */
+    
+    
 
 
 	// Remove all duplicate entries from v
