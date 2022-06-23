@@ -19,16 +19,28 @@ int main() {
 	}
     
     vector<string> vec;
-    vec.push_back("0ss");
-    vec.push_back("s0s");
+    vec.push_back("0ss,sss");
+    vec.push_back("s0s,sss,000");
     vec.push_back("ss0");
     vector<int> or_vector;
-    or_vector = right_or_aux(vec);
+    or_vector = right_or_aux(vec, 3);
+    /*
     for (int i = 0; i < or_vector.size(); ++i) {
         cout << or_vector[i] << endl;
     }
      
+    for (int i = 0; i < vec.size(); ++i) {
+        cout << pad(vec, 3)[i] << endl;
+    }
+     */
+    for (int i = 0; i < vec.size(); ++i) {
+        cout << strip_commas(vec)[i] << " ";
+    }
     
+    
+    
+     
+    /*
     vector<string> vec;
     vec.push_back("sss1011s1");
     vector<int> or_vector;
@@ -37,5 +49,10 @@ int main() {
         cout << or_vector[i] << endl;
     }
 
+    string s = "";
+    cout << pad_to_length(s, 19, 0) << endl;
+    cout << pad_to_length(s, 19, 0).length();
+     */
 	return 0;
 }
+
