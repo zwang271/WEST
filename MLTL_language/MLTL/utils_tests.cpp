@@ -20,9 +20,10 @@ TEST(test_right_or_aux_1) {
     vec.push_back("ss0");
     vector<int> or_vector;
     or_vector = right_or_aux(vec, 3);
+    ostringstream actual;
     
     for (int i = 0; i < or_vector.size(); ++i) {
-        cout << or_vector[i] << endl;
+        actual << or_vector[i] << endl;
     }
 }
 
