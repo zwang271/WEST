@@ -5,9 +5,9 @@
 using namespace std;
 
 int main() {
-    
+
 	cout << string_intersect("", "1ss, sss, sss, sss", 3) << endl;
-    
+
 	string s1[] = {"s1,     ss", "1s,      ss"};
 	vector<string> v1 (s1, s1 + sizeof(s1) / sizeof(string) );
 	string s2[] = {"10  ,  ss     ", "s1,  ss   "};
@@ -17,29 +17,31 @@ int main() {
 	for (int i = 0; i < v.size(); ++i){
 		cout << v[i] << endl;
 	}
-    
+
     vector<string> vec;
     vec.push_back("0ss,sss");
     vec.push_back("s0s,sss,000");
     vec.push_back("ss0");
-    vector<int> or_vector;
-    or_vector = right_or_aux(vec, 3);
+    //vector<int> or_vector;
+    //or_vector = right_or_aux(vec, 3);
     /*
     for (int i = 0; i < or_vector.size(); ++i) {
         cout << or_vector[i] << endl;
     }
-     
+
     for (int i = 0; i < vec.size(); ++i) {
         cout << pad(vec, 3)[i] << endl;
     }
      */
+    vec = strip_commas(vec);
+    cout << "TEST3";
     for (int i = 0; i < vec.size(); ++i) {
-        cout << strip_commas(vec)[i] << " ";
+      cout << vec[i] << " ";
     }
-    
-    
-    
-     
+
+
+
+
     /*
     vector<string> vec;
     vec.push_back("sss1011s1");
@@ -55,4 +57,3 @@ int main() {
      */
 	return 0;
 }
-
