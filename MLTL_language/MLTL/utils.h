@@ -154,7 +154,16 @@ vector<int> right_or_aux(vector<string> v, int n) {
 */
 vector<string> strip_commas(vector<string> comma_v) {
     for (int i = 0; i < comma_v.size(); ++i) {
-        comma_v[i].erase(remove(comma_v[i].begin(), comma_v[i].end(), ','));
+		int len_w = comma_v[i].length();
+		string w = "";
+
+		for (int j = 0; j < len_w; ++j) {
+			if (comma_v[i][j] != ',') {
+				w += comma_v[i][j];
+			}
+		}
+
+		comma_v[i] = w;
     }
     return comma_v;
 }
@@ -207,7 +216,7 @@ vector<string> right_or(vector<string> v, int iteration, vector<int> indices, in
 vector<string> set_union(vector<string> v1, vector<string> v2){
 	vector<string> v = vector<string>();
 
-	// Union all elements of v1,v2 into v
+	// Union all elements of v1,v2 into v	
     /*
 	for (int i = 0; i < v1.size(); ++i){
 		for (int j = 0; j < v2.size(); ++j){

@@ -98,8 +98,4 @@ TEST(test_pad_to_length_2) {
     ASSERT_EQUAL(expected.length(), actual.length());
 }
 
-
-
-
-
 TEST_MAIN()
