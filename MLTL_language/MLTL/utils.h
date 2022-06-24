@@ -8,8 +8,11 @@ using namespace std;
 
 //NOTE: error_check that sum of right bounds must be less than computation bounds
 
+// Pad input string from right to specified length.
 string pad_to_length(string unpadded_s, int length, int n) {
+    // Compute remaining space to pad.
     int diff = int((length - unpadded_s.length()) / (n + 1));
+    // Pad remaining space with ",ss...s"
     for (int i = 0; i < diff; i++) {
         unpadded_s += ',' + string(n, 's');
     }
@@ -17,23 +20,29 @@ string pad_to_length(string unpadded_s, int length, int n) {
 }
 
 
-
+// Pad a vector of strings so all strings have same length.
 vector<string> pad(vector<string> unpadded_v, int n) {
-    int maxLength = 0;
-    for (int i = 0; i < unpadded_v.size(); ++i) {
-        if (unpadded_v[i].length() > maxLength) {
-            maxLength = int(unpadded_v[i].length());
-        }
+  int unpadded_size = unpadded_v.size();
+
+  // Compute max-length of strings
+  int maxLength = 0;
+  for (int i = 0; i < unpadded_size; ++i) {
+    if (unpadded_v[i].length() > maxLength) {
+        maxLength = int(unpadded_v[i].length());
     }
-    for (int j = 0; j < unpadded_v.size(); ++j) {
-        unpadded_v[j] = pad_to_length(unpadded_v[j], maxLength, n);
-    }
-    
-    vector<string> padded_v = unpadded_v;
-    return padded_v;
+  }
+
+  // Pad each string to maxLength
+  vector<string> padded_v;
+  for (int j = 0; j < unpadded_size; ++j) {
+    padded_v.push_back(pad_to_length(unpadded_v[j], maxLength, n));
+  }
+
+  return padded_v;
 }
 
 
+// Returns the bit-wise 'and' of two strings.
 string string_intersect(string w_1, string w_2, int n) {
 	// Remove white-characters from w_1 and w_2
 	w_1.erase(remove_if(w_1.begin(),
@@ -45,29 +54,13 @@ string string_intersect(string w_1, string w_2, int n) {
 	if (w_1 == "" || w_2 == "") {
 		return "";
 	}
-    vector<string> vec = {w_1, w_2};
-    pad(vec, n);
-	string w = "";
-	// Make w_2 same length as w_1
-	if (w_1.length() > w_2.length()) {
-        
-        
-		int diff = int((w_1.length() - w_2.length()) / (n + 1));
-		for (int i = 0; i < diff; i++) {
-			w_2 += ',' + string(n, 's');
-		}
-         
-	}
-	// Make w_1 same length as w_2
-	else if (w_1.length() < w_2.length()) {
-		int diff = int((w_2.length() - w_1.length()) / (n + 1));
-		for (int i = 0; i < diff; i++) {
-			w_1 += ',' + string(n, 's');
-		}
-	}
-	// Now w_1.length() == w_2.length()
+
+  // Make w_1 and w_2 the same length.
+  vector<string> vec = {w_1, w_2};
+  pad(vec, n);
 
   // Bit-wise 'and' w_1 and w_2
+  string w = "";
 	for (int i = 0; i < w_1.length(); i++) {
 		if (w_1[i] != 's' and w_2[i] != 's') {
 			if (w_1[i] != w_2[i]) {
@@ -90,6 +83,7 @@ string string_intersect(string w_1, string w_2, int n) {
 }
 
 
+// Returns bit-wise 'and' of all strings of vector.
 vector<string> set_intersect(vector<string> v1, vector<string> v2, int n){
 	vector<string> v = vector<string>();
 
@@ -124,15 +118,22 @@ vector<int> right_or_aux(vector<string> v, int n) {
             }
         }
     }
-  
-return indices;
+
+  return indices;
 }
 
 
 
 vector<string> strip_commas(vector<string> comma_v) {
-    for (int i = 0; i < comma_v.size(); ++i) {
+    cout << "TEST1" << endl;
+    int size = comma_v.size();
+    cout << size << endl;
+    for (int i = 0; i < size; ++i) {
+        cout << "TEST2" << endl;
+        //string s = comma_v[i];
+        cout << "input: " << comma_v[i] << endl;
         comma_v[i].erase(remove(comma_v[i].begin(), comma_v[i].end(), ','));
+        cout << "output: " << comma_v[i] << endl;
     }
     return comma_v;
 }
@@ -150,17 +151,17 @@ vector<string> right_or(vector<string> v, int iteration, vector<int> indices, in
                 return ret;
             }
         }
-        
-        
-    
-    
- 
-    
-    
+
+
+
+
+
+
+
 }
 }
  */
- 
+
 
 vector<string> set_union(vector<string> v1, vector<string> v2){
 	vector<string> v = vector<string>();
@@ -176,8 +177,8 @@ vector<string> set_union(vector<string> v1, vector<string> v2){
 		}
 	}
      */
-    
-    
+
+
 
 
 	// Remove all duplicate entries from v
