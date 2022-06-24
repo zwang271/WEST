@@ -154,7 +154,7 @@ vector<int> right_or_aux(vector<string> v, int n) {
 */
 vector<string> strip_commas(vector<string> comma_v) {
     for (int i = 0; i < comma_v.size(); ++i) {
-		int len_w = comma_v[i].length();
+		int len_w = int(comma_v[i].length());
 		string w = "";
 
 		for (int j = 0; j < len_w; ++j) {
