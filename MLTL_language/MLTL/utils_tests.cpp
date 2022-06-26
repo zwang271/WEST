@@ -28,18 +28,62 @@ TEST(test_right_or_aux_1) {
 
 TEST(test_right_or_aux_2) {
     vector<string> vec;
-    vec.push_back("sss1011s1");
+    vec.push_back("sss,101,1s1");
     vector<int> or_vector;
     or_vector = right_or_aux(vec, 9);
     for (int i = 0; i < or_vector.size(); ++i) {
         cout << or_vector[i] << endl;
     }
-
 }
 
 TEST(test_right_or_1) {
-    
+    vector<string> vec = {"0", "1"};
+    vector<string> or_vector;
+    or_vector = right_or(vec, 0, right_or_aux(vec, 1), 1);
+    vector<string> answer = { "s" };
+    for (int i = 0; i < or_vector.size(); ++i) {
+        ASSERT_EQUAL(or_vector[i], answer[i]);
+    }
 }
+
+TEST(test_right_or_2) {
+    vector<string> vec = { "0,1", "1,s" };
+    vector<string> or_vector;
+    or_vector = right_or(vec, 0, right_or_aux(vec, 1), 1);
+    vector<string> answer = { "ss" };
+    for (int i = 0; i < or_vector.size(); ++i) {
+        ASSERT_EQUAL(or_vector[i], answer[i]);
+    }
+}
+
+
+TEST(test_single_char_or_1) {
+    vector<string> vec = { "0", "1" };
+    vector<string> or_vector = single_char_or(vec);
+    vector<string> answer = { "s" };
+    for (int i = 0; i < answer.size(); ++i) {
+        ASSERT_EQUAL(or_vector[i], answer[i]);
+    }
+}
+
+TEST(test_single_char_or_2) {
+    vector<string> vec = { "1", "1", "1", "1", "1"};
+    vector<string> or_vector = single_char_or(vec);
+    vector<string> answer = { "1" };
+    for (int i = 0; i < answer.size(); ++i) {
+        ASSERT_EQUAL(or_vector[i], answer[i]);
+    }
+}
+
+TEST(test_single_char_or_3) {
+    vector<string> vec = { "1", "1", "s", "0", "s" };
+    vector<string> or_vector = single_char_or(vec);
+    vector<string> answer = { "s" };
+    for (int i = 0; i < answer.size(); ++i) {
+        ASSERT_EQUAL(or_vector[i], answer[i]);
+    }
+}
+
 
 TEST(test_string_intersect_1) {
     cout << string_intersect("", "1ss, sss, sss, sss", 3) << endl;
