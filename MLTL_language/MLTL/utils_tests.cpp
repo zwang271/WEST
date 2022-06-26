@@ -50,7 +50,7 @@ TEST(test_right_or_2) {
     vector<string> vec = { "0,1", "1,s" };
     vector<string> or_vector;
     or_vector = right_or(vec, 0, right_or_aux(vec, 1), 1);
-    vector<string> answer = { "ss" };
+    vector<string> answer = { "1,0", "s,1"};
     for (int i = 0; i < or_vector.size(); ++i) {
         ASSERT_EQUAL(or_vector[i], answer[i]);
     }
@@ -143,7 +143,7 @@ TEST(test_pad_to_length_2) {
 }
 
 TEST(WFF_check_1) {
-    string f = "G[1,3]&[p0,p1,p2,p3]";
+    string f = "G[1,3](&[p0,p1,p2,p3])";
     ASSERT_EQUAL(Wff_check(f), true);
 }
 
@@ -158,17 +158,17 @@ TEST(WFF_check_3) {
 }
 
 TEST(Comp_len_0) {
-    string f = "((p0 & p1) v p3)";
+    string f = "((p0&p1)vp3)";
     ASSERT_EQUAL(Comp_len(f), 1);
 }
 
 TEST(Comp_len_1) {
-    string f = "G[1,3]&[p0,p1,p2,p3]";
+    string f = "G[1,3](&[p0,p1,p2,p3])";
     ASSERT_EQUAL(Comp_len(f), 4);
 }
 
 TEST(Comp_len_2) {
-    string f = "G[1,3]&[(p0vp4),p1,p2,p3]";
+    string f = "G[1,3](&[(p0vp4),p1,p2,p3])";
     ASSERT_EQUAL(Wff_check(f), true);
     ASSERT_EQUAL(Comp_len(f), 4);
 }

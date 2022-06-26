@@ -47,7 +47,11 @@ vector<string> pad(vector<string> unpadded_v, int n) {
 	return padded_v;
 }
 
-/*DOCUMENT THIS*/
+/*
+* Input: string S 
+*		 char C
+* Output: S with every instance of C removed
+*/
 string strip_char(string s, char c)
 {
 	string w = "";
@@ -66,16 +70,7 @@ string strip_char(string s, char c)
 */
 vector<string> strip_commas(vector<string> comma_v) {
 	for (int i = 0; i < comma_v.size(); ++i) {
-		int len_w = int(comma_v[i].length());
-		string w = "";
-
-		for (int j = 0; j < len_w; ++j) {
-			if (comma_v[i][j] != ',') {
-				w += comma_v[i][j];
-			}
-		}
-
-		comma_v[i] = w;
+		comma_v[i] = strip_char(comma_v[i], ',');;
 	}
 	return comma_v;
 }
@@ -173,7 +168,7 @@ vector<string> set_intersect(vector<string> v1, vector<string> v2, int n) {
 /*
 * Input: Vector of computation strings V, with commas
 *	     N is number of propositional variables
-* Info: Any computation string w is of the form w = s^k(0|1)^m
+* Info: Any computation string w is of the form w = (s,)^k(0,|1,|s,)^m where k is maximal
 * Output: Array of indices that computes m for each string in V
 */
 vector<int> right_or_aux(vector<string> v, int n) {
@@ -194,7 +189,10 @@ vector<int> right_or_aux(vector<string> v, int n) {
 	return indices;
 }
 
-/*DOCUMENT THIS*/
+/*
+* Input: vector V of length 1 computation strings (bits)
+* Output: singleton vector computing or of V
+*/
 vector<string> single_char_or(vector<string> V) {
 	vector<string> ret;
 	if (V.size() == 0) {
@@ -216,7 +214,10 @@ vector<string> single_char_or(vector<string> V) {
 	}
 }
 
-/*DOCUMENT THIS*/
+/*
+* Input: Vectors A and B of computation strings
+* Output: Vector of A concatenated with B
+*/
 vector<string> join(vector<string> A, vector<string> B) {
 	vector<string> AB;
 	AB.reserve(A.size() + B.size()); // preallocate memory
@@ -225,7 +226,11 @@ vector<string> join(vector<string> A, vector<string> B) {
 	return AB;
 }
 
-/*DOCUMENT THIS*/
+/*
+* Input: Vector of computation strings V
+*		 String S
+* Output: Appends S to each string in V
+*/
 vector<string> list_str_concat(vector<string> V, string s) {
 	for (int i = 0; i < V.size(); ++i) {
 		V[i] += s;
@@ -235,19 +240,20 @@ vector<string> list_str_concat(vector<string> V, string s) {
 
 /*
 * Input: Vector of computation strings V, with commas
-*		 ITERATION describes depth of recursion
+*		 ITERATION describes depth of recursion (MUST CALL WITH 0 INITIALLY)
 *		 INIDCES is vector of ints from right_or_aux
 *		 N is number of propositional variables
 * Output: Vector of disjoint computation strings
 */
 vector<string> right_or(vector<string> v, int iteration, vector<int> indices, int n) {
 	//strip commas before, or write invariant_check
-	int len_w = int(v[0].size());
 
 	if (iteration == 0) {
 		v = pad(v, n);
 		v = strip_commas(v);
 	}
+
+	int len_w = int(v[0].size());
 
 	// Base case
 	if (len_w == 1) {
@@ -259,6 +265,7 @@ vector<string> right_or(vector<string> v, int iteration, vector<int> indices, in
 			string s_w = string(len_w, 's'); // string = 's' repeated len_w times
 			if (find(v.begin(), v.end(), s_w) != v.end()) {
 				vector<string> ret = { s_w };
+				ret = add_commas(ret, n);
 				return ret;
 			}
 		}
@@ -268,26 +275,28 @@ vector<string> right_or(vector<string> v, int iteration, vector<int> indices, in
 	vector<string> end_one;
 
 	for (int i = 0; i < v.size(); ++i) {
-		if (v[i][len_w - 1] == '0') {
-			end_zero.push_back(v[i].substr(0, len_w - 1));
+		string w = v[i];
+		if (w[len_w - 1] == '0') {
+			end_zero.push_back(w.substr(0, len_w - 1));
 		}
-		else if (v[i][len_w - 1] == '1') {
-			end_one.push_back(v[i].substr(0, len_w - 1));
+		else if (w[len_w - 1] == '1') {
+			end_one.push_back(w.substr(0, len_w - 1));
 		}
 		else {
-			end_zero.push_back(v[i].substr(0, len_w - 1));
-			end_one.push_back(v[i].substr(0, len_w - 1));
+			end_zero.push_back(w.substr(0, len_w - 1));
+			end_one.push_back(w.substr(0, len_w - 1));
 		}
 	}
 
-	if (end_zero.size() == 0 || end_one.size() == 0) {
+	if (end_zero.size() == 0 and end_one.size() == 0) {
 		return end_zero; // returns an empty vector
 	}
 	else {
-		iteration++;
-		join(list_str_concat(right_or(end_zero, iteration, indices, n), "0"),
+		++iteration;
+		v = join(list_str_concat(right_or(end_zero, iteration, indices, n), "0"),
 			list_str_concat(right_or(end_one, iteration, indices, n), "1")
 		);
+		v = add_commas(v, n);
 	}
 
 	return v;
