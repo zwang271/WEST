@@ -8,7 +8,12 @@ using namespace std;
 
 //NOTE: error_check that sum of right bounds must be less than computation bounds
 
-// Pad input string from right to specified length.
+/*
+* Input: computation string UNPADDED_S separated by commas 
+*		 LENGTH is target length to pad to
+*		 N is number of propositional variables
+* Output: computation string separated by commas of length LENGTH
+*/
 string pad_to_length(string unpadded_s, int length, int n) {
     // Compute remaining space to pad.
     int diff = int((length - unpadded_s.length()) / (n + 1));
@@ -20,7 +25,10 @@ string pad_to_length(string unpadded_s, int length, int n) {
 }
 
 
-// Pad a vector of strings so all strings have same length.
+/*
+* Input: Vector of computation strings with commas
+* Output: Pads all comutation strings to the same length as the longest string
+*/
 vector<string> pad(vector<string> unpadded_v, int n) {
   int unpadded_size = unpadded_v.size();
 
@@ -42,7 +50,11 @@ vector<string> pad(vector<string> unpadded_v, int n) {
 }
 
 
-// Returns the bit-wise 'and' of two strings.
+/*
+* Input: Two computation strings W_1 and W_2, comma separated 
+*		 N is number of propositional variables
+* Output: Bit-wise and of the two string of length max(len(w_1), len(w_2))
+*/
 string string_intersect(string w_1, string w_2, int n) {
 	// Remove white-characters from w_1 and w_2
 	w_1.erase(remove_if(w_1.begin(),
@@ -56,7 +68,9 @@ string string_intersect(string w_1, string w_2, int n) {
 	}
 
   // Make w_1 and w_2 the same length.
-  vector<string> vec = {w_1, w_2};
+  vector<string> vec;
+  vec.push_back(w_1);
+  vec.push_back(w_2);
   pad(vec, n);
 
   // Bit-wise 'and' w_1 and w_2
@@ -83,7 +97,11 @@ string string_intersect(string w_1, string w_2, int n) {
 }
 
 
-// Returns bit-wise 'and' of all strings of vector.
+/*
+* Input: Two vectors of computation strings V1 and V2, comma separated
+* Output: Computes pairwise string_intersect between all 
+*		  computation strings in V1 and V2
+*/
 vector<string> set_intersect(vector<string> v1, vector<string> v2, int n){
 	vector<string> v = vector<string>();
 
@@ -101,9 +119,12 @@ vector<string> set_intersect(vector<string> v1, vector<string> v2, int n){
 }
 
 
-//entries in index counts how many char are remaining after removing consecutive sigmas at front
-//parse from left, count from the right
-//j is first non-sigma
+/*
+* Input: Vector of computation strings V, NO COMMAS
+*	     N is number of propositional variables
+* Info: Any computation string w is of the form w = s^k(0|1)^m
+* Output: Array of indices that computes m for each string in V
+*/
 vector<int> right_or_aux(vector<string> v, int n) {
     v = pad(v, n);
     int len_w = int(v[0].size());
@@ -118,24 +139,48 @@ vector<int> right_or_aux(vector<string> v, int n) {
             }
         }
     }
-
-  return indices;
+	return indices;
 }
 
 
-
+/*
+* Input: Vector of computation strings with commas
+* Output: Vector of computation strings without commas
+*/
 vector<string> strip_commas(vector<string> comma_v) {
-    cout << "TEST1" << endl;
-    int size = comma_v.size();
-    cout << size << endl;
-    for (int i = 0; i < size; ++i) {
-        cout << "TEST2" << endl;
-        //string s = comma_v[i];
-        cout << "input: " << comma_v[i] << endl;
-        comma_v[i].erase(remove(comma_v[i].begin(), comma_v[i].end(), ','));
-        cout << "output: " << comma_v[i] << endl;
+    for (int i = 0; i < comma_v.size(); ++i) {
+		int len_w = comma_v[i].length();
+		string w = "";
+
+		for (int j = 0; j < len_w; ++j) {
+			if (comma_v[i][j] != ',') {
+				w += comma_v[i][j];
+			}
+		}
+
+		comma_v[i] = w;
     }
     return comma_v;
+}
+
+/*
+* Input: Vector of computation strings without commas
+*		 N is number of propositional variables
+* Output: Vector of computation strings with commas
+*/
+vector<string> add_commas(vector<string> v, int n) {
+	for (int i = 0; i < v.size(); i++) {
+		int len_w = v[i].length();
+		string w = "";
+		for (int j = 0; j < len_w; j += n) {
+			w += v[i].substr(j,n);
+			if (j + n < len_w) {
+				w += ',';
+			}
+		}
+		v[i] = w;
+	}
+	return v;
 }
 
 /*
@@ -166,7 +211,7 @@ vector<string> right_or(vector<string> v, int iteration, vector<int> indices, in
 vector<string> set_union(vector<string> v1, vector<string> v2){
 	vector<string> v = vector<string>();
 
-	// Union all elements of v1,v2 into v
+	// Union all elements of v1,v2 into v	
     /*
 	for (int i = 0; i < v1.size(); ++i){
 		for (int j = 0; j < v2.size(); ++j){
