@@ -1,6 +1,8 @@
 #include <string>
 #include <tuple>
 #include <stdexcept>
+#include <iostream>
+#include "grammar.h"
 
 /*
 This file implements the following Context-Free Grammar
@@ -28,12 +30,12 @@ Binary_Temp_conn  ->  ‘U’ | ‘R’
 
 
 Wff ->  Prop_var | Prop_cons
-                   | Unary_Prop_conn Wff
-	                | Unary_Temp_conn  Interval  Wff
-	             |  Assoc_Prop_conn ‘[‘  Array_entry  ‘]’
+                 | Unary_Prop_conn Wff
+	             | Unary_Temp_conn  Interval  Wff
 
-                 | ‘(‘ Wff Binary_Prop_conn Wff ‘)’
-               | ‘(‘ Wff Binary_Temp_conn  Interval Wff ‘)
+	             | '(' Assoc_Prop_conn ‘[‘  Array_entry  ']' ')'
+                 | '(' Wff Binary_Prop_conn Wff ')'
+                 | '(' Wff Binary_Temp_conn  Interval Wff ')'
 
 
 The Prop constants: True, False are represented by: ‘T’, ‘F’.
@@ -48,7 +50,9 @@ The Binary Temp connectives: Until, Weak until are represented by: ‘U’, ‘R
 using namespace std;
 
 
-// Takes substring of given string from a to b.
+/*
+Takes substring of given string from a to b.
+*/
 string Slice(string s, int a, int b){
 	int s_len = s.length();
   	
@@ -107,13 +111,14 @@ bool Interval_check(string s){
     // Parse for comma index
     int comma_index = 1;
     while(Num_check(Slice(s, 1, comma_index)) and comma_index <= len_s-1){
-        comma_index = comma_index + 1;
+        ++comma_index;
     }
 
     string num_1 = Slice(s, 1, comma_index-1);
     string comma = Slice_char(s, comma_index);
     string num_2 = Slice(s, comma_index+1, len_s-2);
-    return left_bracket == "[" and Num_check(num_1) and comma == "," and Num_check(num_2) and right_bracket == "]";
+    return left_bracket == "[" and Num_check(num_1) and comma == "," 
+        and Num_check(num_2) and right_bracket == "]";
 }
 
 
@@ -163,24 +168,29 @@ bool Array_entry_check(string s){
 
     //    Parse for comma_index in s
     //    When left_count == right_count, we are done parsing and have found comma_index.
-    int comma_index = 1;
-    for (comma_index = 1; comma_index <= len_s-1; ++comma_index){
+    int comma_index = 0;
+    for (comma_index = 0; comma_index <= len_s-1; ++comma_index){
+
         string c = Slice_char(s, comma_index);
 
         if (c == "(") {
             ++left_count;
         }
-        if (c == ")"){
+        else if (c == ")"){
             ++right_count;
         }
 
         // Done parsing for comma_index.
+        
+        //cout << s << " " << comma_index << " " << left_count << " " << right_count << endl;
+
         if (left_count == right_count and c == ","){
             break;
         }
     }
 
-    return (Wff_check(Slice(s, 0, comma_index-1)) and Slice_char(s, comma_index) == "," and Array_entry_check(Slice(s, comma_index+1, len_s-1))) or Wff_check(s) ;
+    return (Wff_check(Slice(s, 0, comma_index-1)) and Slice_char(s, comma_index) == "," 
+        and Array_entry_check(Slice(s, comma_index+1, len_s-1))) or Wff_check(s) ;
 }
 
 
@@ -197,12 +207,12 @@ bool Binary_Temp_conn_check(string s){
 
 
 // Wff ->  Prop_var | Prop_cons
-//                   | Unary_Prop_conn Wff
+//                  | Unary_Prop_conn Wff
 //	                | Unary_Temp_conn  Interval  Wff
-//	             |  Assoc_Prop_conn ‘[‘  Array_entry  ‘]’
-//
-//                | ‘(‘ Wff Binary_Prop_conn Wff ‘)’
-//                 | ‘(‘ Wff Binary_Temp_conn  Interval Wff ‘)
+// 
+//	                | '(' Assoc_Prop_conn ‘[‘  Array_entry  ‘]’ ')'
+//                  | ‘(‘ Wff Binary_Prop_conn Wff ‘)’
+//                  | ‘(‘ Wff Binary_Temp_conn  Interval Wff ‘)
 
 bool Wff_check(string s){
     int len_s = s.length();
@@ -233,18 +243,17 @@ bool Wff_check(string s){
         return Interval_check(interval) and Wff_check(alpha);
     }
 
-    // Assoc_Prop_conn ‘[‘  Array_entry  ‘]’
-    if(Assoc_Prop_conn_check(Slice_char(s, 0))){
-        int begin_array = 1;
-        int end_array = 2;
-
-        // Parse for end of array
-        while (Slice_char(s, end_array) != "]" and end_array <= len_s-1){
-            end_array = end_array + 1;
-        }
+    // '(' Assoc_Prop_conn ‘[‘  Array_entry  ‘]’ ')'
+    if(Assoc_Prop_conn_check(Slice_char(s, 1))){
+        int begin_array = 2;
+        int end_array = len_s-2;
 
         string array_entry = Slice(s, begin_array+1, end_array-1);
-        return Slice_char(s, 1) == "[" and Array_entry_check(array_entry) and Slice_char(s, len_s-1) == "]";
+        return Slice_char(s, 0) == "(" 
+            and Slice_char(s, 2) == "["
+            and Array_entry_check(array_entry)
+            and Slice_char(s, len_s - 2) == "]"
+            and Slice_char(s, len_s - 1) == ")"; 
     }
 
     // ‘(‘ Wff Binary_Prop_conn Wff ‘)’ | ‘(‘ Wff Binary_Temp_conn Interval Wff ‘)
@@ -316,9 +325,9 @@ bool Wff_check(string s){
 int primary_binary_conn(string wff){
     int len_wff = wff.length();
 
-    // Assoc_Prop_conn ‘[‘  Array_entry  ‘]’
-    if (Assoc_Prop_conn_check(Slice_char(wff, 0))){
-        return 0;
+    // '(' Assoc_Prop_conn ‘[‘  Array_entry  ‘]’ ')'
+    if (Assoc_Prop_conn_check(Slice_char(wff, 1))){
+        return 1;
     }
 
     // ‘(‘ Wff Binary_Prop_conn Wff ‘)’  |  ‘(‘ Wff Binary_Temp_conn  Interval Wff ‘)'
@@ -439,17 +448,18 @@ int Comp_len(string wff){
         int comma_index = get<1>(interval);
         int end_interval = get<2>(interval);
         int upperbound = stoi(Slice(wff, comma_index+1, end_interval-1));
-        string alpha = Slice(wff, 1, len_wff-1);
+        string alpha = Slice(wff, end_interval+1, len_wff-1);
         return upperbound + Comp_len(alpha); 
     }
 
-    // Assoc_Prop_conn ‘[‘  Array_entry  ‘]’
+    // '(' Assoc_Prop_conn ‘[‘  Array_entry  ‘]’ ')'
+    c = Slice_char(wff, 1);
     if (Assoc_Prop_conn_check(c)){
         // Parse through '[' wff_1 ',' wff_2 ',' ... ',' wff_n ']' entry-by-entry
         // and iteratively compute: return_value = max(Comp_len(wff_1), ..., Comp_len(wff_n))
-        int begin_entry = 2;
+        int begin_entry = 3;
         int return_value = 0;
-        for (int end_entry = 2; end_entry <= len_wff-1; ++end_entry){
+        for (int end_entry = 3; end_entry <= len_wff-1; ++end_entry){
             if (Wff_check(Slice(wff, begin_entry, end_entry))){
                 string alpha = Slice(wff, begin_entry, end_entry);
                 int Comp1 = Comp_len(alpha);
@@ -475,7 +485,7 @@ int Comp_len(string wff){
     if (Binary_Prop_conn_check(binary_conn)){
         string alpha = Slice(wff, 1, binary_conn_index-1); 
         int Comp_alpha = Comp_len(alpha); 
-        string beta = Slice (wff, binary_conn_index+1, len_wff-1);
+        string beta = Slice (wff, binary_conn_index+1, len_wff-2);
         int Comp_beta = Comp_len(beta);
 
         return max(Comp_alpha, Comp_beta);
@@ -484,14 +494,16 @@ int Comp_len(string wff){
     // ‘(‘ Wff Binary_Temp_conn  Interval Wff ‘)'
     if (Binary_Temp_conn_check(binary_conn)){
         tuple<int, int, int> interval = primary_interval(wff);
+        int comma_index = get<1>(interval);
         int end_interval = get<2>(interval);
+        int upper_bound = stoi(Slice(wff, comma_index + 1, end_interval - 1));
 
         string alpha = Slice(wff, 1, binary_conn_index-1);
         int Comp_alpha = Comp_len(alpha); 
         string beta = Slice(wff, end_interval+1, len_wff-2);
         int Comp_beta = Comp_len(beta);
         
-        return end_interval + max(Comp_alpha, Comp_beta);
+        return upper_bound + max(Comp_alpha, Comp_beta);
     }
 
     
