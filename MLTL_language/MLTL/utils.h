@@ -7,7 +7,7 @@ using namespace std;
 
 //NOTE: error_check that sum of right bounds must be less than computation bounds
 string pad_to_length(string unpadded_s, int length, int n);
-vector<string> pad(vector<string> unpadded_v, int n, int m);
+vector<string> pad(vector<string> unpadded_v, int n, int m = -1);
 string strip_char(string s, char c);
 vector<string> strip_commas(vector<string> comma_v);
 vector<string> add_commas(vector<string> v, int n);

@@ -33,7 +33,7 @@ string pad_to_length(string unpadded_s, int length, int n) {
 *		 M is -1 at first, pass in a positive value for m to pad all strings to length m instead
 * Output: Pads all comutation strings to the same length as the longest string
 */
-vector<string> pad(vector<string> unpadded_v, int n, int m  = -1) {
+vector<string> pad(vector<string> unpadded_v, int n, int m) {
 	int unpadded_size = unpadded_v.size();
 
 	// Compute max-length of strings
