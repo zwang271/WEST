@@ -168,7 +168,7 @@ vector<string> reg_R(vector<string> alpha, vector<string> beta, int a, int b, in
 *                       | ‘(‘ Nnf Binary_Temp_conn  Interval Nnf ‘)
 */
 vector<string> reg(string s, int n) {
-	int len_s = s.length();
+	int len_s = int(s.length());
 
 	// ?(~) Prop_var 
 	if (Prop_var_check(s) or
