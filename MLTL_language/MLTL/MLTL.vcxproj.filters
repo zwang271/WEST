@@ -24,12 +24,18 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="reg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utils.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="grammar.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="reg.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
