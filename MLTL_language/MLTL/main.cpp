@@ -27,11 +27,15 @@ int main() {
 	//cout << Wff_check(formula) << endl;
 	//cout << Comp_len(formula) << endl;
 
-	string s = "~p4";
-	int n = 6;
+	// string s = "F[2,4]p1";
+	// string s = "F[2,4]~p1";
+	string s = "G[3,5]~p0";
+	int n = 4;
 
-	vector<string> v = reg_prop_var(s, n);
+	//vector<string> v = right_or(reg(s, n), 0, right_or_aux(reg(s, n), n), n);
+	vector<string> v = reg(s, n);
 	print(v);
+
 
     return 0;
 }
