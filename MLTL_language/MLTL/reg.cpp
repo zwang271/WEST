@@ -1,5 +1,6 @@
 #include "utils.h"
 #include "grammar.h"
+#include "reg.h"
 
 /*
 * Input: Two vectors of computation strings V1 and V2, comma separated
@@ -8,6 +9,12 @@
 */
 vector<string> set_intersect(vector<string> v1, vector<string> v2, int n) {
 	vector<string> v = vector<string>();
+	if (v1 == v or v2 == v) { // Currently v is the empty vector
+		return v;
+	}
+
+	int len_w = max(v1[0].length(), v2[0].length());
+	v1 = pad(v1, n, len_w); v2 = pad(v2, n, len_w);
 
 	// Bit-wise 'and' all entries of v1 and v2
 	for (int i = 0; i < v1.size(); ++i) {
@@ -70,6 +77,54 @@ vector<string> reg_prop_var(string s, int n)
 }
 
 
+vector<string> reg_F(vector<string> alpha, int a, int b, int n) {
+	vector<string> comp = vector<string>();
+
+	string pre = "";
+	string w = "";
+	vector<string> temp_alpha = vector<string>();
+
+	for (int i = 0; i < a; ++i) {
+		pre += string(n, 's') + ",";
+	}
+
+	for (int i = 0; i <= b - a; ++i) {
+		w = pre;
+		
+		for (int j = 0; j < i; ++j) {
+			w += string(n, 's') + ",";
+		}
+		temp_alpha = list_str_concat_prefix(alpha, w);
+		comp = join(comp, temp_alpha);
+	}
+	return comp;
+}
+
+vector<string> reg_G(vector<string> alpha, int a, int b, int n)
+{
+	string pre = "";
+	string w = "";
+	vector<string> temp_alpha = vector<string>();
+
+	for (int i = 0; i < a; ++i) {
+		pre += string(n, 's') + ",";
+	}
+
+	vector<string> comp = list_str_concat_prefix(alpha, pre);
+
+	for (int i = 0; i < b - a; ++i) {
+		w = pre;
+
+		for (int j = 0; j <= i; ++j) {
+			w += string(n, 's') + ",";
+		}
+		temp_alpha = list_str_concat_prefix(alpha, w);
+		comp = set_intersect(comp, temp_alpha, n);
+	}
+	return comp;
+}
+
+
 /*
 * Nnf ->  ?(~) Prop_var | Prop_cons
 *	                    | Unary_Temp_conn  Interval  Nnf
@@ -79,7 +134,6 @@ vector<string> reg_prop_var(string s, int n)
 *                       | ‘(‘ Nnf Binary_Temp_conn  Interval Nnf ‘)
 */
 vector<string> reg(string s, int n) {
-
 	int len_s = s.length();
 
 	// ?(~) Prop_var 
@@ -93,20 +147,35 @@ vector<string> reg(string s, int n) {
 		return reg_prop_cons(s, n);
 	}
 
-	//// Unary_Temp_conn  Interval  Nnf
-	//if (Unary_Temp_conn_check(Slice_char(s, 0))) {
-	//	int begin_interval = 1;
-	//	int end_interval = 2;
+	// Unary_Temp_conn  Interval  Nnf
+	if (Unary_Temp_conn_check(Slice_char(s, 0))) {
+		int begin_interval = 1;
+		int end_interval = 2;
+		int comma_index = 0;
 
-	//	// Parse for end of interval
-	//	while (Slice_char(s, end_interval) != "]" and end_interval <= len_s - 1) {
-	//		end_interval = end_interval + 1;
-	//	}
+		// Parse for end of interval
+		while (Slice_char(s, end_interval) != "]" and end_interval <= len_s - 1) {
+			if (Slice_char(s, end_interval) == ",") {
+				comma_index = end_interval;
+			}
+			end_interval = end_interval + 1;
+		}
 
-	//	string interval = Slice(s, begin_interval, end_interval);
-	//	string alpha = Slice(s, end_interval + 1, len_s - 1);
-	//	return Interval_check(interval) and Nnf_check(alpha);
-	//}
+		string interval = Slice(s, begin_interval, end_interval);
+		int a = stoi(Slice(s, begin_interval + 1, comma_index -1));
+		int b = stoi(Slice(s, comma_index + 1, end_interval - 1));
+		string alpha = Slice(s, end_interval + 1, len_s - 1);
+		string unary_temp_con = Slice_char(s, 0);
+		
+		// Handing the 'finally' temporal operator
+		vector<string> reg_alpha = reg(alpha, n); // recursive call
+		if (unary_temp_con == "F") {
+			return reg_F(reg_alpha, a, b, n);
+		}
+		else if (unary_temp_con == "G") {
+			return reg_G(reg_alpha, a, b, n);
+		}
+	}
 
 	//// '(' Assoc_Prop_conn ‘[‘  Array_entry  ‘]’ ')'
 	//if (Assoc_Prop_conn_check(Slice_char(s, 1))) {

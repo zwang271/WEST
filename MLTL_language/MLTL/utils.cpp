@@ -29,9 +29,11 @@ string pad_to_length(string unpadded_s, int length, int n) {
 
 /*
 * Input: Vector of computation strings with commas
+*		 N is number of propositional variables
+*		 M is -1 at first, pass in a positive value for m to pad all strings to length m instead
 * Output: Pads all comutation strings to the same length as the longest string
 */
-vector<string> pad(vector<string> unpadded_v, int n) {
+vector<string> pad(vector<string> unpadded_v, int n, int m  = -1) {
 	int unpadded_size = unpadded_v.size();
 
 	// Compute max-length of strings
@@ -41,6 +43,7 @@ vector<string> pad(vector<string> unpadded_v, int n) {
 			maxLength = int(unpadded_v[i].length());
 		}
 	}
+	maxLength = max(maxLength, m);
 
 	// Pad each string to maxLength
 	vector<string> padded_v;
@@ -218,9 +221,22 @@ vector<string> join(vector<string> A, vector<string> B) {
 *		 String S
 * Output: Appends S to each string in V
 */
-vector<string> list_str_concat(vector<string> V, string s) {
+vector<string> list_str_concat_suffix(vector<string> V, string s) {
 	for (int i = 0; i < V.size(); ++i) {
 		V[i] += s;
+	}
+	return V;
+}
+
+
+/*
+* Input: Vector of computation strings V
+*		 String S
+* Output: Prepends S to each string in V
+*/
+vector<string> list_str_concat_prefix(vector<string> V, string s) {
+	for (int i = 0; i < V.size(); ++i) {
+		V[i] = s + V[i];
 	}
 	return V;
 }
@@ -281,8 +297,8 @@ vector<string> right_or(vector<string> v, int iteration, vector<int> indices, in
 	}
 	else {
 		++iteration;
-		v = join(list_str_concat(right_or(end_zero, iteration, indices, n), "0"),
-			list_str_concat(right_or(end_one, iteration, indices, n), "1")
+		v = join(list_str_concat_suffix(right_or(end_zero, iteration, indices, n), "0"),
+			list_str_concat_suffix(right_or(end_one, iteration, indices, n), "1")
 		);
 		v = add_commas(v, n);
 	}
