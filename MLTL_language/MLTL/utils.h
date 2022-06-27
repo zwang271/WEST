@@ -18,4 +18,6 @@ vector<string> single_char_or(vector<string> V);
 vector<string> join(vector<string> A, vector<string> B);
 vector<string> list_str_concat(vector<string> V, string s);
 vector<string> right_or(vector<string> v, int iteration, vector<int> indices, int n);
-
+vector<string> reg_prop_cons(string s, int n);
+vector<string> reg_prop_var(string s, int n);
+void print(vector<string> v);
