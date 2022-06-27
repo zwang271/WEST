@@ -21,7 +21,7 @@
     <ClCompile Include="grammar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="utils_tests.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
