@@ -142,19 +142,105 @@ TEST(test_pad_to_length_2) {
     ASSERT_EQUAL(expected.length(), actual.length());
 }
 
-TEST(WFF_check_1) {
+TEST(WFF_check_global) {
     string f = "G[1,3](&[p0,p1,p2,p3])";
-    ASSERT_EQUAL(Wff_check(f), true);
+    ASSERT_TRUE(Wff_check(f));
 }
 
-TEST(WFF_check_2) {
+TEST(WFF_check_nonsense) {
     string f = "hoagopsdw398wioags09 -8yt3pgwek;";
-    ASSERT_EQUAL(Wff_check(f), false);
+    ASSERT_FALSE(Wff_check(f));
 }
 
-TEST(WFF_check_3) {
+TEST(WFF_check_global_until) {
     string f = "G[1,3]((p0U[1,6]p4)&(p1&(p2&p3)))";
-    ASSERT_EQUAL(Wff_check(f), true);
+    ASSERT_TRUE(Wff_check(f));
+}
+
+TEST(WFF_check_negation_1) {
+    string f = "G[1,3]~p0";
+    ASSERT_TRUE(Wff_check(f));
+}
+
+TEST(WFF_check_negation_2) {
+    string f = "~p0";
+    ASSERT_TRUE(Wff_check(f));
+}
+
+TEST(WFF_check_nested_negation) {
+    string f = "(~(~p0U[1,2]~p1)=(p0R[1,2]p1))";
+    ASSERT_TRUE(Wff_check(f));
+}
+
+TEST(WFF_check_binary_operator_parentheses) {
+    string f = "~(~p0U[1,2]~p1)=(p0R[1,2]p1)";
+    ASSERT_FALSE(Wff_check(f));
+}
+
+TEST(WFF_check_empty_string) {
+    string f = "";
+    ASSERT_FALSE(Wff_check(f));
+}
+
+TEST(WFF_check_double_negation) {
+    string f = "~~p0";
+    ASSERT_TRUE(Wff_check(f));
+}
+
+TEST(WFF_check_implies_1) {
+    string f = "(p0>G[1,1]p1)";
+    ASSERT_TRUE(Wff_check(f));
+}
+
+TEST(WFF_check_implies_2) {
+    string f = "(p0=>G[1,1]p1)";
+    ASSERT_FALSE(Wff_check(f));
+}
+
+TEST(WFF_check_oscillation) {
+    string f = "G[1,10](&[(p0>G[1,1]~p0),(~p0>G[1,1]p0)])";
+    ASSERT_TRUE(Wff_check(f));
+}
+
+TEST(WFF_check_true_in_binary_operator) {
+    string f = "(TU[2,3]p0)";
+    ASSERT_TRUE(Wff_check(f));
+}
+
+TEST(WFF_check_false_in_binary_operator) {
+    string f = "(TR[2,3]F)";
+    ASSERT_TRUE(Wff_check(f));
+}
+
+TEST(WFF_check_induction_example) {
+    string f = "( G[1,10](p0>G[1,1]p0) > (p0>G[1,10]p0) )";
+    f = strip_char(f, ' ');
+    ASSERT_TRUE(Wff_check(f));
+}
+
+TEST(WFF_check_whitespace_1) {
+    string f = "p0 = ~p1";
+    ASSERT_FALSE(Wff_check(f));
+}
+
+TEST(WFF_check_whitespace_2) {
+    string f = "p0 > ~p1";
+    ASSERT_FALSE(Wff_check(f));
+}
+
+TEST(WFF_check_whitespace_3) {
+    string f = "p0 U ~p1";
+    ASSERT_FALSE(Wff_check(f));
+}
+
+TEST(WFF_check_whitespace_4) {
+    string f = "p0 R ~p1";
+    ASSERT_FALSE(Wff_check(f));
+}
+
+TEST(WFF_check_unary_operator_parenthese) {
+    string f = "~(~p1)";
+    ASSERT_FALSE(Wff_check(f));
 }
 
 TEST(Comp_len_0) {
@@ -162,6 +248,7 @@ TEST(Comp_len_0) {
     ASSERT_EQUAL(Comp_len(f), 1);
 }
 
+// add 1 to last time step to get length
 TEST(Comp_len_1) {
     string f = "G[1,3](&[p0,p1,p2,p3])";
     ASSERT_EQUAL(Comp_len(f), 4);
@@ -173,9 +260,22 @@ TEST(Comp_len_2) {
     ASSERT_EQUAL(Comp_len(f), 4);
 }
 
-//TEST(Comp_len_3) {
-//    string f = "G[1,3]&[(p0U[1,6]p4),p1,p2,p3]";
-//    ASSERT_EQUAL(Comp_len(f), 4);
-//}
+TEST(Comp_len_3) {
+    string f = "G[1,3](&[(p0U[1,6]p4),p1,p2,p3])";
+    ASSERT_EQUAL(Comp_len(f), 10);
+}
+
+TEST(Comp_len_induction) {
+    string f = "( G[1,10](p0>G[1,1]p0) > (p0>G[1,10]p0) )";
+    f = strip_char(f, ' ');
+    ASSERT_EQUAL(Comp_len(f), 12);
+}
+
+TEST(Comp_len_oscillation) {
+    string f = "G[1,10](&[(p0>G[1,1]~p0),(~p0>G[1,1]p0)])";
+    ASSERT_EQUAL(Comp_len(f), 12);
+}
+
+
 
 TEST_MAIN()
