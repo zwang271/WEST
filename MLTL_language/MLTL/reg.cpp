@@ -101,6 +101,7 @@ vector<string> reg_F(vector<string> alpha, int a, int b, int n) {
 	return comp;
 }
 
+
 vector<string> reg_G(vector<string> alpha, int a, int b, int n)
 {
 	string pre = "";
@@ -121,6 +122,38 @@ vector<string> reg_G(vector<string> alpha, int a, int b, int n)
 		}
 		temp_alpha = list_str_concat_prefix(alpha, w);
 		comp = set_intersect(comp, temp_alpha, n);
+	}
+	return comp;
+}
+
+
+vector<string> reg_U(vector<string> alpha, vector<string> beta, int a, int b, int n) {
+	string pre = "";
+	for (int i = 0; i < a; ++i) {
+		pre += string(n, 's') + ",";
+	}
+
+	vector<string> comp = list_str_concat_prefix(beta, pre);
+	
+	for (int i = a; i <= b - 1; ++i) {
+		comp = join(comp, set_intersect(
+		reg_G(alpha, a, i, n), reg_G(beta, i+1, i+1, n), n));
+	}
+	return comp;
+}
+
+
+vector<string> reg_R(vector<string> alpha, vector<string> beta, int a, int b, int n) {
+	string pre = "";
+	for (int i = 0; i < a; ++i) {
+		pre += string(n, 's') + ",";
+	}
+
+	vector<string> comp = reg_G(beta, a, b, n);
+	
+	for (int i = a; i <= b; ++i) {
+		comp = join(comp,
+			set_intersect(reg_G(beta, a, i, n), reg_G(alpha, i, i, n), n));
 	}
 	return comp;
 }
@@ -191,39 +224,39 @@ vector<string> reg(string s, int n) {
 	//		and Slice_char(s, len_s - 1) == ")";
 	//}
 
-	//// ‘(‘ Wff Binary_Prop_conn Wff ‘)’ | ‘(‘ Wff Binary_Temp_conn Interval Wff ‘)
-	//if (Slice_char(s, 0) == "(" and Slice_char(s, len_s - 1) == ")") {
+	// ‘(‘ Wff Binary_Prop_conn Wff ‘)’ | ‘(‘ Wff Binary_Temp_conn Interval Wff ‘)
+	if (Slice_char(s, 0) == "(" and Slice_char(s, len_s - 1) == ")") {
 
-	//	// Number of '(' in s
-	//	int left_count = 0;
-	//	// Number of ')' in s
-	//	int right_count = 0;
+		// Number of '(' in s
+		int left_count = 0;
+		// Number of ')' in s
+		int right_count = 0;
 
 
-	//	//    Parse for binary_conn_index in s
+		//    Parse for binary_conn_index in s
 
-	//	//    When left_count == right_count and s[binary_conn_index] is a binary connective,
-	//	//    we are done parsing and have found binary_conn_index.
+		//    When left_count == right_count and s[binary_conn_index] is a binary connective,
+		//    we are done parsing and have found binary_conn_index.
 
-	//	int binary_conn_index = 1;
-	//	for (binary_conn_index = 1; binary_conn_index <= len_s - 1; ++binary_conn_index) {
-	//		string c = Slice_char(s, binary_conn_index);
+		int binary_conn_index = 1;
+		for (binary_conn_index = 1; binary_conn_index <= len_s - 1; ++binary_conn_index) {
+			string c = Slice_char(s, binary_conn_index);
 
-	//		if (c == "(") {
-	//			++left_count;
-	//		}
+			if (c == "(") {
+				++left_count;
+			}
 
-	//		if (c == ")") {
-	//			++right_count;
-	//		}
+			if (c == ")") {
+				++right_count;
+			}
 
-	//		// Done parsing for binary_conn_index.
-	//		if (left_count == right_count and (Binary_Prop_conn_check(c) or Binary_Temp_conn_check(c))) {
-	//			break;
-	//		}
-	//	}
+			// Done parsing for binary_conn_index.
+			if (left_count == right_count and (Binary_Prop_conn_check(c) or Binary_Temp_conn_check(c))) {
+				break;
+			}
+		}
 
-	//	string binary_conn = Slice_char(s, binary_conn_index);
+		string binary_conn = Slice_char(s, binary_conn_index);
 
 	//	// ‘(‘ Wff Binary_Prop_conn Wff ‘)’
 	//	if (Binary_Prop_conn_check(binary_conn)) {
@@ -232,22 +265,34 @@ vector<string> reg(string s, int n) {
 	//		return Wff_check(alpha) and Wff_check(beta);
 	//	}
 
-	//	// ‘(‘ Wff Binary_Temp_conn Interval Wff ‘)
-	//	if (Binary_Temp_conn_check(binary_conn)) {
-	//		int begin_interval = binary_conn_index + 1;
-	//		int end_interval = binary_conn_index + 2;
+		// ‘(‘ Wff Binary_Temp_conn Interval Wff ‘)
+		if (Binary_Temp_conn_check(binary_conn)) {
+			int begin_interval = binary_conn_index + 1;
+			int end_interval = binary_conn_index + 2;
+			int comma_index = 0;
 
-	//		// Parse for end of interval
-	//		while (Slice_char(s, end_interval) != "]" and end_interval <= len_s - 1) {
-	//			end_interval = end_interval + 1;
-	//		}
+			// Parse for end of interval
+			while (Slice_char(s, end_interval) != "]" and end_interval <= len_s - 1) {
+				if (Slice_char(s, end_interval) == ",") {
+					comma_index = end_interval;
+				}
+				end_interval = end_interval + 1;
+			}
 
-	//		string alpha = Slice(s, 1, binary_conn_index - 1);
-	//		string interval = Slice(s, begin_interval, end_interval);
-	//		string beta = Slice(s, end_interval + 1, len_s - 2);
-	//		return Wff_check(alpha) and Interval_check(interval) and Wff_check(beta);
-	//	}
-	//}
+			string alpha = Slice(s, 1, binary_conn_index - 1);
+			string interval = Slice(s, begin_interval, end_interval);
+			string beta = Slice(s, end_interval + 1, len_s - 2);
+			int a = stoi(Slice(s, begin_interval + 1, comma_index - 1));
+			int b = stoi(Slice(s, comma_index + 1, end_interval - 1));
+			
+			if (binary_conn == "U") {
+				return reg_U(reg(alpha, n), reg(beta, n), a, b, n);
+			}
+			else if (binary_conn == "R") {
+				return reg_R(reg(alpha, n), reg(beta, n), a, b, n);
+			}
+		}
+	}
 
 	return vector<string>();
 }
