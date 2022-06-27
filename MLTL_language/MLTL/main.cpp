@@ -13,8 +13,8 @@ int main() {
 	string s = "(p0R[1,3]p1)";
 	int n = 2;
 
-	vector<string> v = pad(reg(s, n), n);
-	print(v);
+	vector<string> v = {"s0", "s1"};
+	print(simplify(v, 2));
 
     return 0;
 }

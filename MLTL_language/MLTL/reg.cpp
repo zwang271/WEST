@@ -258,12 +258,12 @@ vector<string> reg(string s, int n) {
 
 		string binary_conn = Slice_char(s, binary_conn_index);
 
-	//	// ‘(‘ Wff Binary_Prop_conn Wff ‘)’
-	//	if (Binary_Prop_conn_check(binary_conn)) {
-	//		string alpha = Slice(s, 1, binary_conn_index - 1);
-	//		string beta = Slice(s, binary_conn_index + 1, len_s - 2);
-	//		return Wff_check(alpha) and Wff_check(beta);
-	//	}
+		//// ‘(‘ Wff Binary_Prop_conn Wff ‘)’
+		//if (Binary_Prop_conn_check(binary_conn)) {
+		//	string alpha = Slice(s, 1, binary_conn_index - 1);
+		//	string beta = Slice(s, binary_conn_index + 1, len_s - 2);
+		//	return Wff_check(alpha) and Wff_check(beta);
+		//}
 
 		// ‘(‘ Wff Binary_Temp_conn Interval Wff ‘)
 		if (Binary_Temp_conn_check(binary_conn)) {

@@ -19,3 +19,4 @@ vector<string> list_str_concat_suffix(vector<string> V, string s);
 vector<string> list_str_concat_prefix(vector<string> V, string s);
 vector<string> right_or(vector<string> v, int iteration, vector<int> indices, int n);
 void print(vector<string> v);
+vector<string> simplify(vector<string> v, int n);
