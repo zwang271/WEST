@@ -10,8 +10,11 @@
 #include "unit_test_framework.h"
 #include "grammar.h"
 #include <iostream>
+#include "reg.h"
 
 using namespace std;
+
+//TESTS FOR UTILS.CPP
 
 TEST(test_right_or_aux_1) {
     vector<string> vec;
@@ -84,9 +87,9 @@ TEST(test_single_char_or_3) {
     }
 }
 
-
+/*
 TEST(test_string_intersect_1) {
-    cout << string_intersect("", "1ss, sss, sss, sss", 3) << endl;
+    //cout << string_intersect("", "1ss, sss, sss, sss", 3) << endl;
     
     string s1[] = {"s1,     ss", "1s,      ss"};
     vector<string> v1 (s1, s1 + sizeof(s1) / sizeof(string) );
@@ -98,6 +101,8 @@ TEST(test_string_intersect_1) {
         cout << v[i] << endl;
     }
 }
+*/
+
 
 TEST(test_pad_1) {
     vector<string> vec;
@@ -275,6 +280,204 @@ TEST(Comp_len_oscillation) {
     string f = "G[1,10](&[(p0>G[1,1]~p0),(~p0>G[1,1]p0)])";
     ASSERT_EQUAL(Comp_len(f), 12);
 }
+
+
+
+
+
+
+
+
+//TESTS FOR REG.CPP
+
+TEST(test_set_intersect_1) {
+    vector<string> v1 = {"ss", "ss", "ss", "ss"};
+    vector<string> v2 = {"ss", "ss", "ss", "ss"};
+    vector<string> v_expected = {"ss", "ss", "ss", "ss","ss", "ss", "ss", "ss","ss", "ss", "ss", "ss","ss", "ss", "ss", "ss"};
+    vector<string> v_actual = set_intersect(v1, v2, 2);
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(test_set_intersect_2) {
+    vector<string> v1 = {"1", "0"};
+    vector<string> v2 = {"0", "1"};
+    vector<string> v_actual = set_intersect(v1, v2, 1);
+    vector<string> v_expected = {"1", "0"};
+    
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(test_set_intersect_3) {
+    vector<string> v1 = {"1", "0"};
+    vector<string> v2 = {"0", "1"};
+    vector<string> v_actual = set_intersect(v1, v2, 1);
+    vector<string> v_expected = {"1", "0"};
+    
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(test_set_intersect_4) {
+    vector<string> v1 = {"10", "11"};
+    vector<string> v2 = {"00", "01"};
+    vector<string> v_actual = set_intersect(v1, v2, 2);
+    vector<string> v_expected = {};
+    
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(test_set_intersect_5) {
+    vector<string> v1 = {"10", "11"};
+    vector<string> v2 = {"10", "01"};
+    vector<string> v_actual = set_intersect(v1, v2, 2);
+    vector<string> v_expected = {"10"};
+    
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(test_set_intersect_6) {
+    vector<string> v1 = {"10", "s1"};
+    vector<string> v2 = {"10", "01"};
+    vector<string> v_actual = set_intersect(v1, v2, 2);
+    vector<string> v_expected = {"10", "01"};
+    
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+
+
+TEST(test_set_union_1) {
+    vector<string> v1 = {"10", "s1"};
+    vector<string> v2 = {"10", "01"};
+    vector<string> v_actual = set_union(v1, v2, 2);
+    vector<string> v_expected = {"10", "s1"};
+    
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(test_set_union_2) {
+    vector<string> v1 = {"ss", "ss", "ss", "ss"};
+    vector<string> v2 = {"ss", "ss", "ss", "ss"};
+    vector<string> v_actual = set_union(v1, v2, 2);
+    vector<string> v_expected = {"ss"};
+    vector<string> v = join(v1, v2);
+    vector<int> v_int = right_or_aux(v, 2);
+    for (int i = 0; i < v_int.size(); ++i) {
+        cout << v_int[i] << " ";
+    }
+    
+    
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(test_set_union_3) {
+    vector<string> v1 = {"10", "11"};
+    vector<string> v2 = {"00", "01"};
+    vector<string> v_actual = set_union(v1, v2, 2);
+    vector<string> v_expected = {"s0", "s1"};
+    
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(test_set_union_4) {
+    vector<string> v1 = {"ss"};
+    vector<string> v2 = {"ss"};
+    vector<string> v_actual = set_union(v1, v2, 2);
+    vector<string> v_expected = {"ss"};
+    
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(test_set_union_5) {
+    vector<string> v1 = {"10", "11"};
+    vector<string> v2 = {"00"};
+    vector<string> v_actual = set_union(v1, v2, 2);
+    vector<string> v_expected = {"s0", "11"};
+    
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(test_set_union_6) {
+    vector<string> v1 = {"10", "11", "11"};
+    vector<string> v2 = {"00"};
+    vector<string> v_actual = set_union(v1, v2, 2);
+    vector<string> v_expected = {"s0", "11"};
+    
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(test_prop_cons_1) {
+    string t = "T";
+    vector<string> v_expected = {"ss"};
+    vector<string> v_actual = reg_prop_cons(t, 2);
+    
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(test_prop_cons_2) {
+    string t = "F";
+    vector<string> v_expected = {};
+    vector<string> v_actual = reg_prop_cons(t, 2);
+    
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(test_prop_cons_3) {
+    string t = "T";
+    vector<string> v_expected = vector<string>();
+    vector<string> v_actual = reg_prop_cons(t, 0);
+    
+    ASSERT_EQUAL(v_expected.size(), v_actual.size());
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(reg_prop_var_1) {
+    string t = "p0";
+    vector<string> v_expected = {"1s"};
+    vector<string> v_actual = reg_prop_var(t, 2);
+    
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(reg_prop_var_2) {
+    string t = "p1";
+    vector<string> v_expected = {"s1"};
+    vector<string> v_actual = reg_prop_var(t, 2);
+    
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(reg_prop_var_3) {
+    string t = "p1";
+    vector<string> v_expected = {"s1s"};
+    vector<string> v_actual = reg_prop_var(t, 3);
+    
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(reg_prop_var_4) {
+    string t = "~p1";
+    vector<string> v_expected = {"s0s"};
+    vector<string> v_actual = reg_prop_var(t, 3);
+    
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(reg_prop_var_5) {
+    string t = "p0";
+    vector<string> v_expected = {"1"};
+    vector<string> v_actual = reg_prop_var(t, 1);
+    
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(reg_prop_var_6) {
+    string t = "~p0";
+    vector<string> v_expected = {"0"};
+    vector<string> v_actual = reg_prop_var(t, 1);
+    
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
 
 
 

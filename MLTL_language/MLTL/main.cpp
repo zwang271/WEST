@@ -2,6 +2,7 @@
 #include <vector>
 #include "utils.h"
 #include "grammar.h"
+#include "nnf_grammar.h"
 #include "reg.h"
 
 using namespace std;

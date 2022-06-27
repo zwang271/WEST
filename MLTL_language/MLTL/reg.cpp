@@ -37,6 +37,8 @@ vector<string> set_intersect(vector<string> v1, vector<string> v2, int n) {
 */
 vector<string> set_union(vector<string> v1, vector<string> v2, int n) {
 	vector<string> v = join(v1, v2);
+    
+    
 	return right_or(v, 0, right_or_aux(v, n), n);
 }
 
@@ -44,14 +46,13 @@ vector<string> set_union(vector<string> v1, vector<string> v2, int n) {
 /*
 * Prop_cons  ->  'T' | 'F'
 */
-vector<string> reg_prop_cons(string s, int n)
-{
+vector<string> reg_prop_cons(string s, int n) {
 	vector<string> v = vector<string>();
-	if (s == "T") {
+	if ((s == "T") && ( n != 0)) {
 		v.push_back(string(n, 's'));
 	}
 	else if (s == "F") {
-	}
+	} //do nothing
 	return v;
 }
 

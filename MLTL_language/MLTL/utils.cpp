@@ -166,8 +166,8 @@ vector<int> right_or_aux(vector<string> v, int n) {
 	for (int i = 0; i < v.size(); ++i) {
 		if (v[i][0] == 's') {
 			for (int j = 1; j < len_w; ++j) {
-				if (v[i][j] != 's') {
-					indices.push_back(len_w - j);
+				if (v[i][j] != 's' or (j == len_w-1 and v[i][j] == 's')) {
+					indices.push_back(len_w - j -1);
 					break;
 				}
 			}
