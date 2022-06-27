@@ -87,6 +87,7 @@ TEST(test_single_char_or_3) {
     }
 }
 
+// I have no idea what this is
 /*
 TEST(test_string_intersect_1) {
     //cout << string_intersect("", "1ss, sss, sss, sss", 3) << endl;
@@ -113,7 +114,7 @@ TEST(test_pad_1) {
     or_vector = right_or_aux(vec, 3);
      
     for (int i = 0; i < vec.size(); ++i) {
-        cout << pad(vec, 3)[i] << endl;
+        cout << pad(vec, 3, 3)[i] << endl;
     }
 }
 
@@ -478,6 +479,90 @@ TEST(reg_prop_var_6) {
     ASSERT_EQUAL(v_expected, v_actual);
 }
 
+TEST(test_finally_basic) {
+    string s = "F[2,4]p1";
+    vector<string> v_expected = {"ss,ss,s1", "ss,ss,ss,s1", "ss,ss,ss,ss,s1"};
+    vector<string> v_actual = reg(s, 2);
+    
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(test_finally_a_equals_b) {
+    string s = "F[2,2]p0";
+    vector<string> v_expected = {"s,s,1"};
+    vector<string> v_actual = reg(s, 1);
+    
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+
+TEST(test_finally_negation) {
+    string s = "F[2,2]~p0";
+    vector<string> v_expected = {"s,s,0"};
+    vector<string> v_actual = reg(s, 1);
+    
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(test_finally_two_props) {
+    string s = "F[2,2]p0";
+    vector<string> v_expected = {"ss,ss,1s"};
+    vector<string> v_actual = reg(s, 2);
+    
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(test_finally_zero_props) {
+    string s = "F[0,2]T";
+    vector<string> v_expected = {};
+    vector<string> v_actual = reg(s, 0);
+    
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(test_finally_with_and_1) {
+    string s = "F[0,2](&[p0,p1])";
+    ASSERT_TRUE(Wff_check(s));
+    
+    vector<string> v_expected = {"ss,ss,11", "ss,ss,ss,11", "ss,ss,ss,ss,11"};
+    vector<string> v_actual = reg(s, 2);
+    //print(reg(s, 2));
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(test_finally_with_and_2) {
+    string s = "F[0,2](&[p0,p1])";
+    ASSERT_TRUE(Wff_check(s));
+    vector<string> v_expected = {"sss,sss,11s", "sss,sss,sss,11s", "sss,sss,sss,sss,11s"};
+    vector<string> v_actual = reg(s, 3);
+    //print(reg(s, 3));
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(test_finally_with_or_1) {
+    string s = "F[2,4](v[p0,p1])";
+    ASSERT_TRUE(Wff_check(s));
+    vector<string> v_expected = {"ss,ss,s1", "ss,ss,ss,s1", "ss,ss,ss,ss,s1",
+                                 "ss,ss,1s", "ss,ss,ss,1s", "ss,ss,ss,ss,1s"};
+    
+    vector<string> v_actual = reg(s, 2);
+    //print(reg(s, 2));
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(test_finally_with_or_2) {
+    string s = "F[0,2](v[p0,p1])";
+    ASSERT_TRUE(Wff_check(s));
+    vector<string> v_expected = {"sss,sss,11s", "sss,sss,sss,11s", "sss,sss,sss,sss,11s"};
+    vector<string> v_actual = reg(s, 3);
+    //print(reg(s, 3));
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+
+TEST(test_global_basic) {
+    
+}
 
 
 
