@@ -316,3 +316,11 @@ void print(vector<string> v) {
 	}
 }
 
+
+/*
+* Input: Vector of computation strings v
+* Output: Vector of disjoint computation strings v
+*/
+vector<string> simplify(vector<string> v, int n) {
+	return right_or(v, 0, right_or_aux(v, n), n);
+}
