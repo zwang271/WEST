@@ -114,10 +114,10 @@ vector<string> reg_G(vector<string> alpha, int a, int b, int n)
 
 	vector<string> comp = list_str_concat_prefix(alpha, pre);
 
-	for (int i = 0; i < b - a; ++i) {
+	for (int i = 0; i <= b - a; ++i) {
 		w = pre;
 
-		for (int j = 0; j <= i; ++j) {
+		for (int j = 0; j < i; ++j) {
 			w += string(n, 's') + ",";
 		}
 		temp_alpha = list_str_concat_prefix(alpha, w);
