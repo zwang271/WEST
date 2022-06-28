@@ -198,11 +198,15 @@ string Wff_to_Nnf(string wff){
 
         // Unary_Temp_conn Interval wff
         if (Unary_Temp_conn_check(Slice_char(wff, 0))){
-            tuple<int, int, int> interval_tuple = primary_interval(wff); 
+            string unary_temp_conn = Slice_char(wff, 0);
+            tuple<int, int, int> interval_tuple = primary_interval(wff);
+            int begin_interval = get<0>(interval_tuple); 
             int end_interval =  get<2>(interval_tuple);
             string alpha = Slice(wff, end_interval+1, len_wff-1);
 
-            return Slice(wff, 0, end_interval) + Wff_to_Nnf(alpha); 
+            // Input: unary_temp_conn Interval alpha
+            // Return: unary_temp_conn Interval Wff_to_Nnf(alpha)
+            return unary_temp_conn + Slice(wff, begin_interval, end_interval) + Wff_to_Nnf(alpha); 
         } 
 
         // '(' Assoc_Prop_conn ‘[‘  Array_entry  ‘]’ ')'
@@ -226,6 +230,8 @@ string Wff_to_Nnf(string wff){
             // Remove extra comma at right end
             return_string = Slice(return_string, 0, return_string.length()-2);
 
+            // Input: '(' Assoc_Prop_conn ‘[‘  Array_entry  ‘]’ ')'
+            // Return: '(' Assoc_Prop_conn '[' Wff_to_Nnf(wff_1) ',' ... ',' Wff_to_Nnf(wff_n) ']' ')'
             return_string = return_string + "])";
             return return_string;
         }
@@ -237,25 +243,25 @@ string Wff_to_Nnf(string wff){
         // ‘(‘ Wff Binary_Prop_conn Wff ‘)’
         if (Binary_Prop_conn_check(binary_conn)){
             string alpha = Slice(wff, 1, binary_conn_index-1);
-            string nnf_alpha = Wff_to_Nnf(alpha);
             string beta = Slice(wff, binary_conn_index+1, len_wff-2);
-            string nnf_beta = Wff_to_Nnf(beta);
 
-            return "(" + nnf_alpha + binary_conn + nnf_beta + ")";
+            // Input: '(' alpha binary_conn beta ')' 
+            // Return: '(' Wff_to_Nnf(alpha) + binary_conn + Wff_to_Nnf(beta)
+            return "(" + Wff_to_Nnf(alpha) + binary_conn + Wff_to_Nnf(beta) + ")";
         }
 
-        // ‘(‘ Wff Binary_Temp_conn  Interval Wff ‘)
+        // ‘(‘ Wff Binary_Temp_conn  Interval Wff ‘)'
         if (Binary_Temp_conn_check(binary_conn)){
             tuple<int, int, int> interval_tuple = primary_interval(wff);
             int begin_interval = get<0>(interval_tuple);
             int end_interval = get<2>(interval_tuple);
 
             string alpha = Slice(wff, 1, binary_conn_index-1);
-            string nnf_alpha = Wff_to_Nnf(alpha);
             string beta = Slice(wff, end_interval+1, len_wff-2);
-            string nnf_beta = Wff_to_Nnf(beta);
 
-            return "(" + nnf_alpha + binary_conn + Slice(wff, begin_interval, end_interval) + nnf_beta + ")";        
+            // Input: ‘(‘ alpha binary_conn  Interval beta ‘)'  
+            // Return: '(' Wff_to_Nnf(alpha) binary_conn Interval Wff_to_Nnf(beta) ')'
+            return "(" + Wff_to_Nnf(alpha) + binary_conn + Slice(wff, begin_interval, end_interval) + Wff_to_Nnf(beta) + ")";        
         }    
         
     }
@@ -306,8 +312,8 @@ string Wff_to_Nnf(string wff){
                 unary_temp_conn = "F";
             }  
 
-            // Input: '~' Unary_Temp_conn  Interval  Wff 
-            // Return: dual(Unary_Temp_conn) Interval Wff_to_Nnf(Wff)
+            // Input: '~' unary_Temp_conn  Interval  alpha 
+            // Return: dual(unary_Temp_conn) Interval Wff_to_Nnf("~" + alpha)
             return unary_temp_conn + Slice(wff, begin_interval, end_interval) + Wff_to_Nnf("~" + alpha); 
         }
 
@@ -345,7 +351,7 @@ string Wff_to_Nnf(string wff){
                 // Remove extra comma at right end
                 return_string = Slice(return_string, 0, return_string.length()-2);
 
-                // Input: '~' ‘(‘ Assoc_Prop_conn '[' wff_1 ',' wff_2 ',' ... ',' wff_n ']' ‘)’
+                // Input: "~(" Assoc_Prop_conn '[' wff_1 ',' wff_2 ',' ... ',' wff_n ']' ‘)’
                 // Return: '(' dual(Assoc_Prop_conn) '[' Wff_to_Nnf('~' wff_1) ',' ... ',' Wff_to_Nnf('~' wff_n) ']' ')'
                 return_string = return_string + "])";
                 return return_string;  
@@ -386,7 +392,7 @@ string Wff_to_Nnf(string wff){
                 vec = vec + "]";
                 neg_vec = neg_vec + "]";
 
-                // Input: '~' ‘(‘ '=' '[' wff_1 ',' wff_2 ',' ... ',' wff_n ']' ‘)’
+                // Input: "~(" '=' '[' wff_1 ',' wff_2 ',' ... ',' wff_n ']' ‘)’
                 // Return: '(' '(' 'v' vec ')'  '&'  '(' 'v' neg_vec ')' ')'
                 string return_string = "((v" + vec + ")&(v" + neg_vec + "))";
                 return return_string;
