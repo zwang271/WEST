@@ -166,8 +166,12 @@ vector<int> right_or_aux(vector<string> v, int n) {
 	for (int i = 0; i < v.size(); ++i) {
 		if (v[i][0] == 's') {
 			for (int j = 1; j < len_w; ++j) {
-				if (v[i][j] != 's' or (j == len_w-1 and v[i][j] == 's')) {
-					indices.push_back(len_w - j -1);
+				if (v[i][j] != 's') {
+					indices.push_back(len_w - j);
+					break;
+				}
+				else if ((j == len_w - 1 and v[i][j] == 's')) {
+					indices.push_back(0);
 					break;
 				}
 			}
@@ -251,6 +255,9 @@ vector<string> list_str_concat_prefix(vector<string> V, string s) {
 */
 vector<string> right_or(vector<string> v, int iteration, vector<int> indices, int n) {
 	//strip commas before, or write invariant_check
+	if (v.size() == 0 or v.size() == 1) {
+		return v;
+	}
 
 	if (iteration == 0) {
 		v = pad(v, n);
@@ -264,14 +271,23 @@ vector<string> right_or(vector<string> v, int iteration, vector<int> indices, in
 		return single_char_or(v);
 	}
 
-	for (int i = 0; i < indices.size(); ++i) {
-		if (indices[i] == iteration) {
-			string s_w = string(len_w, 's'); // string = 's' repeated len_w times
-			if (find(v.begin(), v.end(), s_w) != v.end()) {
-				vector<string> ret = { s_w };
-				ret = add_commas(ret, n);
-				return ret;
-			}
+	//for (int i = 0; i < indices.size(); ++i) {
+	//	if (indices[i] == iteration) {
+	//		string s_w = string(len_w, 's'); // string = 's' repeated len_w times
+	//		if (find(v.begin(), v.end(), s_w) != v.end()) {
+	//			vector<string> ret = { s_w };
+	//			ret = add_commas(ret, n);
+	//			return ret;
+	//		}
+	//	}
+	//}
+	
+	// Searching for s^len_w in input
+	string s_lenw = string(len_w, 's');
+	for (int i = 0; i < v.size(); ++i) {
+		if (v[i] == s_lenw) {
+			vector<string> ret = { s_lenw };
+			return ret;
 		}
 	}
 
@@ -300,6 +316,10 @@ vector<string> right_or(vector<string> v, int iteration, vector<int> indices, in
 		v = join(list_str_concat_suffix(right_or(end_zero, iteration, indices, n), "0"),
 			list_str_concat_suffix(right_or(end_one, iteration, indices, n), "1")
 		);
+	}
+
+	// Final return will be in iteration 1, add commas before returning
+	if (iteration == 1) {
 		v = add_commas(v, n);
 	}
 
