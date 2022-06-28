@@ -21,10 +21,13 @@
     <ClCompile Include="grammar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="reg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="reg.cpp">
+    <ClCompile Include="simulation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -36,6 +39,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="reg.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="simulation.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -258,12 +258,18 @@ vector<string> reg(string s, int n) {
 
 		string binary_conn = Slice_char(s, binary_conn_index);
 
-		//// ‘(‘ Wff Binary_Prop_conn Wff ‘)’
-		//if (Binary_Prop_conn_check(binary_conn)) {
-		//	string alpha = Slice(s, 1, binary_conn_index - 1);
-		//	string beta = Slice(s, binary_conn_index + 1, len_s - 2);
-		//	return Wff_check(alpha) and Wff_check(beta);
-		//}
+		// ‘(‘ Wff Binary_Prop_conn Wff ‘)’
+		if (Binary_Prop_conn_check(binary_conn)) {
+			string alpha = Slice(s, 1, binary_conn_index - 1);
+			string beta = Slice(s, binary_conn_index + 1, len_s - 2);
+			
+			if (binary_conn == "&") {
+				return set_intersect(reg(alpha, n), reg(beta, n), n);
+			}
+			else if (binary_conn == "v") {
+				return set_union(reg(alpha, n), reg(beta, n), n);
+			}
+		}
 
 		// ‘(‘ Wff Binary_Temp_conn Interval Wff ‘)
 		if (Binary_Temp_conn_check(binary_conn)) {
@@ -284,7 +290,7 @@ vector<string> reg(string s, int n) {
 			string beta = Slice(s, end_interval + 1, len_s - 2);
 			int a = stoi(Slice(s, begin_interval + 1, comma_index - 1));
 			int b = stoi(Slice(s, comma_index + 1, end_interval - 1));
-			
+
 			if (binary_conn == "U") {
 				return reg_U(reg(alpha, n), reg(beta, n), a, b, n);
 			}
