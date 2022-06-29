@@ -44,14 +44,14 @@ vector<string> set_union(vector<string> v1, vector<string> v2, int n) {
 
 
 /*
-* Prop_cons  ->  'T' | 'F'
+* Prop_cons  ->  'T' | '!'
 */
 vector<string> reg_prop_cons(string s, int n) {
 	vector<string> v = vector<string>();
 	if ((s == "T") && ( n != 0)) {
 		v.push_back(string(n, 's'));
 	}
-	else if (s == "F") {
+	else if (s == "!") {
 	} //do nothing
 	return v;
 }
@@ -365,6 +365,8 @@ vector<string> reg_clean(string nnf, int n) {
 			string num = Slice(nnf, 1, len_nnf-1);
 			int k = stoi(num);
 			string ret_string = string(k, 's') + "1" + string(n-k-1, 's');
+			
+			//Output
 			return {ret_string};
 		}
 
@@ -385,8 +387,8 @@ vector<string> reg_clean(string nnf, int n) {
 			return {ret_string};
 		}
 
-		// Prop_cons -> 'F'
-		if (nnf == "F"){
+		// Prop_cons -> '!'
+		if (nnf == "!"){
 			return {};
 		}
 	}

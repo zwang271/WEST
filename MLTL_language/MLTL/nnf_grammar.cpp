@@ -10,7 +10,7 @@ Context-Free Grammar for a MLTL wff in Negation normal-form (Nnf).
 Here, ‘Eventually’, ‘Always’, ‘Until’, and ‘Release’ are represented by the letters ‘F’, ‘G’, ‘U’, and ‘R’.
 
 Alphabet = { ‘0’, ‘1’, …, ‘9’, ‘p’, ‘(‘, ‘)’, ‘[’, ‘]’, ‘,’ ,
-                       ‘T’, ‘F’,                
+                       ‘T’, ‘!’,                
                        ‘~’, ‘F’, ‘G’,
                        ‘v’, ‘&’, ‘=’, ‘>’, ‘U’, ‘R’ }
 
@@ -19,7 +19,7 @@ Num  ->  Digit Num |  Digit
 Interval  ->  ‘[’  Num ‘,’ Num ‘]’  
 Prop_var  ->  ‘p’ Num
 
-Prop_cons  ->  ‘T’ | ‘F’
+Prop_cons  ->  ‘T’ | ‘!’
 Binary_Prop_conn  ->  ‘v’ | ‘&’ | ‘=’ | ‘>’
 
 Assoc_Prop_conn -> ‘v’ | ‘&’ | ‘=’
@@ -277,11 +277,11 @@ string Wff_to_Nnf(string wff){
         if (Prop_cons_check(Slice(wff, 1, len_wff-1))){
             // Prop_cons -> 'T'
             if (Slice(wff, 1, len_wff-1) == "T"){
-                return "F";
+                return "!";
             }
 
-            // Prop_cons -> 'F'
-            if (Slice(wff, 1, len_wff-1) == "F"){
+            // Prop_cons -> '!'
+            if (Slice(wff, 1, len_wff-1) == "!"){
                 return "T";
             }
         }
@@ -584,11 +584,11 @@ string Wff_to_Nnf_clean(string wff){
         if (Prop_cons_check(Slice(wff, 1, len_wff-1))){
             // Prop_cons -> 'T'
             if (Slice(wff, 1, len_wff-1) == "T"){
-                return "F";
+                return "!";
             }
 
-            // Prop_cons -> 'F'
-            if (Slice(wff, 1, len_wff-1) == "F"){
+            // Prop_cons -> '!'
+            if (Slice(wff, 1, len_wff-1) == "!"){
                 return "T";
             }
         }
