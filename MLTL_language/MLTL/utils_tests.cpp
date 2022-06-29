@@ -205,6 +205,7 @@ TEST(WFF_check_implies_2) {
 
 TEST(WFF_check_oscillation) {
     string f = "G[1,10](&[(p0>G[1,1]~p0),(~p0>G[1,1]p0)])";
+    
     ASSERT_TRUE(Wff_check(f));
 }
 

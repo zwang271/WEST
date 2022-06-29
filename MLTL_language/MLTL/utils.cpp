@@ -34,7 +34,7 @@ string pad_to_length(string unpadded_s, int length, int n) {
 * Output: Pads all comutation strings to the same length as the longest string
 */
 vector<string> pad(vector<string> unpadded_v, int n, int m) {
-	int unpadded_size = unpadded_v.size();
+	int unpadded_size = int(unpadded_v.size());
 
 	// Compute max-length of strings
 	int maxLength = 0;
@@ -91,7 +91,7 @@ vector<string> strip_commas(vector<string> comma_v) {
 */
 vector<string> add_commas(vector<string> v, int n) {
 	for (int i = 0; i < v.size(); i++) {
-		int len_w = v[i].length();
+		int len_w = int(v[i].length());
 		string w = "";
 		for (int j = 0; j < len_w; j += n) {
 			w += v[i].substr(j, n);
@@ -343,7 +343,7 @@ string simplify_string(string s1, string s2)
 		exit(-1);
 	}
 
-	int len_s = s1.length();
+	int len_s = int(s1.length());
 	for (int i = 0; i < len_s; ++i) {
 		// s1 = w1 + 'c1' + v1
 		string w1 = Slice(s1, 0, i - 1);
@@ -392,7 +392,7 @@ vector<string> simplify(vector<string> v, int n) {
 	}
 
 	// CAN OPTIMIZE BY STRIPPING COMMAS
-	int i = v.size() - 1;
+	int i = int(v.size() - 1);
 	int j = i - 1;
 
 	START:
@@ -402,7 +402,7 @@ vector<string> simplify(vector<string> v, int n) {
 			if (simplified != "FAIL") {
 				v[j] = simplified;
 				remove(v, i);
-				i = v.size() - 1;
+				i = int(v.size() - 1);
 				j = i - 1;
 				goto START;
 			}
