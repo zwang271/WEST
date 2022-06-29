@@ -112,10 +112,16 @@ vector<string> add_commas(vector<string> v, int n) {
 */
 string string_intersect(string w_1, string w_2, int n) {
 	// Remove white-characters from w_1 and w_2
-	w_1.erase(remove_if(w_1.begin(),
-		w_1.end(), ::isspace), w_1.end());
-	w_2.erase(remove_if(w_2.begin(),
-		w_2.end(), ::isspace), w_2.end());
+	w_1 = strip_char(w_1, ' ');
+	w_2 = strip_char(w_2, ' ');
+
+	//Commented-out legacy code
+
+	// w_1.erase(remove_if(w_1.begin(),
+	// 	w_1.end(), ::isspace), w_1.end());
+	// w_2.erase(remove_if(w_2.begin(),
+	// 	w_2.end(), ::isspace), w_2.end());
+
 
 	// If either w_1 or w_2 are empty, return empty.
 	if (w_1 == "" || w_2 == "") {

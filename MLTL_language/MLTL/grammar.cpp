@@ -9,7 +9,7 @@ This file implements the following Context-Free Grammar
 for a well-formed formula for MLTL:
 
 Alphabet = { ‘0’, ‘1’, …, ‘9’, ‘p’, ‘(‘, ‘)’, ‘[’, ‘]’, ‘,’ ,
-                       ‘T’, ‘F’,
+                       ‘T’, ‘!’,
                        ‘~’, ‘F’, ‘G’,
                        ‘v’, ‘&’, ‘=’, ‘>’, ‘U’, ‘R’ }
 
@@ -18,7 +18,7 @@ Num  ->  Digit Num |  Digit
 Interval  ->  ‘[’  Num ‘,’ Num ‘]’
 Prop_var  ->  ‘p’ Num
 
-Prop_cons  ->  ‘T’ | ‘F’
+Prop_cons  ->  ‘T’ | ‘!’
 Unary_Prop_conn  ->  ‘~’
 Binary_Prop_conn  ->  ‘v’ | ‘&’ | ‘=’ | ‘>’
 
@@ -132,9 +132,9 @@ bool Prop_var_check(string s){
 }
 
 
-// Prop_cons  ->  ‘T’ | ‘F’
+// Prop_cons  ->  ‘T’ | ‘!’
 bool Prop_cons_check(string s){
-    return s == "T" or s == "F";
+    return s == "T" or s == "!";
 }
 
 
