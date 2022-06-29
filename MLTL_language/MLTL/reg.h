@@ -8,3 +8,7 @@ vector<string> reg_prop_var(string s, int n);
 vector<string> reg_F(vector<string> alpha, int a, int b, int n);
 vector<string> reg_G(vector<string> alpha, int a, int b, int n);
 vector<string> reg(string s, int n);
+
+// Cleaner implementation of reg
+// in case original is faulty
+vector<string> reg_clean(string s, int n);

@@ -477,3 +477,263 @@ string Wff_to_Nnf(string wff){
         throw invalid_argument(error_string);
     }
 }
+
+
+
+
+
+
+
+// Converts a Wff to its equivalent Nnf-form.
+// Cleaner implementation of Wff_to_Nnf
+// in case original is faulty. 
+string Wff_to_Nnf_clean(string wff){
+    int len_wff = wff.length();
+
+    //Determine if first symbol is '~' or not.
+    if (Slice_char(wff, 0) != "~"){
+        // Prop_var
+        if (Prop_var_check(wff)){
+            return wff;
+        }
+
+        // Prop_cons
+        if (Prop_cons_check(wff)){
+            return wff;
+        }
+
+        // Unary_Temp_conn Interval wff
+        if (Unary_Temp_conn_check(Slice_char(wff, 0))){
+            string unary_temp_conn = Slice_char(wff, 0);
+            tuple<int, int, int> interval_tuple = primary_interval(wff);
+            int begin_interval = get<0>(interval_tuple); 
+            int end_interval =  get<2>(interval_tuple);
+            string alpha = Slice(wff, end_interval+1, len_wff-1);
+
+            // Input: unary_temp_conn Interval alpha
+            // Return: unary_temp_conn Interval Wff_to_Nnf(alpha)
+            return unary_temp_conn + Slice(wff, begin_interval, end_interval) + Wff_to_Nnf(alpha); 
+        } 
+
+        // '(' Assoc_Prop_conn ‘[‘  Array_entry  ‘]’ ')'
+        if (Assoc_Prop_conn_check(Slice_char(wff, 1))){
+            // Parse through '[' wff_1 ',' wff_2 ',' ... ',' wff_n ']' entry-by-entry
+            // and iteratively compute: return_string = '(' Assoc_Prop_conn '[' Wff_to_Nnf(wff_1) ',' ... ',' Wff_to_Nnf(wff_n) ']' ')'
+            int begin_entry = 3;
+            string return_string = Slice(wff, 0, 2); 
+            for (int end_entry = 3; end_entry <= len_wff-1; ++end_entry){
+                if (Wff_check(Slice(wff, begin_entry, end_entry))){
+                    string alpha = Slice(wff, begin_entry, end_entry);
+                    
+                    // Add Wff_to_Nnf(alpha) to return string
+                    return_string = return_string + Wff_to_Nnf(alpha) + ",";
+
+                    // Update begin_entry so it has index of the first char of the next entry.
+                    begin_entry = end_entry + 2;
+                }
+            }
+
+            // Remove extra comma at right end
+            return_string = Slice(return_string, 0, return_string.length()-2);
+
+            // Input: '(' Assoc_Prop_conn ‘[‘  Array_entry  ‘]’ ')'
+            // Return: '(' Assoc_Prop_conn '[' Wff_to_Nnf(wff_1) ',' ... ',' Wff_to_Nnf(wff_n) ']' ')'
+            return_string = return_string + "])";
+            return return_string;
+        }
+
+        // ‘(‘ Wff Binary_Prop_conn Wff ‘)’ | ‘(‘ Wff Binary_Temp_conn  Interval Wff ‘)    
+        int binary_conn_index = primary_binary_conn(wff);
+        string binary_conn = Slice_char(wff, binary_conn_index);
+
+        // ‘(‘ Wff Binary_Prop_conn Wff ‘)’
+        if (Binary_Prop_conn_check(binary_conn)){
+            string alpha = Slice(wff, 1, binary_conn_index-1);
+            string beta = Slice(wff, binary_conn_index+1, len_wff-2);
+
+            // Input: '(' alpha binary_conn beta ')' 
+            // Return: '(' Wff_to_Nnf(alpha) + binary_conn + Wff_to_Nnf(beta)
+            return "(" + Wff_to_Nnf(alpha) + binary_conn + Wff_to_Nnf(beta) + ")";
+        }
+
+        // ‘(‘ Wff Binary_Temp_conn  Interval Wff ‘)'
+        if (Binary_Temp_conn_check(binary_conn)){
+            tuple<int, int, int> interval_tuple = primary_interval(wff);
+            int begin_interval = get<0>(interval_tuple);
+            int end_interval = get<2>(interval_tuple);
+
+            string alpha = Slice(wff, 1, binary_conn_index-1);
+            string beta = Slice(wff, end_interval+1, len_wff-2);
+
+            // Input: ‘(‘ alpha binary_conn  Interval beta ‘)'  
+            // Return: '(' Wff_to_Nnf(alpha) binary_conn Interval Wff_to_Nnf(beta) ')'
+            return "(" + Wff_to_Nnf(alpha) + binary_conn + Slice(wff, begin_interval, end_interval) + Wff_to_Nnf(beta) + ")";        
+        }    
+        
+    }
+
+    // Slice_char(wff, 0) == "~"
+    if (Slice_char(wff, 0) == "~"){
+        // '~' Prop_var
+        if (Prop_var_check(Slice(wff, 1, len_wff-1))){
+            return wff;
+        }
+
+        // '~' Prop_cons
+        if (Prop_cons_check(Slice(wff, 1, len_wff-1))){
+            // Prop_cons -> 'T'
+            if (Slice(wff, 1, len_wff-1) == "T"){
+                return "F";
+            }
+
+            // Prop_cons -> 'F'
+            if (Slice(wff, 1, len_wff-1) == "F"){
+                return "T";
+            }
+        }
+
+        // '~' Unary_Prop_conn Wff
+        if (Unary_Prop_conn_check(Slice_char(wff, 1))){
+            string alpha = Slice(wff, 2, len_wff-1);
+            return Wff_to_Nnf(alpha);
+        }
+
+        // '~' Unary_Temp_conn  Interval  Wff
+        if (Unary_Temp_conn_check(Slice_char(wff, 1))){
+            string unary_temp_conn = Slice_char(wff, 1);
+
+            tuple<int, int, int> interval_tuple = primary_interval(Slice(wff, 1, len_wff-1));
+            // Add 1 to every entry of interval tuple to accomodate sliced-off '~' char.
+            interval_tuple = make_tuple(get<0>(interval_tuple) + 1, get<1>(interval_tuple) + 1, get<2>(interval_tuple) + 1);
+
+            int begin_interval = get<0>(interval_tuple);
+            int end_interval = get<2>(interval_tuple);
+            string alpha =  Slice(wff, end_interval+1, len_wff-1);
+
+            // Switch 'F', 'G' with corresponding dual: 'G', 'F'
+            if (unary_temp_conn == "F"){
+                unary_temp_conn = "G";
+            }
+            if (unary_temp_conn == "G"){
+                unary_temp_conn = "F";
+            }  
+
+            // Input: '~' unary_Temp_conn  Interval  alpha 
+            // Return: dual(unary_Temp_conn) Interval Wff_to_Nnf("~" + alpha)
+            return unary_temp_conn + Slice(wff, begin_interval, end_interval) + Wff_to_Nnf("~" + alpha); 
+        }
+
+        // '~' ‘(‘ Assoc_Prop_conn ‘[‘  Array_entry  ‘]’ ‘)’
+        if (Assoc_Prop_conn_check(Slice_char(wff, 2))){
+            string assoc_prop_conn = Slice_char(wff, 2);
+
+            // ~ (...((wff_1 assoc_prop_conn wff_2) assoc_prop_conn wff_3) ... assoc_prop_conn wff_n)
+            // is equiv to ~(assoc_prop_conn [wff_1, ..., wff_n])
+            int begin_entry = 4;
+            string equiv_formula = ""; 
+            for (int end_entry = 4; end_entry <= len_wff-1; ++end_entry){
+                if (Wff_check(Slice(wff, begin_entry, end_entry))){   
+                    string alpha = Slice(wff, begin_entry, end_entry);
+                    
+                    // First entry obtained
+                    if (begin_entry == 4){
+                        // Add wff_1 to equiv_formula
+                        equiv_formula = equiv_formula + alpha;
+                    }
+
+                    // Not first entry
+                    else {
+                        // Add wff_n to equiv_formula, where n >= 2
+                        equiv_formula = "(" + equiv_formula + assoc_prop_conn + alpha + ")";
+                    }
+
+                    // Update begin_entry so it has index of the first char of the next entry.
+                    begin_entry = end_entry + 2;
+                }
+            }
+
+            // Add on "~" on front
+            equiv_formula = "~" + equiv_formula;
+            
+            
+            return Wff_to_Nnf_clean(equiv_formula);
+        }
+
+        // '~' ‘(‘ Wff Binary_Prop_conn Wff ‘)’ | '~' ‘(‘ Wff Binary_Temp_conn  Interval Wff ‘)
+
+        // Add 1 to accomodate for sliced-off '~'    
+        int binary_conn_index = primary_binary_conn(Slice(wff, 1, len_wff-1)) + 1;
+        string binary_conn = Slice_char(wff, binary_conn_index);
+
+        // '~' ‘(‘ Wff Binary_Prop_conn Wff ‘)’
+        if (Binary_Prop_conn_check(binary_conn)){
+            // '~' ‘(‘ Wff 'v' Wff ‘)’ | '~' ‘(‘ Wff '&' Wff ‘)
+            if (binary_conn == "v" or binary_conn == "&"){ 
+
+                // Switch 'v', '&' with corresponding dual: '&', 'v'
+                if (binary_conn == "v"){
+                    binary_conn = "&";
+                }
+                if (binary_conn == "&"){
+                    binary_conn = "v";
+                } 
+
+                string nega_alpha = "~" + Slice(wff, 2, binary_conn_index-1);
+                string nega_beta = "~" + Slice(wff, binary_conn_index+1, len_wff-2);
+                return "(" + Wff_to_Nnf(nega_alpha) + binary_conn + Wff_to_Nnf(nega_beta) + ")";
+            }
+
+            // '~' ‘(‘ Wff '=' Wff ')'
+            if (binary_conn == "="){
+                string alpha = Slice(wff, 2, binary_conn_index-1);
+                string beta = Slice(wff, binary_conn_index+1, len_wff-2);
+                string nega_alpha = "~" + alpha;
+                string nega_beta = "~" + beta;
+
+                // Input: '~' ‘(‘ alpha '=' beta ')'
+                // Return: "((" + Wff_to_Nnf(alpha) + "v" + Wff_to_Nnf(beta) ")" + "&" + "(" "Wff_to_Nnf(neg_alpha)" + "v" + "Wff_to_Nnf(neg_beta)" "))" 
+                return "((" + Wff_to_Nnf(alpha) + "v" + Wff_to_Nnf(beta) + ")" + "&" + "(" + Wff_to_Nnf(nega_alpha) + "v" + Wff_to_Nnf(nega_beta) + "))";    
+            }
+
+            // '~' '(' Wff '>' Wff ')'
+            if (binary_conn == ">"){
+                string alpha = Slice(wff, 2, binary_conn_index-1);
+                string beta = Slice(wff, binary_conn_index+1, len_wff-2);
+                string neg_beta = "~" + beta;
+
+                // Input: "~(" + alpha + ">" + beta ")"
+                // Return: "(" + Wff_to_Nnf(alpha) + "&" + Wff_to_Nnf(neg_beta) + ")"
+                return "(" + Wff_to_Nnf(alpha) + "&" + Wff_to_Nnf(neg_beta) + ")";
+            }
+
+        }
+
+
+        //'~' ‘(‘ Wff Binary_Temp_conn  Interval Wff ‘)
+        if (Binary_Temp_conn_check(binary_conn)){
+            if (binary_conn == "F" or binary_conn == "G"){ 
+
+                // Binary_Temp_conn -> ‘U’ | ‘R’
+                // Switch 'U', 'R' with corresponding dual: 'R', 'U'
+                if (binary_conn == "U"){
+                    binary_conn = "R";
+                }
+                if (binary_conn == "R"){
+                    binary_conn = "U";
+                } 
+
+                string neg_alpha = "~" + Slice(wff, 2, binary_conn_index-1);
+                string neg_beta = "~" + Slice(wff, binary_conn_index+1, len_wff-2);
+
+                // Input: "~(" + alpha + binary_conn + beta + ")"
+                //Return: "(" + Wff_to_Nnf(neg_alpha) + dual(binary_conn) + Wff_to_Nnf(neg_beta) + ")"
+                return "(" + Wff_to_Nnf(neg_alpha) + binary_conn + Wff_to_Nnf(neg_beta) + ")";
+            }
+        }
+    }
+
+    else{
+        string error_string = wff + " is not a well-formed formula.\n";
+        throw invalid_argument(error_string);
+    }
+}
