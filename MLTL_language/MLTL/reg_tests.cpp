@@ -7,6 +7,22 @@
 
 using namespace std;
 
+TEST(assoc_and_0) {
+    int n = 2;
+    string s = "(&[p0])";
+    vector<string> v_reg = reg(s, n);
+    vector<string> v_actual = { "1s" };
+    ASSERT_EQUAL(v_reg, v_actual)
+}
+
+TEST(assoc_and_1) {
+    int n = 2;
+    string s = "(&[p0,p1])";
+    vector<string> v_reg = reg(s, n);
+    vector<string> v_actual = { "11" };
+    ASSERT_EQUAL(v_reg, v_actual)
+}
+
 TEST(test_finally_basic) {
     string s = "F[2,4]p1";
     vector<string> v_expected = {"ss,ss,s1", "ss,ss,ss,s1", "ss,ss,ss,ss,s1"};
@@ -200,7 +216,6 @@ TEST(test_implies_basic) {
     vector<string> v_expected = {"0s", "11"};
     ASSERT_EQUAL(v_expected, v_actual);
 }
-
 
 
 TEST(test_equivalent) {
