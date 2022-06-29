@@ -67,12 +67,12 @@ vector<string> reg_prop_var(string s, int n)
 
 	if (s[0] == 'p') {
 		k = stoi(s.substr(1, s.length() - 1));
-		string temp = string(k - 1, 's') + "1" + string(n - k, 's');
+		string temp = string(k, 's') + "1" + string(n - k - 1, 's');
 		v.push_back(temp);
 	}
 	else if (s[0] == '~') {
 		k = stoi(s.substr(2, s.length() - 2));
-		v.push_back(string(k - 1, 's') + '0' + string(n - k, 's'));
+		v.push_back(string(k, 's') + '0' + string(n - k - 1, 's'));
 	}
 	return v;
 }
@@ -217,94 +217,37 @@ vector<string> reg(string nnf, int n) {
 
 	// '(' Assoc_Prop_conn '['  Nnf_Array_entry ']' ')'
 	if (Assoc_Prop_conn_check(Slice_char(nnf, 1))) {
-		string assoc_prop_conn = Slice_char(nnf, 1);
+		// '(' Assoc_Prop_conn '['  Nnf_Array_entry ']' ')'
+		if (Assoc_Prop_conn_check(Slice_char(nnf, 1))) {
+			string assoc_prop_conn = Slice_char(nnf, 1);
 
-		// Assoc_Prop_conn -> 'v'
-		if (assoc_prop_conn == "v"){
-			// Parse through '[' nnf_1 ',' nnf_2 ',' ... ',' nnf_n ']' entry-by-entry
-			// and iteratively compute: 
-			// vector<string> return_reg = [reg(nnf_1), ... , reg(nnf_n)]
-			// Then return: right_or(return_reg)
+			// (...((wff_1 assoc_prop_conn wff_2) assoc_prop_conn wff_3) ... assoc_prop_conn wff_n)
+			// is equiv to (assoc_prop_conn [wff_1, ..., wff_n])
 			int begin_entry = 3;
-			vector<string> return_reg = {};
-			for (int end_entry = 3; end_entry <= len_nnf-1; ++end_entry){
-				if (Wff_check(Slice(nnf, begin_entry, end_entry))){
+			string equiv_formula = "";
+			for (int end_entry = 3; end_entry <= len_nnf - 1; ++end_entry) {
+				if (Wff_check(Slice(nnf, begin_entry, end_entry))) {
 					string alpha = Slice(nnf, begin_entry, end_entry);
-					
-					// Join reg(alpha) to return_reg
-					return_reg = join(return_reg, reg(alpha, n));
+
+					// First entry obtained
+					if (begin_entry == 3) {
+						// Add wff_1 to equiv_formula
+						equiv_formula = equiv_formula + alpha;
+					}
+
+					// Not first entry
+					else {
+						// Add wff_n to equiv_formula, where n >= 2
+						equiv_formula = "(" + equiv_formula + assoc_prop_conn + alpha + ")";
+					}
 
 					// Update begin_entry so it has index of the first char of the next entry.
 					begin_entry = end_entry + 2;
 				}
 			}
 
-			// Input: '(' 'v' '[' nnf_1 ',' nnf_2 ',' ... ',' nnf_n ']' ')'
-			// Return: right_or([reg(nnf_1), ... , reg(nnf_n)])
-			// Use right_or to ensure return_reg is disjoint union. 
-			return_reg = right_or(return_reg, n, 0);
-			return return_reg;
+			return reg_clean(equiv_formula, n);
 		}
-
-		// Assoc_Prop_conn -> '&'
-		if (assoc_prop_conn == "&"){
-			// Parse through '[' nnf_1 ',' nnf_2 ',' ... ',' nnf_n ']' entry-by-entry
-			// and iteratively compute: 
-			// vector<string> return_reg = set_intersect [reg(nnf_1), ... , reg(nnf_n)]
-			// Then return: right_or(return_reg)
-			int begin_entry = 3;
-			vector<string> return_reg = {};
-			for (int end_entry = 3; end_entry <= len_nnf-1; ++end_entry){
-				if (Wff_check(Slice(nnf, begin_entry, end_entry))){
-					string alpha = Slice(nnf, begin_entry, end_entry);
-					
-					// Intersect return_reg with reg(alpha)
-					return_reg = set_intersect(return_reg, reg(alpha, n), n);
-
-					// Update begin_entry so it has index of the first char of the next entry.
-					begin_entry = end_entry + 2;
-				}
-			}
-
-			// Input: '(' '&' '[' nnf_1 ',' nnf_2 ',' ... ',' nnf_n ']' ')'
-			// Return: right_or (set_intersect [reg(nnf_1), ... , reg(nnf_n)])
-			// Use right_or to ensure return_reg is disjoint union. 
-			return_reg = right_or(return_reg, n, 0);
-			return return_reg;
-		}
-
-		// Assoc_Prop_conn -> '='
-		if (assoc_prop_conn == "="){
-			// Parse "[nnf_1,..., nnf_n]" to find the index slices for nnf_1, nnf_2, ..., nnf_n.
-			// We will use this parsing to do two things:
-			// 1. Create the vector<string> vec := intersect [reg(nnf_1), ..., reg(nnf_n)]
-			// 2. Create the vecotr<string> neg_vec := intersect [reg(~nnf_1), ..., reg(~nnf_n)]
-
-			int begin_entry = 3;
-			vector<string> vec = {};
-			vector<string> neg_vec = {}; 
-			for (int end_entry = 3; end_entry <= len_nnf-1; ++end_entry){
-				if (Wff_check(Slice(nnf, begin_entry, end_entry))){
-					string alpha = Slice(nnf, begin_entry, end_entry);
-					string neg_alpha = "~" + alpha;
-					
-					// intersect vec and reg(alpha)
-					// intersect neg_vec and reg(~alpha)
-					vec = set_intersect(vec, reg(alpha, n), n);
-					neg_vec = set_intersect(neg_vec, reg(neg_alpha, n), n);
-
-					// Update begin_entry so it has index of the first char of the next entry.
-					begin_entry = end_entry + 2;
-				}
-			}
-
-			// Input: '(' '=' '[' nnf_1 ',' nnf_2 ',' ... ',' nnf_n ']' ')'
-			// Return: (intersect [nnf_1, ..., nnf_n]) right_or (intersect '~'[nnf_1, ..., nnf_n])
-			// Use right_or to ensure return_reg is disjoint union.
-			// Using the equivalence: '=' vec     is equiv to      ('&' vec) 'v' ('&' neg_vec) 
-			return right_or(join(vec, neg_vec), n, 0); 
-		}		
-
 	}
 
 	// �(� Nnf Binary_Prop_conn Nnf �)� | �(� Nnf Binary_Temp_conn Interval Nnf �)
