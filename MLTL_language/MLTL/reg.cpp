@@ -66,12 +66,12 @@ vector<string> reg_prop_var(string s, int n)
 	vector<string> v = vector<string>();
 
 	if (s[0] == 'p') {
-		k = stoi(s.substr(1, s.length() - 1)) + 1;
+		k = stoi(s.substr(1, s.length() - 1));
 		string temp = string(k - 1, 's') + "1" + string(n - k, 's');
 		v.push_back(temp);
 	}
 	else if (s[0] == '~') {
-		k = stoi(s.substr(2, s.length() - 2)) + 1;
+		k = stoi(s.substr(2, s.length() - 2));
 		v.push_back(string(k - 1, 's') + '0' + string(n - k, 's'));
 	}
 	return v;
@@ -397,6 +397,8 @@ vector<string> reg(string nnf, int n) {
         string error_string = nnf + " is not in Negation-normal form.\n";
         throw invalid_argument(error_string);
     }
+
+	return vector<string>();
 }
 
 
@@ -407,7 +409,7 @@ vector<string> reg(string nnf, int n) {
 // for the language of nnf.
 // For preformance reasons, reg_clean will return a
 // NOT NECESSARILY DISJOINT Union.
-// To obtain a disjoing union from reg_clean's output,
+// To obtain a disjoint union from reg_clean's output,
 // use right_or.
 //
 // Cleaner implementation of reg
@@ -497,7 +499,7 @@ vector<string> reg_clean(string nnf, int n) {
 			// which is: reg_nnf = join [reg(alpha), 's...s' + reg(alpha), ..., ('s...s')^(upper_bound-lower_bound) + reg(alpha)] 
 			for (int i = 0; i <= upper_bound-lower_bound; ++i){
 				// Vector for ('s...s')^(i) + reg(alpha)
-				vector<string> current_step_alpha = list_str_concat_prefix(reg_alpha, string(i, 's'));
+				vector<string> current_step_alpha = list_str_concat_prefix(reg_alpha, string(i, 's') + ",");
 
 				// Join current_step_alpha to reg_nnf
 				reg_nnf = join(reg_nnf, current_step_alpha);
@@ -510,7 +512,7 @@ vector<string> reg_clean(string nnf, int n) {
 			// which is: reg_nnf = set_intersection [reg(alpha), 's...s' + reg(alpha), ..., ('s...s')^(upper_bound-lower_bound) + reg(alpha)] 
 			for (int i = 0; i <= upper_bound-lower_bound; ++i){
 				// Vector for ('s...s')^(i) + reg(alpha)
-				vector<string> current_step_alpha = list_str_concat_prefix(reg_alpha, string(i, 's'));
+				vector<string> current_step_alpha = list_str_concat_prefix(reg_alpha, string(i, 's') + ",");
 
 				// Set_intersect current_step_alpha to reg_nnf
 				reg_nnf = set_intersect(reg_nnf, current_step_alpha, n);
@@ -576,7 +578,9 @@ vector<string> reg_clean(string nnf, int n) {
 		if (binary_conn == "="){
 			// (alpha = beta) is equiv to ((alpha & beta) v (Wff_to_Nnf_clean(~alpha) & Wff_to_Nnf_clean(~beta)))
 			// ((alpha & beta) v (Wff_to_Nnf_clean(~alpha) & Wff_to_Nnf_clean(~beta))) is in Nnf-form
-			string equiv_nnf_formula = "((" + alpha + "&" + beta + ")v(" + Wff_to_Nnf_clean("~" + alpha) + "&" + Wff_to_Nnf_clean("~" + beta) + "))";
+			string equiv_nnf_formula = "((" + alpha + "&" + beta + ")v(" 
+				+ Wff_to_Nnf_clean("~" + alpha) + "&" 
+				+ Wff_to_Nnf_clean("~" + beta) + "))";
 			return reg_clean(equiv_nnf_formula, n);
 		}
 
@@ -608,7 +612,8 @@ vector<string> reg_clean(string nnf, int n) {
 			string nnf_neg_alpha = Wff_to_Nnf_clean("~" + alpha);
 			for (int i = lower_bound-1; i <= upper_bound-1; ++i){
 				// Add F [a,i] Wff_to_Nnf(~alpha) to equiv_nnf_formula
-				equiv_nnf_formula = equiv_nnf_formula + "F[" + to_string(lower_bound) + "," + to_string(i) + "]" + nnf_neg_alpha + ",";
+				equiv_nnf_formula = equiv_nnf_formula + "F[" 
+					+ to_string(lower_bound) + "," + to_string(i) + "]" + nnf_neg_alpha + ",";
 			}
 
 			// Remove extra comma
@@ -645,4 +650,5 @@ vector<string> reg_clean(string nnf, int n) {
         string error_string = nnf + " is not in Negation-normal form.\n";
         throw invalid_argument(error_string);
     }
+	return vector<string>();
 }
