@@ -38,8 +38,7 @@ vector<string> set_intersect(vector<string> v1, vector<string> v2, int n) {
 vector<string> set_union(vector<string> v1, vector<string> v2, int n) {
 	vector<string> v = join(v1, v2);
     
-    
-	return right_or(v, 0, right_or_aux(v, n), n);
+	return right_or(v, n);
 }
 
 
