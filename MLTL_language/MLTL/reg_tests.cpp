@@ -160,8 +160,8 @@ TEST(test_p_until_p_until_q) {
     ASSERT_TRUE(Wff_check(s));
     vector<string> v_actual = reg(s, 2);
 
+    print(v_actual);
     //print(simplify(v_actual, 2));
-    print(simplify(v_actual, 2));
 
     vector<string> v_expected = {"s1", "1s,s1", "1s,1s,s1"};
     ASSERT_EQUAL(v_expected, v_actual);
