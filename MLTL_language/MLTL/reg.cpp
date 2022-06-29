@@ -1,5 +1,6 @@
 #include "utils.h"
 #include "grammar.h"
+#include "nnf_grammar.h"
 #include "reg.h"
 
 /*
@@ -389,6 +390,254 @@ vector<string> reg(string nnf, int n) {
 			else if (binary_conn == "R") {
 				return reg_R(reg(alpha, n), reg(beta, n), a, b, n);
 			}
+		}
+	}
+
+	else{
+        string error_string = nnf + " is not in Negation-normal form.\n";
+        throw invalid_argument(error_string);
+    }
+}
+
+
+
+
+
+// Given an Nnf-formula nnf, returns the regex
+// for the language of nnf.
+// For preformance reasons, reg_clean will return a
+// NOT NECESSARILY DISJOINT Union.
+// To obtain a disjoing union from reg_clean's output,
+// use right_or.
+//
+// Cleaner implementation of reg
+// in case original is faulty.
+vector<string> reg_clean(string nnf, int n) {
+	int len_nnf = int(nnf.length());
+
+	// ?(~) Prop_var 
+	if (Prop_var_check(nnf) or
+		(Slice_char(nnf, 0) == "~" and Prop_var_check(Slice(nnf, 1, len_nnf-1)))) {
+
+		// Prop_var -> 'p' Num		
+		if (Prop_var_check(nnf)) {
+			string num = Slice(nnf, 1, len_nnf-1);
+			int k = stoi(num);
+			string ret_string = string(k, 's') + "1" + string(n-k-1, 's');
+			return {ret_string};
+		}
+
+		// '~' Prop_var -> '~' 'p' Num
+		if (Slice_char(nnf, 0) == "~" and Prop_var_check(Slice(nnf, 1, len_nnf-1))) {
+			string num = Slice(nnf, 2, len_nnf-1);
+			int k = stoi(num);
+			string ret_string = string(k, 's') + '0' + string(n-k-1, 's');
+			return {ret_string};
+		}
+	}
+
+	// Prop_cons
+	if (Prop_cons_check(nnf)) {
+		// Prop_cons -> 'T'
+		if(nnf == "T"){
+			string ret_string = string(n, 's');
+			return {ret_string};
+		}
+
+		// Prop_cons -> 'F'
+		if (nnf == "F"){
+			return {};
+		}
+	}
+
+	// Unary_Temp_conn  Interval  Nnf
+	if (Unary_Temp_conn_check(Slice_char(nnf, 0))) {
+		string unary_temp_conn = Slice_char(nnf, 0);
+
+		tuple<int,int,int> interval_tuple = primary_interval(nnf);
+		int begin_interval = get<0>(interval_tuple); 
+		int comma_index = get<1>(interval_tuple); 
+		int end_interval = get<2>(interval_tuple); 
+		int lower_bound = stoi(Slice(nnf, begin_interval+1, comma_index-1));
+		int upper_bound = stoi(Slice(nnf, comma_index+1, end_interval-1));
+		string alpha = Slice(nnf, end_interval+1, len_nnf-1);
+		vector<string> reg_alpha = reg_clean(alpha, n);
+
+		// Empty interval
+		if (lower_bound > upper_bound){
+			// vacously false
+			if(unary_temp_conn == "F"){
+				return {};
+			}
+
+			// vacously true
+			if(unary_temp_conn == "G"){
+				string ret_string = string(n, 's');
+				return {ret_string};
+			}
+
+		}
+
+
+		vector<string> reg_nnf = {}; 
+		string pre = "";
+
+		// [0, lower_bound-1] time steps don't matter.
+		for (int i = 0; i <= lower_bound-1; ++i) {
+			pre += string(n, 's') + ",";
+		}
+
+
+		// Determine which operation to use based on initial
+		// Unary Temp character
+
+		// If Unary_Temp_conn is 'F', operation is join
+		if (unary_temp_conn == "F"){
+			// Compute regex for 'F' [0, upper_bound-lower_bound] alpha
+			// which is: reg_nnf = join [reg(alpha), 's...s' + reg(alpha), ..., ('s...s')^(upper_bound-lower_bound) + reg(alpha)] 
+			for (int i = 0; i <= upper_bound-lower_bound; ++i){
+				// Vector for ('s...s')^(i) + reg(alpha)
+				vector<string> current_step_alpha = list_str_concat_prefix(reg_alpha, string(i, 's'));
+
+				// Join current_step_alpha to reg_nnf
+				reg_nnf = join(reg_nnf, current_step_alpha);
+			}
+		}
+
+		// If Unary_Temp_conn is 'G', operation is set_intersection
+		if (unary_temp_conn == "G"){
+			// Compute regex for 'G' [0, upper_bound-lower_bound] alpha
+			// which is: reg_nnf = set_intersection [reg(alpha), 's...s' + reg(alpha), ..., ('s...s')^(upper_bound-lower_bound) + reg(alpha)] 
+			for (int i = 0; i <= upper_bound-lower_bound; ++i){
+				// Vector for ('s...s')^(i) + reg(alpha)
+				vector<string> current_step_alpha = list_str_concat_prefix(reg_alpha, string(i, 's'));
+
+				// Set_intersect current_step_alpha to reg_nnf
+				reg_nnf = set_intersect(reg_nnf, current_step_alpha, n);
+			}
+		}
+
+		// Regex for unary_temp_conn [lower_bound, upper_bound] alpha is pre + reg_nnf
+		return list_str_concat_prefix(reg_alpha, pre);
+	}
+
+	// '(' Assoc_Prop_conn '['  Nnf_Array_entry ']' ')'
+	if (Assoc_Prop_conn_check(Slice_char(nnf, 1))) {
+		string assoc_prop_conn = Slice_char(nnf, 1);
+
+		// (...((wff_1 assoc_prop_conn wff_2) assoc_prop_conn wff_3) ... assoc_prop_conn wff_n)
+		// is equiv to (assoc_prop_conn [wff_1, ..., wff_n])
+		int begin_entry = 3;
+		string equiv_formula = ""; 
+		for (int end_entry = 3; end_entry <= len_nnf-1; ++end_entry){
+			if (Wff_check(Slice(nnf, begin_entry, end_entry))){   
+				string alpha = Slice(nnf, begin_entry, end_entry);
+				
+				// First entry obtained
+				if (begin_entry == 3){
+					// Add wff_1 to equiv_formula
+					equiv_formula = equiv_formula + alpha;
+				}
+
+				// Not first entry
+				else {
+					// Add wff_n to equiv_formula, where n >= 2
+					equiv_formula = "(" + equiv_formula + assoc_prop_conn + alpha + ")";
+				}
+
+				// Update begin_entry so it has index of the first char of the next entry.
+				begin_entry = end_entry + 2;
+			}
+		}
+		
+		return reg_clean(equiv_formula, n);
+	}
+	
+	// '(' Nnf Binary_Prop_conn Nnf ')' | '(' Nnf Binary_Temp_conn Interval Nnf ')'
+	int binary_conn_index = primary_binary_conn(nnf);
+	string binary_conn = Slice_char(nnf, binary_conn_index);
+
+	// '(' Nnf Binary_Prop_conn Nnf ')'
+	if (Binary_Prop_conn_check(binary_conn)) {
+		string alpha = Slice(nnf, 1, binary_conn_index - 1);
+		vector<string> reg_alpha = reg_clean(alpha, n);
+		string beta = Slice(nnf, binary_conn_index + 1, len_nnf - 2);
+		vector<string> reg_beta = reg_clean(beta, n);
+		
+		if (binary_conn == "&") {
+			return set_intersect(reg_alpha, reg_beta, n);
+		}
+
+
+		if (binary_conn == "v") {
+			return join(reg_alpha, reg_beta);
+		}
+
+		if (binary_conn == "="){
+			// (alpha = beta) is equiv to ((alpha & beta) v (Wff_to_Nnf_clean(~alpha) & Wff_to_Nnf_clean(~beta)))
+			// ((alpha & beta) v (Wff_to_Nnf_clean(~alpha) & Wff_to_Nnf_clean(~beta))) is in Nnf-form
+			string equiv_nnf_formula = "((" + alpha + "&" + beta + ")v(" + Wff_to_Nnf_clean("~" + alpha) + "&" + Wff_to_Nnf_clean("~" + beta) + "))";
+			return reg_clean(equiv_nnf_formula, n);
+		}
+
+		if (binary_conn == ">"){
+			// (alpha > beta) is equiv to (Wff_to_Nnf(~alpha) v beta))
+			// (Wff_to_Nnf(~alpha) v beta)) is in Nnf-form
+			string equiv_nnf_formula = "(" + Wff_to_Nnf_clean("~" + alpha) + "v" + beta + ")";
+			return reg_clean(equiv_nnf_formula, n);
+		}
+	}
+
+	// '(' Nnf Binary_Temp_conn Interval Nnf ')'
+	if (Binary_Temp_conn_check(binary_conn)) {
+		tuple<int,int,int> interval_tuple = primary_interval(nnf);
+		int begin_interval = get<0>(interval_tuple); 
+		int comma_index = get<1>(interval_tuple); 
+		int end_interval = get<2>(interval_tuple); 
+		int lower_bound = stoi(Slice(nnf, begin_interval+1, comma_index-1));
+		int upper_bound = stoi(Slice(nnf, comma_index+1, end_interval-1));
+		string alpha = Slice(nnf, 1, binary_conn_index-1);
+		string beta = Slice(nnf, end_interval+1, len_nnf-2);		
+
+		if (binary_conn == "U") {
+			// '(' alpha 'U' [a,b] beta ')' is equiv
+			// to ( (v[F [a,a-1] Wff_to_Nnf(~alpha), ..., F [a,b-1] Wff_to_Nnf(~alpha)]) v F [a,b] beta).
+			// ( (v[F [a,a-1] Wff_to_Nnf(~alpha), ..., F [a,b-1] Wff_to_Nnf(~alpha)]) v F [a,b] beta) is
+			// in Nnf-form.
+			string equiv_nnf_formula = "";
+			string nnf_neg_alpha = Wff_to_Nnf_clean("~" + alpha);
+			for (int i = lower_bound-1; i <= upper_bound-1; ++i){
+				// Add F [a,i] Wff_to_Nnf(~alpha) to equiv_nnf_formula
+				equiv_nnf_formula = equiv_nnf_formula + "F[" + to_string(lower_bound) + "," + to_string(i) + "]" + nnf_neg_alpha + ",";
+			}
+
+			// Remove extra comma
+			equiv_nnf_formula = Slice(equiv_nnf_formula, 0, equiv_nnf_formula.length()-2);
+
+			equiv_nnf_formula = "((v[" + equiv_nnf_formula + "])" 
+			                    + "vF[" + to_string(lower_bound) + "," + to_string(upper_bound) + "]" + beta + ")";
+			return reg_clean(equiv_nnf_formula, n);
+		}
+
+
+		if (binary_conn == "R") {
+			// '(' alpha 'R' [a,b] beta ')' is equiv
+			// to ( (&[G [a,a-1] Wff_to_Nnf(~alpha), ..., G [a,b-1] Wff_to_Nnf(~alpha)]) & G [a,b] beta).
+			// ( (&[G [a,a-1] Wff_to_Nnf(~alpha), ..., G [a,b-1] Wff_to_Nnf(~alpha)]) & G [a,b] beta) is
+			// in Nnf-form.
+			string equiv_nnf_formula = "";
+			string nnf_neg_alpha = Wff_to_Nnf_clean("~" + alpha);
+			for (int i = lower_bound-1; i <= upper_bound-1; ++i){
+				// Add G [a,i] Wff_to_Nnf(~alpha) to equiv_nnf_formula
+				equiv_nnf_formula = equiv_nnf_formula + "G[" + to_string(lower_bound) + "," + to_string(i) + "]" + nnf_neg_alpha + ",";
+			}
+
+			// Remove extra comma
+			equiv_nnf_formula = Slice(equiv_nnf_formula, 0, equiv_nnf_formula.length()-2);
+
+			equiv_nnf_formula = "((&[" + equiv_nnf_formula + "])" 
+			                    + "&G[" + to_string(lower_bound) + "," + to_string(upper_bound) + "]" + beta + ")";
+			return reg_clean(equiv_nnf_formula, n); 
 		}
 	}
 
