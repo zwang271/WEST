@@ -42,7 +42,7 @@ TEST(test_right_or_aux_2) {
 TEST(test_right_or_1) {
     vector<string> vec = {"0", "1"};
     vector<string> or_vector;
-    or_vector = right_or(vec, 0, right_or_aux(vec, 1), 1);
+    //or_vector = right_or(vec, 0, right_or_aux(vec, 1), 1);
     vector<string> answer = { "s" };
     for (int i = 0; i < or_vector.size(); ++i) {
         ASSERT_EQUAL(or_vector[i], answer[i]);
@@ -52,7 +52,7 @@ TEST(test_right_or_1) {
 TEST(test_right_or_2) {
     vector<string> vec = { "0,1", "1,s" };
     vector<string> or_vector;
-    or_vector = right_or(vec, 0, right_or_aux(vec, 1), 1);
+    //or_vector = right_or(vec, 0, right_or_aux(vec, 1), 1);
     vector<string> answer = { "1,0", "s,1"};
     for (int i = 0; i < or_vector.size(); ++i) {
         ASSERT_EQUAL(or_vector[i], answer[i]);
@@ -86,24 +86,6 @@ TEST(test_single_char_or_3) {
         ASSERT_EQUAL(or_vector[i], answer[i]);
     }
 }
-
-// I have no idea what this is
-/*
-TEST(test_string_intersect_1) {
-    //cout << string_intersect("", "1ss, sss, sss, sss", 3) << endl;
-    
-    string s1[] = {"s1,     ss", "1s,      ss"};
-    vector<string> v1 (s1, s1 + sizeof(s1) / sizeof(string) );
-    string s2[] = {"10  ,  ss     ", "s1,  ss   "};
-    vector<string> v2 (s2, s2 + sizeof(s2) / sizeof(string) );
-    vector<string> v = set_intersect(v1, v2, 2);
-
-    for (int i = 0; i < v.size(); ++i){
-        cout << v[i] << endl;
-    }
-}
-*/
-
 
 TEST(test_pad_1) {
     vector<string> vec;
@@ -205,7 +187,6 @@ TEST(WFF_check_implies_2) {
 
 TEST(WFF_check_oscillation) {
     string f = "G[1,10](&[(p0>G[1,1]~p0),(~p0>G[1,1]p0)])";
-    
     ASSERT_TRUE(Wff_check(f));
 }
 
