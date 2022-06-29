@@ -591,4 +591,5 @@ vector<string> reg_clean(string nnf, int n) {
         string error_string = nnf + " is not in Negation-normal form.\n";
         throw invalid_argument(error_string);
     }
+    return vector<string>();
 }
