@@ -255,21 +255,144 @@ TEST(test_oscillation_5) {
     ASSERT_EQUAL(v_expected, v_actual);
 }
 
-
-TEST(test_equivalent) {
+//BUG: need to think about this
+TEST(test_induction) {
+    string s = "(G[0,3](p0>G[1,1]p0)>(p0>G[0,4]p0))";
+    ASSERT_TRUE(Wff_check(s));
+    vector<string> v_actual = reg(s, 1);
+    vector<string> v_expected = {"s,s,s,s", "0,0,0,0"};
+    ASSERT_EQUAL(v_expected, v_actual);
     
+    print(v_actual);
 }
 
-TEST(test_finally_and_release) {
-    
+TEST(test_equivalent_basic) {
+    string s = "(p0=p1)";
+    ASSERT_TRUE(Wff_check(s));
+    vector<string> v_actual = reg(s, 2);
+    vector<string> v_expected = {"00", "11"};
+    ASSERT_EQUAL(v_expected, v_actual);
 }
 
-TEST(test_finally_and_until) {
-    
+//BUG: nnf error
+TEST(test_equivalent_1) {
+    string s = "(G[0,0]p0=F[0,0]p0)";
+    ASSERT_TRUE(Wff_check(s));
+    vector<string> v_actual = reg(s, 1);
+    vector<string> v_expected = {"s"};
+    ASSERT_EQUAL(v_expected, v_actual);
 }
 
+//BUG: nnf error
+TEST(test_equivalent_2) {
+    string s = "(G[1,1]p0=F[1,1]p0)";
+    ASSERT_TRUE(Wff_check(s));
+    vector<string> v_actual = reg(s, 1);
+    vector<string> v_expected = {"s"};
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(test_intuitive_equivalence_1) {
+    string s1 = "G[1,1]p0";
+    string s2 = "F[1,1]p0";
+    ASSERT_TRUE(Wff_check(s1));
+    ASSERT_TRUE(Wff_check(s2));
+    vector<string> v1 = reg(s1, 1);
+    vector<string> v2 = reg(s2, 1);
+    print(v1);
+    cout << endl;
+    print(v2);
+    ASSERT_EQUAL(v1, v2);
+}
+
+TEST(test_intuitive_equivalence_2) {
+    string s1 = "G[0,0]p0";
+    string s2 = "F[0,0]p0";
+    ASSERT_TRUE(Wff_check(s1));
+    ASSERT_TRUE(Wff_check(s2));
+    vector<string> v1 = reg(s1, 1);
+    vector<string> v2 = reg(s2, 1);
+    print(v1);
+    cout << endl;
+    print(v2);
+    ASSERT_EQUAL(v1, v2);
+}
+
+//BUG: should output the empty computation
+TEST(test_equivalent_zero_prop_var) {
+    string s = "(T=F)";
+    ASSERT_TRUE(Wff_check(s));
+    vector<string> v_actual = reg(s, 0);
+    vector<string> v_expected = {};
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(test_single_prop_1) {
+    string s = "p0";
+    ASSERT_TRUE(Wff_check(s));
+    vector<string> v_actual = reg(s, 1);
+    vector<string> v_expected = {"1"};
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(test_single_prop_2) {
+    string s = "(p0=p0)";
+    ASSERT_TRUE(Wff_check(s));
+    vector<string> v_actual = reg(s, 1);
+    vector<string> v_expected = {"s"};
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(test_release_basic) {
+    string s = "(p0R[0,1]p1)";
+    ASSERT_TRUE(Wff_check(s));
+    vector<string> v_actual = reg(s, 2);
+    vector<string> v_expected = {"s1,s1", "11", "s1,11"};
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(test_finally_and_release_1) {
+    string s = "F[0,1](p0R[0,1]p1)";
+    ASSERT_TRUE(Wff_check(s));
+    vector<string> v_actual = reg(s, 2);
+    //print(v_actual);
+    vector<string> v_expected = {"s1,s1", "11", "s1,11", "ss,s1,s1", "ss,11", "ss,s1,11"};
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(test_finally_and_release_2) {
+    string s = "F[1,2](p0R[0,1]p1)";
+    ASSERT_TRUE(Wff_check(s));
+    vector<string> v_actual = reg(s, 2);
+    print(v_actual);
+    vector<string> v_expected = {"ss,s1,s1", "ss,11", "ss,s1,11", "ss,ss,s1,s1", "ss,ss,11", "ss,ss,s1,11"};
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(test_finally_and_until_1) {
+    string s = "F[0,1](p0U[0,1]p1)";
+    ASSERT_TRUE(Wff_check(s));
+    vector<string> v_expected = {"s1", "1s,s1", "ss,s1", "ss,1s,s1"};
+    vector<string> v_actual = reg(s, 2);
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(test_finally_and_until_2) {
+    string s = "F[1,2](p0U[0,1]p1)";
+    ASSERT_TRUE(Wff_check(s));
+    vector<string> v_expected = {"ss,s1", "ss,1s,s1", "ss,ss,s1", "ss,ss,1s,s1"};
+    vector<string> v_actual = reg(s, 2);
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+//BUG: don't know if v_expected is correct, but there must be a bug because "ss,s1,11" is repeated
 TEST(test_global_and_release) {
-    
+    string s = "G[1,1](p0R[0,1]p1)";
+    ASSERT_TRUE(Wff_check(s));
+    vector<string> v_actual = reg(s, 2);
+    print(v_actual);
+    vector<string> v_expected = {"ss,s1,s1", "ss,11", "ss,s1,11"};
+    ASSERT_EQUAL(v_expected, v_actual);
 }
 
 TEST(test_global_and_until) {
