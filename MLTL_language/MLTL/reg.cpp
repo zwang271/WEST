@@ -217,37 +217,34 @@ vector<string> reg(string nnf, int n) {
 
 	// '(' Assoc_Prop_conn '['  Nnf_Array_entry ']' ')'
 	if (Assoc_Prop_conn_check(Slice_char(nnf, 1))) {
-		// '(' Assoc_Prop_conn '['  Nnf_Array_entry ']' ')'
-		if (Assoc_Prop_conn_check(Slice_char(nnf, 1))) {
-			string assoc_prop_conn = Slice_char(nnf, 1);
+		string assoc_prop_conn = Slice_char(nnf, 1);
 
-			// (...((wff_1 assoc_prop_conn wff_2) assoc_prop_conn wff_3) ... assoc_prop_conn wff_n)
-			// is equiv to (assoc_prop_conn [wff_1, ..., wff_n])
-			int begin_entry = 3;
-			string equiv_formula = "";
-			for (int end_entry = 3; end_entry <= len_nnf - 1; ++end_entry) {
-				if (Wff_check(Slice(nnf, begin_entry, end_entry))) {
-					string alpha = Slice(nnf, begin_entry, end_entry);
+		// (...((wff_1 assoc_prop_conn wff_2) assoc_prop_conn wff_3) ... assoc_prop_conn wff_n)
+		// is equiv to (assoc_prop_conn [wff_1, ..., wff_n])
+		int begin_entry = 3;
+		string equiv_formula = "";
+		for (int end_entry = 3; end_entry <= len_nnf - 1; ++end_entry) {
+			if (Wff_check(Slice(nnf, begin_entry, end_entry))) {
+				string alpha = Slice(nnf, begin_entry, end_entry);
 
-					// First entry obtained
-					if (begin_entry == 3) {
-						// Add wff_1 to equiv_formula
-						equiv_formula = equiv_formula + alpha;
-					}
-
-					// Not first entry
-					else {
-						// Add wff_n to equiv_formula, where n >= 2
-						equiv_formula = "(" + equiv_formula + assoc_prop_conn + alpha + ")";
-					}
-
-					// Update begin_entry so it has index of the first char of the next entry.
-					begin_entry = end_entry + 2;
+				// First entry obtained
+				if (begin_entry == 3) {
+					// Add wff_1 to equiv_formula
+					equiv_formula = equiv_formula + alpha;
 				}
-			}
 
-			return reg_clean(equiv_formula, n);
+				// Not first entry
+				else {
+					// Add wff_n to equiv_formula, where n >= 2
+					equiv_formula = "(" + equiv_formula + assoc_prop_conn + alpha + ")";
+				}
+
+				// Update begin_entry so it has index of the first char of the next entry.
+				begin_entry = end_entry + 2;
+			}
 		}
+
+		return reg_clean(equiv_formula, n);
 	}
 
 	// �(� Nnf Binary_Prop_conn Nnf �)� | �(� Nnf Binary_Temp_conn Interval Nnf �)
