@@ -54,7 +54,7 @@ using namespace std;
 Takes substring of given string from a to b.
 */
 string Slice(string s, int a, int b){
-	int s_len = s.length();
+	int s_len = int(s.length());
   	
   	if (a < 0){
 		a = 0;      
@@ -90,7 +90,7 @@ bool Digit_check(string s){
 
 // Num  ->  Digit Num |  Digit
 bool Num_check(string s){
-    int len_s = s.length();
+    int len_s = int(s.length());
     if (len_s == 1){
         return Digit_check(s);
     }
@@ -103,7 +103,7 @@ bool Num_check(string s){
 
 // Interval  ->  ‘[’  Num ‘,’ Num ‘]’
 bool Interval_check(string s){
-    int len_s = s.length();
+    int len_s = int(s.length());
 
     string left_bracket = Slice_char(s, 0);
     string right_bracket = Slice_char(s, len_s-1);
@@ -124,7 +124,7 @@ bool Interval_check(string s){
 
 // Prop_var  ->  ‘p’ Num
 bool Prop_var_check(string s){
-    int len_s = s.length();
+    int len_s = int(s.length());
 
     string c = Slice_char(s, 0);
     string alpha = Slice(s, 1, len_s-1);
@@ -158,7 +158,7 @@ bool Assoc_Prop_conn_check(string s){
 
 // Array_entry -> Wff ‘,’ Array_entry  |  Wff
 bool Array_entry_check(string s){
-    int len_s = s.length();
+    int len_s = int(s.length());
 
     // Number of '(' in s
     int left_count = 0;
@@ -215,7 +215,7 @@ bool Binary_Temp_conn_check(string s){
 //                  | ‘(‘ Wff Binary_Temp_conn  Interval Wff ‘)
 
 bool Wff_check(string s){
-    int len_s = s.length();
+    int len_s = int(s.length());
 
     // Prop_var | Prop_cons
     if (Prop_var_check(s) or Prop_cons_check(s)){
@@ -323,7 +323,7 @@ bool Wff_check(string s){
 // If this does not occur, the function throws
 // an error message.
 int primary_binary_conn(string wff){
-    int len_wff = wff.length();
+    int len_wff = int(wff.length());
 
     // '(' Assoc_Prop_conn ‘[‘  Array_entry  ‘]’ ')'
     if (Assoc_Prop_conn_check(Slice_char(wff, 1))){
@@ -370,7 +370,7 @@ int primary_binary_conn(string wff){
 // If there is no primary interval for the formula, the function throws
 // an error message.
 tuple<int, int, int> primary_interval(string wff){
-    int len_wff = wff.length();
+    int len_wff = int(wff.length());
 
     // Unary_Temp_conn  Interval  Wff
     if (Unary_Temp_conn_check(Slice_char(wff, 0))){
@@ -423,7 +423,7 @@ tuple<int, int, int> primary_interval(string wff){
 // Function to determine the minimum computation length for a MLTL wff such that there is no 
 // out-of-bounds behavior.
 int Comp_len(string wff){
-    int len_wff = wff.length();
+    int len_wff = int(wff.length());
 
     // Prop_var
     if (Prop_var_check(wff)){
