@@ -253,7 +253,7 @@ vector<string> list_str_concat_prefix(vector<string> V, string s) {
 *		 N is number of propositional variables
 * Output: Vector of disjoint computation strings
 */
-vector<string> right_or(vector<string> v, int iteration, vector<int> indices, int n) {
+vector<string> right_or(vector<string> v, int n, int iteration) {
 	//strip commas before, or write invariant_check
 	if (v.size() == 0 or v.size() == 1) {
 		return v;
@@ -271,16 +271,6 @@ vector<string> right_or(vector<string> v, int iteration, vector<int> indices, in
 		return single_char_or(v);
 	}
 
-	//for (int i = 0; i < indices.size(); ++i) {
-	//	if (indices[i] == iteration) {
-	//		string s_w = string(len_w, 's'); // string = 's' repeated len_w times
-	//		if (find(v.begin(), v.end(), s_w) != v.end()) {
-	//			vector<string> ret = { s_w };
-	//			ret = add_commas(ret, n);
-	//			return ret;
-	//		}
-	//	}
-	//}
 	
 	// Searching for s^len_w in input
 	string s_lenw = string(len_w, 's');
@@ -313,8 +303,8 @@ vector<string> right_or(vector<string> v, int iteration, vector<int> indices, in
 	}
 	else {
 		++iteration;
-		v = join(list_str_concat_suffix(right_or(end_zero, iteration, indices, n), "0"),
-			list_str_concat_suffix(right_or(end_one, iteration, indices, n), "1")
+		v = join(list_str_concat_suffix(right_or(end_zero, n, iteration), "0"),
+			list_str_concat_suffix(right_or(end_one, n, iteration), "1")
 		);
 	}
 
@@ -337,10 +327,90 @@ void print(vector<string> v) {
 }
 
 
+
 /*
-* Input: Vector of computation strings v
-* Output: Vector of disjoint computation strings v
+* Input: computation strings s1 and s2
+*	If the following is possible:
+*	s1 = w1 + 'c1' + v1
+*	s2 = w2 + 'c2' + v2
+*	return w1 + or(c1, c2) + v1
+* Otherwise output: "FAIL"
+*/
+string simplify_string(string s1, string s2)
+{
+	if (s1.length() != s2.length()) {
+		cout << "simplify_string called on strings of unequal length" << endl;
+		exit(-1);
+	}
+
+	int len_s = s1.length();
+	for (int i = 0; i < len_s; ++i) {
+		// s1 = w1 + 'c1' + v1
+		string w1 = Slice(s1, 0, i - 1);
+		string c1 = Slice_char(s1, i);
+		string v1 = Slice(s1, i + 1, len_s - 1);
+
+		// s2 = w2 + 'c2' + v2
+		string w2 = Slice(s2, 0, i - 1);
+		string c2 = Slice_char(s2, i);
+		string v2 = Slice(s2, i + 1, len_s - 1);
+
+		if (w1 == w2 and v1 == v2) {
+			// c1|c2 of the form s|0 or s|1 or 0|1
+			if (c1 != c2) {
+				return w1 + "s" + v1;
+			}
+
+			// Otherwise c1 == c2 and return s1 == s2
+			else {
+				return s1;
+			}
+		}
+	}
+
+	return "FAIL";
+}
+
+
+/*
+* Removes element in INDEX from vector v
+*/
+template <typename T>
+void remove(vector<T>& v, size_t index) {
+	v.erase(v.begin() + index);
+}
+
+
+/*
+* Input: Vector of disjoint computation strings v
+* Output: Simplifies strings in v pairwise as much as possible
 */
 vector<string> simplify(vector<string> v, int n) {
-	return right_or(v, 0, right_or_aux(v, n), n);
+	v = pad(v, n);
+	if (v.size() <= 1) {
+		return v;
+	}
+
+	// CAN OPTIMIZE BY STRIPPING COMMAS
+	int i = v.size() - 1;
+	int j = i - 1;
+
+	START:
+	while(i >= 1) {
+		while(j >= 0) {
+			string simplified = simplify_string(v[i], v[j]);
+			if (simplified != "FAIL") {
+				v[j] = simplified;
+				remove(v, i);
+				i = v.size() - 1;
+				j = i - 1;
+				goto START;
+			}
+			--j;
+		}
+		--i;
+		j = i - 1;
+	}
+
+	return v;
 }
