@@ -217,6 +217,46 @@ TEST(test_implies_basic) {
     ASSERT_EQUAL(v_expected, v_actual);
 }
 
+TEST(test_oscillation_1) {
+    string s = "G[0,1](&[(p0>G[1,1]~p0),(~p0>G[1,1]p0)])";
+    ASSERT_TRUE(Wff_check(s));
+    vector<string> v_actual = simplify(reg(s, 1), 1);
+    vector<string> v_expected = {"0,1", "1,0"};
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(test_oscillation_2) {
+    string s = "G[0,2](&[(p0>G[1,1]~p0),(~p0>G[1,1]p0)])";
+    ASSERT_TRUE(Wff_check(s));
+    vector<string> v_actual = simplify(reg(s, 1), 1);
+    vector<string> v_expected = {"0,1,0", "1,0,1"};
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(test_oscillation_3) {
+    string s = "G[0,0](&[(p0>G[1,1]~p0),(~p0>G[1,1]p0)])";
+    ASSERT_TRUE(Wff_check(s));
+    vector<string> v_actual = simplify(reg(s, 1), 1);
+    vector<string> v_expected = {"0", "1"};
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(test_oscillation_4) {
+    string s = "G[0,0](&[(p0>G[1,1]~p0),(~p0>G[1,1]p0)])";
+    ASSERT_TRUE(Wff_check(s));
+    vector<string> v_actual = simplify(reg(s, 2), 2);
+    vector<string> v_expected = {"0s", "1s"};
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(test_oscillation_5) {
+    string s = "G[0,1](&[(p1>G[1,1]~p1),(~p1>G[1,1]p1)])";
+    ASSERT_TRUE(Wff_check(s));
+    vector<string> v_actual = simplify(reg(s, 2), 2);
+    vector<string> v_expected = {"s0,s1", "s1,s0"};
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
 
 TEST(test_equivalent) {
     
