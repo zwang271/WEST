@@ -267,7 +267,7 @@ string Wff_to_Nnf(string wff){
     }
 
     // Slice_char(wff, 0) == "~"
-    else{
+    if (Slice_char(wff, 0) == "~"){
         // '~' Prop_var
         if (Prop_var_check(Slice(wff, 1, len_wff-1))){
             return wff;
@@ -470,5 +470,10 @@ string Wff_to_Nnf(string wff){
                 return "(" + Wff_to_Nnf(neg_alpha) + binary_conn + Wff_to_Nnf(neg_beta) + ")";
             }
         }
+    }
+
+    else{
+        string error_string = wff + " is not a well-formed formula.\n";
+        throw invalid_argument(error_string);
     }
 }

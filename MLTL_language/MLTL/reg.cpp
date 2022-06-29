@@ -58,7 +58,7 @@ vector<string> reg_prop_cons(string s, int n) {
 
 
 /*
-* Prop_var -> ‘p’ Num | '~' 'p' Num
+* Prop_var -> ï¿½pï¿½ Num | '~' 'p' Num
 */
 vector<string> reg_prop_var(string s, int n)
 {
@@ -163,84 +163,107 @@ vector<string> reg_R(vector<string> alpha, vector<string> beta, int a, int b, in
 * Nnf ->  ?(~) Prop_var | Prop_cons
 *	                    | Unary_Temp_conn  Interval  Nnf
 *
-*	                    | '(' Assoc_Prop_conn ‘[‘  Array_entry_Nnf  ‘]’ ')'
-*                       | ‘(‘ Nnf Binary_Prop_conn Nnf ‘)’
-*                       | ‘(‘ Nnf Binary_Temp_conn  Interval Nnf ‘)
+*	                    | '(' Assoc_Prop_conn ï¿½[ï¿½  Array_entry_Nnf  ï¿½]ï¿½ ')'
+*                       | ï¿½(ï¿½ Nnf Binary_Prop_conn Nnf ï¿½)ï¿½
+*                       | ï¿½(ï¿½ Nnf Binary_Temp_conn  Interval Nnf ï¿½)
 */
-vector<string> reg(string s, int n) {
-	int len_s = int(s.length());
+vector<string> reg(string nnf, int n) {
+	int len_nnf = int(nnf.length());
 
 	// ?(~) Prop_var 
-	if (Prop_var_check(s) or
-		(Slice_char(s, 0) == "~" and Prop_var_check(Slice(s, 1, len_s - 1)))) {
-		return reg_prop_var(s, n);
+	if (Prop_var_check(nnf) or
+		(Slice_char(nnf, 0) == "~" and Prop_var_check(Slice(nnf, 1, len_nnf - 1)))) {
+		return reg_prop_var(nnf, n);
 	}
 
 	// Prop_cons
-	if (Prop_cons_check(s)) {
-		return reg_prop_cons(s, n);
+	if (Prop_cons_check(nnf)) {
+		return reg_prop_cons(nnf, n);
 	}
 
 	// Unary_Temp_conn  Interval  Nnf
-	if (Unary_Temp_conn_check(Slice_char(s, 0))) {
+	if (Unary_Temp_conn_check(Slice_char(nnf, 0))) {
+		string unary_temp_con = Slice_char(nnf, 0);
+
 		int begin_interval = 1;
 		int end_interval = 2;
 		int comma_index = 0;
 
 		// Parse for end of interval
-		while (Slice_char(s, end_interval) != "]" and end_interval <= len_s - 1) {
-			if (Slice_char(s, end_interval) == ",") {
+		while (Slice_char(nnf, end_interval) != "]" and end_interval <= len_nnf - 1) {
+			if (Slice_char(nnf, end_interval) == ",") {
 				comma_index = end_interval;
 			}
 			end_interval = end_interval + 1;
 		}
 
-		string interval = Slice(s, begin_interval, end_interval);
-		int a = stoi(Slice(s, begin_interval + 1, comma_index -1));
-		int b = stoi(Slice(s, comma_index + 1, end_interval - 1));
-		string alpha = Slice(s, end_interval + 1, len_s - 1);
-		string unary_temp_con = Slice_char(s, 0);
+		string interval = Slice(nnf, begin_interval, end_interval);
+		int a = stoi(Slice(nnf, begin_interval + 1, comma_index -1));
+		int b = stoi(Slice(nnf, comma_index + 1, end_interval - 1));
+		string alpha = Slice(nnf, end_interval + 1, len_nnf - 1);
 		
-		// Handing the 'finally' temporal operator
+		
 		vector<string> reg_alpha = reg(alpha, n); // recursive call
+		// Unary_Temp_conn -> 'F'
 		if (unary_temp_con == "F") {
 			return reg_F(reg_alpha, a, b, n);
 		}
-		else if (unary_temp_con == "G") {
+
+		// Unary_Temp_conn -> 'G'
+		if (unary_temp_con == "G") {
 			return reg_G(reg_alpha, a, b, n);
 		}
 	}
 
-	//// '(' Assoc_Prop_conn ‘[‘  Array_entry  ‘]’ ')'
-	//if (Assoc_Prop_conn_check(Slice_char(s, 1))) {
-	//	int begin_array = 2;
-	//	int end_array = len_s - 2;
+	// '(' Assoc_Prop_conn '['  Array_entry ']' ')'
+	if (Assoc_Prop_conn_check(Slice_char(nnf, 1))) {
+		string assoc_prop_conn = Slice_char(nnf, 1);
 
-	//	string array_entry = Slice(s, begin_array + 1, end_array - 1);
-	//	return Slice_char(s, 0) == "("
-	//		and Slice_char(s, 2) == "["
-	//		and Array_entry_check(array_entry)
-	//		and Slice_char(s, len_s - 2) == "]"
-	//		and Slice_char(s, len_s - 1) == ")";
-	//}
+		// Assoc_Prop_conn_check -> 'v'
+		if (assoc_prop_conn == "v"){
+			// Parse through '[' nnf_1 ',' nnf_2 ',' ... ',' nnf_n ']' entry-by-entry
+			// and iteratively compute: 
+			// vector<string> return_reg = [reg(nnf_1), ... , reg(nnf_n)]
+			// Then return: right_or(return_reg)
+			int begin_entry = 3;
+			vector<string> return_reg = {};
+			for (int end_entry = 3; end_entry <= len_nnf-1; ++end_entry){
+				if (Wff_check(Slice(nnf, begin_entry, end_entry))){
+					string alpha = Slice(nnf, begin_entry, end_entry);
+					
+					// Join reg(alpha) to return_reg
+					return_reg = join(return_reg, reg(alpha, n));
 
-	// ‘(‘ Wff Binary_Prop_conn Wff ‘)’ | ‘(‘ Wff Binary_Temp_conn Interval Wff ‘)
-	if (Slice_char(s, 0) == "(" and Slice_char(s, len_s - 1) == ")") {
+					// Update begin_entry so it has index of the first char of the next entry.
+					begin_entry = end_entry + 2;
+				}
+			}
 
-		// Number of '(' in s
+			// Input: '(' 'v' '[' nnf_1 ',' nnf_2 ',' ... ',' nnf_n ']' ')'
+			// Return: right_or([reg(nnf_1), ... , reg(nnf_n)])
+			return_reg = right_or(return_reg, n, 0);
+			return return_reg;
+		} 		
+
+	}
+
+	// ï¿½(ï¿½ Wff Binary_Prop_conn Wff ï¿½)ï¿½ | ï¿½(ï¿½ Wff Binary_Temp_conn Interval Wff ï¿½)
+	if (Slice_char(nnf, 0) == "(" and Slice_char(nnf, len_nnf - 1) == ")") {
+
+		// Number of '(' in nnf
 		int left_count = 0;
-		// Number of ')' in s
+		// Number of ')' in nnf
 		int right_count = 0;
 
 
-		//    Parse for binary_conn_index in s
+		//    Parse for binary_conn_index in nnf
 
-		//    When left_count == right_count and s[binary_conn_index] is a binary connective,
+		//    When left_count == right_count and nnf[binary_conn_index] is a binary connective,
 		//    we are done parsing and have found binary_conn_index.
 
 		int binary_conn_index = 1;
-		for (binary_conn_index = 1; binary_conn_index <= len_s - 1; ++binary_conn_index) {
-			string c = Slice_char(s, binary_conn_index);
+		for (binary_conn_index = 1; binary_conn_index <= len_nnf - 1; ++binary_conn_index) {
+			string c = Slice_char(nnf, binary_conn_index);
 
 			if (c == "(") {
 				++left_count;
@@ -256,12 +279,12 @@ vector<string> reg(string s, int n) {
 			}
 		}
 
-		string binary_conn = Slice_char(s, binary_conn_index);
+		string binary_conn = Slice_char(nnf, binary_conn_index);
 
-		// ‘(‘ Wff Binary_Prop_conn Wff ‘)’
+		// ï¿½(ï¿½ Wff Binary_Prop_conn Wff ï¿½)ï¿½
 		if (Binary_Prop_conn_check(binary_conn)) {
-			string alpha = Slice(s, 1, binary_conn_index - 1);
-			string beta = Slice(s, binary_conn_index + 1, len_s - 2);
+			string alpha = Slice(nnf, 1, binary_conn_index - 1);
+			string beta = Slice(nnf, binary_conn_index + 1, len_nnf - 2);
 			
 			if (binary_conn == "&") {
 				return set_intersect(reg(alpha, n), reg(beta, n), n);
@@ -271,25 +294,25 @@ vector<string> reg(string s, int n) {
 			}
 		}
 
-		// ‘(‘ Wff Binary_Temp_conn Interval Wff ‘)
+		// ï¿½(ï¿½ Wff Binary_Temp_conn Interval Wff ï¿½)
 		if (Binary_Temp_conn_check(binary_conn)) {
 			int begin_interval = binary_conn_index + 1;
 			int end_interval = binary_conn_index + 2;
 			int comma_index = 0;
 
 			// Parse for end of interval
-			while (Slice_char(s, end_interval) != "]" and end_interval <= len_s - 1) {
-				if (Slice_char(s, end_interval) == ",") {
+			while (Slice_char(nnf, end_interval) != "]" and end_interval <= len_nnf - 1) {
+				if (Slice_char(nnf, end_interval) == ",") {
 					comma_index = end_interval;
 				}
 				end_interval = end_interval + 1;
 			}
 
-			string alpha = Slice(s, 1, binary_conn_index - 1);
-			string interval = Slice(s, begin_interval, end_interval);
-			string beta = Slice(s, end_interval + 1, len_s - 2);
-			int a = stoi(Slice(s, begin_interval + 1, comma_index - 1));
-			int b = stoi(Slice(s, comma_index + 1, end_interval - 1));
+			string alpha = Slice(nnf, 1, binary_conn_index - 1);
+			string interval = Slice(nnf, begin_interval, end_interval);
+			string beta = Slice(nnf, end_interval + 1, len_nnf - 2);
+			int a = stoi(Slice(nnf, begin_interval + 1, comma_index - 1));
+			int b = stoi(Slice(nnf, comma_index + 1, end_interval - 1));
 
 			if (binary_conn == "U") {
 				return reg_U(reg(alpha, n), reg(beta, n), a, b, n);
@@ -300,5 +323,8 @@ vector<string> reg(string s, int n) {
 		}
 	}
 
-	return vector<string>();
+	else{
+        string error_string = nnf + " is not a well-formed formula.\n";
+        throw invalid_argument(error_string);
+    }
 }
