@@ -17,6 +17,7 @@ vector<string> single_char_or(vector<string> V);
 vector<string> join(vector<string> A, vector<string> B);
 vector<string> list_str_concat_suffix(vector<string> V, string s);
 vector<string> list_str_concat_prefix(vector<string> V, string s);
-vector<string> right_or(vector<string> v, int iteration, vector<int> indices, int n);
+vector<string> right_or(vector<string> v, int n, int iteration = 0);
 void print(vector<string> v);
+string simplify_string(string s1, string s2);
 vector<string> simplify(vector<string> v, int n);
