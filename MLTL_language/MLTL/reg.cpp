@@ -14,7 +14,7 @@ vector<string> set_intersect(vector<string> v1, vector<string> v2, int n) {
 		return v;
 	}
 
-	int len_w = max(v1[0].length(), v2[0].length());
+	int len_w = int(max(v1[0].length(), v2[0].length()));
 	v1 = pad(v1, n, len_w); v2 = pad(v2, n, len_w);
 
 	// Bit-wise 'and' all entries of v1 and v2
@@ -397,6 +397,7 @@ vector<string> reg(string nnf, int n) {
         string error_string = nnf + " is not in Negation-normal form.\n";
         throw invalid_argument(error_string);
     }
+    return vector<string>();
 }
 
 
@@ -612,7 +613,7 @@ vector<string> reg_clean(string nnf, int n) {
 			}
 
 			// Remove extra comma
-			equiv_nnf_formula = Slice(equiv_nnf_formula, 0, equiv_nnf_formula.length()-2);
+			equiv_nnf_formula = Slice(equiv_nnf_formula, 0, int(equiv_nnf_formula.length()-2));
 
 			equiv_nnf_formula = "((v[" + equiv_nnf_formula + "])" 
 			                    + "vF[" + to_string(lower_bound) + "," + to_string(upper_bound) + "]" + beta + ")";
@@ -633,7 +634,7 @@ vector<string> reg_clean(string nnf, int n) {
 			}
 
 			// Remove extra comma
-			equiv_nnf_formula = Slice(equiv_nnf_formula, 0, equiv_nnf_formula.length()-2);
+			equiv_nnf_formula = Slice(equiv_nnf_formula, 0, int(equiv_nnf_formula.length()-2));
 
 			equiv_nnf_formula = "((&[" + equiv_nnf_formula + "])" 
 			                    + "&G[" + to_string(lower_bound) + "," + to_string(upper_bound) + "]" + beta + ")";
@@ -645,4 +646,5 @@ vector<string> reg_clean(string nnf, int n) {
         string error_string = nnf + " is not in Negation-normal form.\n";
         throw invalid_argument(error_string);
     }
+    return vector<string>();
 }

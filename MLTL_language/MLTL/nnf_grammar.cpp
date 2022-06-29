@@ -42,7 +42,7 @@ using namespace std;
 
 // Nnf_Array_entry -> Nnf ‘,’ Nnf_Array_entry  |  Nnf
 bool Nnf_Array_entry_check(string s){
-    int len_s = s.length();
+    int len_s = int(s.length());
 
     // Number of '(' in s
     int left_count = 0;
@@ -82,7 +82,7 @@ bool Nnf_Array_entry_check(string s){
 //                        | ‘(‘ Nnf Binary_Prop_conn Nnf ‘)’
 //                        | ‘(‘ Nnf Binary_Temp_conn  Interval Nnf  ‘)’
 bool Nnf_check(string s){
-    int len_s = s.length();
+    int len_s = int(s.length());
 
     // ?('~') Prop_var | Prop_cons
     if (Prop_var_check(s) or (Slice_char(s,0) == "~" and Prop_var_check(Slice(s, 1, len_s-1))) 
@@ -182,7 +182,7 @@ bool Nnf_check(string s){
 
 // Converts a Wff to its equivalent Nnf-form.
 string Wff_to_Nnf(string wff){
-    int len_wff = wff.length();
+    int len_wff = int(wff.length());
 
     //Determine if first symbol is '~' or not.
     if (Slice_char(wff, 0) != "~"){
@@ -228,7 +228,7 @@ string Wff_to_Nnf(string wff){
             }
 
             // Remove extra comma at right end
-            return_string = Slice(return_string, 0, return_string.length()-2);
+            return_string = Slice(return_string, 0, int(return_string.length()-2));
 
             // Input: '(' Assoc_Prop_conn ‘[‘  Array_entry  ‘]’ ')'
             // Return: '(' Assoc_Prop_conn '[' Wff_to_Nnf(wff_1) ',' ... ',' Wff_to_Nnf(wff_n) ']' ')'
@@ -349,7 +349,7 @@ string Wff_to_Nnf(string wff){
                 }
 
                 // Remove extra comma at right end
-                return_string = Slice(return_string, 0, return_string.length()-2);
+                return_string = Slice(return_string, 0, int(return_string.length()-2));
 
                 // Input: "~(" Assoc_Prop_conn '[' wff_1 ',' wff_2 ',' ... ',' wff_n ']' ‘)’
                 // Return: '(' dual(Assoc_Prop_conn) '[' Wff_to_Nnf('~' wff_1) ',' ... ',' Wff_to_Nnf('~' wff_n) ']' ')'
@@ -385,8 +385,8 @@ string Wff_to_Nnf(string wff){
                 }
 
                 // Remove extra comma at right end
-                vec = Slice(vec, 0, vec.length()-2);
-                neg_vec = Slice(neg_vec, 0, neg_vec.length()-2);
+                vec = Slice(vec, 0, int(vec.length()-2));
+                neg_vec = Slice(neg_vec, 0, int(neg_vec.length()-2));
 
                 // Add in end right bracket ']'
                 vec = vec + "]";
@@ -476,6 +476,7 @@ string Wff_to_Nnf(string wff){
         string error_string = wff + " is not a well-formed formula.\n";
         throw invalid_argument(error_string);
     }
+    return 0;
 }
 
 
@@ -488,7 +489,7 @@ string Wff_to_Nnf(string wff){
 // Cleaner implementation of Wff_to_Nnf
 // in case original is faulty. 
 string Wff_to_Nnf_clean(string wff){
-    int len_wff = wff.length();
+    int len_wff = int(wff.length());
 
     //Determine if first symbol is '~' or not.
     if (Slice_char(wff, 0) != "~"){
@@ -534,7 +535,7 @@ string Wff_to_Nnf_clean(string wff){
             }
 
             // Remove extra comma at right end
-            return_string = Slice(return_string, 0, return_string.length()-2);
+            return_string = Slice(return_string, 0, int(return_string.length()-2));
 
             // Input: '(' Assoc_Prop_conn ‘[‘  Array_entry  ‘]’ ')'
             // Return: '(' Assoc_Prop_conn '[' Wff_to_Nnf(wff_1) ',' ... ',' Wff_to_Nnf(wff_n) ']' ')'
@@ -736,4 +737,5 @@ string Wff_to_Nnf_clean(string wff){
         string error_string = wff + " is not a well-formed formula.\n";
         throw invalid_argument(error_string);
     }
+    return "";
 }
