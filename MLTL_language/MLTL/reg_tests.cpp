@@ -9,6 +9,7 @@ using namespace std;
 
 // UNIT FUNCTIONAL TEST CASES
 
+//test comment
 
 // we might need to specify that minimum 1 prop_var
 // should be specified even when there are none in the formula
