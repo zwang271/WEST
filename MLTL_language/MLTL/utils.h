@@ -21,3 +21,4 @@ vector<string> right_or(vector<string> v, int n, int iteration = 0);
 void print(vector<string> v);
 string simplify_string(string s1, string s2);
 vector<string> simplify(vector<string> v, int n);
+void print_all_representations(vector<string> v_actual, int n);

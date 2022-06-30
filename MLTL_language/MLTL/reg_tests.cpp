@@ -2,14 +2,13 @@
 #include "utils.h"
 #include "unit_test_framework.h"
 #include "grammar.h"
+#include "nnf_grammar.h"
 #include <iostream>
 #include "reg.h"
 
 using namespace std;
 
 // UNIT FUNCTIONAL TEST CASES
-
-//test comment
 
 // we might need to specify that minimum 1 prop_var
 // should be specified even when there are none in the formula
@@ -93,7 +92,7 @@ TEST(basic_until) {
     ASSERT_EQUAL(v_expected, v_actual);
 }
 
-// BUG
+//// BUG
 TEST(basic_release) {
     string s = "(p0R[0,1]p1)";
     ASSERT_TRUE(Wff_check(s));
@@ -107,9 +106,9 @@ TEST(basic_release) {
 
 
 
-// EDGECASE TESTS
-
-//BUG: this is the same as "T", so every computation should satisfy this: s
+//// EDGECASE TESTS
+//
+////BUG: this is the same as "T", so every computation should satisfy this: s
 TEST(test_p_equals_p) {
     string s = "(p0=p0)";
     ASSERT_TRUE(Wff_check(s));
@@ -277,13 +276,20 @@ TEST(test_until_swapped_props) {
 
 
 TEST(test_until_nested_diff_complen) {
-    string s = "(p0U[0,1]p1)U[0,2])p2)";
+    string s = "((p0U[0,1]p1)U[0,2]p2)";
+    int n = 3;
     ASSERT_TRUE(Wff_check(s));
-    vector<string> v_actual = reg(s, 3);
-    vector<string> v_expected = {"1s", "s1,1s"};
-ASSERT_EQUAL(v_expected, v_actual);
-}
+    ASSERT_TRUE(Nnf_check(s));
+    vector<string> v_actual = reg(s, n);
+    v_actual = simplify(v_actual, n);
 
+    //print_all_representations(v_actual, n);
+
+    vector<string> v_expected = {"ss1,sss,sss", "s1s,ss1,sss",
+                    "1ss,s11,sss", "s1s,s1s,ss1", "s1s,1ss,s11", 
+                    "1ss,s1s,ss1", "1ss,11s,s11"};
+    ASSERT_EQUAL(v_expected, v_actual);
+}
 
 
 TEST(test_p_until_p_until_q) {
@@ -295,13 +301,19 @@ TEST(test_p_until_p_until_q) {
     ASSERT_EQUAL(v_expected, v_actual);
 }
 
-//BUG
+
+////BUG
 TEST(test_and_with_until_diff_complen) {
     string s = "(&[(p0U[0,1]p1),(p0U[0,2]p1)])";
+    int n = 2;
     //should return comps for (p0U[0,1]p1)
     ASSERT_TRUE(Wff_check(s));
-    vector<string> v_actual = reg(s, 2);
-    vector<string> v_expected = {"s1", "1s,s1"};
+    vector<string> v_actual = reg(s, n);
+
+    /*print_all_representations(v_actual, n);*/
+
+    v_actual = simplify(right_or(v_actual, n), n);
+    vector<string> v_expected = {"s1,ss,ss", "10,s1,ss"};
     ASSERT_EQUAL(v_expected, v_actual);
 }
 
@@ -329,7 +341,7 @@ TEST(test_implies_basic) {
     string s = "(p0>p1)";
     ASSERT_TRUE(Wff_check(s));
     vector<string> v_actual = simplify(reg(s, 2), 2);
-    vector<string> v_expected = {"0s", "11"};
+    vector<string> v_expected = {"0s", "s1"};
     ASSERT_EQUAL(v_expected, v_actual);
 }
 
@@ -374,31 +386,43 @@ TEST(test_oscillation_5) {
 }
 
 //BUG: need to think about this
+// FIXED
 TEST(test_induction) {
     string s = "(G[0,3](p0>G[1,1]p0)>(p0>G[0,4]p0))";
+    int n = 1;
     ASSERT_TRUE(Wff_check(s));
-    vector<string> v_actual = reg(s, 1);
-    vector<string> v_expected = {"s,s,s,s", "0,0,0,0"};
-    ASSERT_EQUAL(v_expected, v_actual);
+    vector<string> v_actual = reg(s, n);
 
-    print(v_actual);
+    //print_all_representations(v_actual, n);
+
+    v_actual = simplify(right_or(v_actual, n), n);
+
+    vector<string> v_expected = {"s,s,s,s,s"};
+    ASSERT_EQUAL(v_expected, v_actual);
 }
 
-//BUG: nnf error
+////BUG: nnf error
+// FIXED
 TEST(test_equivalent_1) {
     string s = "(G[0,0]p0=F[0,0]p0)";
+    int n = 1;
     ASSERT_TRUE(Wff_check(s));
-    vector<string> v_actual = reg(s, 1);
+    vector<string> v_actual = reg(s, n);
+    v_actual = simplify(v_actual, n);
     vector<string> v_expected = {"s"};
     ASSERT_EQUAL(v_expected, v_actual);
 }
 
-//BUG: nnf error
+////BUG: nnf error
+// FIXED
 TEST(test_equivalent_2) {
     string s = "(G[1,1]p0=F[1,1]p0)";
+    int n = 1;
     ASSERT_TRUE(Wff_check(s));
-    vector<string> v_actual = reg(s, 1);
-    vector<string> v_expected = {"s"};
+    vector<string> v_actual = reg(s, n);
+    v_actual = simplify(v_actual, n);
+
+    vector<string> v_expected = {"s,s"};
     ASSERT_EQUAL(v_expected, v_actual);
 }
 
@@ -409,9 +433,9 @@ TEST(test_intuitive_equivalence_1) {
     ASSERT_TRUE(Wff_check(s2));
     vector<string> v1 = reg(s1, 1);
     vector<string> v2 = reg(s2, 1);
-    print(v1);
+    /*print(v1);
     cout << endl;
-    print(v2);
+    print(v2);*/
     ASSERT_EQUAL(v1, v2);
 }
 
@@ -466,16 +490,19 @@ TEST(test_finally_and_until_2) {
 //BUG: don't know if v_expected is correct, but there must be a bug because "ss,s1,11" is repeated
 TEST(test_global_and_release) {
     string s = "G[1,1](p0R[0,1]p1)";
+    int n = 2;
     ASSERT_TRUE(Wff_check(s));
-    vector<string> v_actual = reg(s, 2);
-    print(v_actual);
+    vector<string> v_actual = reg(s, n);
+    
+    print_all_representations(v_actual, n);
+
     vector<string> v_expected = {"ss,s1,s1", "ss,11", "ss,s1,11"};
     ASSERT_EQUAL(v_expected, v_actual);
 }
 
-TEST(test_global_and_until) {
-
-}
+//TEST(test_global_and_until) {
+//
+//}
 
 TEST_MAIN()
 

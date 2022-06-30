@@ -338,8 +338,9 @@ void print(vector<string> v) {
 * Input: computation strings s1 and s2
 *	If the following is possible:
 *	s1 = w1 + 'c1' + v1
-*	s2 = w2 + 'c2' + v2
-*	return w1 + or(c1, c2) + v1
+*	s2 = w1 + 'c2' + v1
+*	Here, c1 and c2 are the first differing character from the left
+*	return w1 + single_char_or(c1, c2) + v1
 * Otherwise output: "FAIL"
 */
 string simplify_string(string s1, string s2)
@@ -401,6 +402,14 @@ vector<string> simplify(vector<string> v, int n) {
 	int i = int(v.size() - 1);
 	int j = i - 1;
 
+
+	// v = v0, v1, v2, ..., v_n-1, v_n
+	// i starts at v_n, j starts at v_n-1
+	// if v[i] and v[j] can simplify, then v[i] is destroyed and 
+	//		v[j] = simplify_string(v[i], v[j])
+	// iteratively decrement j until out of bounds from left (j < 0), then decrement i 
+	// and assign j = i - 1
+
 	START:
 	while(i >= 1) {
 		while(j >= 0) {
@@ -419,4 +428,18 @@ vector<string> simplify(vector<string> v, int n) {
 	}
 
 	return v;
+}
+
+void print_all_representations(vector<string> v_actual, int n) {
+	cout << "reg" << endl;
+	print(v_actual);
+
+	cout << endl << "simplify" << endl;
+	print(simplify(v_actual, n));
+
+	cout << endl << "right_or" << endl;
+	print(right_or(v_actual, n));
+
+	cout << endl << "simplify right_or" << endl;
+	print(simplify(right_or(v_actual, n), n));
 }
