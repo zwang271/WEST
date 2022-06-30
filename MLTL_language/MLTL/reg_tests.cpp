@@ -12,7 +12,7 @@ using namespace std;
 
 // we might need to specify that minimum 1 prop_var
 // should be specified even when there are none in the formula
-TEST(test_true) {
+TEST(basic_true) {
     string s = "T";
     ASSERT_TRUE(Wff_check(s));
     vector<string> v_actual = reg(s, 1);
@@ -21,7 +21,7 @@ TEST(test_true) {
 }
 
 
-TEST(test_false) {
+TEST(basic_false) {
     string s = "!";
     ASSERT_TRUE(Wff_check(s));
     vector<string> v_actual = reg(s, 1);
@@ -30,7 +30,7 @@ TEST(test_false) {
 }
 
 
-TEST(test_single_prop_var) {
+TEST(basic_single_prop_var) {
     string s = "p0";
     ASSERT_TRUE(Wff_check(s));
     vector<string> v_actual = reg(s, 1);
@@ -65,14 +65,15 @@ TEST(test_global_basic) {
     ASSERT_EQUAL(v_expected, v_actual);
 }
 
-//BUG
+
 TEST(test_or_basic) {
     string s = "(v[p0,p1])";
     ASSERT_TRUE(Wff_check(s));
-    vector<string> v_expected = {"s1", "1s"};
+    vector<string> v_expected = {"1s", "s1"};
     vector<string> v_actual = reg(s, 2);
     ASSERT_EQUAL(v_expected, v_actual);
 }
+
 
 TEST(test_and_basic) {
     string s = "(&[p0,p1])";
@@ -81,7 +82,6 @@ TEST(test_and_basic) {
     vector<string> v_actual = reg(s, 2);
     ASSERT_EQUAL(v_expected, v_actual);
 }
-
 
 
 TEST(test_until_basic) {
@@ -102,7 +102,11 @@ TEST(test_release_basic) {
 }
 
 
-// RUDIMENTARY EDGECASES TEST CASES
+
+
+
+
+// EDGECASE TESTS
 
 
 
@@ -234,9 +238,16 @@ TEST(test_global_basic_2) {
 TEST(test_global_with_or) {
     string s = "G[0,1](v[p1,p2])";
     ASSERT_TRUE(Wff_check(s));
-    vector<string> v_expected = {"s1s,s1s", "s1s,ss1", "s11,s1s", "s11,ss1",
-                                 "s11,s1s", "s11,ss1", "ss1,s1s", "ss1,ss1"};
+    vector<string> v_expected = {"s1s,s1s", "s1s,ss1", "ss1,s1s", "ss1,ss1"};
     vector<string> v_actual = reg(s, 3);
+    ASSERT_EQUAL(v_expected, v_actual);
+}
+
+TEST(test_global_with_or_2) {
+    string s = "G[0,1](v[p0,p1])";
+    ASSERT_TRUE(Wff_check(s));
+    vector<string> v_expected = {"1s,1s", "1s,s1", "s1,1s", "s1,s1"};
+    vector<string> v_actual = reg(s, 2);
     ASSERT_EQUAL(v_expected, v_actual);
 }
 
