@@ -105,7 +105,7 @@ vector<string> reg_F(vector<string> reg_alpha, int a, int b, int n) {
 		for (int j = 0; j < i; ++j) {
 			w += string(n, 's') + ",";
 		}
-		// Now w = (s^n ,)^(a+i)
+		// Now w = (s^n ,)^i
 
 		temp_alpha = list_str_concat_prefix(reg_alpha, w);
 		comp = join(comp, temp_alpha);
@@ -126,8 +126,8 @@ vector<string> reg_G(vector<string> reg_alpha, int a, int b, int n)
 		pre += string(n, 's') + ",";
 	}
 
-	// Initialize comp = pre alpha to prevent intersection with empty vector
-	vector<string> comp = list_str_concat_prefix(reg_alpha, pre);
+	// Initialize comp = alpha to prevent intersection with empty vector
+	vector<string> comp = reg_alpha;
 
 	// calculate comp = set_intersect_{i = a:b} (s^n,)^i alpha
 	//				  = set_intersect_{i = 0:b-a} (s^n,)^a+i alpha
