@@ -3,6 +3,8 @@
 #include "nnf_grammar.h"
 #include "reg.h"
 
+// TEST COMMENT
+
 /*
 * Input: Two vectors of computation strings V1 and V2, comma separated
 * Output: Computes pairwise string_intersect between all
