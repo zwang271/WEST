@@ -128,13 +128,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="grammar.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="nnf_grammar.cpp" />
     <ClCompile Include="reg.cpp" />
+    <ClCompile Include="reg_tests.cpp" />
     <ClCompile Include="simulation.cpp" />
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="grammar.h" />
+    <ClInclude Include="nnf_grammar.h" />
     <ClInclude Include="reg.h" />
     <ClInclude Include="simulation.h" />
     <ClInclude Include="utils.h" />
