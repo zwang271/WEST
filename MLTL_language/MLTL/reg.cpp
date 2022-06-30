@@ -119,20 +119,21 @@ vector<string> reg_F(vector<string> reg_alpha, int a, int b, int n) {
 
 vector<string> reg_G(vector<string> reg_alpha, int a, int b, int n)
 {
-	vector<string> comp = vector<string>();
-
 	string pre = "";
 	vector<string> temp_alpha = vector<string>();
-
 	// pre = (s^n ,)^a
 	for (int i = 0; i < a; ++i) {
 		pre += string(n, 's') + ",";
 	}
 
+	// Initialize comp = pre alpha to prevent intersection with empty vector
+	vector<string> comp = list_str_concat_prefix(reg_alpha, pre);
+
 	// calculate comp = set_intersect_{i = a:b} (s^n,)^i alpha
 	//				  = set_intersect_{i = 0:b-a} (s^n,)^a+i alpha
-	//				  = (s^n,)^a set_intersect_{i = 0:b-a} (s^n,)i alpha
-	for (int i = 0; i <= b - a; ++i) {
+	//				  = (s^n,)^a set_intersect_{i = 0:b-a} (s^n,)^i alpha
+	//				  = ((s^n,)^a alpha) set_intersect (set_intersect{i = 1:b-a} (s^n,)^i alpha)
+	for (int i = 1; i <= b - a; ++i) {
 		string w = "";
 		for (int j = 0; j < i; ++j) {
 			w += string(n, 's') + ",";
@@ -302,7 +303,7 @@ vector<string> reg(string nnf, int n) {
 		}
 
 		if (binary_conn == "v") {
-			return set_union(reg_alpha, reg_beta, n);
+			return join(reg_alpha, reg_beta);
 		}
 
 		if (binary_conn == "="){
