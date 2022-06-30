@@ -3,10 +3,6 @@
 #include "nnf_grammar.h"
 #include "reg.h"
 
-// TEST COMMENT
-
-// TEST COMMENT 2
-
 /*
 * Input: Two vectors of computation strings V1 and V2, comma separated
 * Output: Computes pairwise string_intersect between all
@@ -18,7 +14,25 @@ vector<string> set_intersect(vector<string> v1, vector<string> v2, int n) {
 		return v;
 	}
 
-	int len_w = int(max(v1[0].length(), v2[0].length()));
+	//int len_w = int(max(v1[0].length(), v2[0].length()));
+	//v1 = pad(v1, n, len_w); v2 = pad(v2, n, len_w);
+
+	// CORRECTION TO VECOTR PADDING LINE
+	int len_w = 0;
+
+	// Gets length of longest string in v1
+	for (string w : v1) {
+		if (w.length() > len_w) {
+			len_w = w.length();
+		}
+	}
+	// Gets length of longest string in join(v1, v2)
+	for (string w : v2) {
+		if (w.length() > len_w) {
+			len_w = w.length();
+		}
+	}
+
 	v1 = pad(v1, n, len_w); v2 = pad(v2, n, len_w);
 
 	// Bit-wise 'and' all entries of v1 and v2
@@ -316,14 +330,14 @@ vector<string> reg(string nnf, int n) {
 			string equiv_nnf_formula = "((" + alpha + "&" + beta + ")v("
 				+ Wff_to_Nnf_clean("~" + alpha) + "&"
 				+ Wff_to_Nnf_clean("~" + beta) + "))";
-			return reg_clean(equiv_nnf_formula, n);
+			return reg(equiv_nnf_formula, n);
 		}
 
 		if (binary_conn == ">") {
 			// (alpha > beta) is equiv to (Wff_to_Nnf(~alpha) v beta))
 			// (Wff_to_Nnf(~alpha) v beta)) is in Nnf-form
 			string equiv_nnf_formula = "(" + Wff_to_Nnf_clean("~" + alpha) + "v" + beta + ")";
-			return reg_clean(equiv_nnf_formula, n);
+			return reg(equiv_nnf_formula, n);
 		}
 	}
 
