@@ -8,14 +8,14 @@
 This file implements the following Context-Free Grammar
 for a well-formed formula for MLTL:
 
-Alphabet = { ‘0’, ‘1’, …, ‘9’, ‘p’, ‘(‘, ‘)’, ‘[’, ‘]’, ‘,’ ,
+Alphabet = { ‘0’, ‘1’, …, ‘9’, ‘p’, ‘(‘, ‘)’, ‘[’, ‘]’, ':', ‘,’ ,
                        ‘T’, ‘!’,
                        ‘~’, ‘F’, ‘G’,
                        ‘v’, ‘&’, ‘=’, ‘>’, ‘U’, ‘R’ }
 
 Digit  ->  ‘0’ | ‘1’ | … |’9’
 Num  ->  Digit Num |  Digit
-Interval  ->  ‘[’  Num ‘,’ Num ‘]’
+Interval  ->  ‘[’  Num ‘:’ Num ‘]’
 Prop_var  ->  ‘p’ Num
 
 Prop_cons  ->  ‘T’ | ‘!’
@@ -117,7 +117,7 @@ bool Interval_check(string s){
     string num_1 = Slice(s, 1, comma_index-1);
     string comma = Slice_char(s, comma_index);
     string num_2 = Slice(s, comma_index+1, len_s-2);
-    return left_bracket == "[" and Num_check(num_1) and comma == "," 
+    return left_bracket == "[" and Num_check(num_1) and comma == ":" 
         and Num_check(num_2) and right_bracket == "]";
 }
 

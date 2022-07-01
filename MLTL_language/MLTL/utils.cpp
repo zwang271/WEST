@@ -255,6 +255,85 @@ vector<string> list_str_concat_prefix(vector<string> V, string s) {
 /*
 * Input: Vector of computation strings V, with commas
 *		 ITERATION describes depth of recursion (MUST CALL WITH 0 INITIALLY)
+*		 N is number of propositional variables
+* Output: Vector of disjoint computation strings
+*/
+vector<string> left_or(vector<string> v, int n, int iteration) {
+	// Single union and empty union are disjoint
+	if (v.size() == 0 or v.size() == 1) {
+		return v;
+	}
+
+	//strip commas before, or write invariant_check
+	if (iteration == 0) {
+		// Pad all strings to length of longest string
+		v = pad(v, n);
+		v = strip_commas(v);
+	}
+
+	// Length of all strings
+	int len_w = int(v[0].size());
+
+	// Base case of single char strings
+	if (len_w == 1) {
+		return single_char_or(v);
+	}
+
+	
+	// Searching for s^len_w in input
+	string s_lenw = string(len_w, 's');
+	for (int i = 0; i < v.size(); ++i) {
+		if (v[i] == s_lenw) {
+			vector<string> ret = { s_lenw };
+			return ret;
+		}
+	}
+
+	vector<string> begin_zero;
+	vector<string> begin_one;
+
+	// Cut-off left-most char in all strings, and assign either to
+	// begin_zero or begin_one based on char 
+	for (int i = 0; i < v.size(); ++i) {
+		// w = c + rest
+		string w = v[i];
+		string c = Slice_char(w, 0);
+		string rest = Slice(w, 1, len_w-1);
+		if (c == "0") {
+			// Slice(w, 1, len_w-1)
+			begin_zero.push_back(rest);
+		}
+		else if (c == "1") {
+			begin_one.push_back(rest);
+		}
+		else {
+			begin_zero.push_back(rest);
+			begin_one.push_back(rest);
+		}
+	}
+
+	if (begin_zero.size() == 0 and begin_one.size() == 0) {
+		return {}; // returns an empty vector
+	}
+	else {
+		++iteration;
+		v = join(list_str_concat_prefix(right_or(begin_zero, n, iteration), "0"),
+			list_str_concat_prefix(right_or(begin_one, n, iteration), "1")
+		);
+	}
+
+	// Final return will be in iteration 1, add commas before returning
+	if (iteration == 1) {
+		v = add_commas(v, n);
+	}
+
+	return v;
+}
+
+
+/*
+* Input: Vector of computation strings V, with commas
+*		 ITERATION describes depth of recursion (MUST CALL WITH 0 INITIALLY)
 *		 INIDCES is vector of ints from right_or_aux
 *		 N is number of propositional variables
 * Output: Vector of disjoint computation strings
