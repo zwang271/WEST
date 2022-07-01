@@ -45,7 +45,7 @@ vector<string> set_intersect(vector<string> v1, vector<string> v2, int n) {
 		}
 	}
 
-	return v;
+	return simplify(v, n);
 }
 
 

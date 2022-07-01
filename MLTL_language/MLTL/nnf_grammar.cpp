@@ -9,14 +9,14 @@
 Context-Free Grammar for a MLTL wff in Negation normal-form (Nnf).
 Here, ‘Eventually’, ‘Always’, ‘Until’, and ‘Release’ are represented by the letters ‘F’, ‘G’, ‘U’, and ‘R’.
 
-Alphabet = { ‘0’, ‘1’, …, ‘9’, ‘p’, ‘(‘, ‘)’, ‘[’, ‘]’, ‘,’ ,
+Alphabet = { ‘0’, ‘1’, …, ‘9’, ‘p’, ‘(‘, ‘)’, ‘[’, ‘]’, ':', ‘,’ ,
                        ‘T’, ‘!’,                
                        ‘~’, ‘F’, ‘G’,
                        ‘v’, ‘&’, ‘=’, ‘>’, ‘U’, ‘R’ }
 
 Digit  ->  ‘0’ | ‘1’ | … |’9’
 Num  ->  Digit Num |  Digit
-Interval  ->  ‘[’  Num ‘,’ Num ‘]’  
+Interval  ->  ‘[’  Num ‘:’ Num ‘]’  
 Prop_var  ->  ‘p’ Num
 
 Prop_cons  ->  ‘T’ | ‘!’
