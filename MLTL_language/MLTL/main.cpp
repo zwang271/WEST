@@ -9,11 +9,18 @@
 using namespace std;
 
 int main() {
-	vector<string> v1 = {"ss0,s1s,000", "ss1,s1s"};
-	vector<string> v2 = {"000,s1s,0ss", "sss,s1s,1ss"};
-	print(simplify(left_or(v2, 3), 3));
+	vector<string> v1 = { "100,s11,ss0", "100,s1s,ss1", "s10,ss1,sss",
+							 "s10,100,s11", "s10,s10,ss1", "ss1,sss,sss"};
+	print(v1);
 	cout << endl;
-	print(simplify(left_or(v2, 3), 3));
+	v1 = pad(v1, 3);
+	print(v1);
+	cout << endl;
+	v1 = strip_commas(v1);
+	print(v1);
+	cout << endl;
+
+	print_tree(v1);
 
     return 0;
 }
