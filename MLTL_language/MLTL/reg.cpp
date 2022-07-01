@@ -204,8 +204,8 @@ vector<string> reg_R(vector<string> alpha, vector<string> beta, int a, int b, in
 	vector<string> comp = reg_G(beta, a, b, n);
 
 	// Calculating comp = alpha U[a,b] beta
-	//					= (G[a,b] beta) join join_{i = a:b}G[a,i] alpha set_intersect G[i,i] alpha
-	for (int i = a; i <= b; ++i) {
+	//					= (G[a,b] beta) join join_{i = a:b-1}G[a,i] alpha set_intersect G[i,i] alpha
+	for (int i = a; i <= b-1; ++i) {
 		comp = join(comp,
 			set_intersect(reg_G(beta, a, i, n), reg_G(alpha, i, i, n), n));
 	}
