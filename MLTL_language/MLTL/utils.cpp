@@ -509,6 +509,99 @@ vector<string> simplify(vector<string> v, int n) {
 	return v;
 }
 
+
+void print_tree(vector<string> v, string pre_space) {
+	// Base case: print out v with pre-concatennated pre_space
+	if (v.size() == 1) {
+		v = list_str_concat_prefix(v, pre_space);
+		print(v);
+		return;
+	} 
+	// Exit from function if v is empty
+	else if (v.size() == 0) { return; }
+
+	// Remove all "" from v
+	for (int i = 0; i < v.size(); ++i) {
+		if (v[i] == "") {
+			remove(v, i);
+		}
+	}
+
+	v = strip_commas(v);
+
+	// Cases for how the next character after left_common of strings in v
+	vector<string> differ_zero = {};
+	vector<string> differ_one = {};
+	vector<string> differ_s = {};
+
+	// Find the longest common substring from the left
+	string left_common = common_left_string(v);
+
+	for (string w : v) {
+		// w = left_common + rest
+		// next_char is first letter of rest, could possibly be ""
+		string next_char = Slice_char(w, left_common.length());
+		string rest = Slice(w, left_common.length(), w.length() - 1);
+
+		if (next_char == "0") {
+			differ_zero.push_back(rest);
+		}
+		else if (next_char == "1") {
+			differ_one.push_back(rest);
+		}
+		else if (next_char == "s") {
+			differ_s.push_back(rest);
+		}
+		// next_char can't be ","
+		// no if blocks matched means next_char = ""
+	}
+
+	cout << pre_space + left_common << endl;
+
+	string pre = string(left_common.length(), ' ') + pre_space;
+	print_tree(differ_zero, pre);
+	print_tree(differ_one, pre);
+	print_tree(differ_s, pre);
+}
+
+
+/*
+* Returns the longest common left substring of all strings in v
+*/
+string common_left_string(vector<string> v) {
+	// Return entire string if v has only 1 string
+	if (v.size() == 1) {
+		return v[0];
+	}
+	// Return empty string if v is empty
+	else if (v.size() == 0) { return ""; }
+
+	int len_w = v[0].length();
+	string left_common = "";
+	bool found_longest = false;
+	for (int i = 0; i < len_w; i++) {
+		// Deepen search for common left string
+		left_common += Slice_char(v[0], i);
+
+		// Check if left_common is still a common left substring 
+		for (string w: v) {
+			// Check if left_common no longer matches w
+			if (Slice(w, 0, left_common.length() - 1) != left_common) {
+				found_longest = true;
+				break;
+			}
+		}
+
+		if (found_longest) {
+			// Remove the last character to get obtain long left common substring
+			left_common = Slice(left_common, 0, left_common.length() - 2);
+			break;
+		}
+	}
+	return left_common;
+}
+
+
 void print_all_representations(vector<string> v_actual, int n) {
 
 	cout << endl << endl << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl << endl;

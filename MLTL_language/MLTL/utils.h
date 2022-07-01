@@ -22,4 +22,6 @@ vector<string> right_or(vector<string> v, int n, int iteration = 0);
 void print(vector<string> v);
 string simplify_string(string s1, string s2);
 vector<string> simplify(vector<string> v, int n);
+void print_tree(vector<string> v, string pre_space = "");
+string common_left_string(vector<string> v);
 void print_all_representations(vector<string> v_actual, int n);

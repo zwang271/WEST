@@ -1,4 +1,2 @@
-﻿  reg.cpp
-C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_language\MLTL\reg.cpp(26,22): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_language\MLTL\reg.cpp(32,22): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+﻿  main.cpp
   MLTL.vcxproj -> C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_language\x64\Debug\MLTL.exe
