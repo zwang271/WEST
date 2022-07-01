@@ -319,7 +319,7 @@ TEST(test_until_nested_diff_complen) {
     vector<string> v_actual = reg(s, n);
     v_actual = simplify(v_actual, n);
 
-    //print_all_representations(v_actual, n);
+    print_all_representations(v_actual, n);
 
     vector<string> v_expected = {"ss1,sss,sss", "s1s,ss1,sss",
                     "1ss,s11,sss", "s1s,s1s,ss1", "s1s,1ss,s11", 
@@ -501,9 +501,9 @@ TEST(test_intuitive_equivalence_2) {
     ASSERT_TRUE(Nnf_check(s2));
     vector<string> v1 = reg(s1, 1);
     vector<string> v2 = reg(s2, 1);
-    print(v1);
+   /* print(v1);
     cout << endl;
-    print(v2);
+    print(v2);*/
     ASSERT_EQUAL(v1, v2);
 }
 
@@ -523,7 +523,7 @@ TEST(test_finally_and_release_2) {
     ASSERT_TRUE(Wff_check(s));
     ASSERT_TRUE(Nnf_check(s));
     vector<string> v_actual = reg(s, 2);
-    print(v_actual);
+    /*print(v_actual);*/
     vector<string> v_expected = {"ss,s1,s1", "ss,11", "ss,s1,11", "ss,ss,s1,s1", "ss,ss,11", "ss,ss,s1,11"};
     ASSERT_EQUAL(v_expected, v_actual);
 }
@@ -554,7 +554,7 @@ TEST(test_global_and_release) {
     ASSERT_TRUE(Nnf_check(s));
     vector<string> v_actual = reg(s, n);
     
-    print_all_representations(v_actual, n);
+    //print_all_representations(v_actual, n);
 
     vector<string> v_expected = {"ss,s1,s1", "ss,11", "ss,s1,11"};
     ASSERT_EQUAL(v_expected, v_actual);
@@ -564,23 +564,23 @@ TEST(chiara_dual_release_equivalence_check){
     string a = "( (v[G[1:3]p1, (G[1:1]p0 & G[1:1]p1), (G[2:2]p0 & G[1:2]p1), (G[3:3]p0 & G[1:3]p1)])";
 	string b = "= (&[(F[1:0]p0 v G[1:1]p1), (F[1:1]p0 v G[2:2]p1), (F[1:3]p0 v G[3:3]p1)]) )";
 	string s1 = strip_char(a + b, ' ');
-	cout << s1 << endl;
+	/*cout << s1 << endl;
 	cout << "Wff_check: " << Wff_check(s1) << endl;
-	cout << "Nnf_check: " << Nnf_check(s1) << endl;
+	cout << "Nnf_check: " << Nnf_check(s1) << endl;*/
 
 	vector<string> reg_s1 = reg(s1, 2);
-	print_all_representations(reg_s1, 2);
+	//print_all_representations(reg_s1, 2);
 
 	s1 = "(v[G[1:3]p1, (G[1:1]p0 & G[1:1]p1), (G[2:2]p0 & G[1:2]p1), (G[3:3]p0 & G[1:3]p1)])";
 	string s2 = "(&[(F[1:0]p0 v G[1:1]p1), (F[1:1]p0 v G[2:2]p1), (F[1:3]p0 v G[3:3]p1)])";
 	s1 = strip_char(s1, ' ');
 	s2 = strip_char(s2, ' ');
-	cout << "Wff_check: " << Wff_check(s1) << endl;
+	/*cout << "Wff_check: " << Wff_check(s1) << endl;
 	cout << "Nnf_check: " << Nnf_check(s1) << endl;
 	cout << "Wff_check: " << Wff_check(s2) << endl;
 	cout << "Nnf_check: " << Nnf_check(s2) << endl;
 	cout << "Comp_len(s1): " << Comp_len(s1) << endl;
-	cout << "Comp_len(s2): " << Comp_len(s2) << endl; 
+	cout << "Comp_len(s2): " << Comp_len(s2) << endl; */
 }
 
 

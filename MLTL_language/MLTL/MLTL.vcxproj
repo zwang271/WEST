@@ -128,9 +128,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="grammar.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="nnf_grammar.cpp" />
     <ClCompile Include="reg.cpp" />
+    <ClCompile Include="reg_tests.cpp" />
     <ClCompile Include="simulation.cpp" />
     <ClCompile Include="utils.cpp" />
   </ItemGroup>

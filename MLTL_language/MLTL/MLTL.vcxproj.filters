@@ -30,7 +30,7 @@
     <ClCompile Include="nnf_grammar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="reg_tests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

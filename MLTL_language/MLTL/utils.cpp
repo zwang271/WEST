@@ -510,6 +510,8 @@ vector<string> simplify(vector<string> v, int n) {
 }
 
 void print_all_representations(vector<string> v_actual, int n) {
+
+	cout << endl << endl << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl << endl;
 	cout << "reg" << endl;
 	print(v_actual);
 
@@ -521,4 +523,13 @@ void print_all_representations(vector<string> v_actual, int n) {
 
 	cout << endl << "simplify right_or" << endl;
 	print(simplify(right_or(v_actual, n), n));
+
+	cout << endl << "left_or" << endl;
+	print(left_or(v_actual, n));
+
+	cout << endl << "simplify left_or" << endl;
+	print(simplify(left_or(v_actual, n), n));
+
+	cout << endl << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl << endl << endl;
 }
+
