@@ -503,7 +503,7 @@ int Comp_len(string wff){
         string beta = Slice(wff, end_interval+1, len_wff-2);
         int Comp_beta = Comp_len(beta);
         
-        return upper_bound + max(Comp_alpha, Comp_beta);
+        return max((upper_bound-1) + Comp_alpha, upper_bound + Comp_beta);
     }
 
     
