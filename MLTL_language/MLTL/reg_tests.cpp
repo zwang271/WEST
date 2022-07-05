@@ -102,13 +102,13 @@ TEST(basic_until) {
     ASSERT_EQUAL(v_expected, v_actual);
 }
 
-//// BUG
+
 TEST(basic_release) {
     string s = "(p0R[0:1]p1)";
     ASSERT_TRUE(Wff_check(s));
     ASSERT_TRUE(Nnf_check(s));
     vector<string> v_actual = reg(s, 2);
-    vector<string> v_expected = {"s1,s1", "11", "s1,11"};
+    vector<string> v_expected = {"s1,s1", "11"};
     ASSERT_EQUAL(v_expected, v_actual);
 }
 
@@ -117,9 +117,8 @@ TEST(basic_release) {
 
 
 
-//// EDGECASE TESTS
-//
-////BUG: this is the same as "T", so every computation should satisfy this: s
+//// EDGE CASE TESTS
+
 TEST(test_p_equals_p) {
     string s = "(p0=p0)";
     ASSERT_TRUE(Wff_check(s));
@@ -319,7 +318,7 @@ TEST(test_until_nested_diff_complen) {
     vector<string> v_actual = reg(s, n);
     v_actual = simplify(v_actual, n);
 
-    print_all_representations(v_actual, n);
+    //print_all_representations(v_actual, n);
 
     vector<string> v_expected = {"ss1,sss,sss", "s1s,ss1,sss",
                     "1ss,s11,sss", "s1s,s1s,ss1", "s1s,1ss,s11", 
@@ -339,7 +338,6 @@ TEST(test_p_until_p_until_q) {
 }
 
 
-////BUG
 TEST(test_and_with_until_diff_complen) {
     string s = "(&[(p0U[0:1]p1),(p0U[0:2]p1)])";
     int n = 2;
@@ -348,9 +346,9 @@ TEST(test_and_with_until_diff_complen) {
     ASSERT_TRUE(Nnf_check(s));
     vector<string> v_actual = reg(s, n);
 
-    /*print_all_representations(v_actual, n);*/
+    //print_all_representations(v_actual, n);
 
-    v_actual = simplify(right_or(v_actual, n), n);
+    v_actual = simplify(right_expand(v_actual, n), n);
     vector<string> v_expected = {"s1,ss,ss", "10,s1,ss"};
     ASSERT_EQUAL(v_expected, v_actual);
 }
@@ -433,8 +431,6 @@ TEST(test_oscillation_5) {
     ASSERT_EQUAL(v_expected, v_actual);
 }
 
-//BUG: need to think about this
-// FIXED
 TEST(test_induction) {
     string s = "(G[0:3](p0>G[1:1]p0)>(p0>G[0:4]p0))";
     int n = 1;
@@ -444,14 +440,13 @@ TEST(test_induction) {
 
     //print_all_representations(v_actual, n);
 
-    v_actual = simplify(right_or(v_actual, n), n);
+    v_actual = simplify(right_expand(v_actual, n), n);
 
     vector<string> v_expected = {"s,s,s,s,s"};
     ASSERT_EQUAL(v_expected, v_actual);
 }
 
-////BUG: nnf error
-// FIXED
+
 TEST(test_equivalent_1) {
     string s = "(G[0:0]p0=F[0:0]p0)";
     int n = 1;
@@ -463,8 +458,7 @@ TEST(test_equivalent_1) {
     ASSERT_EQUAL(v_expected, v_actual);
 }
 
-////BUG: nnf error
-// FIXED
+
 TEST(test_equivalent_2) {
     string s = "(G[1:1]p0=F[1:1]p0)";
     int n = 1;
@@ -514,7 +508,7 @@ TEST(test_finally_and_release_1) {
     ASSERT_TRUE(Nnf_check(s));
     vector<string> v_actual = reg(s, 2);
     //print(v_actual);
-    vector<string> v_expected = {"s1,s1", "11", "s1,11", "ss,s1,s1", "ss,11", "ss,s1,11"};
+    vector<string> v_expected = {"s1,s1", "11", "ss,s1,s1", "ss,11"};
     ASSERT_EQUAL(v_expected, v_actual);
 }
 
@@ -524,7 +518,7 @@ TEST(test_finally_and_release_2) {
     ASSERT_TRUE(Nnf_check(s));
     vector<string> v_actual = reg(s, 2);
     /*print(v_actual);*/
-    vector<string> v_expected = {"ss,s1,s1", "ss,11", "ss,s1,11", "ss,ss,s1,s1", "ss,ss,11", "ss,ss,s1,11"};
+    vector<string> v_expected = {"ss,s1,s1", "ss,11", "ss,ss,s1,s1", "ss,ss,11"};
     ASSERT_EQUAL(v_expected, v_actual);
 }
 
@@ -546,7 +540,6 @@ TEST(test_finally_and_until_2) {
     ASSERT_EQUAL(v_expected, v_actual);
 }
 
-//BUG: don't know if v_expected is correct, but there must be a bug because "ss,s1,11" is repeated
 TEST(test_global_and_release) {
     string s = "G[1:1](p0R[0:1]p1)";
     int n = 2;
@@ -556,7 +549,7 @@ TEST(test_global_and_release) {
     
     //print_all_representations(v_actual, n);
 
-    vector<string> v_expected = {"ss,s1,s1", "ss,11", "ss,s1,11"};
+    vector<string> v_expected = {"ss,s1,s1", "ss,11"};
     ASSERT_EQUAL(v_expected, v_actual);
 }
 
@@ -583,10 +576,6 @@ TEST(chiara_dual_release_equivalence_check){
 	cout << "Comp_len(s2): " << Comp_len(s2) << endl; */
 }
 
-
-//TEST(test_global_and_until) {
-//
-//}
 
 TEST_MAIN()
 

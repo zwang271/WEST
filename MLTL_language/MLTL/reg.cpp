@@ -4,10 +4,10 @@
 #include "reg.h"
 
 /*
-* Input: Two vectors of computation strings V1 and V2, comma separated
-* Output: Computes pairwise string_intersect between all
-*		  computation strings in V1 and V2
-*/
+ * Input: Two vectors of computation strings V1 and V2, comma separated
+ * Output: Computes pairwise string_intersect between all
+ *		  computation strings in V1 and V2
+ */
 vector<string> set_intersect(vector<string> v1, vector<string> v2, int n) {
 	vector<string> v = vector<string>();
 	if (v1 == v or v2 == v) { // Currently v is the empty vector
@@ -50,20 +50,23 @@ vector<string> set_intersect(vector<string> v1, vector<string> v2, int n) {
 
 
 /*
-* Input: Vectors V1 and V2 of computation strings
-*		 N is number of proposition variables
-* Output: Vector of disjoint computation strings
-*/
+ * Input: Vectors V1 and V2 of computation strings
+ *		 n is number of propositional variables
+ * Output: Vector of disjoint computation strings
+ */
 vector<string> set_union(vector<string> v1, vector<string> v2, int n) {
 	vector<string> v = join(v1, v2);
 
-	return right_or(v, n);
+	return right_expand(v, n);
 }
 
 
 /*
-* Prop_cons  ->  'T' | '!'
-*/
+ * Prop_cons  ->  'T' | '!'
+ * Input: mLTL formula in NNF form (string)
+ *      n is number of propositional variables
+ * Output: Vector of computation strings satisfying "T" or "!"
+ */
 vector<string> reg_prop_cons(string nnf, int n) {
 	if ((nnf == "T") and (n != 0)) {
 		return { string(n, 's') };
@@ -80,8 +83,11 @@ vector<string> reg_prop_cons(string nnf, int n) {
 
 
 /*
-* Prop_var -> 'p' Num | '~' 'p' Num
-*/
+ * Prop_var -> 'p' Num | '~' 'p' Num
+ * Input: mLTL formula in NNF form (string)
+ *      n is number of propositional variables
+ * Output: Vector of computation strings satisfying a prop. var.
+ */
 vector<string> reg_prop_var(string nnf, int n)
 {
 	int k;
@@ -103,7 +109,13 @@ vector<string> reg_prop_var(string nnf, int n)
 	return {};
 }
 
-
+/*
+ * Input: vector reg_alpha of computation strings satisfying MLTL NNF formula alpha
+ *      a is lower bound of interval
+ *      b is upper bound of interval
+ *      n is number of propositional variables
+ * Output: Vector of computation strings satisfying F[a,b]alpha
+ */
 vector<string> reg_F(vector<string> reg_alpha, int a, int b, int n) {
 	vector<string> comp = vector<string>();
 
@@ -134,7 +146,13 @@ vector<string> reg_F(vector<string> reg_alpha, int a, int b, int n) {
 	return comp;
 }
 
-
+/*
+ * Input: vector reg_alpha of computation strings satisfying mLTL NNF formula alpha
+ *      a is lower bound of interval
+ *      b is upper bound of interval
+ *      n is number of propositional variables
+ * Output: Vector of computation strings satisfying G[a,b]alpha
+ */
 vector<string> reg_G(vector<string> reg_alpha, int a, int b, int n)
 {
 	string pre = "";
@@ -167,7 +185,14 @@ vector<string> reg_G(vector<string> reg_alpha, int a, int b, int n)
 	return comp;
 }
 
-
+/*
+ * Input: vector reg_alpha of computation strings satisfying mLTL NNF formula alpha
+ *      vector reg_beta of comp. strings satisfying mLTL NNF formula beta
+ *      a is lower bound of interval
+ *      b is upper bound of interval
+ *      n is number of propositional variables
+ * Output: Vector of computation strings satisfying alphaU[a,b]beta
+ */
 vector<string> reg_U(vector<string> reg_alpha, vector<string> reg_beta, int a, int b, int n) {
 	string pre = "";
 	// pre = (s^n,)^a
@@ -192,7 +217,14 @@ vector<string> reg_U(vector<string> reg_alpha, vector<string> reg_beta, int a, i
 	return comp;
 }
 
-
+/*
+ * Input: vector reg_alpha of computation strings satisfying mLTL NNF formula alpha
+ *      vector reg_beta of comp. strings satisfying mLTL NNF formula beta
+ *      a is lower bound of interval
+ *      b is upper bound of interval
+ *      n is number of propositional variables
+ * Output: Vector of computation strings satisfying alphaR[a,b]beta
+ */
 vector<string> reg_R(vector<string> alpha, vector<string> beta, int a, int b, int n) {
 	string pre = "";
 	// pre = (s^n,)^a
@@ -214,13 +246,16 @@ vector<string> reg_R(vector<string> alpha, vector<string> beta, int a, int b, in
 
 
 /*
-* Nnf ->  ?(~) Prop_var | Prop_cons
-*	                    | Unary_Temp_conn  Interval  Nnf
-*
-*	                    | '(' Assoc_Prop_conn �[�  Nnf_Array_entry  �]� ')'
-*                       | �(� Nnf Binary_Prop_conn Nnf �)�
-*                       | �(� Nnf Binary_Temp_conn  Interval Nnf �)
-*/
+ * Nnf ->  ?(~) Prop_var | Prop_cons
+ *	                     | Unary_Temp_conn  Interval  Nnf
+ *
+ *	                     | '(' Assoc_Prop_conn '['  Nnf_Array_entry  ']' ')'
+ *                       | '(' Nnf Binary_Prop_conn Nnf ')'
+ *                       | '(' Nnf Binary_Temp_conn  Interval Nnf ')'
+ * Input: mLTL formula in NNF (string)
+ *     n is number of propositional variables
+ * Output: Vector of computation strings satisfying the formula
+ */
 vector<string> reg(string nnf, int n) {
 	int len_nnf = int(nnf.length());
 
@@ -376,7 +411,7 @@ vector<string> reg(string nnf, int n) {
 // For preformance reasons, reg_clean will return a
 // NOT NECESSARILY DISJOINT Union.
 // To obtain a disjoint union from reg_clean's output,
-// use right_or.
+// use right_expand.
 //
 // Cleaner implementation of reg
 // in case original is faulty.

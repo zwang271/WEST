@@ -5,8 +5,8 @@
 #include "grammar.h"
 
 /*
-This file implements the following Context-Free Grammar
-for a well-formed formula for MLTL:
+This file implements the following Context-Free Grammar:
+For a well-formed mLTL formula,
 
 Alphabet = { ‘0’, ‘1’, …, ‘9’, ‘p’, ‘(‘, ‘)’, ‘[’, ‘]’, ':', ‘,’ ,
                        ‘T’, ‘!’,
@@ -51,8 +51,8 @@ using namespace std;
 
 
 /*
-Takes substring of given string from a to b.
-*/
+ * Takes substring of given string from a to b.
+ */
 string Slice(string s, int a, int b){
 	int s_len = int(s.length());
   	
@@ -75,20 +75,28 @@ string Slice(string s, int a, int b){
 }
 
 
-// Returns length 1 string at index i.
+/*
+ * Returns length 1 string at index i.
+ */
 string Slice_char(string s, int i){
     return Slice(s, i, i);
 }
 
 
-// Digit  ->  ‘0’ | ‘1’ | … |’9’
+/*
+ * Digit  ->  ‘0’ | ‘1’ | … |’9’
+ * Checks that the inputted string is a digit.
+ */
 bool Digit_check(string s){
     return s == "0" or s == "1" or s == "2" or s == "3" 
         or s == "4" or s == "5" or s == "6" or s == "7" or s == "8" or s == "9";
 }
 
 
-// Num  ->  Digit Num |  Digit
+/*
+ * Num  ->  Digit Num |  Digit
+ * Checks that the inputted string is of length 1 and then runs digit_check().
+ */
 bool Num_check(string s){
     int len_s = int(s.length());
     if (len_s == 1){
@@ -101,7 +109,10 @@ bool Num_check(string s){
 }
 
 
-// Interval  ->  ‘[’  Num ‘,’ Num ‘]’
+/*
+ * Interval  ->  ‘[’  Num ‘,’ Num ‘]’
+ * Checks that the inputted string is of the form of an interval.
+ */
 bool Interval_check(string s){
     int len_s = int(s.length());
 
@@ -122,7 +133,10 @@ bool Interval_check(string s){
 }
 
 
-// Prop_var  ->  ‘p’ Num
+/*
+ * Prop_var  ->  ‘p’ Num
+ * Checks that the inputted string is a propositional variable.
+ */
 bool Prop_var_check(string s){
     int len_s = int(s.length());
 
@@ -132,31 +146,47 @@ bool Prop_var_check(string s){
 }
 
 
-// Prop_cons  ->  ‘T’ | ‘!’
+/*
+ * Prop_cons  ->  ‘T’ | ‘!’
+ * Checks that the inputted string is a propositional constant.
+ */
 bool Prop_cons_check(string s){
     return s == "T" or s == "!";
 }
 
 
-// Unary_Prop_conn  ->  ‘~’
+/*
+ * Unary_Prop_conn  ->  ‘~’
+ * Checks that the inputted string is the negation symbol (the unary prop. connective).
+ */
 bool Unary_Prop_conn_check(string s){
     return s == "~";
 }
 
 
-// Binary_Prop_conn  ->  ‘v’ | ‘&’ | ‘=’ | ‘>’
+/*
+ * Binary_Prop_conn  ->  ‘v’ | ‘&’ | ‘=’ | ‘>’
+ * Checks that the inputted string is a binary prop. connective (or, and, equivalence, implication).
+ */
 bool Binary_Prop_conn_check(string s){
     return s == "v" or s == "&" or s == "=" or s == ">";
 }
 
 
-// Assoc_Prop_conn -> ‘v’ | ‘&’ | ‘=’
+/*
+ * Assoc_Prop_conn -> ‘v’ | ‘&’ | ‘=’
+ * Checks that the inputted string is an associative prop. connective (or, and, equivalence).
+ */
 bool Assoc_Prop_conn_check(string s){
     return s == "v" or s == "&" or s == "=";
 }
 
 
-// Array_entry -> Wff ‘,’ Array_entry  |  Wff
+/*
+ * Array_entry -> Wff ‘,’ Array_entry  |  Wff
+ * Checks that the inputted string is an array of WFFs.
+ * We use an array of WFFs, for example, when ANDing >2 formulas.
+ */
 bool Array_entry_check(string s){
     int len_s = int(s.length());
 
@@ -194,25 +224,33 @@ bool Array_entry_check(string s){
 }
 
 
-// Unary_Temp_conn  ->  ‘F’ | ‘G’
+/*
+ * Unary_Temp_conn  ->  ‘F’ | ‘G’
+ * Checks that the inputted string is F or G (the unary temporal connectives).
+ */
 bool Unary_Temp_conn_check(string s){
     return s == "F" or s == "G";
 }
 
 
-// Binary_Temp_conn  ->  ‘U’ | ‘R’
+/*
+ * Binary_Temp_conn  ->  ‘U’ | ‘R’
+ * Checks that the inputted string is U or R (the binary temporal connectives).
+ */
 bool Binary_Temp_conn_check(string s){
     return s == "U" or s == "R";
 }
 
 
-// Wff ->  Prop_var | Prop_cons
-//                  | Unary_Prop_conn Wff
-//	                | Unary_Temp_conn  Interval  Wff
-// 
-//	                | '(' Assoc_Prop_conn ‘[‘  Array_entry  ‘]’ ')'
-//                  | ‘(‘ Wff Binary_Prop_conn Wff ‘)’
-//                  | ‘(‘ Wff Binary_Temp_conn  Interval Wff ‘)
+/*
+ *  Wff ->  Prop_var | Prop_cons
+ *                  | Unary_Prop_conn Wff
+ *                  | Unary_Temp_conn  Interval  Wff
+ *                  | '(' Assoc_Prop_conn ‘[‘  Array_entry  ‘]’ ')'
+ *                  | ‘(‘ Wff Binary_Prop_conn Wff ‘)’
+ *                  | ‘(‘ Wff Binary_Temp_conn  Interval Wff ‘)
+ *  Checks that an inputted string is a WFF.
+ */
 
 bool Wff_check(string s){
     int len_s = int(s.length());
@@ -318,7 +356,7 @@ bool Wff_check(string s){
 }
 
 
-// Given a well-formed MLTL formula wff,
+// Given a well-formed mLTL formula wff,
 // return the index of the primary binary connective.
 // If this does not occur, the function throws
 // an error message.
@@ -362,7 +400,7 @@ int primary_binary_conn(string wff){
 }
 
 
-// Given a well-formed MLTL formula wff,
+// Given a well-formed mLTL formula wff,
 // return the tuple (begin_interval, comma_index, end_interval), giving the indexs
 // for the primary interval occuring in the formula.
 // This makes parsing for the temporal indexs easy.
@@ -420,7 +458,7 @@ tuple<int, int, int> primary_interval(string wff){
 }
 
 
-// Function to determine the minimum computation length for a MLTL wff such that there is no 
+// Function to determine the minimum computation length for a mLTL wff such that there is no
 // out-of-bounds behavior.
 int Comp_len(string wff){
     int len_wff = int(wff.length());
