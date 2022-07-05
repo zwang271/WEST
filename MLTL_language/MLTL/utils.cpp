@@ -11,11 +11,11 @@ using namespace std;
 
 
 /*
-* Input: computation string UNPADDED_S separated by commas
-*		 LENGTH is target length to pad to
-*		 N is number of propositional variables
-* Output: computation string separated by commas of length LENGTH
-*/
+ * Input: computation string UNPADDED_S separated by commas
+ *		 LENGTH is target length to pad to
+ *		 n is number of propositional variables
+ * Output: computation string separated by commas of length LENGTH
+ */
 string pad_to_length(string unpadded_s, int length, int n) {
 	// Compute remaining space to pad.
 	int diff = int((length - unpadded_s.length()) / (n + 1));
@@ -28,11 +28,11 @@ string pad_to_length(string unpadded_s, int length, int n) {
 
 
 /*
-* Input: Vector of computation strings with commas
-*		 N is number of propositional variables
-*		 M is -1 at first, pass in a positive value for m to pad all strings to length m instead
-* Output: Pads all comutation strings to the same length as the longest string
-*/
+ * Input: Vector of computation strings with commas
+ *		 n is number of propositional variables
+ *		 m is -1 at first, pass in a positive value for m to pad all strings to length m instead
+ * Output: Pads all computation strings to the same length as the longest string
+ */
 vector<string> pad(vector<string> unpadded_v, int n, int m) {
 	int unpadded_size = int(unpadded_v.size());
 
@@ -56,10 +56,10 @@ vector<string> pad(vector<string> unpadded_v, int n, int m) {
 
 
 /*
-* Input: string S 
-*		 char C
-* Output: S with every instance of C removed
-*/
+ * Input: string S
+ *		 char C
+ * Output: S with every instance of C removed
+ */
 string strip_char(string s, char c)
 {
 	string w = "";
@@ -73,9 +73,9 @@ string strip_char(string s, char c)
 
 
 /*
-* Input: Vector of computation strings with commas
-* Output: Vector of computation strings without commas
-*/
+ * Input: Vector of computation strings with commas
+ * Output: Vector of computation strings without commas
+ */
 vector<string> strip_commas(vector<string> comma_v) {
 	for (int i = 0; i < comma_v.size(); ++i) {
 		comma_v[i] = strip_char(comma_v[i], ',');;
@@ -85,10 +85,10 @@ vector<string> strip_commas(vector<string> comma_v) {
 
 
 /*
-* Input: Vector of computation strings without commas
-*		 N is number of propositional variables
-* Output: Vector of computation strings with commas
-*/
+ * Input: Vector of computation strings without commas
+ *		 n is number of propositional variables
+ * Output: Vector of computation strings with commas
+ */
 vector<string> add_commas(vector<string> v, int n) {
 	for (int i = 0; i < v.size(); i++) {
 		int len_w = int(v[i].length());
@@ -106,10 +106,10 @@ vector<string> add_commas(vector<string> v, int n) {
 
 
 /*
-* Input: Two computation strings W_1 and W_2, comma separated
-*		 N is number of propositional variables
-* Output: Bit-wise and of the two string of length max(len(w_1), len(w_2))
-*/
+ * Input: Two computation strings W_1 and W_2, comma separated
+ *		 n is number of propositional variables
+ * Output: Bit-wise AND of the two strings of length max(len(w_1), len(w_2))
+ */
 string string_intersect(string w_1, string w_2, int n) {
 	// Remove white-characters from w_1 and w_2
 	w_1 = strip_char(w_1, ' ');
@@ -159,38 +159,9 @@ string string_intersect(string w_1, string w_2, int n) {
 
 
 /*
-* Input: Vector of computation strings V, with commas
-*	     N is number of propositional variables
-* Info: Any computation string w is of the form w = (s,)^k(0,|1,|s,)^m where k is maximal
-* Output: Array of indices that computes m for each string in V
-*/
-vector<int> right_or_aux(vector<string> v, int n) {
-	v = pad(v, n);
-	v = strip_commas(v);
-	int len_w = int(v[0].size());
-	vector<int> indices;
-	for (int i = 0; i < v.size(); ++i) {
-		if (v[i][0] == 's') {
-			for (int j = 1; j < len_w; ++j) {
-				if (v[i][j] != 's') {
-					indices.push_back(len_w - j);
-					break;
-				}
-				else if ((j == len_w - 1 and v[i][j] == 's')) {
-					indices.push_back(0);
-					break;
-				}
-			}
-		}
-	}
-	return indices;
-}
-
-
-/*
-* Input: vector V of length 1 computation strings (bits)
-* Output: singleton vector computing or of V
-*/
+ * Input: vector V of length 1 computation strings (bits)
+ * Output: singleton vector computing OR of V
+ */
 vector<string> single_char_or(vector<string> V) {
 	vector<string> ret;
 	if (V.size() == 0) {
@@ -214,9 +185,9 @@ vector<string> single_char_or(vector<string> V) {
 
 
 /*
-* Input: Vectors A and B of computation strings
-* Output: Vector of A concatenated with B
-*/
+ * Input: Vectors A and B of computation strings
+ * Output: Vector A concatenated with B
+ */
 vector<string> join(vector<string> A, vector<string> B) {
 	vector<string> AB;
 	AB.reserve(A.size() + B.size()); // preallocate memory
@@ -227,10 +198,10 @@ vector<string> join(vector<string> A, vector<string> B) {
 
 
 /*
-* Input: Vector of computation strings V
-*		 String S
-* Output: Appends S to each string in V
-*/
+ * Input: Vector of computation strings V
+ *		 String S
+ * Output: Appends S to each string in V
+ */
 vector<string> list_str_concat_suffix(vector<string> V, string s) {
 	for (int i = 0; i < V.size(); ++i) {
 		V[i] += s;
@@ -240,10 +211,10 @@ vector<string> list_str_concat_suffix(vector<string> V, string s) {
 
 
 /*
-* Input: Vector of computation strings V
-*		 String S
-* Output: Prepends S to each string in V
-*/
+ * Input: Vector of computation strings V
+ *		 String S
+ * Output: Prepends S to each string in V
+ */
 vector<string> list_str_concat_prefix(vector<string> V, string s) {
 	for (int i = 0; i < V.size(); ++i) {
 		V[i] = s + V[i];
@@ -253,12 +224,13 @@ vector<string> list_str_concat_prefix(vector<string> V, string s) {
 
 
 /*
-* Input: Vector of computation strings V, with commas
-*		 ITERATION describes depth of recursion (MUST CALL WITH 0 INITIALLY)
-*		 N is number of propositional variables
-* Output: Vector of disjoint computation strings
-*/
-vector<string> left_or(vector<string> v, int n, int iteration) {
+ * Input: Vector of computation strings V, with commas
+ *		 ITERATION describes depth of recursion (MUST CALL WITH 0 INITIALLY)
+ *		 n is number of propositional variables
+ * Output: Vector of disjoint computation strings
+ * Info: Called left_expand() because the function begins the recursion at the leftmost character of the strings
+ */
+vector<string> left_expand(vector<string> v, int n, int iteration) {
 	// Single union and empty union are disjoint
 	if (v.size() == 0 or v.size() == 1) {
 		return v;
@@ -317,8 +289,8 @@ vector<string> left_or(vector<string> v, int n, int iteration) {
 	}
 	else {
 		++iteration;
-		v = join(list_str_concat_prefix(right_or(begin_zero, n, iteration), "0"),
-			list_str_concat_prefix(right_or(begin_one, n, iteration), "1")
+		v = join(list_str_concat_prefix(right_expand(begin_zero, n, iteration), "0"),
+			list_str_concat_prefix(right_expand(begin_one, n, iteration), "1")
 		);
 	}
 
@@ -332,13 +304,13 @@ vector<string> left_or(vector<string> v, int n, int iteration) {
 
 
 /*
-* Input: Vector of computation strings V, with commas
-*		 ITERATION describes depth of recursion (MUST CALL WITH 0 INITIALLY)
-*		 INIDCES is vector of ints from right_or_aux
-*		 N is number of propositional variables
-* Output: Vector of disjoint computation strings
-*/
-vector<string> right_or(vector<string> v, int n, int iteration) {
+ * Input: Vector of computation strings V, with commas
+ *		 ITERATION describes depth of recursion (MUST CALL WITH 0 INITIALLY)
+ *		 n is number of propositional variables
+ * Output: Vector of disjoint computation strings
+ * Info: Called right_expand() because the function begins the recursion at the rightmost character of the strings
+ */
+vector<string> right_expand(vector<string> v, int n, int iteration) {
 	//strip commas before, or write invariant_check
 	if (v.size() == 0 or v.size() == 1) {
 		return v;
@@ -388,8 +360,8 @@ vector<string> right_or(vector<string> v, int n, int iteration) {
 	}
 	else {
 		++iteration;
-		v = join(list_str_concat_suffix(right_or(end_zero, n, iteration), "0"),
-			list_str_concat_suffix(right_or(end_one, n, iteration), "1")
+		v = join(list_str_concat_suffix(right_expand(end_zero, n, iteration), "0"),
+			list_str_concat_suffix(right_expand(end_one, n, iteration), "1")
 		);
 	}
 
@@ -403,8 +375,8 @@ vector<string> right_or(vector<string> v, int n, int iteration) {
 
 
 /*
-* Prints each element of a vector of strings on a new line
-*/
+ * Prints each element of a vector of strings on a new line
+ */
 void print(vector<string> v) {
 	for (int i = 0; i < v.size(); ++i) {
 		cout << v[i] << endl;
@@ -412,16 +384,15 @@ void print(vector<string> v) {
 }
 
 
-
 /*
-* Input: computation strings s1 and s2
-*	If the following is possible:
-*	s1 = w1 + 'c1' + v1
-*	s2 = w1 + 'c2' + v1
-*	Here, c1 and c2 are the first differing character from the left
-*	return w1 + single_char_or(c1, c2) + v1
-* Otherwise output: "FAIL"
-*/
+ * Input: computation strings s1 and s2
+ *	If the following is possible:
+ *	s1 = w1 + 'c1' + v1
+ *	s2 = w1 + 'c2' + v1
+ *	Here, c1 and c2 are the first differing character from the left
+ *	return w1 + single_char_or(c1, c2) + v1
+ * Otherwise output: "FAIL"
+ */
 string simplify_string(string s1, string s2)
 {
 	if (s1.length() != s2.length()) {
@@ -459,8 +430,8 @@ string simplify_string(string s1, string s2)
 
 
 /*
-* Removes element in INDEX from vector v
-*/
+ * Removes element in INDEX from vector v
+ */
 template <typename T>
 void remove(vector<T>& v, size_t index) {
 	v.erase(v.begin() + index);
@@ -468,9 +439,9 @@ void remove(vector<T>& v, size_t index) {
 
 
 /*
-* Input: Vector of disjoint computation strings v
-* Output: Simplifies strings in v pairwise as much as possible
-*/
+ * Input: Vector of disjoint computation strings v
+ * Output: Simplifies strings in v pairwise as much as possible
+ */
 vector<string> simplify(vector<string> v, int n) {
 	v = pad(v, n);
 	if (v.size() <= 1) {
@@ -510,8 +481,12 @@ vector<string> simplify(vector<string> v, int n) {
 }
 
 
+/*
+ * Prints vector of computations strings as a tree.
+ * String pre_space is printed in front of the computation strings.
+ */
 void print_tree(vector<string> v, string pre_space) {
-	// Base case: print out v with pre-concatennated pre_space
+	// Base case: print out v with pre-concatenated pre_space
 	if (v.size() == 1) {
 		v = list_str_concat_prefix(v, pre_space);
 		print(v);
@@ -566,8 +541,8 @@ void print_tree(vector<string> v, string pre_space) {
 
 
 /*
-* Returns the longest common left substring of all strings in v
-*/
+ * Returns the longest common left substring of all strings in v.
+ */
 string common_left_string(vector<string> v) {
 	// Return entire string if v has only 1 string
 	if (v.size() == 1) {
@@ -601,7 +576,10 @@ string common_left_string(vector<string> v) {
 	return left_common;
 }
 
-
+/*
+ * Prints all computation strings in a vector v_actual.
+ * n is number of propositional variables
+ */
 void print_all_representations(vector<string> v_actual, int n) {
 
 	cout << endl << endl << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl << endl;
@@ -611,17 +589,17 @@ void print_all_representations(vector<string> v_actual, int n) {
 	cout << endl << "simplify" << endl;
 	print(simplify(v_actual, n));
 
-	cout << endl << "right_or" << endl;
-	print(right_or(v_actual, n));
+	cout << endl << "right_expand" << endl;
+	print(right_expand(v_actual, n));
 
-	cout << endl << "simplify right_or" << endl;
-	print(simplify(right_or(v_actual, n), n));
+	cout << endl << "simplify right_expand" << endl;
+	print(simplify(right_expand(v_actual, n), n));
 
-	cout << endl << "left_or" << endl;
-	print(left_or(v_actual, n));
+	cout << endl << "left_expand" << endl;
+	print(left_expand(v_actual, n));
 
-	cout << endl << "simplify left_or" << endl;
-	print(simplify(left_or(v_actual, n), n));
+	cout << endl << "simplify left_expand" << endl;
+	print(simplify(left_expand(v_actual, n), n));
 
 	cout << endl << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl << endl << endl;
 }
