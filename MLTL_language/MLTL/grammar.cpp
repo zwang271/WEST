@@ -356,10 +356,9 @@ bool Wff_check(string s){
 }
 
 
-// Given a well-formed mLTL formula wff,
-// return the index of the primary binary connective.
-// If this does not occur, the function throws
-// an error message.
+/*
+ * Returns the index of the primary binary connective of a WFF.
+ */
 int primary_binary_conn(string wff){
     int len_wff = int(wff.length());
 
@@ -400,13 +399,9 @@ int primary_binary_conn(string wff){
 }
 
 
-// Given a well-formed mLTL formula wff,
-// return the tuple (begin_interval, comma_index, end_interval), giving the indexs
-// for the primary interval occuring in the formula.
-// This makes parsing for the temporal indexs easy.
-//
-// If there is no primary interval for the formula, the function throws
-// an error message.
+/*
+ * Returns the indices where the primary interval is in a given WFF.
+ */
 tuple<int, int, int> primary_interval(string wff){
     int len_wff = int(wff.length());
 
@@ -458,8 +453,9 @@ tuple<int, int, int> primary_interval(string wff){
 }
 
 
-// Function to determine the minimum computation length for a mLTL wff such that there is no
-// out-of-bounds behavior.
+/*
+ * Determines the minimum computation length needed for a given WFF to not have out-of-bounds behavior.
+ */
 int Comp_len(string wff){
     int len_wff = int(wff.length());
 
