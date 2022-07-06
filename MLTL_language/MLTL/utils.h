@@ -25,3 +25,4 @@ vector<string> simplify(vector<string> v, int n);
 void print_tree(vector<string> v, string pre_space = "");
 string common_left_string(vector<string> v);
 void print_all_representations(vector<string> v_actual, int n);
+int sum_of_characters(vector<string>);

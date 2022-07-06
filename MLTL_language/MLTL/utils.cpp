@@ -605,3 +605,10 @@ void print_all_representations(vector<string> v_actual, int n) {
 	cout << endl << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl << endl << endl;
 }
 
+int sum_of_characters(vector<string> v) {
+    int sum = 0;
+    for (int i = 0; i < v.size(); ++i) {
+        sum += v[i].length();
+    }
+    return sum;
+}
