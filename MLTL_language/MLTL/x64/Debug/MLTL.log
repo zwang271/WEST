@@ -1,2 +1,2 @@
-﻿  main.cpp
-LINK : fatal error LNK1168: cannot open C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_language\x64\Debug\MLTL.exe for writing
+﻿  nnf_grammar.cpp
+  MLTL.vcxproj -> C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_language\x64\Debug\MLTL.exe

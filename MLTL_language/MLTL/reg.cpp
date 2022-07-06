@@ -180,7 +180,8 @@ vector<string> reg_G(vector<string> reg_alpha, int a, int b, int n)
 
 		temp_alpha = list_str_concat_prefix(reg_alpha, w);
 		comp = set_intersect(comp, temp_alpha, n);
-		cout << i << "\t" << comp.size() << endl;
+		/*cout << i << "\t size: " << comp.size() << endl;
+		print(comp);*/
 	}
 	comp = list_str_concat_prefix(comp, pre);
 
@@ -309,23 +310,24 @@ vector<string> reg(string nnf, int n) {
 	if (Assoc_Prop_conn_check(Slice_char(nnf, 1))) {
 		string assoc_prop_conn = Slice_char(nnf, 1);
 
-		// (...((wff_1 assoc_prop_conn wff_2) assoc_prop_conn wff_3) ... assoc_prop_conn wff_n)
-		// is equiv to (assoc_prop_conn [wff_1, ..., wff_n])
+		// (...((Nnf_1 assoc_prop_conn Nnf_2) assoc_prop_conn Nnf_3) ... assoc_prop_conn Nnf_n)
+		// is equiv to (assoc_prop_conn [Nnf_1, ..., Nnf_n])
 		int begin_entry = 3;
 		string equiv_formula = "";
+		// Parsing for Nff between each comma
 		for (int end_entry = 3; end_entry <= len_nnf - 1; ++end_entry) {
-			if (Wff_check(Slice(nnf, begin_entry, end_entry))) {
+			if (Nnf_check(Slice(nnf, begin_entry, end_entry))) {
 				string alpha = Slice(nnf, begin_entry, end_entry);
 
 				// First entry obtained
 				if (begin_entry == 3) {
-					// Add wff_1 to equiv_formula
+					// Add Nnf_1 to equiv_formula
 					equiv_formula = equiv_formula + alpha;
 				}
 
 				// Not first entry
 				else {
-					// Add wff_n to equiv_formula, where n >= 2
+					// Add Nnf_n to equiv_formula, where n >= 2
 					equiv_formula = "(" + equiv_formula + assoc_prop_conn + alpha + ")";
 				}
 
@@ -373,7 +375,7 @@ vector<string> reg(string nnf, int n) {
 		}
 	}
 
-	// '(' Wff Binary_Temp_conn Interval Wff ')'
+	// '(' Nnf Binary_Temp_conn Interval Nnf ')'
 	if (Binary_Temp_conn_check(binary_conn)) {
 		tuple<int, int, int> interval_tuple = primary_interval(nnf);
 		int begin_interval = get<0>(interval_tuple);
@@ -527,23 +529,23 @@ vector<string> reg_clean(string nnf, int n) {
 	if (Assoc_Prop_conn_check(Slice_char(nnf, 1))) {
 		string assoc_prop_conn = Slice_char(nnf, 1);
 
-		// (...((wff_1 assoc_prop_conn wff_2) assoc_prop_conn wff_3) ... assoc_prop_conn wff_n)
-		// is equiv to (assoc_prop_conn [wff_1, ..., wff_n])
+		// (...((Nnf_1 assoc_prop_conn Nnf_2) assoc_prop_conn Nnf_3) ... assoc_prop_conn Nnf_n)
+		// is equiv to (assoc_prop_conn [Nnf_1, ..., Nnf_n])
 		int begin_entry = 3;
 		string equiv_formula = "";
 		for (int end_entry = 3; end_entry <= len_nnf - 1; ++end_entry) {
-			if (Wff_check(Slice(nnf, begin_entry, end_entry))) {
+			if (Nnf_check(Slice(nnf, begin_entry, end_entry))) {
 				string alpha = Slice(nnf, begin_entry, end_entry);
 
 				// First entry obtained
 				if (begin_entry == 3) {
-					// Add wff_1 to equiv_formula
+					// Add Nnf_1 to equiv_formula
 					equiv_formula = equiv_formula + alpha;
 				}
 
 				// Not first entry
 				else {
-					// Add wff_n to equiv_formula, where n >= 2
+					// Add Nnf_n to equiv_formula, where n >= 2
 					equiv_formula = "(" + equiv_formula + assoc_prop_conn + alpha + ")";
 				}
 

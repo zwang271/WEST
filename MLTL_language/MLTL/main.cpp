@@ -23,7 +23,7 @@ int main() {
 		while (!is_valid) {
 			getline(cin, wff);
 			wff = strip_char(wff, ' ');
-			if (Wff_check(wff) and Nnf_check(wff)) {
+			if (Wff_check(wff)) {
 				is_valid = true;
 			}
 			else {
@@ -40,10 +40,13 @@ int main() {
 				cout << "n must be a positive integer." << endl;
 			}
 		}
-		answer = reg(wff, n);
+		string nnf = Wff_to_Nnf_clean(wff);
+		cout << endl << Nnf_check(nnf) << "\t" << nnf << endl << endl;
+		answer = reg(nnf, n);
 		print(answer);
 		cout << "Finished computing." << answer.size() << endl;
 		/*print_all_representations(answer, n);*/
+		//print(simplify(answer, n));
 		cin.get();
 	}
 
