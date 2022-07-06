@@ -618,7 +618,7 @@ string Wff_to_Nnf_clean(string wff){
             if (unary_temp_conn == "F"){
                 unary_temp_conn = "G";
             }
-            if (unary_temp_conn == "G"){
+            else if (unary_temp_conn == "G"){
                 unary_temp_conn = "F";
             }  
 
@@ -678,7 +678,7 @@ string Wff_to_Nnf_clean(string wff){
                 if (binary_conn == "v"){
                     binary_conn = "&";
                 }
-                if (binary_conn == "&"){
+                else if (binary_conn == "&"){
                     binary_conn = "v";
                 } 
 
@@ -722,7 +722,7 @@ string Wff_to_Nnf_clean(string wff){
                 if (binary_conn == "U"){
                     binary_conn = "R";
                 }
-                if (binary_conn == "R"){
+                else if (binary_conn == "R"){
                     binary_conn = "U";
                 } 
 
