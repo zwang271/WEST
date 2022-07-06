@@ -289,8 +289,8 @@ vector<string> left_expand(vector<string> v, int n, int iteration) {
 	}
 	else {
 		++iteration;
-		v = join(list_str_concat_prefix(right_expand(begin_zero, n, iteration), "0"),
-			list_str_concat_prefix(right_expand(begin_one, n, iteration), "1")
+		v = join(list_str_concat_prefix(left_expand(begin_zero, n, iteration), "0"),
+			list_str_concat_prefix(left_expand(begin_one, n, iteration), "1")
 		);
 	}
 
