@@ -553,7 +553,7 @@ TEST(test_global_and_release) {
     ASSERT_EQUAL(v_expected, v_actual);
 }
 
-TEST(chiara_dual_release_equivalence_check){
+TEST(test_chiara_dual_release_equivalence_check){
     string a = "( (v[G[1:3]p1, (G[1:1]p0 & G[1:1]p1), (G[2:2]p0 & G[1:2]p1), (G[3:3]p0 & G[1:3]p1)])";
 	string b = "= (&[(F[1:0]p0 v G[1:1]p1), (F[1:1]p0 v G[2:2]p1), (F[1:3]p0 v G[3:3]p1)]) )";
 	string s1 = strip_char(a + b, ' ');
@@ -575,6 +575,164 @@ TEST(chiara_dual_release_equivalence_check){
 	cout << "Comp_len(s1): " << Comp_len(s1) << endl;
 	cout << "Comp_len(s2): " << Comp_len(s2) << endl; */
 }
+
+TEST(test_wff_to_nnf_1) {
+    string s = "p0";
+    ASSERT_EQUAL(Wff_to_Nnf_clean(s), s);
+}
+
+TEST(test_wff_to_nnf_2) {
+    string s = "~p0";
+    ASSERT_EQUAL(Wff_to_Nnf_clean(s), s);
+}
+
+TEST(test_wff_to_nnf_3) {
+    string s = "T";
+    ASSERT_EQUAL(Wff_to_Nnf_clean(s), s);
+}
+
+TEST(test_wff_to_nnf_4) {
+    string s = "!";
+    ASSERT_EQUAL(Wff_to_Nnf_clean(s), s);
+}
+
+TEST(test_wff_to_nnf_5) {
+    string s = "~~p1";
+    ASSERT_NOT_EQUAL(Wff_to_Nnf_clean(s), s);
+}
+
+
+TEST(test_wff_to_nnf_F_1) {
+    string s = "F[0:1]p0";
+    ASSERT_EQUAL(Wff_to_Nnf_clean(s), s);
+}
+
+TEST(test_wff_to_nnf_F_2) {
+    string s = "F[0:1]~p0";
+    ASSERT_EQUAL(Wff_to_Nnf_clean(s), s);
+}
+
+TEST(test_wff_to_nnf_F_3) {
+    string s = "~F[0:1]p0";
+    ASSERT_NOT_EQUAL(Wff_to_Nnf_clean(s), s);
+}
+
+TEST(test_wff_to_nnf_G_1) {
+    string s = "G[0:1]p0";
+    ASSERT_EQUAL(Wff_to_Nnf_clean(s), s);
+}
+
+TEST(test_wff_to_nnf_G_2) {
+    string s = "G[0:1]~p0";
+    ASSERT_EQUAL(Wff_to_Nnf_clean(s), s);
+}
+
+TEST(test_wff_to_nnf_G_3) {
+    string s = "~G[0:1]p0";
+    ASSERT_NOT_EQUAL(Wff_to_Nnf_clean(s), s);
+}
+
+TEST(test_wff_to_nnf_or_1) {
+    string s = "(~p0v~p1)";
+    ASSERT_EQUAL(Wff_to_Nnf_clean(s), s);
+}
+
+TEST(test_wff_to_nnf_or_2) {
+    string s = "~(~p0v~p1)";
+    ASSERT_NOT_EQUAL(Wff_to_Nnf_clean(s), s);
+}
+
+TEST(test_wff_to_nnf_or_3) {
+    string s = "~(p0v~p1)";
+    ASSERT_NOT_EQUAL(Wff_to_Nnf_clean(s), s);
+}
+
+TEST(test_wff_to_nnf_or_4) {
+    string s = "~(~p0vp1)";
+    ASSERT_NOT_EQUAL(Wff_to_Nnf_clean(s), s);
+}
+
+TEST(test_wff_to_nnf_or_5) {
+    string s = "~(p0vp1)";
+    ASSERT_NOT_EQUAL(Wff_to_Nnf_clean(s), s);
+}
+
+TEST(test_wff_to_nnf_and_1) {
+    string s = "(~p0&~p1)";
+    ASSERT_EQUAL(Wff_to_Nnf_clean(s), s);
+}
+
+TEST(test_wff_to_nnf_and_2) {
+    string s = "~(~p0&~p1)";
+    ASSERT_NOT_EQUAL(Wff_to_Nnf_clean(s), s);
+}
+
+TEST(test_wff_to_nnf_and_3) {
+    string s = "~(p0&~p1)";
+    ASSERT_NOT_EQUAL(Wff_to_Nnf_clean(s), s);
+}
+
+TEST(test_wff_to_nnf_and_4) {
+    string s = "~(~p0&p1)";
+    ASSERT_NOT_EQUAL(Wff_to_Nnf_clean(s), s);
+}
+
+TEST(test_wff_to_nnf_and_5) {
+    string s = "~(p0&p1)";
+    ASSERT_NOT_EQUAL(Wff_to_Nnf_clean(s), s);
+}
+
+TEST(test_wff_to_nnf_equals_1) {
+    string s = "(~p0=~p1)";
+    ASSERT_EQUAL(Wff_to_Nnf_clean(s), s);
+}
+
+TEST(test_wff_to_nnf_equals_2) {
+    string s = "~(~p0=~p1)";
+    ASSERT_NOT_EQUAL(Wff_to_Nnf_clean(s), s);
+}
+
+TEST(test_wff_to_nnf_equals_3) {
+    string s = "~(p0=~p1)";
+    ASSERT_NOT_EQUAL(Wff_to_Nnf_clean(s), s);
+}
+
+TEST(test_wff_to_nnf_equals_4) {
+    string s = "~(~p0=p1)";
+    ASSERT_NOT_EQUAL(Wff_to_Nnf_clean(s), s);
+}
+
+TEST(test_wff_to_nnf_equals_5) {
+    string s = "~(p0=p1)";
+    ASSERT_NOT_EQUAL(Wff_to_Nnf_clean(s), s);
+}
+
+TEST(test_wff_to_nnf_dual_1) {
+    string not_nnf = "~G[0:1]~p0";
+    string nnf = "F[0:1]p0";
+    ASSERT_EQUAL(Wff_to_Nnf_clean(not_nnf), nnf);
+}
+
+TEST(test_wff_to_nnf_dual_2) {
+    string not_nnf = "~F[0:1]~p0";
+    string nnf = "G[0:1]p0";
+    ASSERT_EQUAL(Wff_to_Nnf_clean(not_nnf), nnf);
+}
+
+TEST(test_wff_to_nnf_dual_3) {
+    string not_nnf = "~(~p0U[0:1]~p1)";
+    string nnf = "(p0R[0:1]p1)";
+    ASSERT_EQUAL(Wff_to_Nnf_clean(not_nnf), nnf);
+}
+
+TEST(test_wff_to_nnf_dual_4) {
+    string not_nnf = "~(~p0R[0:1]~p1)";
+    string nnf = "(p0U[0:1]p1)";
+    ASSERT_EQUAL(Wff_to_Nnf_clean(not_nnf), nnf);
+}
+
+
+
 
 
 TEST_MAIN()
