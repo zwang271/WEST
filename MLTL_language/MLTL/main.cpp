@@ -9,18 +9,26 @@
 using namespace std;
 
 int main() {
-	vector<string> v1 = { "100,s11,ss0", "100,s1s,ss1", "s10,ss1,sss",
-							 "s10,100,s11", "s10,s10,ss1", "ss1,sss,sss"};
-	print(v1);
-	cout << endl;
-	v1 = pad(v1, 3);
-	print(v1);
-	cout << endl;
-	v1 = strip_commas(v1);
-	print(v1);
-	cout << endl;
+	
+	bool is_valid = false;
+	bool running = true;
+	string wff;
+	vector<string> reg;
 
-	print_tree(v1);
+	while (running) {
+		while (!is_valid) {
+			getline(cin, wff);
+			if (Wff_check(wff)) {
+				is_valid = true;
+			}
+			else {
+				cout << "Not a well formed formula!" << endl;
+			}
+		}
+
+		reg = reg(wff);
+
+	}
 
     return 0;
 }
