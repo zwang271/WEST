@@ -290,8 +290,7 @@ vector<string> left_expand(vector<string> v, int n, int iteration) {
 	else {
 		++iteration;
 		v = join(list_str_concat_prefix(left_expand(begin_zero, n, iteration), "0"),
-			list_str_concat_prefix(left_expand(begin_one, n, iteration), "1")
-		);
+			list_str_concat_prefix(left_expand(begin_one, n, iteration), "1"));
 	}
 
 	// Final return will be in iteration 1, add commas before returning
@@ -361,8 +360,7 @@ vector<string> right_expand(vector<string> v, int n, int iteration) {
 	else {
 		++iteration;
 		v = join(list_str_concat_suffix(right_expand(end_zero, n, iteration), "0"),
-			list_str_concat_suffix(right_expand(end_one, n, iteration), "1")
-		);
+			list_str_concat_suffix(right_expand(end_one, n, iteration), "1"));
 	}
 
 	// Final return will be in iteration 1, add commas before returning
