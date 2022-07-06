@@ -601,6 +601,9 @@ void print_all_representations(vector<string> v_actual, int n) {
 	cout << endl << "simplify left_expand" << endl;
 	print(simplify(left_expand(v_actual, n), n));
 
+	cout << endl << "tree" << endl;
+	print_tree(simplify(left_expand(v_actual, n), n));
+
 	cout << endl << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl << endl << endl;
 }
 

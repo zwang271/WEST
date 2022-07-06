@@ -2,6 +2,7 @@
 #include "grammar.h"
 #include "nnf_grammar.h"
 #include "reg.h"
+#include <iostream>
 
 /*
  * Input: Two vectors of computation strings V1 and V2, comma separated
@@ -17,7 +18,7 @@ vector<string> set_intersect(vector<string> v1, vector<string> v2, int n) {
 	//int len_w = int(max(v1[0].length(), v2[0].length()));
 	//v1 = pad(v1, n, len_w); v2 = pad(v2, n, len_w);
 
-	// CORRECTION TO VECOTR PADDING LINE
+	// CORRECTION TO VECTOR PADDING LINE
 	int len_w = 0; 
 
 	// Gets length of longest string in v1
@@ -45,7 +46,8 @@ vector<string> set_intersect(vector<string> v1, vector<string> v2, int n) {
 		}
 	}
 
-	return simplify(v, n);
+	/*return simplify(v, n);*/
+	return v;
 }
 
 
@@ -178,6 +180,7 @@ vector<string> reg_G(vector<string> reg_alpha, int a, int b, int n)
 
 		temp_alpha = list_str_concat_prefix(reg_alpha, w);
 		comp = set_intersect(comp, temp_alpha, n);
+		cout << i << "\t" << comp.size() << endl;
 	}
 	comp = list_str_concat_prefix(comp, pre);
 
@@ -226,12 +229,6 @@ vector<string> reg_U(vector<string> reg_alpha, vector<string> reg_beta, int a, i
  * Output: Vector of computation strings satisfying alphaR[a,b]beta
  */
 vector<string> reg_R(vector<string> alpha, vector<string> beta, int a, int b, int n) {
-	string pre = "";
-	// pre = (s^n,)^a
-	for (int i = 0; i < a; ++i) {
-		pre += string(n, 's') + ",";
-	}
-
 	// initialize comp = G[a,b] beta
 	vector<string> comp = reg_G(beta, a, b, n);
 
