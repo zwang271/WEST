@@ -12,15 +12,17 @@ int main() {
 	
 	bool is_valid = false;
 	bool running = true;
-	string wff;
-	int n = -1;
 	vector<string> answer;
 	vector<string> display;
+	string wff;
 
 	while (running) {
 		cout << "Please enter a MLTL formula." << endl;
+		wff = ""; 
+		is_valid = false;
 		while (!is_valid) {
 			getline(cin, wff);
+			wff = strip_char(wff, ' ');
 			if (Wff_check(wff)) {
 				is_valid = true;
 			}
@@ -29,6 +31,7 @@ int main() {
 			}
 		}
 		cout << "Please enter number of propositional variables." << endl;
+		int n = -1;
 		while (n < 0) {
 			string in;
 			getline(cin, in);
@@ -39,6 +42,8 @@ int main() {
 		}
 		answer = reg(wff, n);
 		print(answer);
+		cout << "Finished computing." << answer.size() << endl;
+		/*print_all_representations(answer, n);*/
 		cin.get();
 	}
 
