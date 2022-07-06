@@ -18,7 +18,7 @@ vector<string> set_intersect(vector<string> v1, vector<string> v2, int n) {
 	//v1 = pad(v1, n, len_w); v2 = pad(v2, n, len_w);
 
 	// CORRECTION TO VECOTR PADDING LINE
-	int len_w = 0;
+	int len_w = 0; 
 
 	// Gets length of longest string in v1
 	for (string w : v1) {
