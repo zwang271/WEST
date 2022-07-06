@@ -13,9 +13,12 @@ int main() {
 	bool is_valid = false;
 	bool running = true;
 	string wff;
-	vector<string> reg;
+	int n = -1;
+	vector<string> answer;
+	vector<string> display;
 
 	while (running) {
+		cout << "Please enter a MLTL formula." << endl;
 		while (!is_valid) {
 			getline(cin, wff);
 			if (Wff_check(wff)) {
@@ -25,9 +28,18 @@ int main() {
 				cout << "Not a well formed formula!" << endl;
 			}
 		}
-
-		reg = reg(wff);
-
+		cout << "Please enter number of propositional variables." << endl;
+		while (n < 0) {
+			string in;
+			getline(cin, in);
+			n = stoi(in);
+			if (n < 0) {
+				cout << "n must be a positive integer." << endl;
+			}
+		}
+		answer = reg(wff, n);
+		print(answer);
+		cin.get();
 	}
 
     return 0;
