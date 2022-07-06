@@ -23,7 +23,7 @@ int main() {
 		while (!is_valid) {
 			getline(cin, wff);
 			wff = strip_char(wff, ' ');
-			if (Wff_check(wff)) {
+			if (Wff_check(wff) and Nnf_check(wff)) {
 				is_valid = true;
 			}
 			else {
