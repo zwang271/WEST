@@ -1,5 +1,9 @@
 #include <iostream>
 #include <vector>
+#include <cstdlib>
+#include <ctime>
+#include <algorithm>
+#include <string>
 #include "utils.h"
 #include "grammar.h"
 #include "nnf_grammar.h"
@@ -17,6 +21,7 @@ int main() {
 	string wff;
 
 	while (running) {
+
 		cout << "Please enter a MLTL formula." << endl;
 		wff = ""; 
 		is_valid = false;
@@ -47,7 +52,7 @@ int main() {
 		cout << "NNF Formula: " << nnf << endl;
 		cout << endl << "NNF Check: " << Nnf_check(nnf) << endl << endl;
 		answer = reg(nnf, n);
-		answer = simplify(answer, n);
+		//answer = simplify(answer, n);
 		print(answer);
 		cout << "Finished computing." << endl;
 		cout << "Size of vector: " << answer.size() << endl;
