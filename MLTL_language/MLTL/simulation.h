@@ -10,3 +10,6 @@
 * Runs right_or on {"0, s, 0, s, ...", "s, 0, s, 0, ..."}
 */
 void right_or_PT1(int iterations);
+string rand_function(int iter, int n);
+void run_rand_function();
+int main();
