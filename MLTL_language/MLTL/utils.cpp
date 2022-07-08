@@ -51,6 +51,8 @@ vector<string> pad(vector<string> unpadded_v, int n, int m) {
 		padded_v.push_back(pad_to_length(unpadded_v[j], maxLength, n));
 	}
 
+    unpadded_v.clear();
+    unpadded_v.shrink_to_fit();
 	return padded_v;
 }
 
@@ -68,6 +70,7 @@ string strip_char(string s, char c)
 			w += s[j];
 		}
 	}
+
 	return w;
 }
 
@@ -128,12 +131,6 @@ string string_intersect(string w_1, string w_2, int n) {
 		return "";
 	}
 
-	// Make w_1 and w_2 the same length.
-	vector<string> vec;
-	vec.push_back(w_1);
-	vec.push_back(w_2);
-	pad(vec, n);
-
 	// Bit-wise 'and' w_1 and w_2
 	string w = "";
 	for (int i = 0; i < w_1.length(); i++) {
@@ -169,16 +166,22 @@ vector<string> single_char_or(vector<string> V) {
 	}
 	else if (V.size() == 1 || (V[0] == "s")) {
 		ret.push_back(V[0]);
+        V.clear();
+        V.shrink_to_fit();
 		return ret;
 	}
 	else {
 		for (int i = 1; i < V.size(); ++i) {
 			if (V[i] != V[0]) {
 				ret.push_back("s");
+                V.clear();
+                V.shrink_to_fit();
 				return ret;
 			}
 		}
 		ret.push_back(V[0]);
+        V.clear();
+        V.shrink_to_fit();
 		return ret;
 	}
 }
@@ -193,6 +196,10 @@ vector<string> join(vector<string> A, vector<string> B) {
 	AB.reserve(A.size() + B.size()); // preallocate memory
 	AB.insert(AB.end(), A.begin(), A.end());
 	AB.insert(AB.end(), B.begin(), B.end());
+    A.clear();
+    A.shrink_to_fit();
+    B.clear();
+    B.shrink_to_fit();
 	return AB;
 }
 
@@ -257,6 +264,8 @@ vector<string> left_expand(vector<string> v, int n, int iteration) {
 	for (int i = 0; i < v.size(); ++i) {
 		if (v[i] == s_lenw) {
 			vector<string> ret = { s_lenw };
+            v.clear();
+            v.shrink_to_fit();
 			return ret;
 		}
 	}
@@ -285,6 +294,8 @@ vector<string> left_expand(vector<string> v, int n, int iteration) {
 	}
 
 	if (begin_zero.size() == 0 and begin_one.size() == 0) {
+        begin_zero.shrink_to_fit();
+        begin_one.shrink_to_fit();
 		return {}; // returns an empty vector
 	}
 	else {
@@ -298,6 +309,10 @@ vector<string> left_expand(vector<string> v, int n, int iteration) {
 		v = add_commas(v, n);
 	}
 
+    begin_zero.clear();
+    begin_zero.shrink_to_fit();
+    begin_one.clear();
+    begin_one.shrink_to_fit();
 	return v;
 }
 
@@ -333,6 +348,8 @@ vector<string> right_expand(vector<string> v, int n, int iteration) {
 	for (int i = 0; i < v.size(); ++i) {
 		if (v[i] == s_lenw) {
 			vector<string> ret = { s_lenw };
+            v.clear();
+            v.shrink_to_fit();
 			return ret;
 		}
 	}
@@ -355,6 +372,8 @@ vector<string> right_expand(vector<string> v, int n, int iteration) {
 	}
 
 	if (end_zero.size() == 0 and end_one.size() == 0) {
+        end_zero.shrink_to_fit();
+        end_one.shrink_to_fit();
 		return end_zero; // returns an empty vector
 	}
 	else {
@@ -368,6 +387,10 @@ vector<string> right_expand(vector<string> v, int n, int iteration) {
 		v = add_commas(v, n);
 	}
 
+    end_zero.clear();
+    end_zero.shrink_to_fit();
+    end_one.clear();
+    end_one.shrink_to_fit();
 	return v;
 }
 
@@ -571,6 +594,8 @@ string common_left_string(vector<string> v) {
 			break;
 		}
 	}
+    v.clear();
+    v.shrink_to_fit();
 	return left_common;
 }
 

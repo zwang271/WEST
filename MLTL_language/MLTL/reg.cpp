@@ -47,6 +47,10 @@ vector<string> set_intersect(vector<string> v1, vector<string> v2, int n) {
 	}
 
 	/*return simplify(v, n);*/
+    v1.clear();
+    v1.shrink_to_fit();
+    v2.clear();
+    v2.shrink_to_fit();
 	return v;
 }
 
@@ -59,6 +63,10 @@ vector<string> set_intersect(vector<string> v1, vector<string> v2, int n) {
 vector<string> set_union(vector<string> v1, vector<string> v2, int n) {
 	vector<string> v = join(v1, v2);
 
+    v1.clear();
+    v1.shrink_to_fit();
+    v2.clear();
+    v2.shrink_to_fit();
 	return right_expand(v, n);
 }
 
@@ -145,6 +153,10 @@ vector<string> reg_F(vector<string> reg_alpha, int a, int b, int n) {
 	comp = list_str_concat_prefix(comp, pre);
 
 	// return comp = (s^n,)^a join_{i = 0:b-a} (s^n,)i alpha
+    reg_alpha.clear();
+    reg_alpha.shrink_to_fit();
+    temp_alpha.clear();
+    temp_alpha.shrink_to_fit();
 	return comp;
 }
 
@@ -186,6 +198,10 @@ vector<string> reg_G(vector<string> reg_alpha, int a, int b, int n)
 	comp = list_str_concat_prefix(comp, pre);
 
 	// return comp = (s^n,)^a join_{i = 0:b-a} (s^n,)i alpha
+    reg_alpha.clear();
+    reg_alpha.shrink_to_fit();
+    temp_alpha.clear();
+    temp_alpha.shrink_to_fit();
 	return comp;
 }
 
@@ -218,6 +234,10 @@ vector<string> reg_U(vector<string> reg_alpha, vector<string> reg_beta, int a, i
 
 	// Return comp = (G[a,a] beta) join join_{i = a:b-1} (G[a,i] alpha) 
 	//					set_intersect (G[i+1,i+1] beta)
+    reg_alpha.clear();
+    reg_alpha.shrink_to_fit();
+    reg_beta.clear();
+    reg_beta.shrink_to_fit();
 	return comp;
 }
 
@@ -239,6 +259,10 @@ vector<string> reg_R(vector<string> alpha, vector<string> beta, int a, int b, in
 		comp = join(comp,
 			set_intersect(reg_G(beta, a, i, n), reg_G(alpha, i, i, n), n));
 	}
+    alpha.clear();
+    alpha.shrink_to_fit();
+    beta.clear();
+    beta.shrink_to_fit();
 	return comp;
 }
 
