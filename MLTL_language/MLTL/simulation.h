@@ -12,4 +12,5 @@
 void right_or_PT1(int iterations);
 string rand_function(int iter, int n);
 void run_rand_function();
+void simulate();
 int main();
