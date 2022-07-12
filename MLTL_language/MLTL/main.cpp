@@ -53,7 +53,10 @@ int main() {
 		cout << endl << "NNF Check: " << Nnf_check(nnf) << endl << endl;
 		answer = reg(nnf, n);
 		//answer = simplify(answer, n);
-		print(answer);
+        
+
+        print_subformulas(subformula_regex(nnf, n));
+		//print_subformulas(answer);
 		cout << "Finished computing." << endl;
 		cout << "Size of vector: " << answer.size() << endl;
 		cout << "Number of characters: " << sum_of_characters(answer) << endl;
