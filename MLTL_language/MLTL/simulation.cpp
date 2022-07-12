@@ -131,9 +131,9 @@ void simulate() {
 }
 
 int main() {
-    srand(time(NULL));
-    run_rand_function();
-    cout << "Wrote to random_mltl.txt\n";
+    //srand(1);
+    /*run_rand_function();
+    cout << "Wrote to random_mltl.txt\n";*/
     simulate();
     cout << "Wrote to complexities.txt\n";
     return 0;
