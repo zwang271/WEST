@@ -191,7 +191,7 @@ vector<string> single_char_or(vector<string> V) {
  * Input: Vectors A and B of computation strings
  * Output: Vector A concatenated with B
  */
-vector<string> join(vector<string> A, vector<string> B) {
+vector<string> join(vector<string> A, vector<string> B, int n, bool simp) {
 	vector<string> AB;
 	AB.reserve(A.size() + B.size()); // preallocate memory
 	AB.insert(AB.end(), A.begin(), A.end());
@@ -200,6 +200,10 @@ vector<string> join(vector<string> A, vector<string> B) {
     A.shrink_to_fit();
     B.clear();
     B.shrink_to_fit();
+
+	if (simp) {
+		return simplify(AB, n);
+	}
 	return AB;
 }
 
@@ -301,7 +305,7 @@ vector<string> left_expand(vector<string> v, int n, int iteration) {
 	else {
 		++iteration;
 		v = join(list_str_concat_prefix(left_expand(begin_zero, n, iteration), "0"),
-			list_str_concat_prefix(left_expand(begin_one, n, iteration), "1"));
+			list_str_concat_prefix(left_expand(begin_one, n, iteration), "1"), n);
 	}
 
 	// Final return will be in iteration 1, add commas before returning
@@ -379,7 +383,7 @@ vector<string> right_expand(vector<string> v, int n, int iteration) {
 	else {
 		++iteration;
 		v = join(list_str_concat_suffix(right_expand(end_zero, n, iteration), "0"),
-			list_str_concat_suffix(right_expand(end_one, n, iteration), "1"));
+			list_str_concat_suffix(right_expand(end_one, n, iteration), "1"), n);
 	}
 
 	// Final return will be in iteration 1, add commas before returning

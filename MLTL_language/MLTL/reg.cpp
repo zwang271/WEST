@@ -9,7 +9,7 @@
  * Output: Computes pairwise string_intersect between all
  *		  computation strings in V1 and V2
  */
-vector<string> set_intersect(vector<string> v1, vector<string> v2, int n) {
+vector<string> set_intersect(vector<string> v1, vector<string> v2, int n, bool simp) {
 	vector<string> v = vector<string>();
 	if (v1 == v or v2 == v) { // Currently v is the empty vector
 		return v;
@@ -51,6 +51,10 @@ vector<string> set_intersect(vector<string> v1, vector<string> v2, int n) {
     v1.shrink_to_fit();
     v2.clear();
     v2.shrink_to_fit();
+
+	if (simp) {
+		return simplify(v, n);
+	}
 	return v;
 }
 
@@ -61,7 +65,7 @@ vector<string> set_intersect(vector<string> v1, vector<string> v2, int n) {
  * Output: Vector of disjoint computation strings
  */
 vector<string> set_union(vector<string> v1, vector<string> v2, int n) {
-	vector<string> v = join(v1, v2);
+	vector<string> v = join(v1, v2, n);
 
     v1.clear();
     v1.shrink_to_fit();
@@ -148,7 +152,7 @@ vector<string> reg_F(vector<string> reg_alpha, int a, int b, int n) {
 		// Now w = (s^n ,)^i
 
 		temp_alpha = list_str_concat_prefix(reg_alpha, w);
-		comp = join(comp, temp_alpha);
+		comp = join(comp, temp_alpha, n);
 	}
 	comp = list_str_concat_prefix(comp, pre);
 
@@ -229,7 +233,7 @@ vector<string> reg_U(vector<string> reg_alpha, vector<string> reg_beta, int a, i
 	//						set_intersect (G[i+1,i+1] beta)
 	for (int i = a; i <= b - 1; ++i) {
 		comp = join(comp, set_intersect(
-			reg_G(reg_alpha, a, i, n), reg_G(reg_beta, i + 1, i + 1, n), n));
+			reg_G(reg_alpha, a, i, n), reg_G(reg_beta, i + 1, i + 1, n), n), n);
 	}
 
 	// Return comp = (G[a,a] beta) join join_{i = a:b-1} (G[a,i] alpha) 
@@ -257,7 +261,7 @@ vector<string> reg_R(vector<string> alpha, vector<string> beta, int a, int b, in
 	//					= (G[a,b] beta) join join_{i = a:b-1}G[a,i] alpha set_intersect G[i,i] alpha
 	for (int i = a; i <= b-1; ++i) {
 		comp = join(comp,
-			set_intersect(reg_G(beta, a, i, n), reg_G(alpha, i, i, n), n));
+			set_intersect(reg_G(beta, a, i, n), reg_G(alpha, i, i, n), n), n);
 	}
     alpha.clear();
     alpha.shrink_to_fit();
@@ -379,7 +383,7 @@ vector<string> reg(string nnf, int n) {
 		}
 
 		if (binary_conn == "v") {
-			return join(reg_alpha, reg_beta);
+			return join(reg_alpha, reg_beta, n);
 		}
 
 		if (binary_conn == "=") {
@@ -528,7 +532,7 @@ vector<string> reg_clean(string nnf, int n) {
 				vector<string> current_step_alpha = list_str_concat_prefix(reg_alpha, string(i, 's') + ",");
 
 				// Join current_step_alpha to reg_nnf
-				reg_nnf = join(reg_nnf, current_step_alpha);
+				reg_nnf = join(reg_nnf, current_step_alpha, n);
 			}
 		}
 
@@ -598,7 +602,7 @@ vector<string> reg_clean(string nnf, int n) {
 
 
 		if (binary_conn == "v") {
-			return join(reg_alpha, reg_beta);
+			return join(reg_alpha, reg_beta, n);
 		}
 
 		if (binary_conn == "=") {
