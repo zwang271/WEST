@@ -552,6 +552,19 @@ int Comp_len(string wff){
     }
 }
 
+bool find_string(vector<tuple<string, vector<string>>> v, string s) {
+    bool in_vec = false;
+    for (int i = 0; i < v.size(); ++i) {
+        if (get<0>(v[i]) == s) {
+            in_vec = true;
+        }
+    }
+    return in_vec;
+}
+
+
+
+
 //Nnf ->  ?( ‘~’) Prop_var | Prop_cons
 //                            | Unary_Temp_conn  Interval  Nnf
 //
@@ -588,7 +601,8 @@ vector<tuple<string, vector<string>>> subformula_regex(string wff, int n) {
         return formulas;
     }
     
-    //recursion starts, think about how to do that
+    //recursion starts
+    
     //if Unary_Temp_conn  Interval  Nnf
     if (Unary_Temp_conn_check(Slice_char(nnf, 0))) {
         tuple<int, int, int> interval_tuple = primary_interval(nnf);
@@ -604,8 +618,11 @@ vector<tuple<string, vector<string>>> subformula_regex(string wff, int n) {
             vector<tuple<string, vector<string>>> alpha_regex = subformula_regex(alpha, n);
             for (int i = 0; i < alpha_regex.size(); ++i) {
                 tuple<string, vector<string>> alpha_regex_tuple = make_tuple(get<0>(alpha_regex[i]), get<1>(alpha_regex[i]));
-                formulas.push_back(alpha_regex_tuple);
+                if (!find_string(formulas, get<0>(alpha_regex[i]))) {
+                    formulas.push_back(alpha_regex_tuple);
+                }
             }
+                
             
             
             //F interval alpha
@@ -667,8 +684,9 @@ vector<tuple<string, vector<string>>> subformula_regex(string wff, int n) {
                     vector<tuple<string, vector<string>>> alpha_regex = subformula_regex(alpha, n);
                     for (int i = 0; i < alpha_regex.size(); ++i) {
                         tuple<string, vector<string>> alpha_regex_tuple = make_tuple(get<0>(alpha_regex[i]), get<1>(alpha_regex[i]));
-                        formulas.push_back(alpha_regex_tuple);
-                    
+                        if (!find_string(formulas, get<0>(alpha_regex[i]))) {
+                            formulas.push_back(alpha_regex_tuple);
+                        }
                     }
 //                    vector<tuple<string, vector<string>>> alpha_regex = subformula_regex(alpha, n);
 //                    tuple<string, vector<string>> alpha_regex_tuple = make_tuple(alpha, get<1>(alpha_regex[0]));
@@ -696,8 +714,9 @@ vector<tuple<string, vector<string>>> subformula_regex(string wff, int n) {
         vector<tuple<string, vector<string>>> alpha_regex = subformula_regex(alpha, n);
         for (int i = 0; i < alpha_regex.size(); ++i) {
             tuple<string, vector<string>> alpha_regex_tuple = make_tuple(get<0>(alpha_regex[i]), get<1>(alpha_regex[i]));
-            formulas.push_back(alpha_regex_tuple);
-        
+            if (!find_string(formulas, get<0>(alpha_regex[i]))) {
+                formulas.push_back(alpha_regex_tuple);
+            }
         }
 //        vector<string> alpha_regex = reg(alpha, n);
 //        tuple<string, vector<string>> alpha_tuple = make_tuple(alpha, alpha_regex);
@@ -705,7 +724,9 @@ vector<tuple<string, vector<string>>> subformula_regex(string wff, int n) {
         vector<tuple<string, vector<string>>> beta_regex = subformula_regex(beta, n);
         for (int i = 0; i < beta_regex.size(); ++i) {
             tuple<string, vector<string>> beta_regex_tuple = make_tuple(get<0>(beta_regex[i]), get<1>(beta_regex[i]));
-            formulas.push_back(beta_regex_tuple);
+            if (!find_string(formulas, get<0>(beta_regex[i]))) {
+                formulas.push_back(beta_regex_tuple);
+            }
         }
         
 //        vector<string> beta_regex = reg(beta, n);
@@ -774,8 +795,9 @@ vector<tuple<string, vector<string>>> subformula_regex(string wff, int n) {
         vector<tuple<string, vector<string>>> alpha_regex = subformula_regex(alpha, n);
         for (int i = 0; i < alpha_regex.size(); ++i) {
             tuple<string, vector<string>> alpha_regex_tuple = make_tuple(get<0>(alpha_regex[i]), get<1>(alpha_regex[i]));
-            formulas.push_back(alpha_regex_tuple);
-        
+            if (!find_string(formulas, get<0>(alpha_regex[i]))) {
+                formulas.push_back(alpha_regex_tuple);
+            }
         }
 //        vector<string> alpha_regex = reg(alpha, n);
 //        tuple<string, vector<string>> alpha_tuple = make_tuple(alpha, alpha_regex);
@@ -784,8 +806,9 @@ vector<tuple<string, vector<string>>> subformula_regex(string wff, int n) {
         vector<tuple<string, vector<string>>> beta_regex = subformula_regex(beta, n);
         for (int i = 0; i < beta_regex.size(); ++i) {
             tuple<string, vector<string>> beta_regex_tuple = make_tuple(get<0>(beta_regex[i]), get<1>(beta_regex[i]));
-            formulas.push_back(beta_regex_tuple);
-        
+            if (!find_string(formulas, get<0>(beta_regex[i]))) {
+                formulas.push_back(beta_regex_tuple);
+            }
         }
         
 //        vector<string> beta_regex = reg(beta, n);
