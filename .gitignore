@@ -1,0 +1,10 @@
+# Ignore .vs files
+*.vs
+.vs
+
+# Ignore vscode files
+*.vscode
+.vscode
+
+# Ignore Mac system files
+.DS_store
