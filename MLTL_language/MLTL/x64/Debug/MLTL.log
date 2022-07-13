@@ -1,13 +1,15 @@
-﻿  reg.cpp
+﻿  grammar.cpp
+  reg.cpp
 C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_language\MLTL\reg.cpp(27,22): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
 C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_language\MLTL\reg.cpp(33,22): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
   simulation.cpp
+C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_language\MLTL\simulation.cpp(138,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   utils.cpp
-C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_language\MLTL\utils.cpp(543,56): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_language\MLTL\utils.cpp(544,62): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_language\MLTL\utils.cpp(579,27): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_language\MLTL\utils.cpp(589,7): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_language\MLTL\utils.cpp(597,64): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_language\MLTL\utils.cpp(640,27): warning C4267: '+=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_language\MLTL\utils.cpp(522,56): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_language\MLTL\utils.cpp(523,62): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_language\MLTL\utils.cpp(558,27): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_language\MLTL\utils.cpp(568,7): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_language\MLTL\utils.cpp(576,64): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_language\MLTL\utils.cpp(624,21): warning C4267: '+=': conversion from 'size_t' to 'int', possible loss of data
   Generating Code...
   MLTL.vcxproj -> C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_language\x64\Debug\MLTL.exe

@@ -52,8 +52,8 @@ vector<string> set_intersect(vector<string> v1, vector<string> v2, int n, bool s
 	v2.shrink_to_fit();
 
 	if (simp) {
-		return simplify(right_expand(v, n), n);
-		//return simplify(v, n);
+		//return simplify(right_expand(v, n), n);
+		return simplify(v, n);
 	}
 	return v;
 }
@@ -74,8 +74,8 @@ vector<string> join(vector<string> A, vector<string> B, int n, bool simp) {
 	B.shrink_to_fit();
 
 	if (simp) {
-		return simplify(right_expand(AB, n), n);
-		//return simplify(AB, n);
+		//return simplify(right_expand(AB, n), n);
+		return simplify(AB, n);
 	}
 	return AB;
 }
@@ -185,6 +185,7 @@ vector<string> reg_F(vector<string> reg_alpha, int a, int b, int n) {
 	temp_alpha.shrink_to_fit();
 	return comp;
 }
+
 
 /*
  * Input: vector reg_alpha of computation strings satisfying mLTL NNF formula alpha
@@ -453,8 +454,6 @@ vector<string> reg(string nnf, int n) {
 
 
 
-
-
 // Given an Nnf-formula nnf, returns the regex
 // for the language of nnf.
 // For preformance reasons, reg_clean will return a
@@ -618,6 +617,7 @@ vector<string> reg_clean(string nnf, int n) {
 		string beta = Slice(nnf, binary_conn_index + 1, len_nnf - 2);
 		vector<string> reg_beta = reg_clean(beta, n);
 
+
 		if (binary_conn == "&") {
 			return set_intersect(reg_alpha, reg_beta, n);
 		}
@@ -627,6 +627,7 @@ vector<string> reg_clean(string nnf, int n) {
 			return join(reg_alpha, reg_beta, n);
 		}
 
+
 		if (binary_conn == "=") {
 			// (alpha = beta) is equiv to ((alpha & beta) v (Wff_to_Nnf_clean(~alpha) & Wff_to_Nnf_clean(~beta)))
 			// ((alpha & beta) v (Wff_to_Nnf_clean(~alpha) & Wff_to_Nnf_clean(~beta))) is in Nnf-form
@@ -635,6 +636,7 @@ vector<string> reg_clean(string nnf, int n) {
 				+ Wff_to_Nnf_clean("~" + beta) + "))";
 			return reg_clean(equiv_nnf_formula, n);
 		}
+
 
 		if (binary_conn == ">") {
 			// (alpha > beta) is equiv to (Wff_to_Nnf(~alpha) v beta))

@@ -613,6 +613,11 @@ void print_all_representations(vector<string> v_actual, int n) {
 	cout << endl << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl << endl << endl;
 }
 
+
+/*
+* Input: Vector of strings V
+* Output: sum of length of all strings 
+*/
 int sum_of_characters(vector<string> v) {
 	int sum = 0;
 	for (int i = 0; i < v.size(); ++i) {

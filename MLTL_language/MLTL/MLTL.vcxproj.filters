@@ -24,10 +24,10 @@
     <ClCompile Include="reg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="simulation.cpp">
+    <ClCompile Include="nnf_grammar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="nnf_grammar.cpp">
+    <ClCompile Include="simulation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -41,10 +41,10 @@
     <ClInclude Include="reg.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="simulation.h">
+    <ClInclude Include="nnf_grammar.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="nnf_grammar.h">
+    <ClInclude Include="simulation.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
