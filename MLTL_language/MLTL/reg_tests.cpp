@@ -774,26 +774,26 @@ TEST(test_wff_to_nnf_dual_6) {
 }
 
 TEST(test_wff_to_nnf_dual_7) {
-    string not_nnf = "~G[1,1]p0";
-    string nnf = "F[1,1]~p0";
+    string not_nnf = "~G[1:1]p0";
+    string nnf = "F[1:1]~p0";
     ASSERT_EQUAL(Wff_to_Nnf_clean(not_nnf), nnf);
 }
 
 TEST(test_wff_to_nnf_dual_8) {
-    string not_nnf = "~F[1,1]p0";
-    string nnf = "G[1,1]~p0";
+    string not_nnf = "~F[1:1]p0";
+    string nnf = "G[1:1]~p0";
     ASSERT_EQUAL(Wff_to_Nnf_clean(not_nnf), nnf);
 }
 
 TEST(test_wff_to_nnf_dual_9) {
-    string not_nnf = "~G[1,4]p0";
-    string nnf = "F[1,4]~p0";
+    string not_nnf = "~G[1:4]p0";
+    string nnf = "F[1:4]~p0";
     ASSERT_EQUAL(Wff_to_Nnf_clean(not_nnf), nnf);
 }
 
 TEST(test_wff_to_nnf_dual_10) {
-    string not_nnf = "~F[1,4]p0";
-    string nnf = "G[1,4]~p0";
+    string not_nnf = "~F[1:4]p0";
+    string nnf = "G[1:4]~p0";
     ASSERT_EQUAL(Wff_to_Nnf_clean(not_nnf), nnf);
 }
 
@@ -801,6 +801,8 @@ TEST(test_sum) {
     vector<string> v = {"1", "11"};
     ASSERT_TRUE(sum_of_characters(v) == 3);
 }
+
+
 
 
 
