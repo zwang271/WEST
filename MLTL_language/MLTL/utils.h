@@ -13,7 +13,6 @@ vector<string> strip_commas(vector<string> comma_v);
 vector<string> add_commas(vector<string> v, int n);
 string string_intersect(string w_1, string w_2, int n);
 vector<string> single_char_or(vector<string> V);
-vector<string> join(vector<string> A, vector<string> B, int n, bool simp = true);
 vector<string> list_str_concat_suffix(vector<string> V, string s);
 vector<string> list_str_concat_prefix(vector<string> V, string s);
 vector<string> left_expand(vector<string> v, int n, int iteration = 0);

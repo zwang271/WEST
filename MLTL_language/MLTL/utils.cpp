@@ -4,7 +4,7 @@
 #include <vector>
 #include <iostream>
 #include "grammar.h"
-
+#include "reg.h"
 
 
 using namespace std;
@@ -51,8 +51,8 @@ vector<string> pad(vector<string> unpadded_v, int n, int m) {
 		padded_v.push_back(pad_to_length(unpadded_v[j], maxLength, n));
 	}
 
-    unpadded_v.clear();
-    unpadded_v.shrink_to_fit();
+	unpadded_v.clear();
+	unpadded_v.shrink_to_fit();
 	return padded_v;
 }
 
@@ -166,45 +166,24 @@ vector<string> single_char_or(vector<string> V) {
 	}
 	else if (V.size() == 1 || (V[0] == "s")) {
 		ret.push_back(V[0]);
-        V.clear();
-        V.shrink_to_fit();
+		V.clear();
+		V.shrink_to_fit();
 		return ret;
 	}
 	else {
 		for (int i = 1; i < V.size(); ++i) {
 			if (V[i] != V[0]) {
 				ret.push_back("s");
-                V.clear();
-                V.shrink_to_fit();
+				V.clear();
+				V.shrink_to_fit();
 				return ret;
 			}
 		}
 		ret.push_back(V[0]);
-        V.clear();
-        V.shrink_to_fit();
+		V.clear();
+		V.shrink_to_fit();
 		return ret;
 	}
-}
-
-
-/*
- * Input: Vectors A and B of computation strings
- * Output: Vector A concatenated with B
- */
-vector<string> join(vector<string> A, vector<string> B, int n, bool simp) {
-	vector<string> AB;
-	AB.reserve(A.size() + B.size()); // preallocate memory
-	AB.insert(AB.end(), A.begin(), A.end());
-	AB.insert(AB.end(), B.begin(), B.end());
-    A.clear();
-    A.shrink_to_fit();
-    B.clear();
-    B.shrink_to_fit();
-
-	if (simp) {
-		return simplify(AB, n);
-	}
-	return AB;
 }
 
 
@@ -262,14 +241,14 @@ vector<string> left_expand(vector<string> v, int n, int iteration) {
 		return single_char_or(v);
 	}
 
-	
+
 	// Searching for s^len_w in input
 	string s_lenw = string(len_w, 's');
 	for (int i = 0; i < v.size(); ++i) {
 		if (v[i] == s_lenw) {
 			vector<string> ret = { s_lenw };
-            v.clear();
-            v.shrink_to_fit();
+			v.clear();
+			v.shrink_to_fit();
 			return ret;
 		}
 	}
@@ -283,7 +262,7 @@ vector<string> left_expand(vector<string> v, int n, int iteration) {
 		// w = c + rest
 		string w = v[i];
 		string c = Slice_char(w, 0);
-		string rest = Slice(w, 1, len_w-1);
+		string rest = Slice(w, 1, len_w - 1);
 		if (c == "0") {
 			// Slice(w, 1, len_w-1)
 			begin_zero.push_back(rest);
@@ -298,14 +277,14 @@ vector<string> left_expand(vector<string> v, int n, int iteration) {
 	}
 
 	if (begin_zero.size() == 0 and begin_one.size() == 0) {
-        begin_zero.shrink_to_fit();
-        begin_one.shrink_to_fit();
+		begin_zero.shrink_to_fit();
+		begin_one.shrink_to_fit();
 		return {}; // returns an empty vector
 	}
 	else {
 		++iteration;
 		v = join(list_str_concat_prefix(left_expand(begin_zero, n, iteration), "0"),
-			list_str_concat_prefix(left_expand(begin_one, n, iteration), "1"), n);
+			list_str_concat_prefix(left_expand(begin_one, n, iteration), "1"), n, false);
 	}
 
 	// Final return will be in iteration 1, add commas before returning
@@ -313,10 +292,10 @@ vector<string> left_expand(vector<string> v, int n, int iteration) {
 		v = add_commas(v, n);
 	}
 
-    begin_zero.clear();
-    begin_zero.shrink_to_fit();
-    begin_one.clear();
-    begin_one.shrink_to_fit();
+	begin_zero.clear();
+	begin_zero.shrink_to_fit();
+	begin_one.clear();
+	begin_one.shrink_to_fit();
 	return v;
 }
 
@@ -346,14 +325,14 @@ vector<string> right_expand(vector<string> v, int n, int iteration) {
 		return single_char_or(v);
 	}
 
-	
+
 	// Searching for s^len_w in input
 	string s_lenw = string(len_w, 's');
 	for (int i = 0; i < v.size(); ++i) {
 		if (v[i] == s_lenw) {
 			vector<string> ret = { s_lenw };
-            v.clear();
-            v.shrink_to_fit();
+			v.clear();
+			v.shrink_to_fit();
 			return ret;
 		}
 	}
@@ -376,14 +355,14 @@ vector<string> right_expand(vector<string> v, int n, int iteration) {
 	}
 
 	if (end_zero.size() == 0 and end_one.size() == 0) {
-        end_zero.shrink_to_fit();
-        end_one.shrink_to_fit();
+		end_zero.shrink_to_fit();
+		end_one.shrink_to_fit();
 		return end_zero; // returns an empty vector
 	}
 	else {
 		++iteration;
 		v = join(list_str_concat_suffix(right_expand(end_zero, n, iteration), "0"),
-			list_str_concat_suffix(right_expand(end_one, n, iteration), "1"), n);
+			list_str_concat_suffix(right_expand(end_one, n, iteration), "1"), n, false);
 	}
 
 	// Final return will be in iteration 1, add commas before returning
@@ -391,10 +370,10 @@ vector<string> right_expand(vector<string> v, int n, int iteration) {
 		v = add_commas(v, n);
 	}
 
-    end_zero.clear();
-    end_zero.shrink_to_fit();
-    end_one.clear();
-    end_one.shrink_to_fit();
+	end_zero.clear();
+	end_zero.shrink_to_fit();
+	end_one.clear();
+	end_one.shrink_to_fit();
 	return v;
 }
 
@@ -485,9 +464,9 @@ vector<string> simplify(vector<string> v, int n) {
 	// iteratively decrement j until out of bounds from left (j < 0), then decrement i 
 	// and assign j = i - 1
 
-	START:
-	while(i >= 1) {
-		while(j >= 0) {
+START:
+	while (i >= 1) {
+		while (j >= 0) {
 			string simplified = simplify_string(v[i], v[j]);
 			if (simplified != "FAIL") {
 				v[j] = simplified;
@@ -516,7 +495,7 @@ void print_tree(vector<string> v, string pre_space) {
 		v = list_str_concat_prefix(v, pre_space);
 		print(v);
 		return;
-	} 
+	}
 	// Exit from function if v is empty
 	else if (v.size() == 0) { return; }
 
@@ -584,7 +563,7 @@ string common_left_string(vector<string> v) {
 		left_common += Slice_char(v[0], i);
 
 		// Check if left_common is still a common left substring 
-		for (string w: v) {
+		for (string w : v) {
 			// Check if left_common no longer matches w
 			if (Slice(w, 0, left_common.length() - 1) != left_common) {
 				found_longest = true;
@@ -598,8 +577,8 @@ string common_left_string(vector<string> v) {
 			break;
 		}
 	}
-    v.clear();
-    v.shrink_to_fit();
+	v.clear();
+	v.shrink_to_fit();
 	return left_common;
 }
 
@@ -635,9 +614,9 @@ void print_all_representations(vector<string> v_actual, int n) {
 }
 
 int sum_of_characters(vector<string> v) {
-    int sum = 0;
-    for (int i = 0; i < v.size(); ++i) {
-        sum += v[i].length();
-    }
-    return sum;
+	int sum = 0;
+	for (int i = 0; i < v.size(); ++i) {
+		sum += v[i].length();
+	}
+	return sum;
 }
