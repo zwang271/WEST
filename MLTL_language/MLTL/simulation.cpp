@@ -10,13 +10,15 @@
 #include <string>
 #include <fstream>
 #include <vector>
+#include <chrono>
 #define MAX_ITER 2
-#define DELTA 5
+#define DELTA 10
 #define MISSION_END 10
 #define FUNC_NUM 1000
 #define NUM_PROP_VAR 5
 
 using namespace std;
+using namespace std::chrono;
 
 void right_or_PT1(int iterations) {
     int n = 1;
@@ -121,8 +123,13 @@ void simulate(string formulas, string out) {
     while (getline(infile, line)) {
         outfile << line.size();
         outfile << " ";
+        auto start = high_resolution_clock::now();
         output = reg(Wff_to_Nnf_clean(line), NUM_PROP_VAR);
         output = simplify(output, NUM_PROP_VAR);
+        auto stop = high_resolution_clock::now();
+        auto duration = duration_cast<microseconds>(stop - start);
+        outfile << duration.count();
+        outfile << " ";
         outfile << sum_of_characters(output);
         outfile << "\n";
         cout << iter << " Wrote a line to complexities.txt\n";
