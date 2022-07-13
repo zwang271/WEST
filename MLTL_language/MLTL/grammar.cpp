@@ -601,13 +601,17 @@ vector<tuple<string, vector<string>>> subformula_regex(string wff, int n) {
         string alpha = Slice(nnf, end_interval+1, len_nnf-1);
         if (Interval_check(interval) and Nnf_check(alpha)) {
             //# prop var of alpha == # prop var of unary_temp_conn interval alpha
-            vector<string> alpha_regex = reg(alpha, n);
-            tuple<string, vector<string>> alpha_regex_tuple = make_tuple(alpha, alpha_regex);
-            formulas.push_back(alpha_regex_tuple);
+            vector<tuple<string, vector<string>>> alpha_regex = subformula_regex(alpha, n);
+            for (int i = 0; i < alpha_regex.size(); ++i) {
+                tuple<string, vector<string>> alpha_regex_tuple = make_tuple(get<0>(alpha_regex[i]), get<1>(alpha_regex[i]));
+                formulas.push_back(alpha_regex_tuple);
+            }
+            
             
             //F interval alpha
             if (Slice_char(nnf, 0) == "F") {
-                vector<string> nnf_regex_F = reg_F(alpha_regex, lower_bound, upper_bound, n);
+                
+                vector<string> nnf_regex_F = reg_F(get<1>(alpha_regex[alpha_regex.size()-1]), lower_bound, upper_bound, n);
                 tuple<string, vector<string>> F_tuple = make_tuple(nnf, nnf_regex_F);
                 formulas.push_back(F_tuple);
                 // Return formulas = (alpha_regex_tuple, F_tuple)
@@ -616,7 +620,7 @@ vector<tuple<string, vector<string>>> subformula_regex(string wff, int n) {
             
             //G interval alpha
             else if (Slice_char(nnf, 0) == "G") {
-                vector<string> nnf_regex_G = reg_G(alpha_regex, lower_bound, upper_bound, n);
+                vector<string> nnf_regex_G = reg_G(get<1>(alpha_regex[alpha_regex.size()-1]), lower_bound, upper_bound, n);
                 tuple<string, vector<string>> G_tuple = make_tuple(nnf, nnf_regex_G);
                 formulas.push_back(G_tuple);
                 // Return formulas = (alpha_regex_tuple, G_tuple)
@@ -637,24 +641,38 @@ vector<tuple<string, vector<string>>> subformula_regex(string wff, int n) {
         
         int num_open_bracket = 1;
         int num_close_bracket = 0;
+        int num_open_paren = 1;
+        int num_close_paren = 0;
         string prop_con = Slice_char(nnf, 1);
         //(&[p0,p1,p2])
         string alpha = "";
         for (int i = 3; i < len_nnf; ++i) {
             if (Slice_char(nnf, i) == "]") ++num_close_bracket;
             if (Slice_char(nnf, i) == "[") ++num_open_bracket;
+            if (Slice_char(nnf, i) == ")") ++num_close_paren;
+            if (Slice_char(nnf, i) == "(") ++num_open_paren;
             
             //concatenate alpha
-            if (Slice_char(nnf, i) != "," && (Slice_char(nnf, i) != "]" || num_open_bracket != num_close_bracket)) {
+            if (Slice_char(nnf, i) != "," && (Slice_char(nnf, i) != "]" || num_open_bracket != num_close_bracket)
+                && (Slice_char(nnf, i) != ")" || num_open_paren != num_close_paren)) {
                 alpha += Slice_char(nnf, i);
             }
             
             else if (Slice_char(nnf, i) == "," || Slice_char(nnf, i) == "]") {
                 //(&[p1,p2,(p4R[0:1]p5)])
                 if (Nnf_check(alpha) && (num_close_bracket == num_open_bracket || Slice_char(nnf, i) == ",")) {
-                    vector<string> alpha_regex = reg(alpha, n);
-                    tuple<string, vector<string>> alpha_tuple = make_tuple(alpha, alpha_regex);
-                    formulas.push_back(alpha_tuple);
+//                    vector<string> alpha_regex = reg(alpha, n);
+//                    tuple<string, vector<string>> alpha_tuple = make_tuple(alpha, alpha_regex);
+//                    formulas.push_back(alpha_tuple);
+                    vector<tuple<string, vector<string>>> alpha_regex = subformula_regex(alpha, n);
+                    for (int i = 0; i < alpha_regex.size(); ++i) {
+                        tuple<string, vector<string>> alpha_regex_tuple = make_tuple(get<0>(alpha_regex[i]), get<1>(alpha_regex[i]));
+                        formulas.push_back(alpha_regex_tuple);
+                    
+                    }
+//                    vector<tuple<string, vector<string>>> alpha_regex = subformula_regex(alpha, n);
+//                    tuple<string, vector<string>> alpha_regex_tuple = make_tuple(alpha, get<1>(alpha_regex[0]));
+//                    formulas.push_back(alpha_regex_tuple);
                 }
                 alpha = "";
             }
@@ -675,18 +693,29 @@ vector<tuple<string, vector<string>>> subformula_regex(string wff, int n) {
         Binary_Prop_conn_check(Slice_char(nnf, binary_con_index)) and
         Nnf_check(beta) and Slice_char(nnf, len_nnf-1) == ")") {
         //# prop var of alpha,beta == # prop var of ‘(‘ alpha Binary_Prop_conn beta ‘)’
-        vector<string> alpha_regex = reg(alpha, n);
-        tuple<string, vector<string>> alpha_tuple = make_tuple(alpha, alpha_regex);
-        formulas.push_back(alpha_tuple);
+        vector<tuple<string, vector<string>>> alpha_regex = subformula_regex(alpha, n);
+        for (int i = 0; i < alpha_regex.size(); ++i) {
+            tuple<string, vector<string>> alpha_regex_tuple = make_tuple(get<0>(alpha_regex[i]), get<1>(alpha_regex[i]));
+            formulas.push_back(alpha_regex_tuple);
         
-        vector<string> beta_regex = reg(beta, n);
-        tuple<string, vector<string>> beta_tuple = make_tuple(beta, beta_regex);
-        formulas.push_back(beta_tuple);
+        }
+//        vector<string> alpha_regex = reg(alpha, n);
+//        tuple<string, vector<string>> alpha_tuple = make_tuple(alpha, alpha_regex);
+//        formulas.push_back(alpha_tuple);
+        vector<tuple<string, vector<string>>> beta_regex = subformula_regex(beta, n);
+        for (int i = 0; i < beta_regex.size(); ++i) {
+            tuple<string, vector<string>> beta_regex_tuple = make_tuple(get<0>(beta_regex[i]), get<1>(beta_regex[i]));
+            formulas.push_back(beta_regex_tuple);
+        }
+        
+//        vector<string> beta_regex = reg(beta, n);
+//        tuple<string, vector<string>> beta_tuple = make_tuple(beta, beta_regex);
+//        formulas.push_back(beta_tuple);
         
         string binary_con = Slice_char(nnf, binary_con_index);
         //(alpha v beta)
         if (binary_con == "v")  {
-            vector<string> nnf_regex = join(alpha_regex, beta_regex, n);
+            vector<string> nnf_regex = join(get<1>(alpha_regex[alpha_regex.size()-1]), get<1>(beta_regex[alpha_regex.size()-1]), n);
             tuple<string, vector<string>> nnf_tuple = make_tuple(nnf, nnf_regex);
             formulas.push_back(nnf_tuple);
             // Return formulas = (alpha_tuple, beta_tuple, nnf_tuple)
@@ -695,7 +724,7 @@ vector<tuple<string, vector<string>>> subformula_regex(string wff, int n) {
         
         //(alpha & beta)
         if (binary_con == "&") {
-            vector<string> nnf_regex = set_intersect(alpha_regex, beta_regex, n);
+            vector<string> nnf_regex = set_intersect(get<1>(alpha_regex[alpha_regex.size()-1]), get<1>(beta_regex[alpha_regex.size()-1]), n);
             tuple<string, vector<string>> nnf_tuple = make_tuple(nnf, nnf_regex);
             formulas.push_back(nnf_tuple);
             // Return formulas = (alpha_tuple, beta_tuple, nnf_tuple)
@@ -733,8 +762,8 @@ vector<tuple<string, vector<string>>> subformula_regex(string wff, int n) {
     int colon_index = get<1>(interval_tuple);
     int end_interval = get<2>(interval_tuple);
     string interval = Slice(nnf, begin_interval, end_interval);
-    int lower_bound = stoi(Slice(interval, begin_interval+1, colon_index-1));
-    int upper_bound = stoi(Slice(interval, colon_index+1, end_interval-1));
+    int lower_bound = stoi(Slice(nnf, begin_interval+1, colon_index-1));
+    int upper_bound = stoi(Slice(nnf, colon_index+1, end_interval-1));
     alpha = Slice(nnf, 1, binary_con_index-1);
     beta = Slice(nnf, end_interval+1, len_nnf-2);
     if (Slice_char(nnf, 0) == "(" and  Nnf_check(alpha) and
@@ -742,24 +771,38 @@ vector<tuple<string, vector<string>>> subformula_regex(string wff, int n) {
         and Interval_check(interval) and
         Nnf_check(beta) and Slice_char(nnf, len_nnf-1) == ")") {
         
-        vector<string> alpha_regex = reg(alpha, n);
-        tuple<string, vector<string>> alpha_tuple = make_tuple(alpha, alpha_regex);
-        formulas.push_back(alpha_tuple);
-        vector<string> beta_regex = reg(beta, n);
-        tuple<string, vector<string>> beta_tuple = make_tuple(beta, beta_regex);
-        formulas.push_back(beta_tuple);
+        vector<tuple<string, vector<string>>> alpha_regex = subformula_regex(alpha, n);
+        for (int i = 0; i < alpha_regex.size(); ++i) {
+            tuple<string, vector<string>> alpha_regex_tuple = make_tuple(get<0>(alpha_regex[i]), get<1>(alpha_regex[i]));
+            formulas.push_back(alpha_regex_tuple);
+        
+        }
+//        vector<string> alpha_regex = reg(alpha, n);
+//        tuple<string, vector<string>> alpha_tuple = make_tuple(alpha, alpha_regex);
+//        formulas.push_back(alpha_tuple);
+        
+        vector<tuple<string, vector<string>>> beta_regex = subformula_regex(beta, n);
+        for (int i = 0; i < beta_regex.size(); ++i) {
+            tuple<string, vector<string>> beta_regex_tuple = make_tuple(get<0>(beta_regex[i]), get<1>(beta_regex[i]));
+            formulas.push_back(beta_regex_tuple);
+        
+        }
+        
+//        vector<string> beta_regex = reg(beta, n);
+//        tuple<string, vector<string>> beta_tuple = make_tuple(beta, beta_regex);
+//        formulas.push_back(beta_tuple);
         
         if (binary_temp_con == "U") {
-            vector<string> nnf_regex = reg_U(alpha_regex, beta_regex, lower_bound, upper_bound, n);
-            tuple<string, vector<string>> nnf_tuple = make_tuple(alpha, nnf_regex);
+            vector<string> nnf_regex = reg_U(get<1>(alpha_regex[alpha_regex.size()-1]), get<1>(beta_regex[alpha_regex.size()-1]), lower_bound, upper_bound, n);
+            tuple<string, vector<string>> nnf_tuple = make_tuple(nnf, nnf_regex);
             formulas.push_back(nnf_tuple);
             // Return formulas = (alpha_tuple, beta_tuple, nnf_tuple)
             return formulas;
         }
         
         if (binary_temp_con == "R") {
-            vector<string> nnf_regex = reg_R(alpha_regex, beta_regex, lower_bound, upper_bound, n);
-            tuple<string, vector<string>> nnf_tuple = make_tuple(alpha, nnf_regex);
+            vector<string> nnf_regex = reg_R(get<1>(alpha_regex[alpha_regex.size()-1]), get<1>(beta_regex[alpha_regex.size()-1]), lower_bound, upper_bound, n);
+            tuple<string, vector<string>> nnf_tuple = make_tuple(nnf, nnf_regex);
             formulas.push_back(nnf_tuple);
             // Return formulas = (alpha_tuple, beta_tuple, nnf_tuple)
             return formulas;
