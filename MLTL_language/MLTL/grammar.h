@@ -2,6 +2,7 @@
 #include <string>
 #include <tuple>
 #include <stdexcept>
+#include <vector>
 
 using namespace std;
 

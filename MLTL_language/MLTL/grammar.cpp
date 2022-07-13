@@ -686,7 +686,7 @@ vector<tuple<string, vector<string>>> subformula_regex(string wff, int n) {
         string binary_con = Slice_char(nnf, binary_con_index);
         //(alpha v beta)
         if (binary_con == "v")  {
-            vector<string> nnf_regex = join(alpha_regex, beta_regex);
+            vector<string> nnf_regex = join(alpha_regex, beta_regex, n);
             tuple<string, vector<string>> nnf_tuple = make_tuple(nnf, nnf_regex);
             formulas.push_back(nnf_tuple);
             // Return formulas = (alpha_tuple, beta_tuple, nnf_tuple)

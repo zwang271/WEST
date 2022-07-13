@@ -19,28 +19,28 @@
 using namespace std;
 
 void right_or_PT1(int iterations) {
-	int n = 1;
-	vector<string> v = { "s", "0" };
-	for (int i = 0; i < iterations; ++i) {
-		if (i % 2 == 0) {
-			v[0] += ",0";
-			v[1] += ",s";
-		}
-		else {
-			v[0] += ",s";
-			v[1] += ",0";
-		}
+    int n = 1;
+    vector<string> v = { "s", "0" };
+    for (int i = 0; i < iterations; ++i) {
+        if (i % 2 == 0) {
+            v[0] += ",0";
+            v[1] += ",s";
+        }
+        else {
+            v[0] += ",s";
+            v[1] += ",0";
+        }
 
-		print(v);
-		cout << i << "\t input length: " << v[0].length() << "\t output vector size: " << simplify(v, n).size() << endl;
-		print(simplify(v, n));
-		cout << endl << endl;
-	}
+        print(v);
+        cout << i << "\t input length: " << v[0].length() << "\t output vector size: " << simplify(v, n).size() << endl;
+        print(simplify(v, n));
+        cout << endl << endl;
+    }
 }
 
 string rand_function(int iter) {
     if (iter == MAX_ITER) {
-        return "p"+ to_string((rand() % NUM_PROP_VAR));
+        return "p" + to_string((rand() % NUM_PROP_VAR));
     }
 
     int op_type = (rand() % 4);
@@ -63,7 +63,7 @@ string rand_function(int iter) {
             binary_prop = "=";
         }
 
-        return "(" + rand_function(iter + 1) + binary_prop + rand_function(iter+1) + ")";
+        return "(" + rand_function(iter + 1) + binary_prop + rand_function(iter + 1) + ")";
     }
     else if (op_type == 2) {
         int unary_temp_gen = rand() % 2;
@@ -83,7 +83,7 @@ string rand_function(int iter) {
     else if (op_type == 3) {
         int binary_temp_gen = rand() % 2;
         string binary_temp = "";
-        if (binary_temp_gen == 0){
+        if (binary_temp_gen == 0) {
             binary_temp = "U";
         }
         else if (binary_temp_gen == 1) {
@@ -99,24 +99,26 @@ string rand_function(int iter) {
     return "";
 }
 
-void run_rand_function() {
+void run_rand_function(string formulas) {
     ofstream myfile;
-    myfile.open("random_mltl.txt");
-    for (int i = 0; i < FUNC_NUM; ++i){
+    myfile.open(formulas);
+    for (int i = 0; i < FUNC_NUM; ++i) {
         myfile << rand_function(0);
         myfile << "\n";
     }
     myfile.close();
 }
 
-void simulate() {
+void simulate(string formulas, string out) {
     ofstream outfile;
-    outfile.open("complexities.txt");
-    ifstream infile("random_mltl.txt");
+    /*outfile.open("complexities.txt");
+    ifstream infile("random_mltl.txt");*/
+    outfile.open(out);
+    ifstream infile(formulas);
     string line;
     vector<string> output;
     int iter = 1;
-    while (getline(infile,line)) {
+    while (getline(infile, line)) {
         outfile << line.size();
         outfile << " ";
         output = reg(Wff_to_Nnf_clean(line), NUM_PROP_VAR);
@@ -131,11 +133,12 @@ void simulate() {
 }
 
 int main() {
-    //srand(1);
-    /*run_rand_function();
-    cout << "Wrote to random_mltl.txt\n";*/
-    simulate();
+    string formulas = "random_mltl.txt";
+    string out = "complexities.txt";
+    srand(time(NULL));
+    run_rand_function(formulas);
+    cout << "Wrote to random_mltl.txt\n";
+    simulate(formulas, out);
     cout << "Wrote to complexities.txt\n";
     return 0;
 }
-
