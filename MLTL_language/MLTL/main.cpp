@@ -45,18 +45,38 @@ int main() {
 				cout << "n must be a positive integer." << endl;
 			}
 		}
+        
+        bool subformulas = false;
+        char y_or_n = 'q';
+        cout << "would you like to generate the truth table? (y / n)" << endl;
+        while (y_or_n == 'q') {
+               cin >> y_or_n;
+               if (y_or_n == 'y') subformulas = true;
+               else if (y_or_n == 'n') subformulas = false;
+               else cout << "enter 'y' or 'n'";
+        }
 
 		// G[0:5] (p0 R[3:5] (p1 & p2))
 
 		string nnf = Wff_to_Nnf_clean(wff);
 		cout << "NNF Formula: " << nnf << endl;
 		cout << endl << "NNF Check: " << Nnf_check(nnf) << endl << endl;
-		answer = reg(nnf, n);
-		//answer = simplify(answer, n);
         
+        if (subformulas) {
+            answer = reg_subformulas(nnf, n);
+            answer = simplify(answer, n);
+            push_back_formulas(nnf, reg_subformulas(nnf, n));
+            print_subformulas(get_formulas(), n);
+        }
 
-        print_subformulas(subformula_regex(nnf, n));
-		//print_subformulas(answer);
+        else {
+            answer = reg(nnf, n);
+            answer = simplify(answer, n);
+            print(answer);
+            cout << endl;
+        }
+        
+        
 		cout << "Finished computing." << endl;
 		cout << "Size of vector: " << answer.size() << endl;
 		cout << "Number of characters: " << sum_of_characters(answer) << endl;

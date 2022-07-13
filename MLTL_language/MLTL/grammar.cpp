@@ -572,7 +572,7 @@ bool find_string(vector<tuple<string, vector<string>>> v, string s) {
 //                                      | ‘(‘ Nnf Binary_Prop_conn Nnf ‘)’
 //                                     | ‘(‘ Nnf Binary_Temp_conn  Interval Nnf  ‘)’
 
-
+/*
 vector<tuple<string, vector<string>>> subformula_regex(string wff, int n) {
     vector<tuple<string, vector<string>>> formulas;
     string nnf = Wff_to_Nnf_clean(wff);
@@ -835,14 +835,7 @@ vector<tuple<string, vector<string>>> subformula_regex(string wff, int n) {
     
     return formulas;
 }
-
+*/
 //vector<tuple<string, vector<string>>> subformula_regex(string wff, int n)
-void print_subformulas(vector< tuple<string, vector<string>> > formulas) {
-    for (int i = 0; i < formulas.size(); ++i) {
-        cout << get<0>(formulas[i]) << endl;
-        print(get<1>(formulas[i]));
-        cout << endl;
-        }
-}
 
 
