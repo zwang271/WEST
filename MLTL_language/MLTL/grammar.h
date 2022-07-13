@@ -24,5 +24,5 @@ bool Binary_Temp_conn_check(string s);
 int primary_binary_conn(string wff);
 tuple<int, int, int> primary_interval(string wff);
 int Comp_len(string wff);
-vector<tuple<string, vector<string>>> subformula_regex(string wff, int n);
-void print_subformulas(vector< tuple<string, vector<string>> > formulas);
+//vector<tuple<string, vector<string>>> subformula_regex(string wff, int n);
+//void print_subformulas(vector< tuple<string, vector<string>> > formulas, int n);

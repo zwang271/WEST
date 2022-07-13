@@ -148,3 +148,5 @@ void print_all_representations(vector<string> v_actual, int n);
 * Output: sum of length of all strings
 */
 int sum_of_characters(vector<string>);
+
+void print_subformulas(vector< tuple<string, vector<string>> > formulas, int n);

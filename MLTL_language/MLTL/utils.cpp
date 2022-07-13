@@ -625,3 +625,13 @@ int sum_of_characters(vector<string> v) {
 	}
 	return sum;
 }
+
+void print_subformulas(vector< tuple<string, vector<string>> > formulas, int n) {
+    for (int i = 0; i < formulas.size(); ++i) {
+        cout << get<0>(formulas[i]) << endl;
+        print(simplify(right_expand(get<1>(formulas[i]), n), n));
+        print(get<1>(formulas[i]));
+        cout << endl;
+        }
+}
+
