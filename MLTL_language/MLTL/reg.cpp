@@ -19,7 +19,7 @@ vector<string> set_intersect(vector<string> v1, vector<string> v2, int n, bool s
 	//v1 = pad(v1, n, len_w); v2 = pad(v2, n, len_w);
 
 	// CORRECTION TO VECTOR PADDING LINE
-	int len_w = 0; 
+	int len_w = 0;
 
 	// Gets length of longest string in v1
 	for (string w : v1) {
@@ -46,16 +46,38 @@ vector<string> set_intersect(vector<string> v1, vector<string> v2, int n, bool s
 		}
 	}
 
-	/*return simplify(v, n);*/
-    v1.clear();
-    v1.shrink_to_fit();
-    v2.clear();
-    v2.shrink_to_fit();
+	v1.clear();
+	v1.shrink_to_fit();
+	v2.clear();
+	v2.shrink_to_fit();
 
 	if (simp) {
-		return simplify(v, n);
+		return simplify(right_expand(v, n), n);
+		//return simplify(v, n);
 	}
 	return v;
+}
+
+
+/*
+ * Input: Vectors A and B of computation strings
+ * Output: Vector A concatenated with B
+ */
+vector<string> join(vector<string> A, vector<string> B, int n, bool simp) {
+	vector<string> AB;
+	AB.reserve(A.size() + B.size()); // preallocate memory
+	AB.insert(AB.end(), A.begin(), A.end());
+	AB.insert(AB.end(), B.begin(), B.end());
+	A.clear();
+	A.shrink_to_fit();
+	B.clear();
+	B.shrink_to_fit();
+
+	if (simp) {
+		return simplify(right_expand(AB, n), n);
+		//return simplify(AB, n);
+	}
+	return AB;
 }
 
 
@@ -67,10 +89,10 @@ vector<string> set_intersect(vector<string> v1, vector<string> v2, int n, bool s
 vector<string> set_union(vector<string> v1, vector<string> v2, int n) {
 	vector<string> v = join(v1, v2, n);
 
-    v1.clear();
-    v1.shrink_to_fit();
-    v2.clear();
-    v2.shrink_to_fit();
+	v1.clear();
+	v1.shrink_to_fit();
+	v2.clear();
+	v2.shrink_to_fit();
 	return right_expand(v, n);
 }
 
@@ -157,10 +179,10 @@ vector<string> reg_F(vector<string> reg_alpha, int a, int b, int n) {
 	comp = list_str_concat_prefix(comp, pre);
 
 	// return comp = (s^n,)^a join_{i = 0:b-a} (s^n,)i alpha
-    reg_alpha.clear();
-    reg_alpha.shrink_to_fit();
-    temp_alpha.clear();
-    temp_alpha.shrink_to_fit();
+	reg_alpha.clear();
+	reg_alpha.shrink_to_fit();
+	temp_alpha.clear();
+	temp_alpha.shrink_to_fit();
 	return comp;
 }
 
@@ -202,10 +224,10 @@ vector<string> reg_G(vector<string> reg_alpha, int a, int b, int n)
 	comp = list_str_concat_prefix(comp, pre);
 
 	// return comp = (s^n,)^a join_{i = 0:b-a} (s^n,)i alpha
-    reg_alpha.clear();
-    reg_alpha.shrink_to_fit();
-    temp_alpha.clear();
-    temp_alpha.shrink_to_fit();
+	reg_alpha.clear();
+	reg_alpha.shrink_to_fit();
+	temp_alpha.clear();
+	temp_alpha.shrink_to_fit();
 	return comp;
 }
 
@@ -238,10 +260,10 @@ vector<string> reg_U(vector<string> reg_alpha, vector<string> reg_beta, int a, i
 
 	// Return comp = (G[a,a] beta) join join_{i = a:b-1} (G[a,i] alpha) 
 	//					set_intersect (G[i+1,i+1] beta)
-    reg_alpha.clear();
-    reg_alpha.shrink_to_fit();
-    reg_beta.clear();
-    reg_beta.shrink_to_fit();
+	reg_alpha.clear();
+	reg_alpha.shrink_to_fit();
+	reg_beta.clear();
+	reg_beta.shrink_to_fit();
 	return comp;
 }
 
@@ -259,14 +281,14 @@ vector<string> reg_R(vector<string> alpha, vector<string> beta, int a, int b, in
 
 	// Calculating comp = alpha U[a,b] beta
 	//					= (G[a,b] beta) join join_{i = a:b-1}G[a,i] alpha set_intersect G[i,i] alpha
-	for (int i = a; i <= b-1; ++i) {
+	for (int i = a; i <= b - 1; ++i) {
 		comp = join(comp,
 			set_intersect(reg_G(beta, a, i, n), reg_G(alpha, i, i, n), n), n);
 	}
-    alpha.clear();
-    alpha.shrink_to_fit();
-    beta.clear();
-    beta.shrink_to_fit();
+	alpha.clear();
+	alpha.shrink_to_fit();
+	beta.clear();
+	beta.shrink_to_fit();
 	return comp;
 }
 
