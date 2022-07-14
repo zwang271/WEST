@@ -72,7 +72,7 @@ int main() {
 
         else {
             answer = reg(nnf, n);
-            answer = simplify(answer, n);
+            //answer = simplify(answer, n);
             print(answer);
             cout << endl;
         }
