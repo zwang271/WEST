@@ -49,7 +49,7 @@ int main() {
         bool subformulas = false;
         char y_or_n = 'q';
         cout << "would you like to generate the truth table? (y / n)" << endl;
-        while (y_or_n == 'q') {
+        while (y_or_n != 'y' and y_or_n != 'n') {
                cin >> y_or_n;
                if (y_or_n == 'y') subformulas = true;
                else if (y_or_n == 'n') subformulas = false;
@@ -63,10 +63,11 @@ int main() {
 		cout << endl << "NNF Check: " << Nnf_check(nnf) << endl << endl;
         
         if (subformulas) {
-            answer = reg_subformulas(nnf, n);
+            answer = reg_sub(nnf, n);
             answer = simplify(answer, n);
-            push_back_formulas(nnf, reg_subformulas(nnf, n));
+            //push_back_formulas(nnf, reg_subformulas(nnf, n));
             print_subformulas(get_formulas(), n);
+			clear_formulas();
         }
 
         else {
