@@ -100,6 +100,6 @@ void clear_formulas();
 
 void push_back_formulas(string s, vector<string> v, int n);
 
-vector<string> reg_subformulas(string nnf, int n);
+//vector<string> reg_subformulas(string nnf, int n);
 
 vector<string> reg_sub(string nnf, int n, bool sub = true);

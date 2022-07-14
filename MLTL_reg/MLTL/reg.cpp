@@ -488,8 +488,8 @@ bool find_formula(vector<tuple<string, vector<string>>> regex, string str) {
 
 void push_back_formulas(string s, vector<string> v, int n) {
     if (!find_formula(FORMULAS, s)) {
-		v = simplify(v, n);
-        tuple<string, vector<string>> tuple = make_tuple(s, v);
+		vector<string> simplify_v = simplify(v, n);
+        tuple<string, vector<string>> tuple = make_tuple(s, simplify_v);
         FORMULAS.push_back(tuple);
     }
 }
