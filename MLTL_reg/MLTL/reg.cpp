@@ -5,41 +5,6 @@
 #include <iostream>
 
 
-
-
-
-
-
-/*
-* Removes duplicate entries from a vector.
-* Mutates vector.
-*/
-template <typename T>
-void remove_duplicates(vector<T>* reg_alpha){
-  // Convert vector to a set
-  set<T> s( (*reg_alpha).begin(), (*reg_alpha).end() );
-  // Assign set back to vector
-  (*reg_alpha).assign( s.begin(), s.end() );
-  
-  return ;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*
  * Input: Two vectors of computation strings V1 and V2, comma separated
  * Output: Computes pairwise string_intersect between all
@@ -90,10 +55,10 @@ vector<string> set_intersect(vector<string> v1, vector<string> v2, int n, bool s
 	if (simp) {
 		//return simplify(right_expand(v, n), n);
 
-		//return simplify(v, n);
+		return simplify(v, n);
 		
-		remove_duplicates(&v);
-		return v;
+		/*remove_duplicates(&v);
+		return v;*/
 	}
 	return v;
 }
@@ -116,10 +81,10 @@ vector<string> join(vector<string> A, vector<string> B, int n, bool simp) {
 	if (simp) {
 		//return simplify(right_expand(AB, n), n);
 
-		//return simplify(AB, n);
+		return simplify(AB, n);
 
-		remove_duplicates(&AB);
-		return AB;
+		/*remove_duplicates(&AB);
+		return AB;*/
 	}
 	return AB;
 }
