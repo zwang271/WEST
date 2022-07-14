@@ -7,14 +7,14 @@
  * Output: Computes pairwise string_intersect between all
  *		  computation strings in V1 and V2
  */
-vector<string> set_intersect(vector<string> v1, vector<string> v2, int n, bool simp = true);
+vector<string> set_intersect(vector<string> v1, vector<string> v2, int n, bool simp = false);
 
 
 /*
  * Input: Vectors A and B of computation strings
  * Output: Vector A concatenated with B
  */
-vector<string> join(vector<string> A, vector<string> B, int n, bool simp = true);
+vector<string> join(vector<string> A, vector<string> B, int n, bool simp = false);
 
 
 /*
