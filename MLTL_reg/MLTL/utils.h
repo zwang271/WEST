@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <string>
 #include <vector>
+#include <set>
 
 using namespace std;
 
@@ -114,6 +115,21 @@ void print(vector<string> v);
  * Otherwise output: "FAIL"
  */
 string simplify_string(string s1, string s2);
+
+
+/*
+ * Removes element in INDEX from vector v
+ */
+template <typename T>
+void remove(vector<T>& v, size_t index);
+
+
+/*
+* Removes duplicate entries from a vector.
+* Mutates vector.
+*/
+template <typename T>
+void remove_duplicates(vector<T>* reg_alpha);
 
 
 /*
