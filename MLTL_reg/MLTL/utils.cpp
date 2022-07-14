@@ -443,6 +443,21 @@ void remove(vector<T>& v, size_t index) {
 
 
 /*
+* Removes duplicate entries from a vector.
+* Mutates vector.
+*/
+template <typename T>
+void remove_duplicates(vector<T>* reg_alpha){
+  // Convert vector to a set
+  set<T> s( (*reg_alpha).begin(), (*reg_alpha).end() );
+  // Assign set back to vector
+  (*reg_alpha).assign( s.begin(), s.end() );
+  
+  return ;
+}
+
+
+/*
  * Input: Vector of disjoint computation strings v
  * Output: Simplifies strings in v pairwise as much as possible
  */
