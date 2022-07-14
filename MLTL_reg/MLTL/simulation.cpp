@@ -15,7 +15,7 @@
 #define DELTA 10
 #define MISSION_END 10
 #define FUNC_NUM 1000
-#define NUM_PROP_VAR 5
+#define NUM_PROP_VAR 10
 
 using namespace std;
 using namespace std::chrono;
