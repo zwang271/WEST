@@ -14,7 +14,6 @@ while a finite model on Prop_array is simply a list of truth assignments on
 Prop_array.
 '''
 
-
 # Determines whether a given string is a bit string
 def Bit_string_check(s):
     len_s = len(s)
