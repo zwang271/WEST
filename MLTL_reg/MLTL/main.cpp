@@ -66,7 +66,7 @@ int main() {
             answer = reg_sub(nnf, n);
             answer = simplify(answer, n);
             //push_back_formulas(nnf, reg_subformulas(nnf, n));
-            print_subformulas(get_formulas(), n);
+            print_subformulas(get_formulas(), n, nnf);
 			clear_formulas();
         }
 
