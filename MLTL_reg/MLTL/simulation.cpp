@@ -11,8 +11,8 @@
 #include <fstream>
 #include <vector>
 #include <chrono>
-#define MAX_ITER 1
-#define DELTA 10
+#define MAX_ITER 3
+#define DELTA 5
 #define INTERVAL_MAX 10
 #define FUNC_NUM 1000
 #define NUM_PROP_VAR 5
