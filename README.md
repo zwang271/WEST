@@ -80,10 +80,77 @@ Let K, L be well-formed formulas, propositional variables, or propositional cons
 **Until:** (K U[a:b] L) <br />
 **Release** (K R[a:b] L) <br />
 
+## Computations
+In a computation, "1" represents a true truth value, and "0" represents a false truth value; "s" represents an arbitrary truth value, i.e. true or false.
+Time steps in a computation are separated by commas. The bit-strings at each time step represent the truth values of each propositional variable. <br />
 
+**Examples:** <br />
+The computation of a formula with one propositional variable that is true for 5 times steps is represented as:
+```
+NNF Formula: G[0:4]p0
 
+1,1,1,1,1
+```
+The computation of a formula with 5 propositional variables that are true for one time step is represented as:
+```
+NNF Formula: G[0:0](&[p0,p1,p2,p3,p4])
 
+11111
+````
+The computations of a formula with two propositional variables that are both eventually true at a third time step are represented as:
+```
+NNF Formula: F[0:2](p0&p1)
 
+11,ss,ss
+ss,11,ss
+ss,ss,11
+```
+Where in each string separated by commas, the first digit represents the truth value of p0, and the second digit represents the truth value of p1.
+
+## Example
+An interesting mLTL formula to consider is that of the oscillation of the truth value of a propositional variable for each time step.
+Here is how a user may generate the truth table for this formula:
+```
+Please enter a MLTL formula.
+$ G[0:2] (&[(p0 > G[1:1]~p0), (~p0 > G[1:1]p0)])
+Please enter number of propositional variables.
+$ 1
+Would you like to generate the truth table? (y / n)
+$ y
+NNF Formula: G[0:2](&[(p0>G[1:1]~p0),(~p0>G[1:1]p0)])
+
+Subformula: p0
+1
+
+Subformula: ~p0
+0
+
+Subformula: G[1:1]~p0
+s,0
+
+Subformula: (p0>G[1:1]~p0)
+0,s
+s,0
+
+Subformula: G[1:1]p0
+s,1
+
+Subformula: (~p0>G[1:1]p0)
+1,s
+s,1
+
+Subformula: (&[(p0>G[1:1]~p0),(~p0>G[1:1]p0)])
+0,1
+1,0
+
+G[0:2](&[(p0>G[1:1]~p0),(~p0>G[1:1]p0)])
+0,1,0,1
+1,0,1,0
+
+Finished computing.
+Size of vector: 2
+Number of characters: 14
+```
 
 
 
