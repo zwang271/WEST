@@ -11,11 +11,11 @@
 #include <fstream>
 #include <vector>
 #include <chrono>
-#define MAX_ITER 2
-#define DELTA 5
-#define MISSION_END 10
+#define MAX_ITER 1
+#define DELTA 10
+#define INTERVAL_MAX 10
 #define FUNC_NUM 1000
-#define NUM_PROP_VAR 10
+#define NUM_PROP_VAR 5
 
 using namespace std;
 using namespace std::chrono;
@@ -77,8 +77,8 @@ string rand_function(int iter) {
             unary_temp = "G";
         }
 
-        int a = rand() % MISSION_END;
-        int b = (rand() % min(DELTA, MISSION_END - a)) + a;
+        int a = rand() % INTERVAL_MAX;
+        int b = (rand() % min(DELTA, INTERVAL_MAX - a)) + a;
 
         return unary_temp + "[" + to_string(a) + ":" + to_string(b) + "]" + rand_function(iter + 1);
     }
@@ -92,8 +92,8 @@ string rand_function(int iter) {
             binary_temp = "R";
         }
 
-        int a = rand() % MISSION_END;
-        int b = (rand() % min(DELTA, MISSION_END - a)) + a;
+        int a = rand() % INTERVAL_MAX;
+        int b = (rand() % min(DELTA, INTERVAL_MAX - a)) + a;
 
         return "(" + rand_function(iter + 1) + binary_temp + "[" + to_string(a) + ":" +
             to_string(b) + "]" + rand_function(iter + 1) + ")";
