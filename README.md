@@ -38,7 +38,7 @@ Note: after inputting a well-formed mLTL formula, the user will be prompted:
 ```
 Please enter number of propositional variables.
 ```
-Where the user will enter an appropriate integer. This number must be at least as large as the number of propositional variables defined in the formula. If desired, the user may input a formulas that does not necessarily include p0, p1, etc. For example, a formula may exclusively use variable p2, and computations will be generated to reflect that there are no restrictions on the first and second variables (p0 and p1). 
+Where the user will enter an appropriate integer. This number must be at least as large as the number of propositional variables defined in the formula. If desired, the user may input a formula that does not necessarily include p0, p1, etc. For example, a formula may exclusively use variable p2, and computations will be generated to reflect that there are no restrictions on the first and second variables (p0 and p1). 
 
 If exclusively propositional constants are inputted, then the user should enter "1" for the number of propositional variables in order to generate a meaningful truth table. 
 
@@ -60,10 +60,10 @@ Let K, L be well-formed formulas, propositional variables, or propositional cons
 **Implies:** (K > L)  <br />
 
 ### Associative Propositional Connectives
-The entirely of the associative propositional connective formula string must be enclosed in parentheses.  <br />
+The entirety of the associative propositional connective formula string must be enclosed in parentheses.  <br />
 The list of elements must be preceded by the associative propositional connective. <br />
 Let "," separate each element in the list, and let "[" and "]" indicate the beginning and end of the list, respectively. <br />
-Let K, L, ..., M be an arbitarily-sized list of well-formed formulas, propositional variables, or propositional constants. <br />
+Let K, L, ..., M be an arbitrarily-sized list of well-formed formulas, propositional variables, or propositional constants. <br />
 
 **And:** (&[K, L, ..., M]) <br />
 **Or:** (v[K, L, ..., M])  <br />
