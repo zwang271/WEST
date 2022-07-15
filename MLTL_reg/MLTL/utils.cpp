@@ -641,12 +641,17 @@ int sum_of_characters(vector<string> v) {
 	return sum;
 }
 
-void print_subformulas(vector< tuple<string, vector<string>> > formulas, int n) {
+void print_subformulas(vector< tuple<string, vector<string>> > formulas, int n, string nnf) {
     for (int i = 0; i < formulas.size(); ++i) {
-        cout << "Subformula: " << get<0>(formulas[i]) << endl;
-        //print(simplify(right_expand(get<1>(formulas[i]), n), n));
-        print(get<1>(formulas[i]));
-        cout << endl;
+        //if the substring is present in the nnf, print it out
+        if (nnf.find(get<0>(formulas[i])) != -1) {
+            if (get<0>(formulas[i]) != nnf) {
+                cout << "Subformula: ";
+            }
+            cout << get<0>(formulas[i]) << endl;
+            print(get<1>(formulas[i]));
+            cout << endl;
         }
+    }
 }
 
