@@ -103,6 +103,7 @@ vector<string> right_expand(vector<string> v, int n, int iteration = 0);
  * Prints each element of a vector of strings on a new line
  */
 void print(vector<string> v);
+void print(vector<int> v);
 
 
 /*
