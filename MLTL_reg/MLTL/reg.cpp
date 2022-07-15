@@ -472,6 +472,8 @@ vector<string> reg(string nnf, int n) {
 }
 
 
+
+
 vector<tuple<string, vector<string>>> FORMULAS;
 
 
