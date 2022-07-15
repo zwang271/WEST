@@ -9,7 +9,8 @@ After downloading and cloning this repository, use the commands
 $ cd 2022-Iowa-State-REU-Temporal-Logic-
 $ cd MLTL_reg
 $ cd MLTL
-$ make
+$ make 
+$ ./west
 ```
 Then, the user will be prompted:
 ```
@@ -23,23 +24,21 @@ Whitespace for formula input is unrestricted.
 Non-empty intervals are recommended for meaningful truth table generation.
 
 ### Propositional Variables and Constants
-One may input propositional constants or propositional variables. <br />
-
 **True:** T <br />
 **False:** ! <br />
 **First Variable:** p0 <br />
 **Second Variable:** p1 <br />
 And so on, where each consecutive variable is followed with the appropriate natural number. <br />
 
-**Negation:** ~ <br />
-The negation operator should be followed by a propositional variable or well-formed mLTL formula. <br />
-Formulas do not necessarily need to be in negation normal form, as our algorithm translates each well-formed formula into negation normal form, and generates the truth table for that translation. <br />
+Let K be a well-formed formula, propositional variable, or propositional constant. <br />
+**Negation:** ~ K <br />
+Formulas do not necessarily need to be in negation normal form, as our algorithm converts formulas into this form and generates the truth table for the formula's translated syntax. <br />
 
 Note: after inputting a well-formed mLTL formula, the user will be prompted:
 ```
 Please enter number of propositional variables.
 ```
-Where the user will enter an appropriate integer. This number must be at least as large as the number of propositional variables defined in the formula. If desired, the user may input a formulas that does not necessarily include p0, p1, etc. In other words, they may be begin with p2, and computations will be generated to reflect that there are no restrictions on the first and second variables (p0 and p1). 
+Where the user will enter an appropriate integer. This number must be at least as large as the number of propositional variables defined in the formula. If desired, the user may input a formulas that does not necessarily include p0, p1, etc. For example, a formula may exclusively use variable p2, and computations will be generated to reflect that there are no restrictions on the first and second variables (p0 and p1). 
 
 If exclusively propositional constants are inputted, then the user should enter "1" for the number of propositional variables in order to generate a meaningful truth table. 
 
@@ -158,6 +157,8 @@ Number of characters: 14
 This project is part of the 2022 Iowa State REU with mentors [Kristin Yvonne Rozier](https://www.aere.iastate.edu/kyrozier/) and Laura Gamboa Guzmán
 
 WEST is an acronym for the last names of the undergraduate mathematicians who collaborated on this project: Zili Wang, Jenna Elwing, Jeremy Sorkin, and Chiara Travesset
+
+INSERT LINK TO OUR PAPER HERE
 
 
 
