@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <set>
+#include <tuple>
 
 using namespace std;
 
@@ -165,4 +166,4 @@ void print_all_representations(vector<string> v_actual, int n);
 */
 int sum_of_characters(vector<string>);
 
-void print_subformulas(vector< tuple<string, vector<string>> > formulas, int n, string nnf);
+void print_subformulas(vector< tuple<string, vector<string> > > formulas, int n, string nnf);
