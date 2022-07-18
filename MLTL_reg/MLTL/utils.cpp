@@ -386,6 +386,11 @@ void print(vector<string> v) {
 		cout << v[i] << endl;
 	}
 }
+void print(vector<int> v) {
+	for (int i = 0; i < v.size(); ++i) {
+		cout << v[i] << endl;
+	}
+}
 
 
 /*
@@ -439,21 +444,6 @@ string simplify_string(string s1, string s2)
 template <typename T>
 void remove(vector<T>& v, size_t index) {
 	v.erase(v.begin() + index);
-}
-
-
-/*
-* Removes duplicate entries from a vector.
-* Mutates vector.
-*/
-template <typename T>
-void remove_duplicates(vector<T>* reg_alpha){
-  // Convert vector to a set
-  set<T> s( (*reg_alpha).begin(), (*reg_alpha).end() );
-  // Assign set back to vector
-  (*reg_alpha).assign( s.begin(), s.end() );
-  
-  return ;
 }
 
 
