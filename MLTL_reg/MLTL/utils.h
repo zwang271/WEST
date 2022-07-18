@@ -170,3 +170,5 @@ int sum_of_characters(vector<string>);
 void print_subformulas(vector< tuple<string, vector<string> > > formulas, int n, string nnf);
 
 bool check_vectors_equal(vector<string> *v1, vector<string> *v2, int n);
+
+int get_n(string wff);
