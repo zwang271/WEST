@@ -151,8 +151,20 @@ Finished computing.
 Size of vector: 2
 Number of characters: 14
 ```
+## Troubleshooting Guide
 
+### The Program Crashed
+Ensure that the number of propositional variables was large enough. The number must be at least one larger than the largest natural number attached to a propositional variable, and not just the number of propositional variables in the formula. For example, the formula
+```
+(p1U[0:2]p3)
+```
+requires at least 4 propositional variables, not 2.
 
+### The Formula is not Well-Formed
+Ensure that all time intervals use ':' to separate the bounds and not a comma.  <br />
+Ensure that all binary and associative connectives have parentheses surrounding them.  <br />
+Ensure that for each propositional variable, its corresponding natural number immediately follows the 'p', and that there isn't a '_' or space in between.  <br />
+Ensure that all unary connectives do NOT have parentheses surrounding them.
 
 ## Contributors
 This project is part of the 2022 Iowa State REU with mentors [Kristin Yvonne Rozier](https://www.aere.iastate.edu/kyrozier/) and Laura Gamboa Guzmán.
