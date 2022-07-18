@@ -9,18 +9,18 @@ After downloading and cloning this repository, use the commands
 $ cd 2022-Iowa-State-REU-Temporal-Logic-
 $ cd MLTL_reg
 $ cd MLTL
-$ make 
+$ make west
 $ ./west
 ```
 Then, the user will be prompted:
 ```
 Please enter a MLTL formula.
 ```
-See the Grammar section below to inform input
+See the Grammar section below to inform input.
 
 
 ## Grammar
-Whitespace for formula input is unrestricted.
+The WEST program strips whitespaces from input.
 Non-empty intervals are recommended for meaningful truth table generation.
 
 ### Propositional Variables and Constants
@@ -31,20 +31,27 @@ Non-empty intervals are recommended for meaningful truth table generation.
 And so on, where each consecutive variable is followed with the appropriate natural number. <br />
 
 Let K be a well-formed formula, propositional variable, or propositional constant. <br />
-**Negation:** ~ K <br />
-Formulas do not necessarily need to be in negation normal form, as our algorithm converts formulas into this form and generates the truth table for the formula's translated syntax. <br />
+Formulas do not necessarily need to be in negation normal form, as the WEST program converts formulas into this form and generates the truth table for the formula's translated syntax. <br />
+The user does not necessarily need to start their propositional variables at p0. That is, a user can input a formula that, for example, includes only the propositional variables p3, p4, and p7. For faster runtime and less memory usage, however, it is not recommended to skip natural numbers like this. <br />
 
-Note: after inputting a well-formed mLTL formula, the user will be prompted:
+After inputting a well-formed mLTL formula, the user will be prompted:
 ```
 Please enter number of propositional variables.
 ```
-Where the user will enter an appropriate integer. This number must be at least as large as the number of propositional variables defined in the formula. If desired, the user may input a formula that does not necessarily include p0, p1, etc. For example, a formula may exclusively use variable p2, and computations will be generated to reflect that there are no restrictions on the first and second variables (p0 and p1). 
+Where the user will enter an appropriate integer. This number must be at least one more than the largest number attached to a propositional variable. For example, for a formula with the propositional variables p3, p4, and p7, the user must enter at least 8. If the user enters too small of a number, the program will crash. <br />
 
 If exclusively propositional constants are inputted, then the user should enter "1" for the number of propositional variables in order to generate a meaningful truth table. 
 
+### Unary Propositional Connectives
+The only unary propositional connective is negation. <br />
+Negation does NOT use parentheses. <br />
+Let K be a well-formed formula, propositional variable, or propositional constant. <br />
+**Negation:** ~ K <br />
+
 ### Unary Temporal Connectives
 All temporal operators must be followed by an interval. All intervals must be followed by a well-formed formula, propositional variable, or propositional constant. <br />
-Let a be the inclusive upper bound of an interval, and let b be inclusive lower bound of an interval. Let ":" separate a and b, and "[" and "]" indicate the beginning and end of an interval, respectively.  <br />
+Unary temporal operators do NOT use parentheses. <br />
+Let a be the inclusive lower bound of an interval, and let b be inclusive upper bound of an interval. Let ":" separate a and b, and "[" and "]" indicate the beginning and end of an interval, respectively.  <br />
 Let K be a well-formed formula, propositional variable, or propositional constant. <br />
 
 **Finally:** F[a:b] K <br />
@@ -73,7 +80,7 @@ Let K, L, ..., M be an arbitrarily-sized list of well-formed formulas, propositi
 ### Binary Temporal Connectives
 All binary connectives must be enclosed with parentheses. <br />
 All temporal operators must be followed by an interval. All intervals must be followed by a well-formed formula, propositional variable, or propositional constant. <br />
-Let a be the inclusive upper bound of an interval, and let b be inclusive lower bound of an interval. Let ":" separate a and b, and "[" and "]" indicate the beginning and end of an interval, respectively.
+Let a be the inclusive lower bound of an interval, and let b be inclusive upper bound of an interval. Let ":" separate a and b, and "[" and "]" indicate the beginning and end of an interval, respectively.
 Let K, L be well-formed formulas, propositional variables, or propositional constants. <br />
 
 **Until:** (K U[a:b] L) <br />
@@ -81,16 +88,16 @@ Let K, L be well-formed formulas, propositional variables, or propositional cons
 
 ## Computations
 In a computation, "1" represents a true truth value, and "0" represents a false truth value; "s" represents an arbitrary truth value, i.e. true or false.
-Time steps in a computation are separated by commas. The bit-strings at each time step represent the truth values of each propositional variable. <br />
+Time steps in a computation are separated by commas. The bit-strings at each time step represent the truth values of each propositional variable, in ascending order. <br />
 
 **Examples:** <br />
-The computation of a formula with one propositional variable that is true for 5 times steps is represented as:
+The computation of a formula with one propositional variable and 5 time steps is represented as:
 ```
 NNF Formula: G[0:4]p0
 
 1,1,1,1,1
 ```
-The computation of a formula with 5 propositional variables that are true for one time step is represented as:
+The computation of a formula with 5 propositional variables and one time step is represented as:
 ```
 NNF Formula: G[0:0](&[p0,p1,p2,p3,p4])
 
@@ -150,13 +157,25 @@ Finished computing.
 Size of vector: 2
 Number of characters: 14
 ```
+## Troubleshooting Guide
 
+### The Program Crashed
+Ensure that the number of propositional variables was large enough. The number must be at least one larger than the largest natural number attached to a propositional variable, and not just the number of propositional variables in the formula. For example, the formula
+```
+(p1U[0:2]p3)
+```
+requires at least 4 propositional variables, not 2.
 
+### The Formula is not Well-Formed
+Ensure that all time intervals use ':' to separate the bounds and not a comma.  <br />
+Ensure that all binary and associative connectives have parentheses surrounding them.  <br />
+Ensure that for each propositional variable, its corresponding natural number immediately follows the 'p', and that there isn't a '_' or space in between.  <br />
+Ensure that all unary connectives do NOT have parentheses surrounding them.
 
 ## Contributors
-This project is part of the 2022 Iowa State REU with mentors [Kristin Yvonne Rozier](https://www.aere.iastate.edu/kyrozier/) and Laura Gamboa Guzmán
+This project is part of the 2022 Iowa State REU with mentors [Kristin Yvonne Rozier](https://www.aere.iastate.edu/kyrozier/) and Laura Gamboa Guzmán.
 
-WEST is an acronym for the last names of the undergraduate mathematicians who collaborated on this project: Zili Wang, Jenna Elwing, Jeremy Sorkin, and Chiara Travesset
+WEST is an acronym for the last names of the undergraduate mathematicians who collaborated on this project: Zili Wang, Jenna Elwing, Jeremy Sorkin, and Chiara Travesset.
 
 INSERT LINK TO OUR PAPER HERE
 
