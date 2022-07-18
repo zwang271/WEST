@@ -1,6 +1,8 @@
 #pragma once
 #include "utils.h"
 #include <vector>
+#include <tuple>
+
 
 /*
  * Input: Two vectors of computation strings V1 and V2, comma separated
@@ -92,9 +94,9 @@ vector<string> reg(string s, int n);
 
 
 
-bool find_formula(vector<tuple<string, vector<string>>> v, string s);
+bool find_formula(vector<tuple<string, vector<string> > > v, string s);
 
-vector<tuple<string, vector<string>>> get_formulas();
+vector< tuple< string, vector<string> > > get_formulas();
 
 void clear_formulas();
 
