@@ -50,7 +50,7 @@ def Digit_check(s : str):
 
 
 #  Num  ->  Digit Num |  Digit
-#  Checks that the inputted string is of length 1 and then runs digit_check().  
+#  Checks that the inputted string is of length 1 and then runs digit_check().
 def Num_check(s : str):
     len_s = len(s)
     if (len_s == 1):
@@ -84,7 +84,7 @@ def Interval_check(s : str):
 
 #   Prop_var  ->  ‘p’ Num
 #  Checks that the inputted string is a propositional variable.
- 
+
 def Prop_var_check(s : str):
     len_s = len(s)
 
@@ -96,7 +96,7 @@ def Prop_var_check(s : str):
 
 #  Prop_cons  ->  ‘T’ | ‘!’
 #  Checks that the inputted string is a propositional constant.
- 
+
 def Prop_cons_check(s : str):
     return s == "T" or s == "!"
 
@@ -104,7 +104,7 @@ def Prop_cons_check(s : str):
 
 #   Unary_Prop_conn  ->  ‘~’
 #   Checks that the inputted string is the negation symbol (the unary prop. connective).
- 
+
 def Unary_Prop_conn_check(s : str):
     return s == "~"
 
@@ -112,7 +112,7 @@ def Unary_Prop_conn_check(s : str):
 
 #   Binary_Prop_conn  ->  ‘v’ | ‘&’ | ‘=’ | ‘>’
 #   Checks that the inputted string is a binary prop. connective (or, and, equivalence, implication).
- 
+
 def Binary_Prop_conn_check(s : str):
     return s == "v" or s == "&" or s == "=" or s == ">"
 
@@ -120,7 +120,7 @@ def Binary_Prop_conn_check(s : str):
 
 #   Assoc_Prop_conn -> ‘v’ | ‘&’ | ‘=’
 #   Checks that the inputted string is an associative prop. connective (or, and, equivalence).
- 
+
 def Assoc_Prop_conn_check(s : str):
     return s == "v" or s == "&" or s == "="
 
@@ -128,7 +128,7 @@ def Assoc_Prop_conn_check(s : str):
 #   Array_entry -> Wff ‘,’ Array_entry  |  Wff
 #   Checks that the inputted string is an array of WFFs.
 #   We use an array of WFFs, for example, when ANDing >2 formulas.
- 
+
 def Array_entry_check(s : str):
     len_s = len(s)
 
@@ -160,7 +160,7 @@ def Array_entry_check(s : str):
 
 #   Unary_Temp_conn  ->  ‘F’ | ‘G’
 #   Checks that the inputted string is F or G (the unary temporal connectives).
- 
+
 def Unary_Temp_conn_check(s : str):
     return s == "F" or s == "G"
 
@@ -168,7 +168,7 @@ def Unary_Temp_conn_check(s : str):
 
 #   Binary_Temp_conn  ->  ‘U’ | ‘R’
 #   Checks that the inputted string is U or R (the binary temporal connectives).
- 
+
 def Binary_Temp_conn_check(s : str):
     return s == "U" or s == "R"
 
@@ -270,7 +270,7 @@ def Wff_check(s : str):
     return False
 
 
-# Returns the index of the primary binary connective of a WFF. 
+# Returns the index of the primary binary connective of a WFF.
 def primary_binary_conn(wff : str):
     len_wff = len(wff)
 
@@ -341,10 +341,32 @@ def primary_interval(wff : str):
 
         return (begin_interval, comma_index, end_interval)
 
-   
+
     else:
         error_string = wff + " does not have a primary interval.\n"
         raise Exception(error_string)
+
+
+# Gives a vector of subformulas in: string array_entry = Array_entry
+# Array_entry -> Wff ‘,’ Array_entry  |  Wff
+def Array_entry_subformulas(array_entry : str):
+    len_array_entry = len(array_entry)
+    subformulas = []
+
+    # Parse "Wff_1,...,Wff_n" string and add subformulas Wff_1, ..., Wff_n
+    # to subformulas array
+    begin_entry = 0 
+    for end_entry in Range(0, len_array_entry - 1, 1):
+        if (Wff_check(Slice(array_entry, begin_entry, end_entry))):
+            alpha = Slice(array_entry, begin_entry, end_entry)
+            # Append subformula alpha to subformulas array
+            subformulas.append(alpha)
+
+            # Update begin_entry so it has index of the first char of the next entry.
+            begin_entry = end_entry + 2
+
+    return subformulas
+    
 
 
 
@@ -373,7 +395,7 @@ def Comp_len(wff : str):
         end_interval = interval[2]
         upperbound = int(Slice(wff, comma_index+1, end_interval-1))
         alpha = Slice(wff, end_interval+1, len_wff-1)
-        return upperbound + Comp_len(alpha) 
+        return upperbound + Comp_len(alpha)
 
     # '(' Assoc_Prop_conn ‘[‘  Array_entry  ‘]’ ')'
     c = Slice_char(wff, 1)
@@ -402,7 +424,7 @@ def Comp_len(wff : str):
 
     # ‘(‘ Wff Binary_Prop_conn Wff ‘)’
     if (Binary_Prop_conn_check(binary_conn)):
-        alpha = Slice(wff, 1, binary_conn_index-1) 
+        alpha = Slice(wff, 1, binary_conn_index-1)
         Comp_alpha = Comp_len(alpha)
         beta = Slice(wff, binary_conn_index+1, len_wff-2)
         Comp_beta = Comp_len(beta)
@@ -417,13 +439,13 @@ def Comp_len(wff : str):
         upper_bound = int(Slice(wff, comma_index + 1, end_interval - 1))
 
         alpha = Slice(wff, 1, binary_conn_index-1)
-        Comp_alpha = Comp_len(alpha) 
+        Comp_alpha = Comp_len(alpha)
         beta = Slice(wff, end_interval+1, len_wff-2)
         Comp_beta = Comp_len(beta)
-        
+
         return max((upper_bound-1) + Comp_alpha, upper_bound + Comp_beta)
 
-    
+
     else:
         error_string = wff + " is not a well-formed formula.\n"
         raise Exception(error_string)

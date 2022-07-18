@@ -156,6 +156,26 @@ def Nnf_check(s : str):
     return False
 
 
+# Gives a vector of subformulas in: string nnf_array_entry = Nnf_Array_entry
+# Nnf_Array_entry -> Nnf ‘,’ Nnf_Array_entry  |  Nnf
+def Nnf_Array_entry_subformulas(nnf_array_entry : str):
+    len_nnf_array_entry = len(nnf_array_entry)
+    subformulas = []
+
+    # Parse "Nnf_1,...,Nnf_n" string and add subformulas Nnf_1, ..., Nnf_n
+    # to subformulas array
+    begin_entry = 0 
+    for end_entry in Range(0, len_nnf_array_entry - 1, 1):
+        if (Nnf_check(Slice(nnf_array_entry, begin_entry, end_entry))):
+            alpha = Slice(nnf_array_entry, begin_entry, end_entry)
+            # Append subformula alpha to subformulas array
+            subformulas.append(alpha)
+
+            #Update begin_entry so it has index of the first char of the next entry.
+            begin_entry = end_entry + 2
+
+    return subformulas
+
 
 #  Converts a WFF to its equivalent NNF.
 #  A cleaner implementation of Wff_to_Nnf().
