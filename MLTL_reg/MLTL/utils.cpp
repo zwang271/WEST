@@ -645,3 +645,49 @@ void print_subformulas(vector< tuple<string, vector<string>> > formulas, int n, 
     }
 }
 
+bool check_vectors_equal(vector<string> *v1, vector<string> *v2, int n) {
+    if (v1->size() != v2->size()) {
+        return false;
+    }
+    
+    
+    // Convert vector to a set
+    set<string> s1((*v1).begin(), (*v1).end());
+    // Assign set back to vector
+    (*v1).assign(s1.begin(), s1.end());
+    
+    // Convert vector to a set
+    set<string> s2((*v2).begin(), (*v2).end());
+    // Assign set back to vector
+    (*v2).assign(s2.begin(), s2.end());
+    
+    //get max length between both vectors
+    
+    
+    int v1_length = int((*v1)[0].length());
+    int v2_length = int((*v2)[0].length());
+    //cal pad individually with 2 paramen=ters
+    
+    if (v1_length > v2_length) {
+        *v2 = pad(*v2, n, v1_length);
+    }
+    else if (v1_length < v2_length) {
+        *v1 = pad(*v1, n, v2_length);
+    }
+//
+//    //pad shorter vector to max length
+//    if (v1_length != v2_length) {
+//        if (shortest_v == *v1) *v1 = pad(shortest_v, n, max_length);
+//
+//        else *v2 = pad(shortest_v, n, max_length);
+//    }
+    
+    //compare each element
+    for (int i = 0; i < v1->size(); ++i) {
+        if ((*v1)[i] != (*v2)[i]) {
+            return false;
+        }
+    }
+    
+    return true;
+}

@@ -8,6 +8,7 @@
 #include "grammar.h"
 #include "nnf_grammar.h"
 #include "reg.h"
+#include <cmath>
 
 using namespace std;
 
