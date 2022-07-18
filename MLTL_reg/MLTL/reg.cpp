@@ -5,6 +5,9 @@
 #include <iostream>
 
 
+vector<tuple<string, vector<string>>> FORMULAS;
+
+
 /*
  * Input: Two vectors of computation strings V1 and V2, comma separated
  * Output: Computes pairwise string_intersect between all
@@ -463,10 +466,6 @@ vector<string> reg(string nnf, int n) {
 	}
 	return {};
 }
-
-
-
-vector<tuple<string, vector<string>>> FORMULAS;
 
 
 vector<tuple<string, vector<string>>> get_formulas() {

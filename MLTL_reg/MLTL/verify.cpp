@@ -211,24 +211,38 @@ vector<string> generate_test(int depth, int n, int a = 0, int b = 2, bool large 
 
 int main() {
 
+	int n = 4;
+	int depth = 1;
+	int a = 0; 
+	int b = 2;
+	bool large = false;
+
 	string formulas_file = "./verify/formulas/formulas.txt";
 	srand(time(NULL));
-
-	vector<string> test = generate_test(2, 4, 0, 2, false);
-	
+	vector<string> test = generate_test(depth, n, a, b, large);
 	for (string wff : test) {
 		if (!Wff_check(wff)) {
 			cout << wff << " failed wff check" << endl; 
 		}
 	}
-
 	write_to_file(test, formulas_file);
+	cout << "Formulas written to " + formulas_file << endl; 
 
 
-	/*vector<string> v = { "1ss", "s1s", "ss1" };
-	vector<string> expanded = expand(v);
-	print(expanded);
-	write_to_file(expanded, out);*/
+	string verify_reg = "./verify/reg_outputs/";
+	for (int i = 0; i < test.size(); ++i) {
+		string wff = test[i];
+		vector<string> reg_wff = reg(wff, n);
+		reg_wff = expand(reg_wff);
+		cout << verify_reg + to_string(i) + ".txt" << endl; 
+		write_to_file(reg_wff, verify_reg + to_string(i) + ".txt");
+	}
+
+
+	///*vector<string> v = { "1ss", "s1s", "ss1" };
+	//vector<string> expanded = expand(v);
+	//print(expanded);
+	//write_to_file(expanded, out);*/
 
 	return 0;
 }
