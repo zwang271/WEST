@@ -24,7 +24,8 @@ Prop_array.
 
 # Here Prop_array is the array of Prop_vars in wff, current_state and end_state
 # is the sub-interval in finite_model where wff is evaluated in.
-def Interpretation_aux (wff, Prop_array, current_state, end_state, finite_model):
+# n is an optional parameter and determines the number of Prop_vars being evaluated.
+def Interpretation_aux (wff, Prop_array, current_state, end_state, finite_model, n = -1):
     len_wff = len(wff)
     len_finite_model = len(finite_model)
 
@@ -115,7 +116,7 @@ def Interpretation_aux (wff, Prop_array, current_state, end_state, finite_model)
 
             flag = False
             for alpha in subformulas:
-                Prop_alpha_array = string_To_Prop_array(alpha)
+                Prop_alpha_array = string_To_Prop_array(alpha, n)
                 eval_alpha = Interpretation_aux(alpha, Prop_alpha_array, current_state, end_state, finite_model)
                 flag = flag or eval_alpha
             return flag
@@ -125,7 +126,7 @@ def Interpretation_aux (wff, Prop_array, current_state, end_state, finite_model)
 
             flag = True
             for alpha in subformulas:
-                Prop_alpha_array = string_To_Prop_array(alpha)
+                Prop_alpha_array = string_To_Prop_array(alpha, n)
                 eval_alpha = Interpretation_aux(alpha, Prop_alpha_array, current_state, end_state, finite_model)
                 flag = flag and eval_alpha
             return flag
@@ -135,7 +136,7 @@ def Interpretation_aux (wff, Prop_array, current_state, end_state, finite_model)
 
             flag = False
             for alpha in subformulas:
-                Prop_alpha_array = string_To_Prop_array(alpha)
+                Prop_alpha_array = string_To_Prop_array(alpha, n)
                 eval_alpha = Interpretation_aux(alpha, Prop_alpha_array, current_state, end_state, finite_model)
                 flag = (flag and eval_alpha) or (not flag and not eval_alpha)
             return flag
@@ -238,14 +239,15 @@ def Interpretation_aux (wff, Prop_array, current_state, end_state, finite_model)
     raise Exception(wff + "is not a well-formed formula.")
 
 
-def Interpretation(wff : str, finite_model):
-    Prop_array = string_To_Prop_array(wff)
+# n is an optional parameter and determines the number of Prop_vars being evaluated.
+def Interpretation(wff : str, finite_model, n = -1):
+    Prop_array = string_To_Prop_array(wff, n)
     current_state = 0
     end_state = Comp_len(wff)-1
-    return Interpretation_aux(wff, Prop_array, current_state, end_state, finite_model)
+    return Interpretation_aux(wff, Prop_array, current_state, end_state, finite_model, n)
 
 
-# Test Interpretation function on input: wff, current_state, end_state, finite_model_string
+# Test Interpretation function on input: wff, finite_model_string
 if __name__ == "__main__":
     wff = input ("Enter MLTL formula : ")
     wff = strip_whitespace(wff)
@@ -255,9 +257,9 @@ if __name__ == "__main__":
     Prop_array = string_To_Prop_array(wff)
 
 
-    current_state = int(input ("Enter current state : "))
-    end_state = int(input ("Enter end state : "))
-    assert (0 <= current_state and current_state <= end_state), "0 <= current_state <= end_state"
+    #current_state = int(input ("Enter current state : "))
+    #end_state = int(input ("Enter end state : "))
+    #assert (0 <= current_state and current_state <= end_state), "0 <= current_state <= end_state"
 
 
     message = "Enter Finite model for " + array_To_string(Prop_array) + " (with entries seperated by ',') :\n"
@@ -266,4 +268,4 @@ if __name__ == "__main__":
     #assert (Finite_model_check(finite_model_string, Prop_array)), "Not a Finite model for " + array_To_string(string_To_Prop_array(wff))
     finite_model = string_To_finite_model(finite_model_string, Prop_array)
 
-    print(Interpretation(wff, Prop_array, current_state, end_state, finite_model))
+    print(Interpretation(wff, finite_model))

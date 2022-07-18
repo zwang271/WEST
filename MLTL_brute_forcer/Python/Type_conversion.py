@@ -15,25 +15,43 @@ def array_To_string(array):
     string = string + array[len_array-1] + ']'
     return string
 
-
-def string_To_Prop_array(s):
+# If n = -1:
+# Takes in string s, parses out Prop_var with largest natural number k.
+# Returns the array: Prop_array = ["p0", "p1", ..., "pk"]
+# 
+# If n >= 0, returns the array: Prop_array = ["p0", "p1", ..., "p(n-1)"]  
+def string_To_Prop_array(s, n = -1):
     len_s = len(s)
     Prop_array = []
 
-    # Append every Prop_var found in s to Prop_array
-    for i in Range(0, len_s-1, 1):
-        if (Prop_var_check(Slice(s, i, i+1))):
-            j = i+2
-            while(Prop_var_check(Slice(s, i, j)) and j <= len_s-1):
-                j = j+1
-            j = j-1
-            Prop_array.append(Slice(s, i, j))
+    if (n == -1):
+        # Parse for the largest Prop_var index in s
+        max_index = -1
+        for begin_index in Range(0, len_s-1, 1):
+            if (Prop_var_check(Slice(s, begin_index, begin_index+1))):
+                # Parse for Prop_var index
+                begin_index = begin_index+1
+                end_index = begin_index
+                while(Num_check(Slice(s, begin_index, end_index)) and end_index <= len_s-1):
+                    end_index += 1
+                end_index -= 1
 
-    # Remove duplicate entries in Prop_array
-    res = []
-    [res.append(x) for x in Prop_array if x not in res]
-    Prop_array = res
-    return Prop_array
+                # Parsing done, have Prop_var index
+                index = int(Slice(s, begin_index, end_index))
+                max_index = max(index, max_index)
+
+        for i in Range(0, max_index, 1):
+            prop_var = "p" + str(i)
+            Prop_array.append(prop_var)
+
+        return Prop_array
+    
+    else:
+        for i in Range(0, n-1, 1):
+            prop_var = "p" + str(i)
+            Prop_array.append(prop_var)
+
+        return Prop_array
 
 
 def bit_To_bool(bit):

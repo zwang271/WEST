@@ -71,10 +71,16 @@ def execute_truth_table_program():
     false_output.write(f"Formula: " + wff)
     false_output.write("\nProp array: " + array_To_string(Prop_array) + '\n\n')
 
+    
+
     finite_model = ['0' * num_prop] * (num_states)
 
+    
+    # For debug_output.txt file
+    n = 4
+    
     for i in Range(1, 2**(num_prop * num_states), 1):
-        eval = Interpretation(wff, finite_model)
+        eval = Interpretation(wff, finite_model, n)
 
         f.write(array_To_string(finite_model) + '   ' + str(eval) + '\n')
         if eval:
