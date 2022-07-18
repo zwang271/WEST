@@ -31,7 +31,6 @@ Non-empty intervals are recommended for meaningful truth table generation.
 And so on, where each consecutive variable is followed with the appropriate natural number. <br />
 
 Let K be a well-formed formula, propositional variable, or propositional constant. <br />
-**Negation:** ~ K <br />
 Formulas do not necessarily need to be in negation normal form, as the WEST program converts formulas into this form and generates the truth table for the formula's translated syntax. <br />
 The user does not necessarily need to start their propositional variables at p0. That is, a user can input a formula that, for example, includes only the propositional variables p3, p4, and p7. For faster runtime and less memory usage, however, it is not recommended to skip natural numbers like this. <br />
 
@@ -43,8 +42,15 @@ Where the user will enter an appropriate integer. This number must be at least o
 
 If exclusively propositional constants are inputted, then the user should enter "1" for the number of propositional variables in order to generate a meaningful truth table. 
 
+### Unary Propositional Connectives
+The only unary propositional connective is negation. <br />
+Negation does NOT use parentheses. <br />
+Let K be a well-formed formula, propositional variable, or propositional constant. <br />
+**Negation:** ~ K <br />
+
 ### Unary Temporal Connectives
 All temporal operators must be followed by an interval. All intervals must be followed by a well-formed formula, propositional variable, or propositional constant. <br />
+Unary temporal operators do NOT use parentheses. <br />
 Let a be the inclusive lower bound of an interval, and let b be inclusive upper bound of an interval. Let ":" separate a and b, and "[" and "]" indicate the beginning and end of an interval, respectively.  <br />
 Let K be a well-formed formula, propositional variable, or propositional constant. <br />
 
