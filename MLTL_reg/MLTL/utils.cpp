@@ -5,6 +5,7 @@
 #include <iostream>
 #include "grammar.h"
 #include "reg.h"
+#include <cctype>
 
 
 using namespace std;
@@ -643,5 +644,35 @@ void print_subformulas(vector< tuple<string, vector<string>> > formulas, int n, 
             cout << endl;
         }
     }
+}
+
+
+/*
+* Returns the (largest prop var index) + 1 in wff
+*/
+int get_n(string wff) {
+	int n = 0;
+
+	bool find_num = false;
+	string num_str = "";
+	for (int i = 0; i < wff.length(); ++i) {
+		if (wff[i] == 'p') {
+			find_num = true;
+		}
+
+		else if (find_num) {
+			if (isdigit(wff[i])) {
+				num_str += wff[i];
+			}
+			else {
+				find_num = false;
+				n = max(stoi(num_str), n);
+				cout << n << endl;
+			}
+		}
+
+	}
+
+	return n + 1;
 }
 
