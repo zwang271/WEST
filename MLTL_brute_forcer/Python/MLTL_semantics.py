@@ -1,6 +1,6 @@
 from Custom_notation import *
 from Type_conversion import *
-from MLTL_wff import *
+from nnf_grammar import *
 
 '''
 This file implements the interpretation of a well-formed MLTL formula wff
@@ -14,41 +14,17 @@ while a finite model on Prop_array is simply a list of truth assignments on
 Prop_array.
 '''
 
-# Determines whether a given string is a bit string
-def Bit_string_check(s):
-    len_s = len(s)
-    for i in Range(0, len_s-1, 1):
-        if (Slice_char(s, i) != '0' and Slice_char(s, i) != '1'):
-            return False
+# Wff ->  Prop_var | Prop_cons
+#                  | Unary_Prop_conn Wff
+#	               | Unary_Temp_conn  Interval  Wff
+	            
+#                  | ‘(‘ Assoc_Prop_conn ‘[‘  Array_entry  ‘]’ ‘)’
+#                  | ‘(‘ Wff Binary_Prop_conn Wff ‘)’
+#                  | ‘(‘ Wff Binary_Temp_conn  Interval Wff ‘)    
 
-    return True
-
-
-# Determines whether a string s encodes a Truth assignment for Prop_array
-def Truth_assign_check(s, Prop_array):
-    len_s = len(s)
-    len_Prop_array = len(Prop_array)
-
-    return (len_s == len_Prop_array) and Bit_string_check(s)
-
-
-# Determines whether a string s encodes a finite model for Prop_array.
-def Finite_model_check(s, Prop_array):
-    len_s = len(s)
-    len_Prop_array = len(Prop_array)
-
-    for i in Range(0, len_s - (len_Prop_array+1), len_Prop_array+1):
-        truth_assign = Slice(s, i, i + len_Prop_array-1)
-        comma = Slice_char(s, i + len_Prop_array)
-
-        if (not (Truth_assign_check(truth_assign, Prop_array) and comma == ',' ) ):
-            return False
-
-    truth_assign = Slice(s, len_s-len_Prop_array, len_s-1)
-    return Truth_assign_check(truth_assign, Prop_array)
-
-
-def Interpretation (wff, Prop_array, current_state, end_state, finite_model):
+# Here Prop_array is the array of Prop_vars in wff, current_state and end_state
+# is the sub-interval in finite_model where wff is evaluated in.
+def Interpretation_aux (wff, Prop_array, current_state, end_state, finite_model):
     len_wff = len(wff)
     len_finite_model = len(finite_model)
 
@@ -74,15 +50,8 @@ def Interpretation (wff, Prop_array, current_state, end_state, finite_model):
         if (wff == 'T'):
             return True
 
-        if (wff == 'F'):
+        if (wff == '!'):
             return False
-
-
-    # Temp_cons
-    if (Temp_cons_check(wff)):
-        # Temp_cons is AMBIVALENT to Out-Of-Bounds Behavior:
-
-        return (current_state == 0)
 
 
     # Unary_Prop_conn Wff
@@ -90,7 +59,7 @@ def Interpretation (wff, Prop_array, current_state, end_state, finite_model):
         # Unary_Prop_conn is AMBIVALENT to Out-Of-Bounds Behavior:
 
         alpha = Slice(wff, 1, len_wff-1)
-        return not Interpretation(alpha, Prop_array, current_state, end_state, finite_model)
+        return not Interpretation_aux(alpha, Prop_array, current_state, end_state, finite_model)
 
 
     # Unary_Temp_conn Interval Wff
@@ -106,35 +75,70 @@ def Interpretation (wff, Prop_array, current_state, end_state, finite_model):
         char = Slice_char(wff, 0)
         alpha = Slice(wff, interval_tuple[2]+1, len_wff-1)
 
-        # print(char + ", interval tuple: " + str(current_state) + ", " + str(end_state))
-
-        if (char == 'E'):
-            # Allow NO Out-Of-Bounds Behavior for E:
+        if (char == 'F'):
+            # Allow NO Out-Of-Bounds Behavior for F:
             if (current_state > len_finite_model-1):
                 return False
             if (end_state > len_finite_model-1):
                 end_state = len_finite_model-1
 
-            # Evaluate 'E interval alpha'
+            # Evaluate 'F Interval alpha'
             for state in Range(current_state, end_state, 1):
-                if (Interpretation(alpha, Prop_array, state, end_state, finite_model)):
+                if (Interpretation_aux(alpha, Prop_array, state, end_state, finite_model)):
                     return True
 
             return False
 
-        if (char == 'A'):
-            # Allow ALL Out-Of-Bounds Behavior for A:
+        if (char == 'G'):
+            # Allow ALL Out-Of-Bounds Behavior for G:
             if (current_state > len_finite_model-1):
                 return True
             if (end_state > len_finite_model-1):
                 end_state = len_finite_model-1
 
-            # Evaluate 'A interval alpha'
+            # Evaluate 'G Interval alpha'
             for state in Range(current_state, end_state, 1):
-                if (not Interpretation(alpha, Prop_array, state, end_state, finite_model)):
+                if (not Interpretation_aux(alpha, Prop_array, state, end_state, finite_model)):
                     return False
 
             return True
+
+
+#  ‘(‘ Assoc_Prop_conn ‘[‘  Array_entry  ‘]’ ‘)’
+    if (Assoc_Prop_conn_check(Slice_char(wff, 1))):
+        char = Slice_char(wff, 1)
+        array_entry = Slice(wff, 3, len_wff-3)
+        subformulas = Array_entry_subformulas(array_entry)
+
+        if (char == "v"):
+            # v is AMBIVALENT to Out-Of-Bounds Behavior:
+
+            flag = False
+            for alpha in subformulas:
+                Prop_alpha_array = string_To_Prop_array(alpha)
+                eval_alpha = Interpretation_aux(alpha, Prop_alpha_array, current_state, end_state, finite_model)
+                flag = flag or eval_alpha
+            return flag
+
+        if (char == "&"):
+            # & is AMBIVALENT to Out-Of-Bounds Behavior:
+
+            flag = True
+            for alpha in subformulas:
+                Prop_alpha_array = string_To_Prop_array(alpha)
+                eval_alpha = Interpretation_aux(alpha, Prop_alpha_array, current_state, end_state, finite_model)
+                flag = flag and eval_alpha
+            return flag
+
+        if (char == "="):
+            # = is AMBIVALENT to Out-Of-Bounds Behavior:
+
+            flag = False
+            for alpha in subformulas:
+                Prop_alpha_array = string_To_Prop_array(alpha)
+                eval_alpha = Interpretation_aux(alpha, Prop_alpha_array, current_state, end_state, finite_model)
+                flag = (flag and eval_alpha) or (not flag and not eval_alpha)
+            return flag
 
 
     binary_conn = primary_binary_conn(wff)
@@ -144,8 +148,8 @@ def Interpretation (wff, Prop_array, current_state, end_state, finite_model):
     if (Binary_Prop_conn_check(char)):
         alpha = Slice(wff, 1, binary_conn-1)
         beta = Slice(wff, binary_conn+1, len_wff-2)
-        eval_alpha = Interpretation(alpha, Prop_array, current_state, end_state, finite_model)
-        eval_beta = Interpretation(beta, Prop_array, current_state, end_state, finite_model)
+        eval_alpha = Interpretation_aux(alpha, Prop_array, current_state, end_state, finite_model)
+        eval_beta = Interpretation_aux(beta, Prop_array, current_state, end_state, finite_model)
 
         if (char == 'v'):
             # v is AMBIVALENT to Out-Of-Bounds Behavior:
@@ -190,43 +194,55 @@ def Interpretation (wff, Prop_array, current_state, end_state, finite_model):
             if (end_state > len_finite_model-1):
                 end_state = len_finite_model-1
 
-            # Evaluate '( alpha U interval beta )'
+            # Evaluate '( alpha U Interval beta )'
             state = current_state
-            eval_alpha = Interpretation(alpha, Prop_array, state, end_state, finite_model)
-            eval_beta = Interpretation(beta, Prop_array, state, end_state, finite_model)
+            eval_alpha = Interpretation_aux(alpha, Prop_array, state, end_state, finite_model)
+            eval_beta = Interpretation_aux(beta, Prop_array, state, end_state, finite_model)
 
             while (state <= end_state-1 and eval_alpha):
                 if (eval_beta):
                     return True
                 state = state+1
-                eval_alpha = Interpretation(alpha, Prop_array, state, end_state, finite_model)
-                eval_beta = Interpretation(beta, Prop_array, state, end_state, finite_model)
+                eval_alpha = Interpretation_aux(alpha, Prop_array, state, end_state, finite_model)
+                eval_beta = Interpretation_aux(beta, Prop_array, state, end_state, finite_model)
 
             return eval_beta
 
-        if(char == 'W'):
-            # Allow ALL Out-Of-Bounds Behavior for W:
+        # αR[a,b]β if and only if |π| ≤ a or ∀s ∈ [a, b], (πs ⊨ β or ∃t ∈ [a, s − 1], πt ⊨ α)    
+        if(char == 'R'):
+            # Allow ALL Out-Of-Bounds Behavior for R:
             if (current_state > len_finite_model-1):
                 return True
             if (end_state > len_finite_model-1):
                 end_state = len_finite_model-1
 
-            # Evaluate '( alpha W interval beta )'
-            state = current_state
-            eval_alpha = Interpretation(alpha, Prop_array, state, end_state, finite_model)
-            eval_beta = Interpretation(beta, Prop_array, state, end_state, finite_model)
+            # Evaluate '( alpha R Interval beta )'
+            for state in Range(current_state, end_state, 1):
+                counter_ex_flag = False
+                eval_beta = Interpretation_aux(beta, Prop_array, state, end_state, finite_model)
+                if(not eval_beta):
+                    for t in Range(current_state, state-1, 1):
+                        eval_alpha = Interpretation_aux(alpha, Prop_array, current_state, t, finite_model)
+                        if (eval_alpha):
+                            break
 
-            while (state <= end_state-1 and eval_alpha):
-                if (eval_beta):
-                    return True
-                state = state+1
-                eval_alpha = Interpretation(alpha, Prop_array, state, end_state, finite_model)
-                eval_beta = Interpretation(beta, Prop_array, state, end_state, finite_model)
+                        if (not eval_alpha and t == state-1):
+                            counter_ex_flag = True
+                
+                if(counter_ex_flag):
+                    return False
 
-            return eval_beta or eval_alpha
+            return True
 
 
     raise Exception(wff + "is not a well-formed formula.")
+
+
+def Interpretation(wff : str, finite_model):
+    Prop_array = string_To_Prop_array(wff)
+    current_state = 0
+    end_state = Comp_len(wff)-1
+    return Interpretation_aux(wff, Prop_array, current_state, end_state, finite_model)
 
 
 # Test Interpretation function on input: wff, current_state, end_state, finite_model_string
@@ -247,7 +263,7 @@ if __name__ == "__main__":
     message = "Enter Finite model for " + array_To_string(Prop_array) + " (with entries seperated by ',') :\n"
     finite_model_string = input(message)
     finite_model_string = strip_whitespace(finite_model_string)
-    assert (Finite_model_check(finite_model_string, Prop_array)), "Not a Finite model for " + array_To_string(string_To_Prop_array(wff))
+    #assert (Finite_model_check(finite_model_string, Prop_array)), "Not a Finite model for " + array_To_string(string_To_Prop_array(wff))
     finite_model = string_To_finite_model(finite_model_string, Prop_array)
 
     print(Interpretation(wff, Prop_array, current_state, end_state, finite_model))
