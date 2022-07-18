@@ -35,8 +35,7 @@ def next_finite_model(num_prop, num_states, finite_model):
     return finite_model
 
 
-# Test next_finite_model function on input: wff, num_states, current_state,
-# and end_state.
+# Test next_finite_model function on input: wff.
 def execute_truth_table_program():
     wff = input ("Enter MLTL formula : ")
     wff = strip_whitespace(wff)
@@ -50,15 +49,15 @@ def execute_truth_table_program():
     Prop_array = string_To_Prop_array(wff)
     num_prop = len(Prop_array)
 
-    num_states = int(input ("Enter number of states for finite_model : "))
-    current_state = int(input ("Enter current state : "))
-    end_state = int(input ("Enter end state : "))
+    num_states = Comp_len(wff)
+    #current_state = int(input ("Enter current state : "))
+    #end_state = int(input ("Enter end state : "))
 
-    try:
-        assert (0 <= current_state and current_state <= end_state)
-    except AssertionError:
-        print("0 <= current_state <= end_state")
-        return -2
+    #try:
+    #    assert (0 <= current_state and current_state <= end_state)
+    #except AssertionError:
+    #    print("0 <= current_state <= end_state")
+    #    return -2
 
     f = open('output.txt', 'w')
     f.write(f"Formula: " + wff)
@@ -75,7 +74,7 @@ def execute_truth_table_program():
     finite_model = ['0' * num_prop] * (num_states)
 
     for i in Range(1, 2**(num_prop * num_states), 1):
-        eval = Interpretation(wff, Prop_array, current_state, end_state, finite_model)
+        eval = Interpretation(wff, finite_model)
 
         f.write(array_To_string(finite_model) + '   ' + str(eval) + '\n')
         if eval:
