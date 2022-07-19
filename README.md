@@ -23,7 +23,7 @@ See the Grammar section below to inform input.
 The WEST program strips whitespaces from input.
 Non-empty intervals are recommended for meaningful truth table generation.
 
-### Propositional Variables and Constants
+### **Propositional Variables and Constants**
 **True:** T <br />
 **False:** ! <br />
 **First Variable:** p0 <br />
@@ -42,13 +42,13 @@ Where the user will enter an appropriate integer. This number must be at least o
 
 If exclusively propositional constants are inputted, then the user should enter "1" for the number of propositional variables in order to generate a meaningful truth table. 
 
-### Unary Propositional Connectives
+### **Unary Propositional Connectives**
 The only unary propositional connective is negation. <br />
 Negation does NOT use parentheses. <br />
 Let K be a well-formed formula, propositional variable, or propositional constant. <br />
 **Negation:** ~ K <br />
 
-### Unary Temporal Connectives
+### **Unary Temporal Connectives**
 All temporal operators must be followed by an interval. All intervals must be followed by a well-formed formula, propositional variable, or propositional constant. <br />
 Unary temporal operators do NOT use parentheses. <br />
 Let a be the inclusive lower bound of an interval, and let b be inclusive upper bound of an interval. Let ":" separate a and b, and "[" and "]" indicate the beginning and end of an interval, respectively.  <br />
@@ -58,20 +58,7 @@ Let K be a well-formed formula, propositional variable, or propositional constan
 **Globally:** G[a:b] K <br />
 
 
-
-
-
-### Binary Temporal Connectives
-All binary connectives must be enclosed with parentheses. <br />
-All temporal operators must be followed by an interval. All intervals must be followed by a well-formed formula, propositional variable, or propositional constant. <br />
-Let a be the inclusive lower bound of an interval, and let b be inclusive upper bound of an interval. Let ":" separate a and b, and "[" and "]" indicate the beginning and end of an interval, respectively.
-Let K, L be well-formed formulas, propositional variables, or propositional constants. <br />
-
-**Until:** (K U[a:b] L) <br />
-**Release** (K R[a:b] L) <br />
-
-
-### Binary Propositional Connectives
+### **Binary Propositional Connectives**
 All binary connectives must be enclosed with parentheses. <br />
 Let K, L be well-formed formulas, propositional variables, or propositional constants. <br />
 
@@ -81,7 +68,20 @@ Let K, L be well-formed formulas, propositional variables, or propositional cons
 **Implies:** (K > L)  <br />
 
 
-### Associative Propositional Connectives
+### **Binary Temporal Connectives**
+All binary connectives must be enclosed with parentheses. <br />
+All temporal operators must be followed by an interval. All intervals must be followed by a well-formed formula, propositional variable, or propositional constant. <br />
+Let a be the inclusive lower bound of an interval, and let b be inclusive upper bound of an interval. Let ":" separate a and b, and "[" and "]" indicate the beginning and end of an interval, respectively.
+Let K, L be well-formed formulas, propositional variables, or propositional constants. <br />
+
+**Until:** (K U[a:b] L) <br />
+**Release** (K R[a:b] L) <br />
+
+
+
+
+
+### **Associative Propositional Connectives**
 The entirety of the associative propositional connective formula string must be enclosed in parentheses.  <br />
 The list of elements must be preceded by the associative propositional connective. <br />
 Let "," separate each element in the list, and let "[" and "]" indicate the beginning and end of the list, respectively. <br />
@@ -92,7 +92,7 @@ Let K, L, ..., M be an arbitrarily-sized list of well-formed formulas, propositi
 **Equivalence:** (=[K, L, ..., M])  <br />
 **Implies:** (>[K, L, ..., M])  <br />
 
-**A note on the associative equivalence operator:** for lists with 2 elements, the equivalence operator functions identically to the binary propositional connective equivalence operator. For formulas with 3 or more elements, the associative equivalence operator does not mean "each element in the list is equivalent". Instead, means that the equivalence of the first two elements in the list is equivalent to the next element in the list, and the truth value for this expression is equivalence to the next element, and so on. For example:
+**A note on the associative equivalence operator:** for lists with 2 elements, the equivalence operator functions identically to the binary propositional connective equivalence operator. For formulas with 3 or more elements, the associative equivalence operator does not mean "each element in the list is equivalent". Instead, it means that the equivalence of the first two elements in the list is equivalent to the next element in the list, and the truth value for this expression is equivalent to the next element, and so on. For example:
 ```
 (=[p0,p1,p2]) is equivalent to ((p0=p1)=p2)
 (=[p0,p1,p2,p3...]) is equivalent to (...(((p0=p1)=p2)=p3)...
@@ -103,7 +103,7 @@ But,
 
 Note that (p0=p1=p2) is not a valid input; therefore, if one wishes to generate the truth table for a formula that means "each element in the list is equivalent", then one could employ the transitivity of the equivalence operator with the and operator. For example,
 ```
-(p0=p1=p2=p3) can be inputed as (&[(p0=p1), (p1=p2), (p2=p3])
+(p0=p1=p2=p3) can be inputted as (&[(p0=p1), (p1=p2), (p2=p3])
 ```
 
 ## Computations
