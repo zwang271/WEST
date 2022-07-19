@@ -680,10 +680,10 @@ vector<string> reg_sub(string nnf, int n, bool sub) {
             //get<0>(regex[i])
             //vector<string> v = {};
             //last tuple = FORMULAS.at(FORMULAS.size()-1)
-            tuple<string, vector<string> > last_tuple = FORMULAS.at(FORMULAS.size()-1);
-            tuple<string, vector<string> > pen_tuple = FORMULAS.at(FORMULAS.size()-2);
-            vector<string> last_vec = get<1>(last_tuple);
-            vector<string> pen_vec = get<1>(pen_tuple);
+//            tuple<string, vector<string> > last_tuple = FORMULAS.at(FORMULAS.size()-1);
+//            tuple<string, vector<string> > pen_tuple = FORMULAS.at(FORMULAS.size()-2);
+//            vector<string> last_vec = get<1>(last_tuple);
+//            vector<string> pen_vec = get<1>(pen_tuple);
             
             
             
@@ -695,7 +695,7 @@ vector<string> reg_sub(string nnf, int n, bool sub) {
 				+ Wff_to_Nnf_clean("~" + beta) + "))";
 
 			if (sub) {
-                if (check_vectors_equal(&last_vec, &pen_vec, n)) {
+                if (check_vectors_equal(&reg_alpha, &reg_beta, n)) {
                     vector<string> v = {};
 
                     int comp_len = max(Comp_len(alpha), Comp_len(beta));
