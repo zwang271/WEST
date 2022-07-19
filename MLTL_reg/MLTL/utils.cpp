@@ -748,5 +748,6 @@ bool compare_files(string f1, string f2) {
 		}
 	}
 	
+	cout << f1 << " matches " << f2 << endl; 
 	return true; 
 }
