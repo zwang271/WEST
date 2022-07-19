@@ -57,6 +57,20 @@ Let K be a well-formed formula, propositional variable, or propositional constan
 **Finally:** F[a:b] K <br />
 **Globally:** G[a:b] K <br />
 
+
+
+
+
+### Binary Temporal Connectives
+All binary connectives must be enclosed with parentheses. <br />
+All temporal operators must be followed by an interval. All intervals must be followed by a well-formed formula, propositional variable, or propositional constant. <br />
+Let a be the inclusive lower bound of an interval, and let b be inclusive upper bound of an interval. Let ":" separate a and b, and "[" and "]" indicate the beginning and end of an interval, respectively.
+Let K, L be well-formed formulas, propositional variables, or propositional constants. <br />
+
+**Until:** (K U[a:b] L) <br />
+**Release** (K R[a:b] L) <br />
+
+
 ### Binary Propositional Connectives
 All binary connectives must be enclosed with parentheses. <br />
 Let K, L be well-formed formulas, propositional variables, or propositional constants. <br />
@@ -65,6 +79,7 @@ Let K, L be well-formed formulas, propositional variables, or propositional cons
 **Or:** (K v L)  <br />
 **Equivalence:** (K = L)  <br />
 **Implies:** (K > L)  <br />
+
 
 ### Associative Propositional Connectives
 The entirety of the associative propositional connective formula string must be enclosed in parentheses.  <br />
@@ -77,14 +92,19 @@ Let K, L, ..., M be an arbitrarily-sized list of well-formed formulas, propositi
 **Equivalence:** (=[K, L, ..., M])  <br />
 **Implies:** (>[K, L, ..., M])  <br />
 
-### Binary Temporal Connectives
-All binary connectives must be enclosed with parentheses. <br />
-All temporal operators must be followed by an interval. All intervals must be followed by a well-formed formula, propositional variable, or propositional constant. <br />
-Let a be the inclusive lower bound of an interval, and let b be inclusive upper bound of an interval. Let ":" separate a and b, and "[" and "]" indicate the beginning and end of an interval, respectively.
-Let K, L be well-formed formulas, propositional variables, or propositional constants. <br />
+**A note on the associative equivalence operator:** for lists with 2 elements, the equivalence operator functions identically to the binary propositional connective equivalence operator. For formulas with 3 or more elements, the associative equivalence operator does not mean "each element in the list is equivalent". Instead, means that the equivalence of the first two elements in the list is equivalent to the next element in the list, and the truth value for this expression is equivalence to the next element, and so on. For example:
+```
+(=[p0,p1,p2]) is equivalent to ((p0=p1)=p2)
+(=[p0,p1,p2,p3...]) is equivalent to (...(((p0=p1)=p2)=p3)...
+But,
+(=[p0,p1,p2]) is not equivalent to (p0=p1=p2)
+```
 
-**Until:** (K U[a:b] L) <br />
-**Release** (K R[a:b] L) <br />
+
+Note that (p0=p1=p2) is not a valid input; therefore, if one wishes to generate the truth table for a formula that means "each element in the list is equivalent", then one could employ the transitivity of the equivalence operator with the and operator. For example,
+```
+(p0=p1=p2=p3) can be inputed as (&[(p0=p1), (p1=p2), (p2=p3])
+```
 
 ## Computations
 In a computation, "1" represents a true truth value, and "0" represents a false truth value; "s" represents an arbitrary truth value, i.e. true or false.
@@ -112,6 +132,7 @@ ss,11,ss
 ss,ss,11
 ```
 Where in each string separated by commas, the first digit represents the truth value of p0, and the second digit represents the truth value of p1.
+
 
 ## Example
 An interesting mLTL formula to consider is that of the oscillation of the truth value of a propositional variable for each time step.
@@ -160,7 +181,7 @@ Number of characters: 14
 ## Troubleshooting Guide
 
 ### The Program Crashed
-Ensure that the number of propositional variables was large enough. The number must be at least one larger than the largest natural number attached to a propositional variable, and not just the number of propositional variables in the formula. For example, the formula
+Ensure that the number of propositional variables was large enough. The number must be at least one larger than the largest natural number attached to a propositional variable, not just the number of propositional variables in the formula. For example, the formula
 ```
 (p1U[0:2]p3)
 ```
