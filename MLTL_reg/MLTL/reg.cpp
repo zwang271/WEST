@@ -676,6 +676,18 @@ vector<string> reg_sub(string nnf, int n, bool sub) {
 		}
 
 		if (binary_conn == "=") {
+            //vector<tuple<string, vector<string>>>
+            //get<0>(regex[i])
+            //vector<string> v = {};
+            //last tuple = FORMULAS.at(FORMULAS.size()-1)
+            tuple<string, vector<string> > last_tuple = FORMULAS.at(FORMULAS.size()-1);
+            tuple<string, vector<string> > pen_tuple = FORMULAS.at(FORMULAS.size()-2);
+            vector<string> last_vec = get<1>(last_tuple);
+            vector<string> pen_vec = get<1>(pen_tuple);
+            
+            
+            
+            
 			// (alpha = beta) is equiv to ((alpha & beta) v (Wff_to_Nnf_clean(~alpha) & Wff_to_Nnf_clean(~beta)))
 			// ((alpha & beta) v (Wff_to_Nnf_clean(~alpha) & Wff_to_Nnf_clean(~beta))) is in Nnf-form
 			string equiv_nnf_formula = "((" + alpha + "&" + beta + ")v("
@@ -683,9 +695,27 @@ vector<string> reg_sub(string nnf, int n, bool sub) {
 				+ Wff_to_Nnf_clean("~" + beta) + "))";
 
 			if (sub) {
+//                if (check_vectors_equal(&last_vec, &pen_vec, n)) {
+//                    vector<string> v = {};
+//
+//                    int comp_len = max(Comp_len(alpha), Comp_len(beta));
+//                    string substring(n, 's');
+//                    string comp = "";
+//                    for (int i = 0; i < comp_len; ++i) {
+//                        comp += substring;
+//                        if (i != comp_len -1) comp += ',';
+//                    }
+//                    //string s_comp = pad_to_length("", comp_len, n);
+//                    v.push_back(comp);
+//                    push_back_formulas(nnf, v, n);
+//                    return v;
+//
+//                }
+//                else {
 				vector<string> reg_nnf = reg_sub(equiv_nnf_formula, n);
 				push_back_formulas(nnf, reg_nnf, n);
 				return reg_nnf;
+//                }
 			}
 
 			return reg_sub(equiv_nnf_formula, n);
