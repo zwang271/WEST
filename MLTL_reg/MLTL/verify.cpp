@@ -223,11 +223,11 @@ vector<string> generate_test(int depth, int n, int a = 0, int b = 2, bool large 
 int main() {
 	string formulas_file = "./verify/formulas.txt";
 	string verify_reg = "./verify/reg_outputs/";
+	string verify_brute_force = "./verify/brute_force_outputs/";
 
 
-	int n = 2;
-	/*
-	int depth = 1;
+	int n = 4;
+	/*int depth = 2;
 	int a = 0; 
 	int b = 2;
 	bool large = false;
@@ -245,7 +245,7 @@ int main() {
 
 	ifstream formulas;
 	formulas.open(formulas_file);
-	int i = 0;
+	int formula_count = 0;
 	while (!formulas.eof()) {
 		string wff;
 		getline(formulas, wff); 
@@ -256,11 +256,21 @@ int main() {
 
 		vector<string> reg_wff = reg(wff, n);
 		reg_wff = expand(reg_wff);
-		print(reg_wff);
-		cout << verify_reg + to_string(i) + ".txt" << endl;
-		write_to_file(reg_wff, verify_reg + to_string(i) + ".txt");
-		i++;
+		cout << "wrote to" << verify_reg + to_string(formula_count) + ".txt" << endl;
+		write_to_file(reg_wff, verify_reg + to_string(formula_count) + ".txt");
+		formula_count++;
 	}
+
+
+	/*cout << endl << endl << "checking output files" << endl;
+	cout << "======================================" << endl; 
+
+	int formula_count = 14;
+	for (int i = 0; i < formula_count; i++) {
+		string f1 = verify_brute_force + to_string(i) + ".txt";
+		string f2 = verify_reg + to_string(i) + ".txt";
+		compare_files(f1, f2);
+	}*/
 
 
 	/*string wff = "(p0U[0:3]p1)";

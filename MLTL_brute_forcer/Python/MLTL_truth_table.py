@@ -1,4 +1,5 @@
 from MLTL_semantics import *
+import pathlib
 
 '''
 Given input: wff, num_states, current_state, end_state
@@ -108,10 +109,10 @@ def comparison_output(wff, output_file, n = -1):
 
     Prop_array = string_To_Prop_array(wff, n)
     num_prop = len(Prop_array)
-    print("num_prop: " + str(num_prop) + '\n')
+    # print("num_prop: " + str(num_prop) + '\n')
 
     num_states = Comp_len(wff)
-    print("num_states: " + str(num_states) + '\n')
+    # print("num_states: " + str(num_states) + '\n')
 
     f = open(output_file, 'w')
 
@@ -162,9 +163,21 @@ def comparison_output(wff, output_file, n = -1):
 
 # New-Driver code
 if __name__ == "__main__":
-    wff = "(p0 U [0:3] p1)"
-    wff = strip_whitespace(wff)
-    output_file = "0.txt"
-    n = 2
-    comparison_output(wff, output_file, n)  
+    # wff = "(p0 U [0:3] p1)"
+    # wff = strip_whitespace(wff)
+    # output_file = "0.txt"
+    # n = 2
+    # comparison_output(wff, output_file, n)  
 
+    path = str(pathlib.Path(__file__).parent.resolve())
+    verify_path = path[:-25] + "\\MLTL_reg\\MLTL\\verify\\"
+    n = 4
+    i = 0
+    with open(verify_path + "formulas.txt") as f:
+        for wff in f:
+            output_file = verify_path + "\\brute_force_outputs" + "\\" + str(i) + ".txt"
+            comparison_output(wff, output_file, n)
+            print("Wrote to", output_file, "for", wff)
+            i += 1
+        
+        print(i)
