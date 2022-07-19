@@ -16,14 +16,20 @@ using namespace std;
 /*
 * Writes all elements of v to out, one item per line
 */
-void write_to_file(vector<string> v, string out) {
+void write_to_file(vector<string> v, string out, bool size = true) {
 	string line;
 	ofstream outfile;
 	outfile.open(out);
-
+	
+	if (size) {
+		outfile << v.size() << endl;
+	}
+	 
 	for (string w : v) {
 		outfile << w << endl;
 	}
+
+	outfile.close();
 }
 
 
@@ -57,6 +63,11 @@ vector<string> expand_string(string w) {
 		if (w[i] == 's') {
 			indices.push_back(i);
 		}
+	}
+
+	if (indices.size() == 0) {
+		v.push_back(w);
+		return v;
 	}
 
 	for (int i = 0; i < pow(2, indices.size()); i++) {
@@ -210,14 +221,17 @@ vector<string> generate_test(int depth, int n, int a = 0, int b = 2, bool large 
 
 
 int main() {
+	string formulas_file = "./verify/formulas.txt";
+	string verify_reg = "./verify/reg_outputs/";
 
-	int n = 4;
+
+	int n = 2;
+	/*
 	int depth = 1;
 	int a = 0; 
 	int b = 2;
 	bool large = false;
 
-	string formulas_file = "./verify/formulas/formulas.txt";
 	srand(time(NULL));
 	vector<string> test = generate_test(depth, n, a, b, large);
 	for (string wff : test) {
@@ -225,24 +239,37 @@ int main() {
 			cout << wff << " failed wff check" << endl; 
 		}
 	}
-	write_to_file(test, formulas_file);
-	cout << "Formulas written to " + formulas_file << endl; 
+	write_to_file(test, formulas_file, false);
+	cout << "Formulas written to " + formulas_file << endl; */
 
 
-	string verify_reg = "./verify/reg_outputs/";
-	for (int i = 0; i < test.size(); ++i) {
-		string wff = test[i];
+	ifstream formulas;
+	formulas.open(formulas_file);
+	int i = 0;
+	while (!formulas.eof()) {
+		string wff;
+		getline(formulas, wff); 
+
+		if (wff == "") {
+			break;
+		}
+
 		vector<string> reg_wff = reg(wff, n);
 		reg_wff = expand(reg_wff);
-		cout << verify_reg + to_string(i) + ".txt" << endl; 
+		print(reg_wff);
+		cout << verify_reg + to_string(i) + ".txt" << endl;
 		write_to_file(reg_wff, verify_reg + to_string(i) + ".txt");
+		i++;
 	}
 
 
-	///*vector<string> v = { "1ss", "s1s", "ss1" };
-	//vector<string> expanded = expand(v);
-	//print(expanded);
-	//write_to_file(expanded, out);*/
+	/*string wff = "(p0U[0:3]p1)";
+	int i = 0;
+	vector<string> reg_wff = reg(wff, n);
+	reg_wff = expand(reg_wff);
+	cout << verify_reg + to_string(i) + ".txt" << endl;
+	write_to_file(reg_wff, verify_reg + to_string(i) + ".txt");*/
+
 
 	return 0;
 }
