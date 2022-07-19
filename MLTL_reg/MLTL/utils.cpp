@@ -6,6 +6,7 @@
 #include "grammar.h"
 #include "reg.h"
 #include <cctype>
+#include <fstream>
 
 
 using namespace std;
@@ -721,4 +722,31 @@ bool check_vectors_equal(vector<string> *v1, vector<string> *v2, int n) {
     }
     
     return true;
+}
+
+
+/*
+* Check two files are equal line by line
+*/
+bool compare_files(string f1, string f2) {
+	ifstream file1, file2;
+	file1.open(f1, ios::binary);
+	file2.open(f1, ios::binary);
+
+	string string1, string2;
+	int j = 0;
+	while (!file1.eof())
+	{
+		getline(file1, string1);
+		getline(file2, string2);
+		j++;
+		if (string1 != string2) {
+			cout << j << "-th strings are not equal in " << f1 << "\n";
+			cout << "   " << string1 << "\n";
+			cout << "   " << string2 << "\n";
+			return false;
+		}
+	}
+	
+	return true; 
 }
