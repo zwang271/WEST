@@ -76,11 +76,8 @@ def execute_truth_table_program():
     finite_model = ['0' * num_prop] * (num_states)
 
     
-    # For debug_output.txt file
-    n = 4
-    
     for i in Range(1, 2**(num_prop * num_states), 1):
-        eval = Interpretation(wff, finite_model, n)
+        eval = Interpretation(wff, finite_model)
 
         f.write(array_To_string(finite_model) + '   ' + str(eval) + '\n')
         if eval:
@@ -97,14 +94,77 @@ def execute_truth_table_program():
     return 0
 
 
-# Driver code
-if __name__ == "__main__":
-    running = True
-    while(running):
-        error_code = -1
-        while error_code != 0:
-            error_code = execute_truth_table_program()
 
-        print("Enter 'q' to quit or 'r' to re-enter another formula:")
-        choice = input()
-        running = False if choice == 'q' else True
+# Function for comparing output between brute-forcer and regex
+# implementations
+def comparison_output(wff, output_file, n = -1):
+    wff = strip_whitespace(wff)
+
+    try:
+        assert (Wff_check(wff))
+    except AssertionError:
+        print("Not a well-formed formula")
+        return -1
+
+    Prop_array = string_To_Prop_array(wff, n)
+    num_prop = len(Prop_array)
+    print("num_prop: " + str(num_prop) + '\n')
+
+    num_states = Comp_len(wff)
+    print("num_states: " + str(num_states) + '\n')
+
+    f = open(output_file, 'w')
+
+    finite_model = ['0' * num_prop] * (num_states)
+
+    satisfying_model = []
+    for i in Range(1, 2**(num_prop * num_states), 1):
+        eval = Interpretation(wff, finite_model, n)
+
+        if eval:
+            satisfying_model.append(finite_model.copy())
+
+        finite_model = next_finite_model(num_prop, num_states, finite_model)
+
+    # Write number of satisfying models at top of output_file file
+    len_satisfying_model = len(satisfying_model)
+    f.write(str(len_satisfying_model) + '\n')
+   
+    # Write satsifying finite models into output_file file
+    for finite_model in satisfying_model:
+        output_string = array_To_string(finite_model)
+        len_output_string = len(output_string)
+        # Remove '[', ']' characters from output_string
+        output_string = Slice(output_string, 1, len_output_string-2)
+        # Remove whitespace from output_string
+        output_string = strip_whitespace(output_string)
+
+        f.write(output_string + '\n')
+
+
+
+    f.close()
+    return 0
+
+
+# Old-Driver code
+# if __name__ == "__main__":
+#     running = True
+#     while(running):
+#         error_code = -1
+#         while error_code != 0:
+#             error_code = execute_truth_table_program()
+
+#         print("Enter 'q' to quit or 'r' to re-enter another formula:")
+#         choice = input()
+#         running = False if choice == 'q' else True
+
+
+# New-Driver code
+if __name__ == "__main__":
+    wff = "(p0 U [0:3] p1)"
+    wff = strip_whitespace(wff)
+    output_file = "0.txt"
+    n = 2
+    comparison_output(wff, output_file, n)  
+
