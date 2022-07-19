@@ -170,12 +170,12 @@ if __name__ == "__main__":
     # comparison_output(wff, output_file, n)  
 
     path = str(pathlib.Path(__file__).parent.resolve())
-    verify_path = path[:-25] + "\\MLTL_reg\\MLTL\\verify\\"
+    verify_path = path[:-25] + "/MLTL_reg/MLTL/verify/"
     n = 4
     i = 0
     with open(verify_path + "formulas.txt") as f:
         for wff in f:
-            output_file = verify_path + "\\brute_force_outputs" + "\\" + str(i) + ".txt"
+            output_file = verify_path + "/brute_force_outputs" + "/" + str(i) + ".txt"
             comparison_output(wff, output_file, n)
             print("Wrote to", output_file, "for", wff)
             i += 1
