@@ -13,7 +13,6 @@
 using namespace std;
 
 int main() {
-	
 	bool is_valid = false;
 	bool running = true;
 	vector<string> answer;

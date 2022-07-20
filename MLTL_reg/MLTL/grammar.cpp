@@ -471,7 +471,12 @@ int Comp_len(string wff){
 
     // Prop_cons
     if (Prop_cons_check(wff)){
-        return 0; 
+        if (wff == "T") {
+            return 1;
+        }
+        else if (wff == "!") {
+            return 0;
+        }
     }
 
     string c = Slice_char(wff, 0);
