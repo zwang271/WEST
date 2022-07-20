@@ -76,8 +76,11 @@ vector<string> join(vector<string> A, vector<string> B, int n, bool simp) {
 	AB.reserve(A.size() + B.size()); // preallocate memory
 	AB.insert(AB.end(), A.begin(), A.end());
 	AB.insert(AB.end(), B.begin(), B.end());
+	// Erase all elements from vector A
 	A.clear();
+	// Shrink vector A to size 0
 	A.shrink_to_fit();
+
 	B.clear();
 	B.shrink_to_fit();
 
@@ -90,22 +93,6 @@ vector<string> join(vector<string> A, vector<string> B, int n, bool simp) {
 		return AB;*/
 	}
 	return AB;
-}
-
-
-/*
- * Input: Vectors V1 and V2 of computation strings
- *		 n is number of propositional variables
- * Output: Vector of disjoint computation strings
- */
-vector<string> set_union(vector<string> v1, vector<string> v2, int n) {
-	vector<string> v = join(v1, v2, n);
-
-	v1.clear();
-	v1.shrink_to_fit();
-	v2.clear();
-	v2.shrink_to_fit();
-	return right_expand(v, n);
 }
 
 
@@ -676,18 +663,6 @@ vector<string> reg_sub(string nnf, int n, bool sub) {
 		}
 
 		if (binary_conn == "=") {
-            //vector<tuple<string, vector<string>>>
-            //get<0>(regex[i])
-            //vector<string> v = {};
-            //last tuple = FORMULAS.at(FORMULAS.size()-1)
-//            tuple<string, vector<string> > last_tuple = FORMULAS.at(FORMULAS.size()-1);
-//            tuple<string, vector<string> > pen_tuple = FORMULAS.at(FORMULAS.size()-2);
-//            vector<string> last_vec = get<1>(last_tuple);
-//            vector<string> pen_vec = get<1>(pen_tuple);
-            
-            
-            
-            
 			// (alpha = beta) is equiv to ((alpha & beta) v (Wff_to_Nnf_clean(~alpha) & Wff_to_Nnf_clean(~beta)))
 			// ((alpha & beta) v (Wff_to_Nnf_clean(~alpha) & Wff_to_Nnf_clean(~beta))) is in Nnf-form
 			string equiv_nnf_formula = "((" + alpha + "&" + beta + ")v("
@@ -712,9 +687,9 @@ vector<string> reg_sub(string nnf, int n, bool sub) {
 
                 }
                 else {
-				vector<string> reg_nnf = reg_sub(equiv_nnf_formula, n);
-				push_back_formulas(nnf, reg_nnf, n);
-				return reg_nnf;
+					vector<string> reg_nnf = reg_sub(equiv_nnf_formula, n);
+					push_back_formulas(nnf, reg_nnf, n);
+					return reg_nnf;
                }
 			}
 

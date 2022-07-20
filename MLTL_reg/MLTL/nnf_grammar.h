@@ -5,9 +5,8 @@
 
 using namespace std;
 
-bool Nnf_check(string s);
 bool Nnf_Array_entry_check(string s);
-string Wff_to_Nnf(string wff);
+bool Nnf_check(string s);
 
 // Given an Nnf-formula nnf, returns the regex
 // for the language of nnf.
