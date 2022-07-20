@@ -33,7 +33,7 @@ string pad_to_length(string unpadded_s, int length, int n) {
  * Input: Vector of computation strings with commas
  *		 n is number of propositional variables
  *		 m is -1 at first, pass in a positive value for m to pad all strings to length m instead
- * Output: Pads all computation strings to the same length as the longest string
+ * Output: Pads all computation strings to the max(length of the longest string, m)
  */
 vector<string> pad(vector<string> unpadded_v, int n, int m) {
 	int unpadded_size = int(unpadded_v.size());
@@ -731,7 +731,7 @@ bool check_vectors_equal(vector<string> *v1, vector<string> *v2, int n) {
 bool compare_files(string f1, string f2) {
 	ifstream file1, file2;
 	file1.open(f1, ios::binary);
-	file2.open(f1, ios::binary);
+	file2.open(f2, ios::binary);
 
 	string string1, string2;
 	int j = 0;
@@ -740,6 +740,7 @@ bool compare_files(string f1, string f2) {
 		getline(file1, string1);
 		getline(file2, string2);
 		j++;
+		//cout << (string1) << "\t" << (string2) << endl;
 		if (string1 != string2) {
 			cout << j << "-th strings are not equal in " << f1 << "\n";
 			cout << "   " << string1 << "\n";

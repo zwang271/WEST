@@ -145,7 +145,7 @@ def comparison_output(wff, output_file, n = -1):
 
 
     f.close()
-    return 0
+    return satisfying_model
 
 
 # Old-Driver code
@@ -163,21 +163,27 @@ def comparison_output(wff, output_file, n = -1):
 
 # New-Driver code
 if __name__ == "__main__":
-    # wff = "(p0 U [0:3] p1)"
+    # wff = "(G[0:2]~p2U[0:2]G[0:2]p2)"
     # wff = strip_whitespace(wff)
     # output_file = "0.txt"
-    # n = 2
-    # comparison_output(wff, output_file, n)  
+    # n = 3
+
+    # for line in comparison_output(wff, output_file, n):
+    #     print(line)
 
     path = str(pathlib.Path(__file__).parent.resolve())
-    verify_path = path[:-25] + "\\MLTL_reg\\MLTL\\verify\\"
+    verify_path = path[:-25] + "/MLTL_reg/MLTL/verify/"
     n = 4
     i = 0
+    start = 0
     with open(verify_path + "formulas.txt") as f:
         for wff in f:
-            output_file = verify_path + "\\brute_force_outputs" + "\\" + str(i) + ".txt"
-            comparison_output(wff, output_file, n)
-            print("Wrote to", output_file, "for", wff)
-            i += 1
+            if i >= start:
+                output_file = verify_path + "/brute_force_outputs" + "/" + str(i) + ".txt"
+                comparison_output(wff, output_file, n)
+                print("Wrote to", output_file, "for", wff)
+                i += 1
+            else:
+                i += 1
         
         print(i)
