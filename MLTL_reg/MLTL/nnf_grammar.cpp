@@ -1,9 +1,10 @@
+#include "grammar.h"
+#include "nnf_grammar.h"
 #include <string>
 #include <tuple>
 #include <stdexcept>
 #include <iostream>
-#include "grammar.h"
-#include "nnf_grammar.h"
+
 
 /*
 Context-Free Grammar for a mLTL wff in Negation normal-form (Nnf):
