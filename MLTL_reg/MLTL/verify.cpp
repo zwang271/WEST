@@ -221,6 +221,19 @@ vector<string> generate_test(int depth, int n, int a = 0, int b = 2, bool large 
 
 
 int main() {
+	//string f1 = "C:/Users/Jonathanandzili/summer_2022_REU/2022-Iowa-State-REU-Temporal-Logic-/MLTL_brute_forcer/Python/0.txt";
+	//string f2 = "./test.txt";
+	//string wff = "(G[0:2]~p2U[0:2]G[0:2]p2)";
+	//int n = 3;
+	//vector<string> reg_wff = reg(wff, n);
+	//// Pad output to comp length
+	//int cp = Comp_len(wff);
+	//reg_wff = pad(reg_wff, n, cp * (n + 1) - 1);
+	//reg_wff = expand(reg_wff);
+	//write_to_file(reg_wff, f2);
+	//compare_files(f1, f2);
+
+
 	string formulas_file = "./verify/formulas.txt";
 	string verify_reg = "./verify/reg_outputs/";
 	string verify_brute_force = "./verify/brute_force_outputs/";
@@ -240,8 +253,8 @@ int main() {
 		}
 	}
 	write_to_file(test, formulas_file, false);
-	cout << "Formulas written to " + formulas_file << endl; */
-
+	cout << "Formulas written to " + formulas_file << endl; 
+	*/
 
 	ifstream formulas;
 	formulas.open(formulas_file);
@@ -255,8 +268,14 @@ int main() {
 		}
 
 		vector<string> reg_wff = reg(wff, n);
+		cout << "formula: " << wff << endl; 
+		print(reg_wff);
+		int cp = Comp_len(wff);
+		reg_wff = pad(reg_wff, n, cp * (n + 1) - 1);
+
 		reg_wff = expand(reg_wff);
 		cout << "wrote to" << verify_reg + to_string(formula_count) + ".txt" << endl;
+		cout << "comp length: " << cp << endl; 
 		write_to_file(reg_wff, verify_reg + to_string(formula_count) + ".txt");
 		formula_count++;
 	}
@@ -265,7 +284,7 @@ int main() {
 	/*cout << endl << endl << "checking output files" << endl;
 	cout << "======================================" << endl; 
 
-	int formula_count = 14;
+	int formula_count = 72;
 	for (int i = 0; i < formula_count; i++) {
 		string f1 = verify_brute_force + to_string(i) + ".txt";
 		string f2 = verify_reg + to_string(i) + ".txt";

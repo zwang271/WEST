@@ -219,11 +219,31 @@ def Interpretation_aux (wff, Prop_array, current_state, end_state, finite_model,
 
             # Evaluate '( alpha R Interval beta )'
             for state in Range(current_state, end_state, 1):
+                # counter_ex_flag = False
+                # eval_beta = Interpretation_aux(beta, Prop_array, state, end_state, finite_model)
+                # if(not eval_beta):
+                #     for t in Range(current_state, state-1, 1):
+                #         # eval_alpha = Interpretation_aux(alpha, Prop_array, current_state, t, finite_model)
+                #         eval_alpha = Interpretation_aux(alpha, Prop_array, t, end_state, finite_model)
+                #         if (eval_alpha):
+                #             break
+
+                #         if (not eval_alpha and t == state-1):
+                #             counter_ex_flag = True
+                
+                # if(counter_ex_flag):
+                #     return False
+
                 counter_ex_flag = False
                 eval_beta = Interpretation_aux(beta, Prop_array, state, end_state, finite_model)
+
+                if (not eval_beta and state == current_state):
+                    return False
+
                 if(not eval_beta):
                     for t in Range(current_state, state-1, 1):
-                        eval_alpha = Interpretation_aux(alpha, Prop_array, current_state, t, finite_model)
+                        # eval_alpha = Interpretation_aux(alpha, Prop_array, current_state, t, finite_model)
+                        eval_alpha = Interpretation_aux(alpha, Prop_array, t, end_state, finite_model)
                         if (eval_alpha):
                             break
 

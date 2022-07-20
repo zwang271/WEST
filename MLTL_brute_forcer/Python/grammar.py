@@ -380,7 +380,10 @@ def Comp_len(wff : str):
 
     # Prop_cons
     if (Prop_cons_check(wff)):
-        return 0
+        if wff == "T":
+            return 1
+        elif wff == "!":
+            return 0
 
     c = Slice_char(wff, 0)
     # Unary_Prop_conn Wff
