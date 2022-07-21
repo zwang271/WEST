@@ -94,14 +94,16 @@ vector<string> reg(string s, int n);
 
 
 
-bool find_formula(vector<tuple<string, vector<string> > > v, string s);
-
 vector< tuple< string, vector<string> > > get_formulas();
+
 
 void clear_formulas();
 
+
+bool find_formula(vector<tuple<string, vector<string> > > v, string s);
+
+
 void push_back_formulas(string s, vector<string> v, int n);
 
-//vector<string> reg_subformulas(string nnf, int n);
 
 vector<string> reg_sub(string nnf, int n, bool sub = true);
