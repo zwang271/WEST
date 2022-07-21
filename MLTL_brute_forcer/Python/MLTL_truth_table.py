@@ -175,7 +175,7 @@ if __name__ == "__main__":
     verify_path = path[:-25] + "/MLTL_reg/MLTL/verify/"
     n = 4
     i = 0
-    start = 0
+    start = 984
     with open(verify_path + "formulas.txt") as f:
         for wff in f:
             if i >= start:
