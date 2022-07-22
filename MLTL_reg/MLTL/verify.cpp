@@ -234,13 +234,13 @@ int main() {
 	//compare_files(f1, f2);
 
 
-	string formulas_file = "./verify/formulas.txt";
-	string verify_reg = "./verify/reg_outputs/";
-	string verify_brute_force = "./verify/brute_force_outputs/";
+	string formulas_file = "./verify/formulas_d0.txt";
+	string verify_reg = "./verify/reg_outputs_d0/";
+	string verify_brute_force = "./verify/brute_force_outputs_d0/";
 
 
-	int n = 4;
-	/*int depth = 2;
+	int n = 1;
+	/*int depth = 0;
 	int a = 0; 
 	int b = 2;
 	bool large = false;
@@ -254,7 +254,7 @@ int main() {
 	}
 	write_to_file(test, formulas_file, false);
 	cout << "Formulas written to " + formulas_file << endl; 
-	*/
+	
 
 	ifstream formulas;
 	formulas.open(formulas_file);
@@ -278,18 +278,18 @@ int main() {
 		cout << "comp length: " << cp << endl; 
 		write_to_file(reg_wff, verify_reg + to_string(formula_count) + ".txt");
 		formula_count++;
-	}
+	}*/
 
 
-	/*cout << endl << endl << "checking output files" << endl;
+	cout << endl << endl << "checking output files" << endl;
 	cout << "======================================" << endl; 
 
-	int formula_count = 72;
+	int formula_count = 2;
 	for (int i = 0; i < formula_count; i++) {
 		string f1 = verify_brute_force + to_string(i) + ".txt";
 		string f2 = verify_reg + to_string(i) + ".txt";
 		compare_files(f1, f2);
-	}*/
+	}
 
 
 	/*string wff = "(p0U[0:3]p1)";
