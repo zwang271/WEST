@@ -194,7 +194,7 @@ Ensure that for each propositional variable, its corresponding natural number im
 Ensure that all unary connectives do NOT have parentheses surrounding them.
 
 ## Contributors
-This project is part of the 2022 Iowa State REU with mentors [Kristin Yvonne Rozier](https://www.aere.iastate.edu/kyrozier/) and Laura Gamboa Guzmán.
+This project is part of the 2022 Iowa State REU with mentors [Kristin Yvonne Rozier](https://www.aere.iastate.edu/kyrozier/) and [Laura Gamboa Guzmán](https://sites.google.com/view/lpgamboa/home).
 
 WEST is an acronym for the last names of the undergraduate mathematicians who collaborated on this project: Zili Wang, Jenna Elwing, Jeremy Sorkin, and Chiara Travesset.
 
