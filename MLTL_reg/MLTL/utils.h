@@ -184,3 +184,35 @@ int get_n(string wff);
 * Check two files are equal line by line
 */
 bool compare_files(string f1, string f2);
+
+
+/*
+* Writes all elements of v to out, one item per line
+*/
+void write_to_file(vector<string> v, string out, bool size = true);
+
+
+/*
+* Converts n to a binary string
+*/
+string binary(int n);
+
+
+/*
+* Return a vector representing the expansion of w into bit strings
+*/
+vector<string> expand_string(string w);
+
+
+/*
+* Expand out all s-strings in v
+*/
+vector<string> expand(vector<string> v);
+
+
+/*
+* Checks if string of regular expressions satisfies hypothesis of REST
+* Input: Vector of n+1 strings, each of length n
+* Output: true or false
+*/
+bool check_simp(vector<string> v); 
