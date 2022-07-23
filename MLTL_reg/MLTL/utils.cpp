@@ -752,3 +752,187 @@ bool compare_files(string f1, string f2) {
 	cout << f1 << " matches " << f2 << endl; 
 	return true; 
 }
+
+
+/*
+* Writes all elements of v to out, one item per line
+*/
+void write_to_file(vector<string> v, string out, bool size) {
+	string line;
+	ofstream outfile;
+	outfile.open(out);
+
+	if (size) {
+		outfile << v.size() << endl;
+	}
+
+	for (string w : v) {
+		outfile << w << endl;
+	}
+
+	outfile.close();
+}
+
+
+/*
+* Converts n to a binary string
+*/
+string binary(int n) {
+	string b = "";
+
+	if (n == 0) {
+		return "0";
+	}
+
+	while (n > 0) {
+		b = to_string(n % 2) + b;
+		n = int(n / 2);
+	}
+
+	return b;
+}
+
+
+/*
+* Return a vector representing the expansion of w into bit strings
+*/
+vector<string> expand_string(string w) {
+	vector<string> v = {};
+	vector<int> indices = {};
+
+	for (int i = 0; i < w.length(); i++) {
+		if (w[i] == 's') {
+			indices.push_back(i);
+		}
+	}
+
+	if (indices.size() == 0) {
+		v.push_back(w);
+		return v;
+	}
+
+	for (int i = 0; i < pow(2, indices.size()); i++) {
+		string b = binary(i);
+		b = string(indices.size() - b.length(), '0') + b;
+
+		string w_copy = w;
+		for (int j = 0; j < indices.size(); j++) {
+			w_copy[indices[j]] = b[j];
+		}
+
+		v.push_back(w_copy);
+	}
+
+
+	return v;
+}
+
+
+/*
+* Removes duplicate entries from a vector.
+* Mutates vector.
+*/
+template <typename T>
+void remove_duplicates(vector<T>* reg_alpha) {
+	// Convert vector to a set
+	set<T> s((*reg_alpha).begin(), (*reg_alpha).end());
+	// Assign set back to vector
+	(*reg_alpha).assign(s.begin(), s.end());
+
+	return;
+}
+
+
+/*
+* Expand out all s-strings in v
+*/
+vector<string> expand(vector<string> v) {
+	vector<string> expanded = {};
+
+	for (string w : v) {
+		expanded = join(expanded, expand_string(w), 0, false);
+	}
+
+	remove_duplicates(&expanded);
+
+	return expanded;
+}
+
+
+/*
+* Checks if string of regular expressions satisfies hypothesis of REST
+* Input: Vector of n+1 strings, each of length n
+* Output: true or false
+*/
+bool check_simp(vector<string> v) {
+	if (v.size() == 0) {
+		cout << "v is an empty vector" << endl; 
+		return false;
+	}
+
+	int n = v.size() - 1;
+	string arb = string(n, 's');
+
+	// Strip all commas and verify input size is (n+1) x n 
+	for (int i = 0; i < v.size(); i++) {
+		v[i] = strip_char(v[i], ',');
+		if (v[i].length() + 1 != v.size()) {
+			cout << "Invalid computation or vector size" << endl; 
+			return false;
+		}
+		
+		if (v[i] == arb) {
+			return true; 
+		}
+	}
+
+	// counter[i] counts number of 0, 1, and s in column i
+	// counter[i][0] counts 0, counter[i][1] counts 1, counter [i][2] counts s
+	int** counter = new int*[n]();
+	for (int i = 0; i < n; i++) {
+		counter[i] = new int[3]();
+		for (int j = 0; j < 3; j++) {
+			counter[i][j] = 0; 
+		}
+	}
+
+	// Count number of 0, 1, s in each column
+	for (int i = 0; i < v.size(); i++) {
+		for (int j = 0; j < n; j++) {
+			if (v[i][j] == '0') {
+				counter[j][0] ++;
+				if (counter[j][0] > 1) {
+					return false;
+				}
+			}
+			else if (v[i][j] == '1') {
+				counter[j][1] ++;
+				if (counter[j][1] > 1) {
+					return false;
+				}
+			}
+			else if (v[i][j] == 's') {
+				counter[j][2] ++;
+			}
+		}
+	}
+
+	for (int i = 0; i < n; i++) {
+		cout << counter[i][0] << "\t" 
+			<< counter[i][1] << "\t" 
+			<< counter[i][2] << endl;
+	}
+
+	// Verify that the hypothesis holds
+	for (int i = 0; i < n; i++) {
+		if (counter[i][0] != 1) return false; 
+		if (counter[i][1] != 1) return false;
+		if (counter[i][2] != n - 1 ) return false;
+	}
+
+	return true; 
+}
+
+
+
+
