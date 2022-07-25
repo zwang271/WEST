@@ -11,6 +11,14 @@
 using namespace std;
 
 int main() {
+	/*string wff_test = "((F[0:3]p0 > F[0:3]p1) > F[0:3](p0 > p1))";
+	wff_test = strip_char(wff_test, ' ');
+	vector<string> wff_expand = expand(reg(wff_test, 2));
+	cout << wff_expand.size() << endl; */
+
+	vector<string> v = { "s,s,1,1", "s,s,1,0", "s,s,0,1", "s,s,0,0" };
+	print(simplify(v, 1));
+
 	bool running = true;
 	vector<string> answer;
 	vector<string> display;

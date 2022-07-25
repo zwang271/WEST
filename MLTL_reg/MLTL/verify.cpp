@@ -134,8 +134,8 @@ int main() {
 	string verify_brute_force = "./verify/brute_force_outputs_d1/";
 
 
-	int n = 2;
-	/*int depth = 1;
+	int n = 4;
+	/*int depth = 2;
 	int a = 0; 
 	int b = 2;
 	bool large = false;
