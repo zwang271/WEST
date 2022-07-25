@@ -412,18 +412,18 @@ vector<string> reg(string nnf, int n) {
 		}
 
 		if (binary_conn == "=") {
-			// (alpha = beta) is equiv to ((alpha & beta) v (Wff_to_Nnf_clean(~alpha) & Wff_to_Nnf_clean(~beta)))
-			// ((alpha & beta) v (Wff_to_Nnf_clean(~alpha) & Wff_to_Nnf_clean(~beta))) is in Nnf-form
+			// (alpha = beta) is equiv to ((alpha & beta) v (Wff_to_Nnf(~alpha) & Wff_to_Nnf(~beta)))
+			// ((alpha & beta) v (Wff_to_Nnf(~alpha) & Wff_to_Nnf(~beta))) is in Nnf-form
 			string equiv_nnf_formula = "((" + alpha + "&" + beta + ")v("
-				+ Wff_to_Nnf_clean("~" + alpha) + "&"
-				+ Wff_to_Nnf_clean("~" + beta) + "))";
+				+ Wff_to_Nnf("~" + alpha) + "&"
+				+ Wff_to_Nnf("~" + beta) + "))";
 			return reg(equiv_nnf_formula, n);
 		}
 
 		if (binary_conn == ">") {
 			// (alpha > beta) is equiv to (Wff_to_Nnf(~alpha) v beta))
 			// (Wff_to_Nnf(~alpha) v beta)) is in Nnf-form
-			string equiv_nnf_formula = "(" + Wff_to_Nnf_clean("~" + alpha) + "v" + beta + ")";
+			string equiv_nnf_formula = "(" + Wff_to_Nnf("~" + alpha) + "v" + beta + ")";
 			return reg(equiv_nnf_formula, n);
 		}
 	}
@@ -663,11 +663,11 @@ vector<string> reg_sub(string nnf, int n, bool sub) {
 		}
 
 		if (binary_conn == "=") {
-			// (alpha = beta) is equiv to ((alpha & beta) v (Wff_to_Nnf_clean(~alpha) & Wff_to_Nnf_clean(~beta)))
-			// ((alpha & beta) v (Wff_to_Nnf_clean(~alpha) & Wff_to_Nnf_clean(~beta))) is in Nnf-form
+			// (alpha = beta) is equiv to ((alpha & beta) v (Wff_to_Nnf(~alpha) & Wff_to_Nnf(~beta)))
+			// ((alpha & beta) v (Wff_to_Nnf(~alpha) & Wff_to_Nnf(~beta))) is in Nnf-form
 			string equiv_nnf_formula = "((" + alpha + "&" + beta + ")v("
-				+ Wff_to_Nnf_clean("~" + alpha) + "&"
-				+ Wff_to_Nnf_clean("~" + beta) + "))";
+				+ Wff_to_Nnf("~" + alpha) + "&"
+				+ Wff_to_Nnf("~" + beta) + "))";
 
 			if (sub) {
                 if (check_vectors_equal(&reg_alpha, &reg_beta, n)) {
@@ -699,7 +699,7 @@ vector<string> reg_sub(string nnf, int n, bool sub) {
 		if (binary_conn == ">") {
 			// (alpha > beta) is equiv to (Wff_to_Nnf(~alpha) v beta))
 			// (Wff_to_Nnf(~alpha) v beta)) is in Nnf-form
-			string equiv_nnf_formula = "(" + Wff_to_Nnf_clean("~" + alpha) + "v" + beta + ")";
+			string equiv_nnf_formula = "(" + Wff_to_Nnf("~" + alpha) + "v" + beta + ")";
 
 			if (sub) {
 				vector<string> reg_nnf = reg_sub(equiv_nnf_formula, n);
