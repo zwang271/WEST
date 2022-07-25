@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <vector>
 #include <iostream>
+#include <cmath>
 #include "grammar.h"
 #include "reg.h"
 #include <cctype>
