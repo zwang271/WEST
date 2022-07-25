@@ -124,7 +124,7 @@ void simulate(string formulas, string out) {
         outfile << line.size();
         outfile << " ";
         auto start = high_resolution_clock::now();
-        output = reg(Wff_to_Nnf_clean(line), NUM_PROP_VAR);
+        output = reg(Wff_to_Nnf(line), NUM_PROP_VAR);
         output = simplify(output, NUM_PROP_VAR);
         auto stop = high_resolution_clock::now();
         auto duration = duration_cast<microseconds>(stop - start);

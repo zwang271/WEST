@@ -11,14 +11,6 @@
 using namespace std;
 
 int main() {
-	/*string wff_test = "((F[0:3]p0 > F[0:3]p1) > F[0:3](p0 > p1))";
-	wff_test = strip_char(wff_test, ' ');
-	vector<string> wff_expand = expand(reg(wff_test, 2));
-	cout << wff_expand.size() << endl; */
-
-	vector<string> v = { "s,s,1,1", "s,s,1,0", "s,s,0,1", "s,s,0,0" };
-	print(simplify(v, 1));
-
 	bool running = true;
 	vector<string> answer;
 	vector<string> display;
@@ -43,17 +35,9 @@ int main() {
 			}
 		}
 
-		//cout << "Please enter number of propositional variables." << endl;
+		// Get number of prop_vars in wff
 		int n = get_n(wff);
-		// while (n < 0) {
-		// 	string in;
-		// 	getline(cin, in);
-		// 	n = stoi(in);
-		// 	if (n < 0) {
-		// 		cout << "n must be a positive integer." << endl;
-		// 	}
-		// }
-        
+		
         bool subformulas = false;
         char y_or_n = 'q';
         while (y_or_n != 'y' and y_or_n != 'n') {
@@ -78,7 +62,7 @@ int main() {
         }
 
 		// Convert input to Nnf form
-		string nnf = Wff_to_Nnf_clean(wff);
+		string nnf = Wff_to_Nnf(wff);
 		cout << "NNF Formula: " << nnf << endl;
         cout << endl;
         

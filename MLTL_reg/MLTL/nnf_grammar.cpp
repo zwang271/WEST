@@ -188,9 +188,8 @@ bool Nnf_check(string s){
 
 /*
  * Converts a WFF to its equivalent NNF.
- * A cleaner implementation of Wff_to_Nnf().
  */
-string Wff_to_Nnf_clean(string wff){
+string Wff_to_Nnf(string wff){
     int len_wff = int(wff.length());
 
     //Determine if first symbol is '~' or not.
@@ -214,22 +213,22 @@ string Wff_to_Nnf_clean(string wff){
             string alpha = Slice(wff, end_interval+1, len_wff-1);
 
             // Input: unary_temp_conn Interval alpha
-            // Return: unary_temp_conn Interval Wff_to_Nnf_clean(alpha)
-            return unary_temp_conn + Slice(wff, begin_interval, end_interval) + Wff_to_Nnf_clean(alpha);
+            // Return: unary_temp_conn Interval Wff_to_Nnf(alpha)
+            return unary_temp_conn + Slice(wff, begin_interval, end_interval) + Wff_to_Nnf(alpha);
         } 
 
         // '(' Assoc_Prop_conn ‘[‘  Array_entry  ‘]’ ')'
         if (Assoc_Prop_conn_check(Slice_char(wff, 1))){
             // Parse through '[' wff_1 ',' wff_2 ',' ... ',' wff_n ']' entry-by-entry
-            // and iteratively compute: return_string = '(' Assoc_Prop_conn '[' Wff_to_Nnf_clean(wff_1) ',' ... ',' Wff_to_Nnf_clean(wff_n) ']' ')'
+            // and iteratively compute: return_string = '(' Assoc_Prop_conn '[' Wff_to_Nnf(wff_1) ',' ... ',' Wff_to_Nnf(wff_n) ']' ')'
             int begin_entry = 3;
             string return_string = Slice(wff, 0, 2); 
             for (int end_entry = 3; end_entry <= len_wff-1; ++end_entry){
                 if (Wff_check(Slice(wff, begin_entry, end_entry))){
                     string alpha = Slice(wff, begin_entry, end_entry);
                     
-                    // Add Wff_to_Nnf_clean(alpha) to return string
-                    return_string = return_string + Wff_to_Nnf_clean(alpha) + ",";
+                    // Add Wff_to_Nnf(alpha) to return string
+                    return_string = return_string + Wff_to_Nnf(alpha) + ",";
 
                     // Update begin_entry so it has index of the first char of the next entry.
                     begin_entry = end_entry + 2;
@@ -240,7 +239,7 @@ string Wff_to_Nnf_clean(string wff){
             return_string = Slice(return_string, 0, int(return_string.length()-2));
 
             // Input: '(' Assoc_Prop_conn ‘[‘  Array_entry  ‘]’ ')'
-            // Return: '(' Assoc_Prop_conn '[' Wff_to_Nnf_clean(wff_1) ',' ... ',' Wff_to_Nnf_clean(wff_n) ']' ')'
+            // Return: '(' Assoc_Prop_conn '[' Wff_to_Nnf(wff_1) ',' ... ',' Wff_to_Nnf(wff_n) ']' ')'
             return_string = return_string + "])";
             return return_string;
         }
@@ -255,8 +254,8 @@ string Wff_to_Nnf_clean(string wff){
             string beta = Slice(wff, binary_conn_index+1, len_wff-2);
 
             // Input: '(' alpha binary_conn beta ')' 
-            // Return: '(' Wff_to_Nnf_clean(alpha) + binary_conn + Wff_to_Nnf_clean(beta)
-            return "(" + Wff_to_Nnf_clean(alpha) + binary_conn + Wff_to_Nnf_clean(beta) + ")";
+            // Return: '(' Wff_to_Nnf(alpha) + binary_conn + Wff_to_Nnf(beta)
+            return "(" + Wff_to_Nnf(alpha) + binary_conn + Wff_to_Nnf(beta) + ")";
         }
 
         // ‘(‘ Wff Binary_Temp_conn  Interval Wff ‘)'
@@ -269,9 +268,9 @@ string Wff_to_Nnf_clean(string wff){
             string beta = Slice(wff, end_interval+1, len_wff-2);
 
             // Input: ‘(‘ alpha binary_conn  Interval beta ‘)'  
-            // Return: '(' Wff_to_Nnf_clean(alpha) binary_conn Interval Wff_to_Nnf_clean(beta) ')'
-            return "(" + Wff_to_Nnf_clean(alpha) + binary_conn 
-                + Slice(wff, begin_interval, end_interval) + Wff_to_Nnf_clean(beta) + ")";
+            // Return: '(' Wff_to_Nnf(alpha) binary_conn Interval Wff_to_Nnf(beta) ')'
+            return "(" + Wff_to_Nnf(alpha) + binary_conn 
+                + Slice(wff, begin_interval, end_interval) + Wff_to_Nnf(beta) + ")";
         }    
         
     }
@@ -299,7 +298,7 @@ string Wff_to_Nnf_clean(string wff){
         // '~' Unary_Prop_conn Wff
         if (Unary_Prop_conn_check(Slice_char(wff, 1))){
             string alpha = Slice(wff, 2, len_wff-1);
-            return Wff_to_Nnf_clean(alpha);
+            return Wff_to_Nnf(alpha);
         }
 
         // '~' Unary_Temp_conn  Interval  Wff
@@ -323,8 +322,8 @@ string Wff_to_Nnf_clean(string wff){
             }  
 
             // Input: '~' unary_Temp_conn  Interval  alpha 
-            // Return: dual(unary_Temp_conn) Interval Wff_to_Nnf_clean("~" + alpha)
-            return unary_temp_conn + Slice(wff, begin_interval, end_interval) + Wff_to_Nnf_clean("~" + alpha);
+            // Return: dual(unary_Temp_conn) Interval Wff_to_Nnf("~" + alpha)
+            return unary_temp_conn + Slice(wff, begin_interval, end_interval) + Wff_to_Nnf("~" + alpha);
         }
 
         // '~' ‘(‘ Assoc_Prop_conn ‘[‘  Array_entry  ‘]’ ‘)’
@@ -360,7 +359,7 @@ string Wff_to_Nnf_clean(string wff){
             equiv_formula = "~" + equiv_formula;
             
             
-            return Wff_to_Nnf_clean(equiv_formula);
+            return Wff_to_Nnf(equiv_formula);
         }
 
         // '~' ‘(‘ Wff Binary_Prop_conn Wff ‘)’ | '~' ‘(‘ Wff Binary_Temp_conn  Interval Wff ‘)
@@ -384,7 +383,7 @@ string Wff_to_Nnf_clean(string wff){
 
                 string nega_alpha = "~" + Slice(wff, 2, binary_conn_index-1);
                 string nega_beta = "~" + Slice(wff, binary_conn_index+1, len_wff-2);
-                return "(" + Wff_to_Nnf_clean(nega_alpha) + binary_conn + Wff_to_Nnf_clean(nega_beta) + ")";
+                return "(" + Wff_to_Nnf(nega_alpha) + binary_conn + Wff_to_Nnf(nega_beta) + ")";
             }
 
             // '~' ‘(‘ Wff '=' Wff ')'
@@ -395,10 +394,10 @@ string Wff_to_Nnf_clean(string wff){
                 string nega_beta = "~" + beta;
 
                 // Input: '~' ‘(‘ alpha '=' beta ')'
-                // Return: "((" + Wff_to_Nnf_clean(alpha) + "v" + Wff_to_Nnf_clean(beta) ")"
-                // + "&" + "(" "Wff_to_Nnf_clean(neg_alpha)" + "v" + "Wff_to_Nnf_clean(neg_beta)" "))"
-                return "((" + Wff_to_Nnf_clean(alpha) + "v" + Wff_to_Nnf_clean(beta) + ")" 
-                    + "&" + "(" + Wff_to_Nnf_clean(nega_alpha) + "v" + Wff_to_Nnf_clean(nega_beta) + "))";
+                // Return: "((" + Wff_to_Nnf(alpha) + "v" + Wff_to_Nnf(beta) ")"
+                // + "&" + "(" "Wff_to_Nnf(neg_alpha)" + "v" + "Wff_to_Nnf(neg_beta)" "))"
+                return "((" + Wff_to_Nnf(alpha) + "v" + Wff_to_Nnf(beta) + ")" 
+                    + "&" + "(" + Wff_to_Nnf(nega_alpha) + "v" + Wff_to_Nnf(nega_beta) + "))";
             }
 
             // '~' '(' Wff '>' Wff ')'
@@ -408,8 +407,8 @@ string Wff_to_Nnf_clean(string wff){
                 string neg_beta = "~" + beta;
 
                 // Input: "~(" + alpha + ">" + beta ")"
-                // Return: "(" + Wff_to_Nnf_clean(alpha) + "&" + Wff_to_Nnf_clean(neg_beta) + ")"
-                return "(" + Wff_to_Nnf_clean(alpha) + "&" + Wff_to_Nnf_clean(neg_beta) + ")";
+                // Return: "(" + Wff_to_Nnf(alpha) + "&" + Wff_to_Nnf(neg_beta) + ")"
+                return "(" + Wff_to_Nnf(alpha) + "&" + Wff_to_Nnf(neg_beta) + ")";
             }
 
         }
@@ -436,10 +435,10 @@ string Wff_to_Nnf_clean(string wff){
                 string neg_beta = "~" + Slice(wff, end_interval+1, len_wff-2);
 
                 // Input: "~(" + alpha + binary_conn + beta + ")"
-                //Return: "(" + Wff_to_Nnf_clean(neg_alpha) + dual(binary_conn) 
-                //          + interval + Wff_to_Nnf_clean(neg_beta) + ")"
-                return "(" + Wff_to_Nnf_clean(neg_alpha) + binary_conn
-                    + Slice(wff, start_interval, end_interval) + Wff_to_Nnf_clean(neg_beta) + ")";
+                //Return: "(" + Wff_to_Nnf(neg_alpha) + dual(binary_conn) 
+                //          + interval + Wff_to_Nnf(neg_beta) + ")"
+                return "(" + Wff_to_Nnf(neg_alpha) + binary_conn
+                    + Slice(wff, start_interval, end_interval) + Wff_to_Nnf(neg_beta) + ")";
             }
         }
     }

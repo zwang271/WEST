@@ -18,7 +18,7 @@
 * b - prop_cons (T or !)
 * c - prop_var
 */
-vector<string> generate_test_template(int depth, int n, int a = 0, int b = 2, bool large = false) {
+vector<string> generate_test_template(int depth, int a = 0, int b = 2, bool large = false) {
 	if (depth == 0) {
 		vector<string> test_d0 = {};
 		
@@ -36,14 +36,14 @@ vector<string> generate_test_template(int depth, int n, int a = 0, int b = 2, bo
 	}
 
 	vector<string> test = {};
-	vector<string> v = generate_test_template(depth - 1, n, a, b, large);
+	vector<string> v = generate_test_template(depth - 1, a, b, large);
 	string interval = "[" + to_string(a) + ":" + to_string(b) + "]";
 
 	for (string alpha_1 : v) {
 		test.push_back("G" + interval + alpha_1);
 		test.push_back("F" + interval + alpha_1);
 
-		vector<string> w = generate_test_template(depth - 1, n, a, b, large);
+		vector<string> w = generate_test_template(depth - 1, a, b, large);
 		for (string alpha_2 : w) {
 			test.push_back("(" + alpha_1 + "R" + interval + alpha_2 + ")");
 			test.push_back("(" + alpha_1 + "U" + interval + alpha_2 + ")");
@@ -94,7 +94,7 @@ string rand_prop_cons() {
 * and propositional literals
 */
 vector<string> generate_test(int depth, int n, int a = 0, int b = 2, bool large = false) {
-	vector<string> T = generate_test_template(depth, n, a, b, large);
+	vector<string> T = generate_test_template(depth, a, b, large);
 
 	for (int i = 0; i < T.size(); i++) {
 		string w = "";
