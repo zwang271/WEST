@@ -21,13 +21,13 @@
     <ClCompile Include="grammar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="reg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="nnf_grammar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="reg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

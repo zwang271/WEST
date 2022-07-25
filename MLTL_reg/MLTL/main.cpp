@@ -69,7 +69,7 @@ int main() {
         // User wants to output regexs of all
 		// subformulas of input
 		if (subformulas) {
-            answer = reg_sub(nnf, n);
+            answer = reg_sub(nnf, n, true, true);
             answer = simplify(answer, n);
             print_subformulas(get_formulas(), n, nnf);
 			clear_formulas();
@@ -77,7 +77,7 @@ int main() {
 
         //User wants to only output regex of input
 		else {
-            answer = reg(nnf, n);
+            answer = reg_sub(nnf, n, false, true);
             answer = simplify(answer, n);
             print(answer);
             cout << endl;

@@ -19,10 +19,6 @@ vector<string> set_intersect(vector<string> v1, vector<string> v2, int n, bool s
 		return v;
 	}
 
-	//int len_w = int(max(v1[0].length(), v2[0].length()));
-	//v1 = pad(v1, n, len_w); v2 = pad(v2, n, len_w);
-
-	// CORRECTION TO VECTOR PADDING LINE
 	int len_w = 0;
 
 	// Gets length of longest string in v1
@@ -56,12 +52,7 @@ vector<string> set_intersect(vector<string> v1, vector<string> v2, int n, bool s
 	v2.shrink_to_fit();
 
 	if (simp) {
-		//return simplify(right_expand(v, n), n);
-
 		return simplify(v, n);
-		
-		/*remove_duplicates(&v);
-		return v;*/
 	}
 	return v;
 }
@@ -85,12 +76,7 @@ vector<string> join(vector<string> A, vector<string> B, int n, bool simp) {
 	B.shrink_to_fit();
 
 	if (simp) {
-		//return simplify(right_expand(AB, n), n);
-
 		return simplify(AB, n);
-
-		/*remove_duplicates(&AB);
-		return AB;*/
 	}
 	return AB;
 }
@@ -151,7 +137,7 @@ vector<string> reg_prop_var(string nnf, int n)
  *      n is number of propositional variables
  * Output: Vector of computation strings satisfying F[a,b]alpha
  */
-vector<string> reg_F(vector<string> reg_alpha, int a, int b, int n) {
+vector<string> reg_F(vector<string> reg_alpha, int a, int b, int n, bool simp) {
 	vector<string> comp = vector<string>();
 
 	string pre = "";
@@ -173,7 +159,7 @@ vector<string> reg_F(vector<string> reg_alpha, int a, int b, int n) {
 		// Now w = (s^n ,)^i
 
 		temp_alpha = list_str_concat_prefix(reg_alpha, w);
-		comp = join(comp, temp_alpha, n);
+		comp = join(comp, temp_alpha, n, simp);
 	}
 	comp = list_str_concat_prefix(comp, pre);
 
@@ -193,7 +179,7 @@ vector<string> reg_F(vector<string> reg_alpha, int a, int b, int n) {
  *      n is number of propositional variables
  * Output: Vector of computation strings satisfying G[a,b]alpha
  */
-vector<string> reg_G(vector<string> reg_alpha, int a, int b, int n)
+vector<string> reg_G(vector<string> reg_alpha, int a, int b, int n, bool simp)
 {
 	string pre = "";
 	vector<string> temp_alpha = vector<string>();
@@ -217,7 +203,7 @@ vector<string> reg_G(vector<string> reg_alpha, int a, int b, int n)
 		// Now w = (s^n ,)^i
 
 		temp_alpha = list_str_concat_prefix(reg_alpha, w);
-		comp = set_intersect(comp, temp_alpha, n);
+		comp = set_intersect(comp, temp_alpha, n, simp);
 		/*cout << i << "\t size: " << comp.size() << endl;
 		print(comp);*/
 	}
@@ -239,7 +225,7 @@ vector<string> reg_G(vector<string> reg_alpha, int a, int b, int n)
  *      n is number of propositional variables
  * Output: Vector of computation strings satisfying alphaU[a,b]beta
  */
-vector<string> reg_U(vector<string> reg_alpha, vector<string> reg_beta, int a, int b, int n) {
+vector<string> reg_U(vector<string> reg_alpha, vector<string> reg_beta, int a, int b, int n, bool simp) {
 	string pre = "";
 	// pre = (s^n,)^a
 	for (int i = 0; i < a; ++i) {
@@ -255,7 +241,7 @@ vector<string> reg_U(vector<string> reg_alpha, vector<string> reg_beta, int a, i
 	//						set_intersect (G[i+1,i+1] beta)
 	for (int i = a; i <= b - 1; ++i) {
 		comp = join(comp, set_intersect(
-			reg_G(reg_alpha, a, i, n), reg_G(reg_beta, i + 1, i + 1, n), n), n);
+			reg_G(reg_alpha, a, i, n, simp), reg_G(reg_beta, i + 1, i + 1, n, simp), n, simp), n, simp);
 	}
 
 	// Return comp = (G[a,a] beta) join join_{i = a:b-1} (G[a,i] alpha) 
@@ -275,15 +261,15 @@ vector<string> reg_U(vector<string> reg_alpha, vector<string> reg_beta, int a, i
  *      n is number of propositional variables
  * Output: Vector of computation strings satisfying alphaR[a,b]beta
  */
-vector<string> reg_R(vector<string> alpha, vector<string> beta, int a, int b, int n) {
+vector<string> reg_R(vector<string> alpha, vector<string> beta, int a, int b, int n, bool simp) {
 	// initialize comp = G[a,b] beta
-	vector<string> comp = reg_G(beta, a, b, n);
+	vector<string> comp = reg_G(beta, a, b, n, simp);
 
 	// Calculating comp = alpha U[a,b] beta
 	//					= (G[a,b] beta) join join_{i = a:b-1}G[a,i] alpha set_intersect G[i,i] alpha
 	for (int i = a; i <= b - 1; ++i) {
 		comp = join(comp,
-			set_intersect(reg_G(beta, a, i, n), reg_G(alpha, i, i, n), n), n);
+			set_intersect(reg_G(beta, a, i, n, simp), reg_G(alpha, i, i, n, simp), n, simp), n, simp);
 	}
 	alpha.clear();
 	alpha.shrink_to_fit();
@@ -304,155 +290,155 @@ vector<string> reg_R(vector<string> alpha, vector<string> beta, int a, int b, in
  *     n is number of propositional variables
  * Output: Vector of computation strings satisfying the formula
  */
-vector<string> reg(string nnf, int n) {
-	int len_nnf = int(nnf.length());
-
-	// ?(~) Prop_var 
-	if (Prop_var_check(nnf) or
-		(Slice_char(nnf, 0) == "~" and Prop_var_check(Slice(nnf, 1, len_nnf - 1)))) {
-		return reg_prop_var(nnf, n);
-	}
-
-	// Prop_cons
-	if (Prop_cons_check(nnf)) {
-		return reg_prop_cons(nnf, n);
-	}
-
-	// Unary_Temp_conn  Interval  Nnf
-	if (Unary_Temp_conn_check(Slice_char(nnf, 0))) {
-		string unary_temp_con = Slice_char(nnf, 0);
-
-		tuple<int, int, int> interval_tuple = primary_interval(nnf);
-		int begin_interval = get<0>(interval_tuple);
-		int comma_index = get<1>(interval_tuple);
-		int end_interval = get<2>(interval_tuple);
-		int a = stoi(Slice(nnf, begin_interval + 1, comma_index - 1));
-		int b = stoi(Slice(nnf, comma_index + 1, end_interval - 1));
-		string alpha = Slice(nnf, end_interval + 1, len_nnf - 1);
-		vector<string> reg_alpha = reg(alpha, n); // recursive call
-
-		// Empty interval
-		if (a > b) {
-			// vacously false
-			if (unary_temp_con == "F") {
-				return {};
-			}
-
-			// vacously true
-			if (unary_temp_con == "G") {
-				string ret_string = string(n, 's');
-				return { ret_string };
-			}
-		}
-
-		// Unary_Temp_conn -> 'F'
-		if (unary_temp_con == "F") {
-			return reg_F(reg_alpha, a, b, n);
-		}
-
-		// Unary_Temp_conn -> 'G'
-		if (unary_temp_con == "G") {
-            //vector<string> v = reg_G(reg_alpha, a, b, n);
-            //push_back_formulas(alpha, v);
-            //return v;
-			return reg_G(reg_alpha, a, b, n);
-		}
-	}
-
-	// '(' Assoc_Prop_conn '['  Nnf_Array_entry ']' ')'
-	if (Assoc_Prop_conn_check(Slice_char(nnf, 1))) {
-		string assoc_prop_conn = Slice_char(nnf, 1);
-
-		// (...((Nnf_1 assoc_prop_conn Nnf_2) assoc_prop_conn Nnf_3) ... assoc_prop_conn Nnf_n)
-		// is equiv to (assoc_prop_conn [Nnf_1, ..., Nnf_n])
-		int begin_entry = 3;
-		string equiv_formula = "";
-		// Parsing for Nff between each comma
-		for (int end_entry = 3; end_entry <= len_nnf - 1; ++end_entry) {
-			if (Nnf_check(Slice(nnf, begin_entry, end_entry))) {
-				string alpha = Slice(nnf, begin_entry, end_entry);
-
-				// First entry obtained
-				if (begin_entry == 3) {
-					// Add Nnf_1 to equiv_formula
-					equiv_formula = equiv_formula + alpha;
-				}
-
-				// Not first entry
-				else {
-					// Add Nnf_n to equiv_formula, where n >= 2
-					equiv_formula = "(" + equiv_formula + assoc_prop_conn + alpha + ")";
-				}
-
-				// Update begin_entry so it has index of the first char of the next entry.
-				begin_entry = end_entry + 2;
-			}
-		}
-
-		return reg(equiv_formula, n);
-	}
-
-	// '(' Nnf Binary_Prop_conn Nnf ')' | '(' Nnf Binary_Temp_conn Interval Nnf ')'
-	int binary_conn_index = primary_binary_conn(nnf);
-	string binary_conn = Slice_char(nnf, binary_conn_index);
-
-	// '(' Nnf Binary_Prop_conn Nnf ')'
-	if (Binary_Prop_conn_check(binary_conn)) {
-		string alpha = Slice(nnf, 1, binary_conn_index - 1);
-		vector<string> reg_alpha = reg(alpha, n);
-		string beta = Slice(nnf, binary_conn_index + 1, len_nnf - 2);
-		vector<string> reg_beta = reg(beta, n);
-
-		if (binary_conn == "&") {
-			return set_intersect(reg_alpha, reg_beta, n);
-		}
-
-		if (binary_conn == "v") {
-			return join(reg_alpha, reg_beta, n);
-		}
-
-		if (binary_conn == "=") {
-			// (alpha = beta) is equiv to ((alpha & beta) v (Wff_to_Nnf(~alpha) & Wff_to_Nnf(~beta)))
-			// ((alpha & beta) v (Wff_to_Nnf(~alpha) & Wff_to_Nnf(~beta))) is in Nnf-form
-			string equiv_nnf_formula = "((" + alpha + "&" + beta + ")v("
-				+ Wff_to_Nnf("~" + alpha) + "&"
-				+ Wff_to_Nnf("~" + beta) + "))";
-			return reg(equiv_nnf_formula, n);
-		}
-
-		if (binary_conn == ">") {
-			// (alpha > beta) is equiv to (Wff_to_Nnf(~alpha) v beta))
-			// (Wff_to_Nnf(~alpha) v beta)) is in Nnf-form
-			string equiv_nnf_formula = "(" + Wff_to_Nnf("~" + alpha) + "v" + beta + ")";
-			return reg(equiv_nnf_formula, n);
-		}
-	}
-
-	// '(' Nnf Binary_Temp_conn Interval Nnf ')'
-	if (Binary_Temp_conn_check(binary_conn)) {
-		tuple<int, int, int> interval_tuple = primary_interval(nnf);
-		int begin_interval = get<0>(interval_tuple);
-		int comma_index = get<1>(interval_tuple);
-		int end_interval = get<2>(interval_tuple);
-		int a = stoi(Slice(nnf, begin_interval + 1, comma_index - 1));
-		int b = stoi(Slice(nnf, comma_index + 1, end_interval - 1));
-		string alpha = Slice(nnf, 1, binary_conn_index - 1);
-		string beta = Slice(nnf, end_interval + 1, len_nnf - 2);
-
-		if (binary_conn == "U") {
-			return reg_U(reg(alpha, n), reg(beta, n), a, b, n);
-		}
-		else if (binary_conn == "R") {
-			return reg_R(reg(alpha, n), reg(beta, n), a, b, n);
-		}
-	}
-
-	else {
-		string error_string = nnf + " is not in Negation-normal form.\n";
-		throw invalid_argument(error_string);
-	}
-	return {};
-}
+//vector<string> reg(string nnf, int n) {
+//	int len_nnf = int(nnf.length());
+//
+//	// ?(~) Prop_var 
+//	if (Prop_var_check(nnf) or
+//		(Slice_char(nnf, 0) == "~" and Prop_var_check(Slice(nnf, 1, len_nnf - 1)))) {
+//		return reg_prop_var(nnf, n);
+//	}
+//
+//	// Prop_cons
+//	if (Prop_cons_check(nnf)) {
+//		return reg_prop_cons(nnf, n);
+//	}
+//
+//	// Unary_Temp_conn  Interval  Nnf
+//	if (Unary_Temp_conn_check(Slice_char(nnf, 0))) {
+//		string unary_temp_con = Slice_char(nnf, 0);
+//
+//		tuple<int, int, int> interval_tuple = primary_interval(nnf);
+//		int begin_interval = get<0>(interval_tuple);
+//		int comma_index = get<1>(interval_tuple);
+//		int end_interval = get<2>(interval_tuple);
+//		int a = stoi(Slice(nnf, begin_interval + 1, comma_index - 1));
+//		int b = stoi(Slice(nnf, comma_index + 1, end_interval - 1));
+//		string alpha = Slice(nnf, end_interval + 1, len_nnf - 1);
+//		vector<string> reg_alpha = reg(alpha, n); // recursive call
+//
+//		// Empty interval
+//		if (a > b) {
+//			// vacously false
+//			if (unary_temp_con == "F") {
+//				return {};
+//			}
+//
+//			// vacously true
+//			if (unary_temp_con == "G") {
+//				string ret_string = string(n, 's');
+//				return { ret_string };
+//			}
+//		}
+//
+//		// Unary_Temp_conn -> 'F'
+//		if (unary_temp_con == "F") {
+//			return reg_F(reg_alpha, a, b, n);
+//		}
+//
+//		// Unary_Temp_conn -> 'G'
+//		if (unary_temp_con == "G") {
+//            //vector<string> v = reg_G(reg_alpha, a, b, n);
+//            //push_back_formulas(alpha, v);
+//            //return v;
+//			return reg_G(reg_alpha, a, b, n);
+//		}
+//	}
+//
+//	// '(' Assoc_Prop_conn '['  Nnf_Array_entry ']' ')'
+//	if (Assoc_Prop_conn_check(Slice_char(nnf, 1))) {
+//		string assoc_prop_conn = Slice_char(nnf, 1);
+//
+//		// (...((Nnf_1 assoc_prop_conn Nnf_2) assoc_prop_conn Nnf_3) ... assoc_prop_conn Nnf_n)
+//		// is equiv to (assoc_prop_conn [Nnf_1, ..., Nnf_n])
+//		int begin_entry = 3;
+//		string equiv_formula = "";
+//		// Parsing for Nff between each comma
+//		for (int end_entry = 3; end_entry <= len_nnf - 1; ++end_entry) {
+//			if (Nnf_check(Slice(nnf, begin_entry, end_entry))) {
+//				string alpha = Slice(nnf, begin_entry, end_entry);
+//
+//				// First entry obtained
+//				if (begin_entry == 3) {
+//					// Add Nnf_1 to equiv_formula
+//					equiv_formula = equiv_formula + alpha;
+//				}
+//
+//				// Not first entry
+//				else {
+//					// Add Nnf_n to equiv_formula, where n >= 2
+//					equiv_formula = "(" + equiv_formula + assoc_prop_conn + alpha + ")";
+//				}
+//
+//				// Update begin_entry so it has index of the first char of the next entry.
+//				begin_entry = end_entry + 2;
+//			}
+//		}
+//
+//		return reg(equiv_formula, n);
+//	}
+//
+//	// '(' Nnf Binary_Prop_conn Nnf ')' | '(' Nnf Binary_Temp_conn Interval Nnf ')'
+//	int binary_conn_index = primary_binary_conn(nnf);
+//	string binary_conn = Slice_char(nnf, binary_conn_index);
+//
+//	// '(' Nnf Binary_Prop_conn Nnf ')'
+//	if (Binary_Prop_conn_check(binary_conn)) {
+//		string alpha = Slice(nnf, 1, binary_conn_index - 1);
+//		vector<string> reg_alpha = reg(alpha, n);
+//		string beta = Slice(nnf, binary_conn_index + 1, len_nnf - 2);
+//		vector<string> reg_beta = reg(beta, n);
+//
+//		if (binary_conn == "&") {
+//			return set_intersect(reg_alpha, reg_beta, n);
+//		}
+//
+//		if (binary_conn == "v") {
+//			return join(reg_alpha, reg_beta, n);
+//		}
+//
+//		if (binary_conn == "=") {
+//			// (alpha = beta) is equiv to ((alpha & beta) v (Wff_to_Nnf(~alpha) & Wff_to_Nnf(~beta)))
+//			// ((alpha & beta) v (Wff_to_Nnf(~alpha) & Wff_to_Nnf(~beta))) is in Nnf-form
+//			string equiv_nnf_formula = "((" + alpha + "&" + beta + ")v("
+//				+ Wff_to_Nnf("~" + alpha) + "&"
+//				+ Wff_to_Nnf("~" + beta) + "))";
+//			return reg(equiv_nnf_formula, n);
+//		}
+//
+//		if (binary_conn == ">") {
+//			// (alpha > beta) is equiv to (Wff_to_Nnf(~alpha) v beta))
+//			// (Wff_to_Nnf(~alpha) v beta)) is in Nnf-form
+//			string equiv_nnf_formula = "(" + Wff_to_Nnf("~" + alpha) + "v" + beta + ")";
+//			return reg(equiv_nnf_formula, n);
+//		}
+//	}
+//
+//	// '(' Nnf Binary_Temp_conn Interval Nnf ')'
+//	if (Binary_Temp_conn_check(binary_conn)) {
+//		tuple<int, int, int> interval_tuple = primary_interval(nnf);
+//		int begin_interval = get<0>(interval_tuple);
+//		int comma_index = get<1>(interval_tuple);
+//		int end_interval = get<2>(interval_tuple);
+//		int a = stoi(Slice(nnf, begin_interval + 1, comma_index - 1));
+//		int b = stoi(Slice(nnf, comma_index + 1, end_interval - 1));
+//		string alpha = Slice(nnf, 1, binary_conn_index - 1);
+//		string beta = Slice(nnf, end_interval + 1, len_nnf - 2);
+//
+//		if (binary_conn == "U") {
+//			return reg_U(reg(alpha, n), reg(beta, n), a, b, n);
+//		}
+//		else if (binary_conn == "R") {
+//			return reg_R(reg(alpha, n), reg(beta, n), a, b, n);
+//		}
+//	}
+//
+//	else {
+//		string error_string = nnf + " is not in Negation-normal form.\n";
+//		throw invalid_argument(error_string);
+//	}
+//	return {};
+//}
 
 
 vector<tuple<string, vector<string>>> get_formulas() {
@@ -496,7 +482,7 @@ void push_back_formulas(string s, vector<string> v, int n) {
  * Output: Vector of computation strings satisfying the formula
  * Also stores every subformula parsed and its corresponding regular expression into FORMULAS
  */
-vector<string> reg_sub(string nnf, int n, bool sub) {
+vector<string> reg_sub(string nnf, int n, bool sub, bool simp) {
 	int len_nnf = int(nnf.length());
 
 	// ?(~) Prop_var 
@@ -535,7 +521,7 @@ vector<string> reg_sub(string nnf, int n, bool sub) {
 		int a = stoi(Slice(nnf, begin_interval + 1, comma_index - 1));
 		int b = stoi(Slice(nnf, comma_index + 1, end_interval - 1));
 		string alpha = Slice(nnf, end_interval + 1, len_nnf - 1);
-		vector<string> reg_alpha = reg_sub(alpha, n); // recursive call
+		vector<string> reg_alpha = reg_sub(alpha, n, sub, simp); // recursive call
 
 		// Empty interval
 		if (a > b) {
@@ -569,24 +555,24 @@ vector<string> reg_sub(string nnf, int n, bool sub) {
 		if (unary_temp_con == "F") {
 
 			if (sub) {
-				vector<string> reg_nnf = reg_F(reg_alpha, a, b, n);
+				vector<string> reg_nnf = reg_F(reg_alpha, a, b, n, simp);
 				push_back_formulas(nnf, reg_nnf, n);
 				return reg_nnf;
 			}
 
-			return reg_F(reg_alpha, a, b, n);
+			return reg_F(reg_alpha, a, b, n, simp);
 		}
 
 		// Unary_Temp_conn -> 'G'
 		if (unary_temp_con == "G") {
 			
 			if (sub) {
-				vector<string> reg_nnf = reg_G(reg_alpha, a, b, n);
+				vector<string> reg_nnf = reg_G(reg_alpha, a, b, n, simp);
 				push_back_formulas(nnf, reg_nnf, n);
 				return reg_nnf;
 			}
 
-			return reg_G(reg_alpha, a, b, n);
+			return reg_G(reg_alpha, a, b, n, simp);
 		}
 	}
 
@@ -621,12 +607,12 @@ vector<string> reg_sub(string nnf, int n, bool sub) {
 		}
 
 		if (sub) {
-			vector<string> reg_nnf = reg_sub(equiv_formula, n);
+			vector<string> reg_nnf = reg_sub(equiv_formula, n, sub, simp);
 			push_back_formulas(nnf, reg_nnf, n);
 			return reg_nnf;
 		}
 
-		return reg_sub(equiv_formula, n);
+		return reg_sub(equiv_formula, n, sub, simp);
 	}
 
 	// '(' Nnf Binary_Prop_conn Nnf ')' | '(' Nnf Binary_Temp_conn Interval Nnf ')'
@@ -636,30 +622,30 @@ vector<string> reg_sub(string nnf, int n, bool sub) {
 	// '(' Nnf Binary_Prop_conn Nnf ')'
 	if (Binary_Prop_conn_check(binary_conn)) {
 		string alpha = Slice(nnf, 1, binary_conn_index - 1);
-		vector<string> reg_alpha = reg_sub(alpha, n);
+		vector<string> reg_alpha = reg_sub(alpha, n, sub, simp);
 		string beta = Slice(nnf, binary_conn_index + 1, len_nnf - 2);
-		vector<string> reg_beta = reg_sub(beta, n);
+		vector<string> reg_beta = reg_sub(beta, n, sub, simp);
 
 		if (binary_conn == "&") {
 
 			if (sub) {
-				vector<string> reg_nnf = set_intersect(reg_alpha, reg_beta, n);
+				vector<string> reg_nnf = set_intersect(reg_alpha, reg_beta, n, simp);
 				push_back_formulas(nnf, reg_nnf, n);
 				return reg_nnf;
 			}
 
-			return set_intersect(reg_alpha, reg_beta, n);
+			return set_intersect(reg_alpha, reg_beta, n, simp);
 		}
 
 		if (binary_conn == "v") {
 
 			if (sub) {
-				vector<string> reg_nnf = join(reg_alpha, reg_beta, n);
+				vector<string> reg_nnf = join(reg_alpha, reg_beta, n, simp);
 				push_back_formulas(nnf, reg_nnf, n);
 				return reg_nnf;
 			}
 
-			return join(reg_alpha, reg_beta, n);
+			return join(reg_alpha, reg_beta, n, simp);
 		}
 
 		if (binary_conn == "=") {
@@ -687,13 +673,13 @@ vector<string> reg_sub(string nnf, int n, bool sub) {
 
                 }
                 else {
-					vector<string> reg_nnf = reg_sub(equiv_nnf_formula, n);
+					vector<string> reg_nnf = reg_sub(equiv_nnf_formula, n, sub, simp);
 					push_back_formulas(nnf, reg_nnf, n);
 					return reg_nnf;
                }
 			}
 
-			return reg_sub(equiv_nnf_formula, n);
+			return reg_sub(equiv_nnf_formula, n, sub, simp);
 		}
 
 		if (binary_conn == ">") {
@@ -702,12 +688,12 @@ vector<string> reg_sub(string nnf, int n, bool sub) {
 			string equiv_nnf_formula = "(" + Wff_to_Nnf("~" + alpha) + "v" + beta + ")";
 
 			if (sub) {
-				vector<string> reg_nnf = reg_sub(equiv_nnf_formula, n);
+				vector<string> reg_nnf = reg_sub(equiv_nnf_formula, n, sub, simp);
 				push_back_formulas(nnf, reg_nnf, n);
 				return reg_nnf;
 			}
 
-			return reg_sub(equiv_nnf_formula, n);
+			return reg_sub(equiv_nnf_formula, n, sub, simp);
 		}
 	}
 
@@ -721,28 +707,28 @@ vector<string> reg_sub(string nnf, int n, bool sub) {
 		int b = stoi(Slice(nnf, comma_index + 1, end_interval - 1));
 		string alpha = Slice(nnf, 1, binary_conn_index - 1);
 		string beta = Slice(nnf, end_interval + 1, len_nnf - 2);
-		vector<string> reg_alpha = reg_sub(alpha, n);
-		vector<string> reg_beta = reg_sub(beta, n);
+		vector<string> reg_alpha = reg_sub(alpha, n, sub, simp);
+		vector<string> reg_beta = reg_sub(beta, n, sub, simp);
 
 		if (binary_conn == "U") {
 
 			if (sub) {
-				vector<string> reg_nnf = reg_U(reg_alpha, reg_beta, a, b, n);
+				vector<string> reg_nnf = reg_U(reg_alpha, reg_beta, a, b, n, simp);
 				push_back_formulas(nnf, reg_nnf, n);
 				return reg_nnf;
 			}
 
-			return reg_U(reg_alpha, reg_beta, a, b, n);
+			return reg_U(reg_alpha, reg_beta, a, b, n, simp);
 		}
 		else if (binary_conn == "R") {
 
 			if (sub) {
-				vector<string> reg_nnf = reg_R(reg_alpha, reg_beta, a, b, n);
+				vector<string> reg_nnf = reg_R(reg_alpha, reg_beta, a, b, n, simp);
 				push_back_formulas(nnf, reg_nnf, n);
 				return reg_nnf;
 			}
 
-			return reg_R(reg_alpha, reg_beta, a, b, n);
+			return reg_R(reg_alpha, reg_beta, a, b, n, simp);
 		}
 	}
 

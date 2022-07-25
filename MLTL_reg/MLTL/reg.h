@@ -44,7 +44,7 @@ vector<string> reg_prop_var(string s, int n);
  *      n is number of propositional variables
  * Output: Vector of computation strings satisfying F[a,b]alpha
  */
-vector<string> reg_F(vector<string> alpha, int a, int b, int n);
+vector<string> reg_F(vector<string> alpha, int a, int b, int n, bool simp);
 
 
 /*
@@ -54,7 +54,7 @@ vector<string> reg_F(vector<string> alpha, int a, int b, int n);
  *      n is number of propositional variables
  * Output: Vector of computation strings satisfying G[a,b]alpha
  */
-vector<string> reg_G(vector<string> alpha, int a, int b, int n);
+vector<string> reg_G(vector<string> alpha, int a, int b, int n, bool simp);
 
 
 /*
@@ -65,7 +65,7 @@ vector<string> reg_G(vector<string> alpha, int a, int b, int n);
  *      n is number of propositional variables
  * Output: Vector of computation strings satisfying alphaU[a,b]beta
  */
-vector<string> reg_U(vector<string> reg_alpha, vector<string> reg_beta, int a, int b, int n);
+vector<string> reg_U(vector<string> reg_alpha, vector<string> reg_beta, int a, int b, int n, bool simp);
 
 
 /*
@@ -76,7 +76,7 @@ vector<string> reg_U(vector<string> reg_alpha, vector<string> reg_beta, int a, i
  *      n is number of propositional variables
  * Output: Vector of computation strings satisfying alphaR[a,b]beta
  */
-vector<string> reg_R(vector<string> alpha, vector<string> beta, int a, int b, int n);
+vector<string> reg_R(vector<string> alpha, vector<string> beta, int a, int b, int n, bool simp);
 
 
 /*
@@ -106,4 +106,4 @@ bool find_formula(vector<tuple<string, vector<string> > > v, string s);
 void push_back_formulas(string s, vector<string> v, int n);
 
 
-vector<string> reg_sub(string nnf, int n, bool sub = true);
+vector<string> reg_sub(string nnf, int n, bool sub = true, bool simp = true);
