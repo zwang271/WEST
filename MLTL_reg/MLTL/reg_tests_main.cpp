@@ -130,7 +130,7 @@ TEST(test_true_equals_false) {
     string s = "(T=!)";
     ASSERT_TRUE(Wff_check(s));
     ASSERT_TRUE(Nnf_check(s));
-    vector<string> v_actual = reg(s, 0);
+    vector<string> v_actual = reg(s, 1);
     vector<string> v_expected = {};
     ASSERT_EQUAL(v_expected, v_actual);
 }
