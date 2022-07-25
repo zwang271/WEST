@@ -18,6 +18,19 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="grammar.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="nnf_grammar.cpp" />
+    <ClCompile Include="reg.cpp" />
+    <ClCompile Include="utils.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="grammar.h" />
+    <ClInclude Include="nnf_grammar.h" />
+    <ClInclude Include="reg.h" />
+    <ClInclude Include="utils.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -126,19 +139,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="grammar.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="nnf_grammar.cpp" />
-    <ClCompile Include="reg.cpp" />
-    <ClCompile Include="utils.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="grammar.h" />
-    <ClInclude Include="nnf_grammar.h" />
-    <ClInclude Include="reg.h" />
-    <ClInclude Include="utils.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

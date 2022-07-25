@@ -6,7 +6,6 @@
 #include "grammar.h"
 #include "nnf_grammar.h"
 #include "reg.h"
-#include "simulation.h"
 
 using namespace std;
 
@@ -37,6 +36,7 @@ int main() {
 
 		// Get number of prop_vars in wff
 		int n = get_n(wff);
+		cout << "get_n outputs: " << n << endl;
 		
         bool subformulas = false;
         char y_or_n = 'q';
@@ -69,7 +69,7 @@ int main() {
         // User wants to output regexs of all
 		// subformulas of input
 		if (subformulas) {
-            answer = reg_sub(nnf, n, true, true);
+            answer = reg(nnf, n, true, true);
             answer = simplify(answer, n);
             print_subformulas(get_formulas(), n, nnf);
 			clear_formulas();
@@ -77,7 +77,7 @@ int main() {
 
         //User wants to only output regex of input
 		else {
-            answer = reg_sub(nnf, n, false, true);
+            answer = reg(nnf, n, false, true);
             answer = simplify(answer, n);
             print(answer);
             cout << endl;

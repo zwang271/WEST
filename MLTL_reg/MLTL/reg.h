@@ -90,8 +90,7 @@ vector<string> reg_R(vector<string> alpha, vector<string> beta, int a, int b, in
  *     n is number of propositional variables
  * Output: Vector of computation strings satisfying the formula
  */
-vector<string> reg(string s, int n);
-
+vector<string> reg(string nnf, int n, bool sub = true, bool simp = true);
 
 
 vector< tuple< string, vector<string> > > get_formulas();
@@ -106,4 +105,3 @@ bool find_formula(vector<tuple<string, vector<string> > > v, string s);
 void push_back_formulas(string s, vector<string> v, int n);
 
 
-vector<string> reg_sub(string nnf, int n, bool sub = true, bool simp = true);
