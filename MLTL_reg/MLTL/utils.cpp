@@ -668,7 +668,7 @@ int get_n(string wff) {
 			else {
 				find_num = false;
 				n = max(stoi(num_str), n);
-				//cout << n << endl;
+				num_str = "";
 			}
 		}
 
