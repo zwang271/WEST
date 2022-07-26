@@ -38,22 +38,51 @@ int main() {
 		int n = get_n(wff);
 		cout << "get_n outputs: " << n << endl;
 		
-        bool subformulas = false;
-        char y_or_n = 'q';
-        while (y_or_n != 'y' and y_or_n != 'n') {
-			cout << "Would you like to generate the truth table? (y / n)" << endl;
+		char simp_reply = 'q';
+		bool simp_flag;
+
+		char truth_table_reply = 'q';
+        bool truth_table_flag;
+        
+
+		// Ask user if they want to simplify output of reg
+		while (simp_reply != 'y' and simp_reply != 'n') {
+			cout << "Would you like to simplify output of reg? (y / n)" << endl;
 			// Read in user input
-			cin >> y_or_n;
+			cin >> simp_reply;
 			// Flush the input buffer
     		cin.ignore(numeric_limits<streamsize>::max(),'\n');
 
-			// Turn on subformulas regex flag
-			if (y_or_n == 'y'){
-				subformulas = true;
+			// Turn on simp_flag
+			if (simp_reply == 'y'){
+				simp_flag = true;
 			}
-			// Turn off subformulas regex flag
-			else if (y_or_n == 'n'){
-				subformulas = false;
+			// Turn off simp_flag
+			else if (simp_reply == 'n'){
+				simp_flag = false;
+			}
+			// User did not enter in 'y' or 'n'
+			else{ 
+				cout << "enter 'y' or 'n'" << endl;
+			}
+        }
+
+
+		// Ask user if they want to print out recursive truth-table 
+        while (truth_table_reply != 'y' and truth_table_reply != 'n') {
+			cout << "Would you like to generate the truth table? (y / n)" << endl;
+			// Read in user input
+			cin >> truth_table_reply;
+			// Flush the input buffer
+    		cin.ignore(numeric_limits<streamsize>::max(),'\n');
+
+			// Turn on truth_table_flag
+			if (truth_table_reply == 'y'){
+				truth_table_flag = true;
+			}
+			// Turn off truth_table_flag
+			else if (truth_table_reply == 'n'){
+				truth_table_flag = false;
 			}
 			// User did not enter in 'y' or 'n'
 			else{ 
@@ -66,19 +95,17 @@ int main() {
 		cout << "NNF Formula: " << nnf << endl;
         cout << endl;
         
-        // User wants to output regexs of all
+        answer = reg(nnf, n, truth_table_flag, simp_flag);
+		
+		// User wants to output regexs of all
 		// subformulas of input
-		if (subformulas) {
-            answer = reg(nnf, n, true, true);
-            answer = simplify(answer, n);
+		if (truth_table_flag) {
             print_subformulas(get_formulas(), n, nnf);
 			clear_formulas();
         }
 
-        //User wants to only output regex of input
+        // User wants to only output regex of input
 		else {
-            answer = reg(nnf, n, false, true);
-            answer = simplify(answer, n);
             print(answer);
             cout << endl;
         }
