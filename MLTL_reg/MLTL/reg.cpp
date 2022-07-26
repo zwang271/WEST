@@ -4,7 +4,8 @@
 #include "reg.h"
 #include <iostream>
 
-
+// Vector containing all sub-nnfs and their regexs
+// for a given nnf input
 vector<tuple<string, vector<string>>> FORMULAS;
 
 
@@ -279,16 +280,26 @@ vector<string> reg_R(vector<string> alpha, vector<string> beta, int a, int b, in
 }
 
 
+/*
+* Returns the global variable FORMULAS of sub-nnfs and their regexs 
+*/
 vector<tuple<string, vector<string>>> get_formulas() {
     return FORMULAS;
 }
 
+
+/*
+* Clears the global variable FORMULAS back to the empty vector
+*/
 void clear_formulas()
 {
 	FORMULAS.clear();
 }
 
 
+/*
+* Determines whether a given formula is in the vector regex
+*/
 bool find_formula(vector<tuple<string, vector<string>>> regex, string str) {
     for (int i = 0; i < regex.size(); ++i) {
         if (get<0>(regex[i]) == str) {
@@ -299,6 +310,10 @@ bool find_formula(vector<tuple<string, vector<string>>> regex, string str) {
 }
 
 
+/*
+* If s is not in FORMULAS, append it to FORMULAS vector.
+* Else, do nothing.
+*/
 void push_back_formulas(string s, vector<string> v, int n) {
     if (!find_formula(FORMULAS, s)) {
 		vector<string> simplify_v = simplify(v, n);
