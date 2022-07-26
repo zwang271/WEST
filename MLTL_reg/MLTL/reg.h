@@ -9,14 +9,14 @@
  * Output: Computes pairwise string_intersect between all
  *		  computation strings in V1 and V2
  */
-vector<string> set_intersect(vector<string> v1, vector<string> v2, int n, bool simp = true);
+vector<string> set_intersect(vector<string> v1, vector<string> v2, int n, bool simp);
 
 
 /*
  * Input: Vectors A and B of computation strings
  * Output: Vector A concatenated with B
  */
-vector<string> join(vector<string> A, vector<string> B, int n, bool simp = true);
+vector<string> join(vector<string> A, vector<string> B, int n, bool simp);
 
 
 /*
@@ -101,7 +101,7 @@ bool find_formula(vector<tuple<string, vector<string> > > v, string s);
 * If s is not in FORMULAS, append it to FORMULAS vector.
 * Else, do nothing.
 */
-void push_back_formulas(string s, vector<string> v, int n);
+void push_back_formulas(string s, vector<string> v, int n, bool simp_flag);
 
 
 /*
@@ -115,4 +115,4 @@ void push_back_formulas(string s, vector<string> v, int n);
  *     n is number of propositional variables
  * Output: Vector of computation strings satisfying the formula
  */
-vector<string> reg(string nnf, int n, bool sub = true, bool simp = true);
+vector<string> reg(string nnf, int n, bool sub, bool simp);
