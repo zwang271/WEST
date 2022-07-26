@@ -178,7 +178,7 @@ Finished computing.
 Size of vector: 2
 Number of characters: 14
 ```
-##Subformulas and Simplification Options
+## Subformulas and Simplification Options
 As seen in the example output above, the user may choose to display the satisfying computations of all the subformulas. By default, the WEST program will show subformulas.<br />
 
 The WEST program also allows the user to choose whether or not to simplify the satisfying computations. In almost all cases, this will dramatically reduce the number of outputted regular expressions, improving readability. However, this setting does increase runtime. By default, the WEST program simplifies outputs.
