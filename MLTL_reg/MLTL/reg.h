@@ -80,6 +80,31 @@ vector<string> reg_R(vector<string> alpha, vector<string> beta, int a, int b, in
 
 
 /*
+* Returns the global variable FORMULAS of sub-nnfs and their regexs 
+*/
+vector< tuple< string, vector<string> > > get_formulas();
+
+
+/*
+* Clears the global variable FORMULAS back to the empty vector
+*/
+void clear_formulas();
+
+
+/*
+* Determines whether a given formula is in the vector regex
+*/
+bool find_formula(vector<tuple<string, vector<string> > > v, string s);
+
+
+/*
+* If s is not in FORMULAS, append it to FORMULAS vector.
+* Else, do nothing.
+*/
+void push_back_formulas(string s, vector<string> v, int n);
+
+
+/*
  * Nnf ->  ?(~) Prop_var | Prop_cons
  *	                     | Unary_Temp_conn  Interval  Nnf
  *
@@ -91,17 +116,3 @@ vector<string> reg_R(vector<string> alpha, vector<string> beta, int a, int b, in
  * Output: Vector of computation strings satisfying the formula
  */
 vector<string> reg(string nnf, int n, bool sub = true, bool simp = true);
-
-
-vector< tuple< string, vector<string> > > get_formulas();
-
-
-void clear_formulas();
-
-
-bool find_formula(vector<tuple<string, vector<string> > > v, string s);
-
-
-void push_back_formulas(string s, vector<string> v, int n);
-
-
