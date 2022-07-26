@@ -107,7 +107,7 @@ Note that (p0=p1=p2) is not a valid input; therefore, if one wishes to generate 
 ```
 
 ## Computations
-In a computation, "1" represents a true truth value, and "0" represents a false truth value; "s" represents an arbitrary truth value, i.e. true or false.
+In a computation, "1" represents a true truth value, and "0" represents a false truth value; "S" represents an arbitrary truth value, i.e. true or false.
 Time steps in a computation are separated by commas. The bit-strings at each time step represent the truth values of each propositional variable, in ascending order. <br />
 
 **Examples:** <br />
@@ -178,6 +178,12 @@ Finished computing.
 Size of vector: 2
 Number of characters: 14
 ```
+##Subformulas and Simplification Options
+As seen in the example output above, the user may choose to display the satisfying computations of all the subformulas. By default, the WEST program will show subformulas.<br />
+
+The WEST program also allows the user to choose whether or not to simplify the satisfying computations. In almost all cases, this will dramatically reduce the number of outputted regular expressions, improving readability. However, this setting does increase runtime. By default, the WEST program simplifies outputs.
+
+
 ## Troubleshooting Guide
 
 ### The Program Crashed
