@@ -36,7 +36,6 @@ int main() {
 
 		// Get number of prop_vars in wff
 		int n = get_n(wff);
-		cout << "get_n outputs: " << n << endl;
 		
 		char simp_reply = 'q';
 		bool simp_flag;
