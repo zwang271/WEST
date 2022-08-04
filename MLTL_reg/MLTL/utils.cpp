@@ -671,6 +671,10 @@ int get_n(string wff) {
 				n = max(stoi(num_str), n);
 				num_str = "";
 			}
+
+			if (i == wff.length() - 1 and find_num) {
+				n = max(stoi(num_str), n);
+			}
 		}
 
 	}
