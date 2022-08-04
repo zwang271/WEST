@@ -1,4 +1,4 @@
-#include "simulation.h"
+#include "simulation_main.h"
 #include "utils.h"
 #include "grammar.h"
 #include "nnf_grammar.h"
@@ -12,43 +12,42 @@
 #include <vector>
 #include <chrono>
 #define MAX_ITER 3
+// Maximum distance of any interval
+// in MLTL formula
 #define DELTA 5
+// Maximum upperbound of any interval
+// in MLTL formula
 #define INTERVAL_MAX 10
+// Number of random MLTL formulas
+// to be generated
 #define FUNC_NUM 1000
 #define NUM_PROP_VAR 5
 
 using namespace std;
 using namespace std::chrono;
 
-void right_or_PT1(int iterations) {
-    int n = 1;
-    vector<string> v = { "s", "0" };
-    for (int i = 0; i < iterations; ++i) {
-        if (i % 2 == 0) {
-            v[0] += ",0";
-            v[1] += ",s";
-        }
-        else {
-            v[0] += ",s";
-            v[1] += ",0";
-        }
 
-        print(v);
-        cout << i << "\t input length: " << v[0].length() << "\t output vector size: " << simplify(v, n).size() << endl;
-        print(simplify(v, n));
-        cout << endl << endl;
-    }
-}
-
+/*
+* Generate a random MLTL formula with a iteration depth
+* of MAX_ITER.
+* For ex: 'p2' is iteration depth 0, '(p0 & p1)' is iteration depth 1,
+* '(((p0 & p1) U [5:10] (p2 R [5:10] p3))' is iteration depth 2, etc.
+*/
 string rand_function(int iter) {
+    // Maximum iteration depth hit, fill-in with propositional variables 
     if (iter == MAX_ITER) {
         return "p" + to_string((rand() % NUM_PROP_VAR));
     }
 
+    // Determines which inductive case to follow
     int op_type = (rand() % 4);
+
+    // Return: "~" + rand_function(iter + 1)
     if (op_type == 0) {
         return "~" + rand_function(iter + 1);
     }
+
+    // Return: "(" + rand_function(iter + 1) + binary_prop + rand_function(iter + 1) + ")"
     else if (op_type == 1) {
         int binary_prop_gen = rand() % 4;
         string binary_prop = "";
@@ -67,6 +66,9 @@ string rand_function(int iter) {
 
         return "(" + rand_function(iter + 1) + binary_prop + rand_function(iter + 1) + ")";
     }
+
+    // Return: unary_temp + "[" + to_string(a) + ":" + to_string(b) + "]" + rand_function(iter + 1)
+    // where a,b are random upper and lower bounds
     else if (op_type == 2) {
         int unary_temp_gen = rand() % 2;
         string unary_temp = "";
@@ -77,11 +79,16 @@ string rand_function(int iter) {
             unary_temp = "G";
         }
 
+        // Random upperbound
         int a = rand() % INTERVAL_MAX;
+        // Random lowerbound
         int b = (rand() % min(DELTA, INTERVAL_MAX - a)) + a;
 
         return unary_temp + "[" + to_string(a) + ":" + to_string(b) + "]" + rand_function(iter + 1);
     }
+
+    // Return: "(" + rand_function(iter + 1) + binary_temp + "[" + to_string(a) + ":" + to_string(b) + "]" + rand_function(iter + 1) + ")"
+    // where a,b are random upper and lower bounds
     else if (op_type == 3) {
         int binary_temp_gen = rand() % 2;
         string binary_temp = "";
@@ -92,7 +99,9 @@ string rand_function(int iter) {
             binary_temp = "R";
         }
 
+        // Random upperbound
         int a = rand() % INTERVAL_MAX;
+        // Random lowerbound
         int b = (rand() % min(DELTA, INTERVAL_MAX - a)) + a;
 
         return "(" + rand_function(iter + 1) + binary_temp + "[" + to_string(a) + ":" +
@@ -101,6 +110,11 @@ string rand_function(int iter) {
     return "";
 }
 
+
+/*
+* Writes FUNC_NUM number of random MLTL
+* formulas of iterative depth MAX_ITER to the file "formulas"
+*/ 
 void run_rand_function(string formulas) {
     ofstream myfile;
     myfile.open(formulas);
@@ -111,15 +125,24 @@ void run_rand_function(string formulas) {
     myfile.close();
 }
 
+
+/*
+* For each MLTL formula alpha in the 'formulas' file, simulate will:
+*   1. Calculate the regex for alpha in 'output' variable
+*   2. Simplify the regex for alpha using simplify() function (from utils.cpp file)
+*      and saves this to 'output' variable
+*   3. Writes the amount of time taken to calculate 'output' as-well-as
+*      number of characters in 'output' to 'out' file   
+*/
 void simulate(string formulas, string out) {
     ofstream outfile;
-    /*outfile.open("complexities.txt");
-    ifstream infile("random_mltl.txt");*/
     outfile.open(out);
     ifstream infile(formulas);
     string line;
     vector<string> output;
-    int iter = 1;
+    // Keeps track of which formula is currently being processed
+    // from 'formulas' file
+    int formula_num = 1;
     while (getline(infile, line)) {
         outfile << line.size();
         outfile << " ";
@@ -128,23 +151,34 @@ void simulate(string formulas, string out) {
         output = simplify(output, NUM_PROP_VAR);
         auto stop = high_resolution_clock::now();
         auto duration = duration_cast<microseconds>(stop - start);
+        // Write the amount of time to calculate 'output'
+        // into 'out' file
         outfile << duration.count();
         outfile << " ";
+        // Write the amount of characters in 'output'
+        // into 'out' file
         outfile << sum_of_characters(output);
         outfile << "\n";
-        cout << iter << " Wrote a line to complexities.txt\n";
-        ++iter;
+        cout << formula_num << " Wrote a line to complexities.txt\n";
+        ++formula_num;
     }
     infile.close();
     outfile.close();
 }
 
+
+/*
+* Driver function for simulation_main.cpp file
+*/
 int main() {
     string formulas = "random_mltl.txt";
     string out = "complexities.txt";
     srand(time(NULL));
+    // Write FUNC_NUM number of random MLTL formulas
+    // to "random_mltl.txt"
     run_rand_function(formulas);
     cout << "Wrote to random_mltl.txt\n";
+    // Write simulation results to "complexities.txt"
     simulate(formulas, out);
     cout << "Wrote to complexities.txt\n";
     return 0;

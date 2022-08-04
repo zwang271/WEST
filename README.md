@@ -1,10 +1,13 @@
 # WEST mLTL Truth Table Generator
 
-The WEST mLTL Truth Table Generator is a program that parses well-formed mLTL formulas and outputs the structure of the computations of these formulas and their substrings. Our recursive algorithm is based on the regular expressions of mLTL operators and runs with approximately doubly exponential space and time complexity.
+The WEST mLTL Truth Table Generator is a program that parses well-formed mLTL formulas and outputs the regular expression
+for the computations that satisfy the formula.
+Our recursive algorithm is based on the regular expressions of mLTL operators and runs with approximately doubly exponential space and time complexity.
 
 ## Usage
 
 After downloading and cloning this repository, use the commands
+
 ``` 
 $ cd 2022-Iowa-State-REU-Temporal-Logic-
 $ cd MLTL_reg
@@ -12,11 +15,193 @@ $ cd MLTL
 $ make west
 $ ./west
 ```
+
 Then, the user will be prompted:
+
 ```
 Please enter a MLTL formula.
 ```
-See the Grammar section below to inform input.
+
+See the Grammar section below for how to properly format inputted mLTL formulas.
+
+If the user enters a something other than a properly written mLTL formula,
+the WEST program will prompt the user to enter in another string:
+
+```
+Please enter a MLTL formula.
+asdasd
+Not a well formed formula!
+Please enter a MLTL formula.
+```
+
+If the input is a properly written mLTL formula, the WEST program will prompt the user whether they wish to
+simplify the output:
+
+```
+Please enter a MLTL formula.
+((G [1:1] p0 v G [1:1] ~p0) v (G [2:2] p0 v G [2:2] ~p0))
+Would you like to simplify output of reg? (y / n)
+```
+
+Answering yes will apply a simplifying function on the output of the WEST program. <br />
+This will lead to a nicer regular expression output, but at the expense of longer computation time. <br />
+
+After prompting the user whether they wish to simplify the output, the WEST will prompt the user
+whether they wish to generate the truth table.  Answering yes will print out the regular expressions for every subformula of the input formula,
+while no will simply output the regular expression for the input formula. <br />
+Note that if simplify is turned on, the WEST program will simply the output for every subformula,
+as well as the output for the input formula. <br />
+The simplify and truth table options are shown for the output of the following input formula: "((G [1:1] p0 v G [1:1] ~p0) v (G [2:2] p0 v G [2:2] ~p0))".<br />
+<br />
+No to simplify, No to truth table: <br />
+
+```
+Please enter a MLTL formula.
+((G [1:1] p0 v G [1:1] ~p0) v (G [2:2] p0 v G [2:2] ~p0))
+Would you like to simplify output of reg? (y / n)
+n
+Would you like to generate the truth table? (y / n)
+n
+NNF Formula: ((G[1:1]p0vG[1:1]~p0)v(G[2:2]p0vG[2:2]~p0))
+
+s,1
+s,0
+s,s,1
+s,s,0
+
+Finished computing.
+Size of vector: 4
+Number of characters: 16
+Please enter a MLTL formula.
+
+```
+
+<br />
+
+<br />
+Yes to simplify, No to truth table: <br />
+
+```
+Please enter a MLTL formula.
+((G [1:1] p0 v G [1:1] ~p0) v (G [2:2] p0 v G [2:2] ~p0))
+Would you like to simplify output of reg? (y / n)
+y
+Would you like to generate the truth table? (y / n)
+n
+NNF Formula: ((G[1:1]p0vG[1:1]~p0)v(G[2:2]p0vG[2:2]~p0))
+
+s,s,s
+
+Finished computing.
+Size of vector: 1
+Number of characters: 5
+Please enter a MLTL formula.
+
+```
+
+<br />
+
+<br />
+No to simplify, Yes to truth table: <br />
+
+```
+Please enter a MLTL formula.
+((G [1:1] p0 v G [1:1] ~p0) v (G [2:2] p0 v G [2:2] ~p0))
+Would you like to simplify output of reg? (y / n)
+n
+Would you like to generate the truth table? (y / n)
+y
+NNF Formula: ((G[1:1]p0vG[1:1]~p0)v(G[2:2]p0vG[2:2]~p0))
+
+Subformula: p0
+1
+
+Subformula: G[1:1]p0
+s,1
+
+Subformula: ~p0
+0
+
+Subformula: G[1:1]~p0
+s,0
+
+Subformula: (G[1:1]p0vG[1:1]~p0)
+s,1
+s,0
+
+Subformula: G[2:2]p0
+s,s,1
+
+Subformula: G[2:2]~p0
+s,s,0
+
+Subformula: (G[2:2]p0vG[2:2]~p0)
+s,s,1
+s,s,0
+
+((G[1:1]p0vG[1:1]~p0)v(G[2:2]p0vG[2:2]~p0))
+s,1
+s,0
+s,s,1
+s,s,0
+
+Finished computing.
+Size of vector: 4
+Number of characters: 16
+Please enter a MLTL formula.
+
+```
+
+<br />
+
+<br />
+Yes to simplify, Yes to truth table: <br />
+
+```
+Please enter a MLTL formula.
+((G [1:1] p0 v G [1:1] ~p0) v (G [2:2] p0 v G [2:2] ~p0))
+Would you like to simplify output of reg? (y / n)
+y
+Would you like to generate the truth table? (y / n)
+y
+NNF Formula: ((G[1:1]p0vG[1:1]~p0)v(G[2:2]p0vG[2:2]~p0))
+
+Subformula: p0
+1
+
+Subformula: G[1:1]p0
+s,1
+
+Subformula: ~p0
+0
+
+Subformula: G[1:1]~p0
+s,0
+
+Subformula: (G[1:1]p0vG[1:1]~p0)
+s,s
+
+Subformula: G[2:2]p0
+s,s,1
+
+Subformula: G[2:2]~p0
+s,s,0
+
+Subformula: (G[2:2]p0vG[2:2]~p0)
+s,s,s
+
+((G[1:1]p0vG[1:1]~p0)v(G[2:2]p0vG[2:2]~p0))
+s,s,s
+
+Finished computing.
+Size of vector: 1
+Number of characters: 5
+Please enter a MLTL formula.
+
+```
+
+<br />
+
 
 
 ## Grammar
@@ -33,14 +218,6 @@ And so on, where each consecutive variable is followed with the appropriate natu
 Let K be a well-formed formula, propositional variable, or propositional constant. <br />
 Formulas do not necessarily need to be in negation normal form, as the WEST program converts formulas into this form and generates the truth table for the formula's translated syntax. <br />
 The user does not necessarily need to start their propositional variables at p0. That is, a user can input a formula that, for example, includes only the propositional variables p3, p4, and p7. For faster runtime and less memory usage, however, it is not recommended to skip natural numbers like this. <br />
-
-After inputting a well-formed mLTL formula, the user will be prompted:
-```
-Please enter number of propositional variables.
-```
-Where the user will enter an appropriate integer. This number must be at least one more than the largest number attached to a propositional variable. For example, for a formula with the propositional variables p3, p4, and p7, the user must enter at least 8. If the user enters too small of a number, the program will crash. <br />
-
-If exclusively propositional constants are inputted, then the user should enter "1" for the number of propositional variables in order to generate a meaningful truth table. 
 
 ### **Unary Propositional Connectives**
 The only unary propositional connective is negation. <br />
@@ -106,8 +283,54 @@ Note that (p0=p1=p2) is not a valid input; therefore, if one wishes to generate 
 (p0=p1=p2=p3) can be inputted as (&[(p0=p1), (p1=p2), (p2=p3])
 ```
 
+
+Below is the context-free grammar that a well-formed mLTL formula must follow. This is optional reading, and only included for the interested reader.
+```
+Context-Free Grammar for a MLTL well-formed formula (wff).
+
+'True', 'False', 'Negation', 'Or', 'And', 'If and only if', and 'Implies' are represented by the symbols:
+    'T', '!', '~', 'v', '&', '=', and '>' respectively.
+    
+‘Eventually’, ‘Always’, ‘Until’, and ‘Weak Until’ are represented by the symbols:
+    ‘F’, ‘G’, ‘U’, and ‘W’ respectively.
+
+
+Alphabet = { ‘0’, ‘1’, …, ‘9’, ‘p’, ‘(‘, ‘)’, ‘[’, ‘]’, ‘:’, ‘,’ ,
+                       ‘T’, ‘!’,                
+                       ‘~’, ‘v’, ‘&’, ‘=’, ‘>’, 
+                       ‘F’, ‘G’, ‘U’, ‘R’ }
+
+
+Digit         ->  ‘0’ | ‘1’ | … |’9’
+Num           ->  Digit Num |  Digit
+Interval      ->  ‘[’  Num ‘:’ Num ‘]’  
+Prop_var      ->  ‘p’ Num
+
+Prop_cons         ->  ‘T’ | ‘!’
+Unary_Prop_conn   ->  ‘~’
+Binary_Prop_conn  ->  ‘v’ | ‘&’ | ‘=’ | ‘>’
+
+Assoc_Prop_conn   -> ‘v’ | ‘&’ | ‘=’
+Array_entry       -> Wff ‘,’ Array_entry  |  Wff 
+
+Unary_Temp_conn   ->  ‘F’ | ‘G’
+Binary_Temp_conn  ->  ‘U’ | ‘R’
+
+
+Wff   ->      Prop_var | Prop_cons
+                       | Unary_Prop_conn Wff
+	                     | Unary_Temp_conn  Interval  Wff
+	            
+                       | ‘(‘ Assoc_Prop_conn ‘[‘  Array_entry  ‘]’ ‘)’
+                       | ‘(‘ Wff Binary_Prop_conn Wff ‘)’
+                       | ‘(‘ Wff Binary_Temp_conn  Interval Wff ‘)    
+
+```
+
+
+
 ## Computations
-In a computation, "1" represents a true truth value, and "0" represents a false truth value; "s" represents an arbitrary truth value, i.e. true or false.
+In a computation, "1" represents a true truth value, and "0" represents a false truth value; "S" represents an arbitrary truth value, i.e. true or false.
 Time steps in a computation are separated by commas. The bit-strings at each time step represent the truth values of each propositional variable, in ascending order. <br />
 
 **Examples:** <br />
@@ -140,8 +363,8 @@ Here is how a user may generate the truth table for this formula:
 ```
 Please enter a MLTL formula.
 $ G[0:2] (&[(p0 > G[1:1]~p0), (~p0 > G[1:1]p0)])
-Please enter number of propositional variables.
-$ 1
+Would you like to simplify output of reg? (y / n)
+$ y
 Would you like to generate the truth table? (y / n)
 $ y
 NNF Formula: G[0:2](&[(p0>G[1:1]~p0),(~p0>G[1:1]p0)])
@@ -178,14 +401,9 @@ Finished computing.
 Size of vector: 2
 Number of characters: 14
 ```
-## Troubleshooting Guide
 
-### The Program Crashed
-Ensure that the number of propositional variables was large enough. The number must be at least one larger than the largest natural number attached to a propositional variable, not just the number of propositional variables in the formula. For example, the formula
-```
-(p1U[0:2]p3)
-```
-requires at least 4 propositional variables, not 2.
+
+## Troubleshooting Guide
 
 ### The Formula is not Well-Formed
 Ensure that all time intervals use ':' to separate the bounds and not a comma.  <br />
@@ -197,8 +415,6 @@ Ensure that all unary connectives do NOT have parentheses surrounding them.
 This project is part of the 2022 Iowa State REU with mentors [Kristin Yvonne Rozier](https://www.aere.iastate.edu/kyrozier/) and [Laura Gamboa Guzmán](https://sites.google.com/view/lpgamboa/home).
 
 WEST is an acronym for the last names of the undergraduate mathematicians who collaborated on this project: Zili Wang, Jenna Elwing, Jeremy Sorkin, and Chiara Travesset.
-
-INSERT LINK TO OUR PAPER HERE
 
 
 

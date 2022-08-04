@@ -121,14 +121,6 @@ string string_intersect(string w_1, string w_2, int n) {
 	w_1 = strip_char(w_1, ' ');
 	w_2 = strip_char(w_2, ' ');
 
-	//Commented-out legacy code
-
-	// w_1.erase(remove_if(w_1.begin(),
-	// 	w_1.end(), ::isspace), w_1.end());
-	// w_2.erase(remove_if(w_2.begin(),
-	// 	w_2.end(), ::isspace), w_2.end());
-
-
 	// If either w_1 or w_2 are empty, return empty.
 	if (w_1 == "" || w_2 == "") {
 		return "";
@@ -451,6 +443,21 @@ void remove(vector<T>& v, size_t index) {
 
 
 /*
+* Removes duplicate entries from a vector.
+* Mutates vector.
+*/
+template <typename T>
+void remove_duplicates(vector<T>* reg_alpha) {
+	// Convert vector to a set
+	set<T> s((*reg_alpha).begin(), (*reg_alpha).end());
+	// Assign set back to vector
+	(*reg_alpha).assign(s.begin(), s.end());
+
+	return;
+}
+
+
+/*
  * Input: Vector of disjoint computation strings v
  * Output: Simplifies strings in v pairwise as much as possible
  */
@@ -590,6 +597,7 @@ string common_left_string(vector<string> v) {
 	return left_common;
 }
 
+
 /*
  * Prints all computation strings in a vector v_actual.
  * n is number of propositional variables
@@ -634,6 +642,7 @@ int sum_of_characters(vector<string> v) {
 	return sum;
 }
 
+
 void print_subformulas(vector< tuple<string, vector<string>> > formulas, int n, string nnf) {
     for (int i = 0; i < formulas.size(); ++i) {
         //if the substring is present in the nnf, print it out
@@ -646,6 +655,48 @@ void print_subformulas(vector< tuple<string, vector<string>> > formulas, int n, 
             cout << endl;
         }
     }
+}
+
+
+bool check_vectors_equal(vector<string> *v1, vector<string> *v2, int n) {
+    if (v1->size() != v2->size()) {
+        return false;
+    }
+    
+    
+    // Convert vector to a set
+    set<string> s1((*v1).begin(), (*v1).end());
+    // Assign set back to vector
+    (*v1).assign(s1.begin(), s1.end());
+    
+    // Convert vector to a set
+    set<string> s2((*v2).begin(), (*v2).end());
+    // Assign set back to vector
+    (*v2).assign(s2.begin(), s2.end());
+    
+    //get max length between both vectors
+    
+    
+    int v1_length = int((*v1)[0].length());
+    int v2_length = int((*v2)[0].length());
+    
+	//Pad shorter vector to max length,
+	//call pad individually with 2 parameters
+    if (v1_length > v2_length) {
+        *v2 = pad(*v2, n, v1_length);
+    }
+    else if (v1_length < v2_length) {
+        *v1 = pad(*v1, n, v2_length);
+    }
+    
+    //compare each element
+    for (int i = 0; i < v1->size(); ++i) {
+        if ((*v1)[i] != (*v2)[i]) {
+            return false;
+        }
+    }
+    
+    return true;
 }
 
 
@@ -682,53 +733,6 @@ int get_n(string wff) {
 	return n + 1;
 }
 
-bool check_vectors_equal(vector<string> *v1, vector<string> *v2, int n) {
-    if (v1->size() != v2->size()) {
-        return false;
-    }
-    
-    
-    // Convert vector to a set
-    set<string> s1((*v1).begin(), (*v1).end());
-    // Assign set back to vector
-    (*v1).assign(s1.begin(), s1.end());
-    
-    // Convert vector to a set
-    set<string> s2((*v2).begin(), (*v2).end());
-    // Assign set back to vector
-    (*v2).assign(s2.begin(), s2.end());
-    
-    //get max length between both vectors
-    
-    
-    int v1_length = int((*v1)[0].length());
-    int v2_length = int((*v2)[0].length());
-    //cal pad individually with 2 paramen=ters
-    
-    if (v1_length > v2_length) {
-        *v2 = pad(*v2, n, v1_length);
-    }
-    else if (v1_length < v2_length) {
-        *v1 = pad(*v1, n, v2_length);
-    }
-//
-//    //pad shorter vector to max length
-//    if (v1_length != v2_length) {
-//        if (shortest_v == *v1) *v1 = pad(shortest_v, n, max_length);
-//
-//        else *v2 = pad(shortest_v, n, max_length);
-//    }
-    
-    //compare each element
-    for (int i = 0; i < v1->size(); ++i) {
-        if ((*v1)[i] != (*v2)[i]) {
-            return false;
-        }
-    }
-    
-    return true;
-}
-
 
 /*
 * Check two files are equal line by line
@@ -745,7 +749,6 @@ bool compare_files(string f1, string f2) {
 		getline(file1, string1);
 		getline(file2, string2);
 		j++;
-		//cout << (string1) << "\t" << (string2) << endl;
 		if (string1 != string2) {
 			cout << j << "-th strings are not equal in " << f1 << "\n";
 			cout << "   " << string1 << "\n";
@@ -830,21 +833,6 @@ vector<string> expand_string(string w) {
 
 
 	return v;
-}
-
-
-/*
-* Removes duplicate entries from a vector.
-* Mutates vector.
-*/
-template <typename T>
-void remove_duplicates(vector<T>* reg_alpha) {
-	// Convert vector to a set
-	set<T> s((*reg_alpha).begin(), (*reg_alpha).end());
-	// Assign set back to vector
-	(*reg_alpha).assign(s.begin(), s.end());
-
-	return;
 }
 
 
@@ -937,7 +925,3 @@ bool check_simp(vector<string> v) {
 
 	return true; 
 }
-
-
-
-
