@@ -4,7 +4,8 @@
 #include "reg.h"
 #include <iostream>
 
-
+// Vector containing all sub-nnfs and their regexs
+// for a given nnf input
 vector<tuple<string, vector<string>>> FORMULAS;
 
 
@@ -279,16 +280,26 @@ vector<string> reg_R(vector<string> alpha, vector<string> beta, int a, int b, in
 }
 
 
+/*
+* Returns the global variable FORMULAS of sub-nnfs and their regexs 
+*/
 vector<tuple<string, vector<string>>> get_formulas() {
     return FORMULAS;
 }
 
+
+/*
+* Clears the global variable FORMULAS back to the empty vector
+*/
 void clear_formulas()
 {
 	FORMULAS.clear();
 }
 
 
+/*
+* Determines whether a given formula is in the vector regex
+*/
 bool find_formula(vector<tuple<string, vector<string>>> regex, string str) {
     for (int i = 0; i < regex.size(); ++i) {
         if (get<0>(regex[i]) == str) {
@@ -299,10 +310,17 @@ bool find_formula(vector<tuple<string, vector<string>>> regex, string str) {
 }
 
 
-void push_back_formulas(string s, vector<string> v, int n) {
+/*
+* If s is not in FORMULAS, append it to FORMULAS vector.
+* Else, do nothing.
+*/
+void push_back_formulas(string s, vector<string> v, int n, bool simp_flag) {
     if (!find_formula(FORMULAS, s)) {
-		vector<string> simplify_v = simplify(v, n);
-        tuple<string, vector<string>> tuple = make_tuple(s, simplify_v);
+		// Determines whether user wants to simplify regex of subformula
+		if (simp_flag){
+			v = simplify(v, n);
+		}
+		tuple<string, vector<string>> tuple = make_tuple(s, v);
         FORMULAS.push_back(tuple);
     }
 }
@@ -329,7 +347,7 @@ vector<string> reg(string nnf, int n, bool sub, bool simp) {
 
 		if (sub) {
 			vector<string> reg_nnf = reg_prop_var(nnf, n);
-			push_back_formulas(nnf, reg_nnf, n);
+			push_back_formulas(nnf, reg_nnf, n, simp);
 			return reg_nnf;
 		}
 
@@ -341,7 +359,7 @@ vector<string> reg(string nnf, int n, bool sub, bool simp) {
 
 		if (sub) {
 			vector<string> reg_nnf = reg_prop_cons(nnf, n);
-			push_back_formulas(nnf, reg_nnf, n);
+			push_back_formulas(nnf, reg_nnf, n, simp);
 			return reg_nnf;
 		}
 
@@ -368,7 +386,7 @@ vector<string> reg(string nnf, int n, bool sub, bool simp) {
 
 				if (sub) {
 					vector<string> reg_nnf = {};
-					push_back_formulas(nnf, reg_nnf, n);
+					push_back_formulas(nnf, reg_nnf, n, simp);
 					return reg_nnf;
 				}
 
@@ -381,7 +399,7 @@ vector<string> reg(string nnf, int n, bool sub, bool simp) {
 
 				if (sub) {
 					vector<string> reg_nnf = { ret_string }; 
-					push_back_formulas(nnf, reg_nnf, n);
+					push_back_formulas(nnf, reg_nnf, n, simp);
 					return reg_nnf;
 				}
 
@@ -394,7 +412,7 @@ vector<string> reg(string nnf, int n, bool sub, bool simp) {
 
 			if (sub) {
 				vector<string> reg_nnf = reg_F(reg_alpha, a, b, n, simp);
-				push_back_formulas(nnf, reg_nnf, n);
+				push_back_formulas(nnf, reg_nnf, n, simp);
 				return reg_nnf;
 			}
 
@@ -406,7 +424,7 @@ vector<string> reg(string nnf, int n, bool sub, bool simp) {
 			
 			if (sub) {
 				vector<string> reg_nnf = reg_G(reg_alpha, a, b, n, simp);
-				push_back_formulas(nnf, reg_nnf, n);
+				push_back_formulas(nnf, reg_nnf, n, simp);
 				return reg_nnf;
 			}
 
@@ -446,7 +464,7 @@ vector<string> reg(string nnf, int n, bool sub, bool simp) {
 
 		if (sub) {
 			vector<string> reg_nnf = reg(equiv_formula, n, sub, simp);
-			push_back_formulas(nnf, reg_nnf, n);
+			push_back_formulas(nnf, reg_nnf, n, simp);
 			return reg_nnf;
 		}
 
@@ -468,7 +486,7 @@ vector<string> reg(string nnf, int n, bool sub, bool simp) {
 
 			if (sub) {
 				vector<string> reg_nnf = set_intersect(reg_alpha, reg_beta, n, simp);
-				push_back_formulas(nnf, reg_nnf, n);
+				push_back_formulas(nnf, reg_nnf, n, simp);
 				return reg_nnf;
 			}
 
@@ -479,7 +497,7 @@ vector<string> reg(string nnf, int n, bool sub, bool simp) {
 
 			if (sub) {
 				vector<string> reg_nnf = join(reg_alpha, reg_beta, n, simp);
-				push_back_formulas(nnf, reg_nnf, n);
+				push_back_formulas(nnf, reg_nnf, n, simp);
 				return reg_nnf;
 			}
 
@@ -506,13 +524,13 @@ vector<string> reg(string nnf, int n, bool sub, bool simp) {
                     }
                     //string s_comp = pad_to_length("", comp_len, n);
                     v.push_back(comp);
-                    push_back_formulas(nnf, v, n);
+                    push_back_formulas(nnf, v, n, simp);
                     return v;
 
                 }
                 else {
 					vector<string> reg_nnf = reg(equiv_nnf_formula, n, sub, simp);
-					push_back_formulas(nnf, reg_nnf, n);
+					push_back_formulas(nnf, reg_nnf, n, simp);
 					return reg_nnf;
                }
 			}
@@ -527,7 +545,7 @@ vector<string> reg(string nnf, int n, bool sub, bool simp) {
 
 			if (sub) {
 				vector<string> reg_nnf = reg(equiv_nnf_formula, n, sub, simp);
-				push_back_formulas(nnf, reg_nnf, n);
+				push_back_formulas(nnf, reg_nnf, n, simp);
 				return reg_nnf;
 			}
 
@@ -552,7 +570,7 @@ vector<string> reg(string nnf, int n, bool sub, bool simp) {
 
 			if (sub) {
 				vector<string> reg_nnf = reg_U(reg_alpha, reg_beta, a, b, n, simp);
-				push_back_formulas(nnf, reg_nnf, n);
+				push_back_formulas(nnf, reg_nnf, n, simp);
 				return reg_nnf;
 			}
 
@@ -562,7 +580,7 @@ vector<string> reg(string nnf, int n, bool sub, bool simp) {
 
 			if (sub) {
 				vector<string> reg_nnf = reg_R(reg_alpha, reg_beta, a, b, n, simp);
-				push_back_formulas(nnf, reg_nnf, n);
+				push_back_formulas(nnf, reg_nnf, n, simp);
 				return reg_nnf;
 			}
 

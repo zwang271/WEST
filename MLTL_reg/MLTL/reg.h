@@ -9,14 +9,14 @@
  * Output: Computes pairwise string_intersect between all
  *		  computation strings in V1 and V2
  */
-vector<string> set_intersect(vector<string> v1, vector<string> v2, int n, bool simp = true);
+vector<string> set_intersect(vector<string> v1, vector<string> v2, int n, bool simp);
 
 
 /*
  * Input: Vectors A and B of computation strings
  * Output: Vector A concatenated with B
  */
-vector<string> join(vector<string> A, vector<string> B, int n, bool simp = true);
+vector<string> join(vector<string> A, vector<string> B, int n, bool simp);
 
 
 /*
@@ -80,6 +80,31 @@ vector<string> reg_R(vector<string> alpha, vector<string> beta, int a, int b, in
 
 
 /*
+* Returns the global variable FORMULAS of sub-nnfs and their regexs 
+*/
+vector< tuple< string, vector<string> > > get_formulas();
+
+
+/*
+* Clears the global variable FORMULAS back to the empty vector
+*/
+void clear_formulas();
+
+
+/*
+* Determines whether a given formula is in the vector regex
+*/
+bool find_formula(vector<tuple<string, vector<string> > > v, string s);
+
+
+/*
+* If s is not in FORMULAS, append it to FORMULAS vector.
+* Else, do nothing.
+*/
+void push_back_formulas(string s, vector<string> v, int n, bool simp_flag);
+
+
+/*
  * Nnf ->  ?(~) Prop_var | Prop_cons
  *	                     | Unary_Temp_conn  Interval  Nnf
  *
@@ -90,18 +115,4 @@ vector<string> reg_R(vector<string> alpha, vector<string> beta, int a, int b, in
  *     n is number of propositional variables
  * Output: Vector of computation strings satisfying the formula
  */
-vector<string> reg(string nnf, int n, bool sub = true, bool simp = true);
-
-
-vector< tuple< string, vector<string> > > get_formulas();
-
-
-void clear_formulas();
-
-
-bool find_formula(vector<tuple<string, vector<string> > > v, string s);
-
-
-void push_back_formulas(string s, vector<string> v, int n);
-
-
+vector<string> reg(string nnf, int n, bool sub, bool simp);
