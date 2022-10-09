@@ -1,0 +1,2155 @@
+\documentclass[runningheads]{llncs}
+
+%KYR: need to ensure included packages don't interfere with LNCS style
+%\usepackage[utf8]{inputenc}
+%\usepackage{amsthm, amsmath, amssymb}
+\usepackage{amsfonts} %mathbb
+\usepackage{amsmath} %hdots
+\usepackage{mathabx} %vDash
+\usepackage{mathrsfs} %mathscr
+\usepackage{blkarray} %for blockarray
+%\usepackage{textcomp}
+%\usepackage{xcolor}
+%\usepackage{soul}
+%\usepackage{ dsfont }
+\usepackage{hyperref}
+\usepackage{cancel} %for \cancel
+\usepackage{algorithm} %for algorithm environment
+\usepackage{algcompatible}
+\usepackage[noend]{algpseudocode}
+%\usepackage{changepage}%http://ctan.org/pkg/changepage
+\usepackage{graphicx} %for includegraphics
+\usepackage{tikz}
+\usepackage{lscape} %for landscape orientation
+%\usepackage{float} %for figures
+\usetikzlibrary{shapes.misc, positioning}
+\usetikzlibrary{arrows.meta}
+\tikzset{>={Latex[width=2mm,length=2mm]}}
+
+%% \hypersetup{
+%%     colorlinks=true,
+%%     linkcolor=blue,
+%%     filecolor=magenta,
+%%     urlcolor=red,
+%%     citecolor=teal
+%% }
+
+%LNCS:
+% If you use the hyperref package, please uncomment the following line
+% to display URLs in blue roman font according to Springer's eBook style:
+\renewcommand\UrlFont{\color{blue}\rmfamily}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Spacing Magic
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage{pslatex} % DON'T REMOVE!  BUYS US HALF A PAGE OR MORE!!!!!
+%Use only in case of emergencies: \linespread{0.98} %KYR: make lines spaces .99 instead of 1 to save space
+\usepackage{times} %KYR: substitute for pslatex that does not mess up math :)
+
+\usepackage{enumitem}
+\setlist[itemize]{noitemsep, nolistsep, topsep=0pt, partopsep={0pt}} 
+
+%CAUTION: dirty trick; questionably allowed... use ONLY in case of emergencies!
+% \linespread{0.99}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Figure Magic
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage{epsfig}
+\usepackage{float} % put figure in minipage
+%\usepackage{framed}
+%\usepackage{subfigure}
+
+% diagonal line in the table
+%\usepackage{diagbox}
+
+\usepackage{enumitem}
+\newlist{Properties}{enumerate}{2}
+\setlist[Properties]{label=Property \arabic*.,itemindent=*}
+
+%\usepackage{tikz}
+%\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+%            \node[shape=circle,draw,inner sep=0.5pt] (char) {#1};}}
+%
+%\newcommand{\VarPhiSequence}{\ensuremath{\langle T_{\varphi} \rangle}\xspace}
+%\newcommand{\ExSeq}[1]{\ensuremath{\langle T_{#1} \rangle}\xspace}
+%\newcommand{\ExSeqElement}[2]{\ensuremath{\langle T^{#1}_{#2} \rangle}\xspace}
+%\newcommand{\IN}{\mathbb{N}}  
+
+% draw box around text
+\usepackage{tcolorbox} 
+
+\renewcommand{\topfraction}{.99} %figures can take up at most 99% of the page before being alone
+\renewcommand{\bottomfraction}{.99} %figures can take up at most 99% of the page before being alone
+\renewcommand{\textfraction}{.01} %at most this % of page will be text before making figure-only page
+\addtolength{\textfloatsep}{-5mm}
+\addtolength{\floatsep}{-5mm}
+\addtolength{\intextsep}{-5mm}
+\addtolength{\abovecaptionskip}{-3mm}
+\addtolength{\belowcaptionskip}{-2mm}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\renewcommand{\phi}{\varphi}
+
+%\theoremstyle{definition}
+%\newtheorem{proposition}{Proposition}
+%\newtheorem{remark}{Remark}
+%\newtheorem{example}{Example}
+%\newtheorem{definition}{Definition}
+%\newtheorem{theorem}{Theorem}
+%\newtheorem{lemma}{Lemma}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\def\nuXmv{{\sf nuXmv}\xspace}
+
+\begin{document}
+%
+%\title{Contribution Title\thanks{Supported by organization x.}}
+\title{Mission-time LTL (MLTL) Formula Validation Via Regular Expressions\thanks{Work supported in part by [ommitted for blind review]}}
+%
+\titlerunning{Abbreviated paper title}
+% If the paper title is too long for the running head, you can set
+% an abbreviated paper title here
+%
+%\author{First Author\inst{1}\orcidID{0000-1111-2222-3333} \and
+%Second Author\inst{2,3}\orcidID{1111-2222-3333-4444} \and
+%Third Author\inst{3}\orcidID{2222--3333-4444-5555}}
+%\author{Jenna Elwing\thanks{University of Michigan, Ann Arbor} \and Laura Gamboa Guzmán\thanks{Iowa State University} \and Jeremy Sorkin\thanks{The Ohio State University} \and Chiara Travesset\thanks{Purdue University} \and Zili Wang\thanks{University of California, Berkeley} \and Kristin Y. Rozier\footnotemark[2]}
+%
+%\authorrunning{F. Author et al.}
+% First names are abbreviated in the running head.
+% If there are more than two authors, 'et al.' is used.
+%
+%\institute{Princeton University, Princeton NJ 08544, USA \and
+%Springer Heidelberg, Tiergartenstr. 17, 69121 Heidelberg, Germany
+%\email{lncs@springer.com}\\
+%\url{http://www.springer.com/gp/computer-science/lncs} \and
+%ABC Institute, Rupert-Karls-University Heidelberg, Heidelberg, Germany\\
+%\email{\{abc,lncs\}@uni-heidelberg.de}}
+%
+\maketitle              % typeset the header of the contribution
+%
+
+
+
+
+
+\begin{abstract}
+        \noindent Mission-time Linear Temporal Logic (MLTL) is an extension of propositional logic that allows temporal quantifiers over finite discrete intervals. A computation is a finite sequence of truth assignments. In this paper, we use regular expressions to describe the structure of the computations that satisfy a given MLTL formula. We prove soundness and completeness of our structure. We also give an implemented algorithm (the WEST program) and analyze its complexity both theoretically and experimentally. Finally, we generate a test suite using control flow diagrams to robustly test the code.
+
+\keywords{First keyword  \and Second keyword \and Another keyword.}
+\end{abstract}
+
+\section{Introduction}
+
+System specifications, such as aerospace operational concepts, often utilize timelines to express critical requirements. We can cite examples of this from NASA's Automated Airspace Concept \cite{EH10}, the U.~S.~Navy's Aircraft Carrier Deck Scheduler \cite{RCRBS11}, the JAXA-NASA Global Precipitation Measurement (GPM) Observatory \cite{GPM}, and many others. Formal methods provide continuously-advancing tools and techniques to rigourously analyze timelines expressed in the form of temporal logic requirements, from early design-time model checking and theorem proving to on-board runtime verification. The U.~S.~Federal Aviation Administration (FAA) even advocates the use of formal methods for flight certification of these critical systems \cite{DO-178C,DO-254,DO-333}. Yet, a significant hurdle to the use of formal methods remains: how to convincingly demonstrate to the humans in the loop, from system designers to certifiers, that the analyzed formulas truly represent the system requirements \cite{Roz16}. We creatively address this validation question using regular expressions and truth tables.
+
+NASA, for example, has developed several tools that operate over temporal logic requirements, such as FRET\cite{GMRPSS20}, R2U2\cite{RS17}, and a PVS library \cite{CTGPD22} for the logic MLTL (Mission-time Linear Temporal Logic) \cite{RRS14,LVR22}. MLTL was the logic used recently in NASA's Robonaut2 verification project \cite{KZJZR20} and is being used currently for both design-time and runtime verification of the NASA Lunar Gateway Vehicle System Manager \cite{DBR21}. Other recent verification %verification-for-certification
+efforts involving MLTL include a JAXA autonomous satellite \cite{JAXA}, a UAS Traffic Management (UTM) system involving Collins and Mosaic Aerospace \cite{HCHJR21}, a sounding rocket \cite{HLR21}, and multiple small satellites \cite{LLR21,LJBHCLR22,AJR22}. However, all of these successful verificaiton efforts were carried out by groups specializing in formal methods research. To enable broader application of formal verification, and adoption across larger projects, we critically need better validation, e.g., so that analysis over MLTL-specified requirements can tranparently contribute to flight certification. 
+
+Many specifications from case studies, in logics such as MTL \cite{AH90} and STL \cite{MN04} fall within the MLTL fragments of these logics. 
+Variations on Metric Temporal Logic (MTL) such as MLTL grow increasingly popular, in part due to their comparatively tractable complexity-to-expressibility trade-offs \cite{OW08}.
+The model checker {\sf nuXmv} encodes a popular subset of MLTL for use in symbolic model checking \cite{nuXmv-v1.1.0}.%, where the $\Box$ and $\Diamond$ operators of an \texttt{LTLSPEC} can have integer bounds \cite{nuXmv-v1.1.0}, though bounds cannot be placed on the $\U$ or $\V$ (the Release operator of \nuxmv) operators.
+
+We show that our contributions not only fill a critical gap in temporal logic valiation but also directly connect to parallel developments to enable better temporal logic formula analysis, benchmark generation, proof generation (e.g., in ACL2), and synthesis of verified C code from temporal logic behavior descriptions. 
+
+%% Mission-time Linear Temporal Logic (MLTL) extends propositional logic by including temporal operators over finite discrete intervals. It is useful for writing specifications for spacecraft, rovers, aircraft, and other robotic missions \cite{LVR22}. In standard propositional logic, a convenient way to check that a formula captures a specification correctly is to write out its truth table and check that the formula behaves in the desired manner. The same strategy can be employed for MLTL, but the truth tables increase in size at a much faster rate, making them too large to be useful. For instance, an MLTL formula with just two propositional variables and 10 time steps would require $\left(2^{10}\right)^2 = 2^{20}$ rows. This is often called the ``State Explosion Problem" \cite{stateexp}.
+
+%% In this paper, we offer a remedy to the state explosion problem by using regular expressions to describe the set of all computations satisfying a MLTL formula, which significantly reduces the space needed to express the computations. We implement these regular expressions into the WEST program, which allows the user to input a MLTL formula and obtain the satisfying computations. The WEST program can be found on its \href{https://github.com/zwang271/2022-Iowa-State-REU-Temporal-Logic-.git}{Github} repository.
+
+The structure of the paper is as follows. In section \ref{prereq}, we build on the semantics of MLTL to define a computation, and its bit string representation. % of a computation that is used throughout the paper and the WEST program. Finally, we describe negation normal form (NNF), a standardized way to express MLTL formulas. By writing the MLTL formulas in NNF, the WEST program is able to run much more efficiently.
+%
+In section \ref{regex}, we recursively define regular expressions encapsulating the satisfying computations of MLTL formulas and prove that our new translation algorithm is both sound and complete. In addition, we provide a calculation for the minimum computation length required to describe all the satisfying computations of a MLTL formula that slightly improves upon existing calculations in the literature. Finally, we show an application of the regular expressions of the satisfying computations by using them to prove an MLTL theorem. In particular, we show that $\alpha\mathcal{U}_{[a,b]}(\alpha\mathcal{U}_{[0,c]}\beta) = \alpha\mathcal{U}_{[a,b+c]}\beta$ and $\alpha\mathcal{R}_{[a,b]}(\alpha\mathcal{R}_{[0,c]}\beta) = \alpha\mathcal{R}_{[a,b+c]}\beta$.
+%
+We introduce a new tool, called WEST, that implements automated validation in section \ref{specs} %, we give the WEST code specifications. In particular, we describe the grammar that the program follows and give an overview of the important functions in the program.
+%
+calculate its space and time complexity, both theoretically and experimentally, in section \ref{complex}. We show that the theoretical worst-case complexity for both space and time is doubly exponential, but that the average case fares far better.
+%
+Section \ref{test} proves correctness of the algorithms and provides a test suite to show correctness of implementation with high confidence. Intelligent fuzzing techniques contribute to test suite construction from a state diagram representing the control flow of the algorithm. We also verify the correctness of outputs of the WEST program against a naive brute force implementation.
+%
+Section \ref{simpsection}, provides a combinatorial theorem for simplifying certain outputs of the WEST program. Formulas of the form $\alpha \equiv \beta$ to check for equivalence between two expressions can lead to outputs that are non-trivial to simplify. Section \ref{Conclusion} discusses impacts and future work. 
+
+
+\section{Mission-time LTL and Regular Expressions} \label{prereq}
+\subsection{Mission-time Linear Temporal Logic}
+Mission-time Linear Temporal Logic (MLTL) \cite{LVR22} is a finite variation of Linear Temporal Logic (LTL) \cite{bmc} over bounded discrete intervals. Instead of taking the LTL operators over an infinite time line, we restrict the operators to a finite time line, taking each temporal operator over a closed interval $[a,b]$ where $a,b \in \mathbb{N}$ and $0 \leq a \leq b$. The syntax of an MLTL formula over a set of atomic propositions $\mathcal{AP}$, where $p \in \mathcal{AP}$ is a propositional variable, is given by the following BNF grammar:
+$$\alpha := \top \ | \ \bot \ | \ p \ | \ \neg \alpha \ | \ \alpha \land \alpha \ | \ \alpha \lor \alpha \ | \ \mathcal{F}_{[a,b]} \alpha \ | \ \mathcal{G}_{[a,b]} \alpha \ | \ \alpha \mathcal{U}_{[a,b]} \alpha \ | \ \alpha \mathcal{R}_{[a,b]} \alpha \footnote{For simplicity, we do not include parentheses in the grammar, but they may used as needed. The WEST program uses parentheses (see section \ref{specs} for more details).}$$
+
+\begin{definition}[\emph{Computation}]
+A computation of length $m$ is a sequence $\{\pi[i]\}_{i = 0}^{m-1}$ of sets of propositional variables, $\pi[i] \subseteq \mathcal{AP}$, where the $i$th set holds the propositional variables that are satisfied at the $i$th time step. That is, a propositional variable $p$ is true at time step $i$ if and only if $p \in \pi[i]$. We denote the suffix of $\pi$ starting at $i$ (including $i$) by $\pi_i$. Note that $\pi_0 = \pi$.
+\end{definition}
+
+We use a bit string representation for our computations. This representation is easy to describe using regular expressions and is convenient to code.
+
+\begin{definition}[\emph{Bit String Representation}]
+Let $p_0, p_1, ..., p_{n-1}$ be propositional variables for a fixed $n \in \mathbb{N}$. We represent a (finite) computation $\pi$ of length $m \in \mathbb{N}$ using a bit string representation as follows:
+\begin{itemize}
+    \item We represent a true assignment to a propositional variable by $1$ and a false assignment by $0$.
+    \item For each time step $j \in [0,1,\hdots,m-1]$, we have a bit string of length $n$ where the $k$-th bit represents the truth assignment of the proposition $p_{k-1}$.
+    \item We separate each time step by a comma and order the time steps in chronological order.
+\end{itemize}
+\end{definition}
+
+\noindent We write that a computation $\pi$ is equal to its bit string representation. An example is given below.
+
+\begin{example}
+Suppose $n=2$. The bit string representation $\pi = 10, 01$ means that $p_0$ is true in the first time step and false in the second one, and that $p_1$ is false in the first time step and true in the second one.
+\end{example}
+
+\subsubsection{Semantics}
+We say a computation $\pi$ as satisfies a given MLTL formula $\alpha$, written $\pi \vDash \alpha$, when\footnote{In MLTL, we do not include the Next ($\chi$) operator since $\mathcal{G}_{[1,1]}$ is equivalent to it.}:
+\begin{align}
+    &\pi \vDash p \text{ iff } p \in \pi[0]\\
+    &\pi \vDash \neg \alpha \text{ iff } \pi \nvDash \alpha\\
+    &\pi \vDash \alpha \land \beta \text{ iff } \pi \vDash \alpha \text{ and } \pi \vDash \beta\\
+    &\pi \vDash \alpha \lor \beta \text{ iff } \pi \vDash \alpha \text{ or } \pi \vDash \beta\\
+    &\pi \vDash \mathcal{F}_{[a,b]}\alpha \text{ iff } |\pi| > a \text{ and } \exists i \in [a,b] \text{ such that } \pi_i \vDash \alpha\\
+    &\pi \vDash \mathcal{G}_{[a,b]}\alpha \text{ iff } |\pi| \leq a \text{ or } \forall i \in [a,b] \ \pi_i \vDash \alpha\\
+    &\pi \vDash \alpha \ \mathcal{U}_{[a,b]} \beta \text{ iff } |\pi| > a \text{ and } \exists i \in [a,b] \text{ such that } \pi_i \vDash \beta \text{ and }\\
+    & \indent \forall j \in [a, i-1]\ \pi_j \vDash \alpha \nonumber \\
+    &\pi \vDash \alpha \ \mathcal{R}_{[a,b]} \beta \text{ iff } |\pi| \leq a \text{ or } \forall i \in [a,b] \ \pi_i \vDash \beta \text{ or }\\
+    & \indent \exists j \in [a,b-1] \text{ such that } \pi_j \vDash \alpha \text{ and } \forall a \leq k \leq j \ \pi_k \vDash \beta \nonumber
+\end{align}
+
+The reader may observe that in this paper, we define Release independently from Until. 
+It is not uncommon for Release instead to be defined as the dual of Until \cite{bmc} \cite{LVR22}. 
+These two definitions are in fact equivalent, and the full proof is provided in Appendix \ref{duality appendix}.
+
+\subsection{Negation Normal Form}
+All MLTL formulas can be written in negation normal form (NNF) \cite{bmc}. We require MLTL formulas to be written in NNF to generate the satisfying computations using regular expressions. Without this requirement, generating the satisfying computations requires taking complements of the languages described by regular expressions, which is a very expensive operation.
+\begin{definition}[\emph{Negation Normal Form \cite{nnf}}] 
+An MLTL formula $\alpha$ is in \emph{negation normal form} if
+\begin{itemize}
+    \item Any negation symbols appear only in front of propositional variables.
+    \item We allow only the operations $\top$, $\bot$, $\land$, and $\lor$ from propositional logic.
+    \item We allow only the operations $\mathcal{U}$ and $\mathcal{R}$ from MLTL.
+\end{itemize}
+\end{definition}
+
+In the literature, NNF does not include the Finally and Global operators, as $\bot \mathcal{R}_{[a,b]} \alpha = \mathcal{G}_{[a,b]} \alpha$ and $\top \mathcal{U}_{[a,b]} \alpha = \mathcal{F}_{[a,b]} \alpha$. In this paper, we stray from the literature and include Finally and Global as part of NNF, as this is far more natural for writing our regular expressions that describe the satisfying computations of a MLTL formula.
+
+\subsection{Regular Expressions}
+  We use regular expressions (regex) to describe the form of the satisfying computations. 
+\begin{definition}[\emph{Regular Expression \cite{sipser}}]
+A \emph{regular expression} is a string that describes the form of a language. 
+Let $\Sigma$ denote a finite alphabet. The empty set $\emptyset$, the empty string $\epsilon = ``"$, and any character in $\Sigma$ are constants defined to be a regular expression. 
+Beyond that, we define regular expressions recursively. 
+Suppose $R$ and $T$ are regular expressions. 
+Then the following operations generate regular expressions:
+\begin{itemize}
+    \item \emph{(Concatenation)} Denoted $RT$, this operation describes the set of strings obtained by concatenating any string generated by $R$ and any string generated by $T$ in that order.
+    \item \emph{(Alternation)} Denoted $R | T$, this operation describes the set union of the strings generated by $R$ and $T$.
+    \item \emph{(Kleene Star)} Denoted $R^*$, this operation describes the set of all strings made by concatenating any finite number (including zero) of strings described by $R$ together.
+    \item $R^i$ denotes regular expression consisting of $R$ repeated $i$ times for $i \geq 0$. $R^0 = \epsilon$.
+\end{itemize}
+\end{definition}
+
+\noindent We provide an example of each operation.
+\begin{example}
+Let $R$ describe \{`$a$', `$b$'\} and $T$ describe \{ `$c$', `$d$' \}.
+\begin{itemize}
+    \item $RT$ describes the set \{ `$ac$', `$ad$', `$bc$', `$bd$' \}.
+    \item $R | T$ describes the set \{`$a$', `$b$', `$c$', `$d$' \}.
+    \item $R^*$ describes the set \{ $\epsilon$, `$a$', `$b$', `$aa$', `$bb$', `$ab$', `$ba$', `$aaa$', `$aba$',... \}.
+    \item $R^2$ describes the set \{ `$aa$', `$bb$', `$ab$', `$ba$' \}.
+\end{itemize}
+\end{example}
+
+\noindent We provide examples of different regex and possible combinations of the above operations.
+\begin{example}
+Let `$a$', `$b$', and `$c$' denote characters in a finite alphabet.
+\begin{itemize}
+    \item $ab^*$ describes the set \{ `$a$', `$ab$', `$abb$', `$abbb$', ... \}.
+    \item $a^*|b$ describes the set \{ $\epsilon$, `$b$', `$a$', `$aa$', `$aaa$', ...\}.
+    \item $a(b^*)c$ describes the set \{ `$ac$', `$abc$', `$abbc$', `$abbbc$', ... \}.
+    \item $(a | b)^3$ describes the set \{ `$aaa$', `$aba$', `$aab$', `$abb$', `$bbb$', ... \}.
+\end{itemize}
+\end{example}
+
+\section{MLTL Regular Expressions} \label{regex}
+  We introduce the following additional notation for our regular expressions that describe the satisfying computations of a MLTL formula:
+\begin{definition}[\emph{Additional Notation}]
+Let $R$ and $T$ denote regular expressions, and let $S$ be an abbreviation for $(0 \ | \ 1)$. Let fixed $n \in \mathbb{N}$ denote the number of propositional variables in a MLTL formula. We use the following operations in the next section to describe the form of satisfying computations of the formula in the bit string representation:
+\begin{itemize}
+    \item $R \lor T$ denotes alternation. We use this notation to match our notation for set intersection defined below.
+    \item Pad($R$, $T$) determines which regular expression is longer and concatenate $(,S^n)$ repeatedly to the end of the shorter regular expression until the two regular expressions are the same length. Note that in the bit string representation, $(,S^n)$, denotes a time step in which the truth value of all $n$ propositional variables does not matter.
+    \item For $R \land T$, we first use Pad($R$, $T$), and then take the set intersection of the sets of strings described by the two regular expressions.
+    \item We do not use the Kleene star since our computations are a fixed finite length.
+\end{itemize}
+\end{definition}
+An example of these operations follows.
+\begin{example}
+Let there be $n = 2$ propositional variables, and let $R = S1$ and $T = 1S,1S | S1,S1$.\\
+To compute $R \land T$ and $R \lor T$, we use Pad($R$,$T$). Clearly $T$ is the longer regex by one time step, so we concatenate $,S^2$ to the right of $R$. Thus $T =1S,1S | S1,S1$ and $R = S1,SS$. Now the regexes are the same length, so we can perform set intersection and alternation:
+\begin{itemize}
+    \item $R \land T = 11,1S | S1, S1$.
+    \item $R \lor T = S1,SS | 1S,1S | S1,S1 = S1,SS | 1S,1S$.
+\end{itemize}
+\end{example}
+
+For the purposes of describing the bit string representations of the satisfying computations for a given MLTL formula, we use the alphabet $\Sigma =$ \{`$0$' , `$1$', `$,$'\} and define $S$ as an abbreviation for $(0 \ | \ 1)$.
+Let $p_0, p_2, ..., p_{n-1}$ be propositional variables, $\alpha, \beta$ well-formed MLTL formulas in negation normal form. We define the regular expression of satisfying computations for an MLTL formula as follows:
+ \begin{align}
+     &\text{reg}(\top) = S^n\\
+     &\text{reg}(\bot) = \emptyset \\
+     &\text{reg}(p_k) = S^{k}1S^{n-k-1} \\
+     &\text{reg}(\neg p_k) = S^{k}0S^{n-k-1} \\
+     &\text{reg}(\alpha \lor \beta) =  \text{reg}(\alpha) \lor \text{reg}(\beta)\\
+     &\text{reg}(\alpha \land \beta) = \text{reg}(\alpha) \land \text{reg}(\beta) \\
+    &\text{reg}(\mathcal{F}_{[a,b]} \alpha) = \bigvee_{i=a}^{b} (S^n,)^i \text{reg}(\alpha) \\
+     &\text{reg}(\mathcal{G}_{[a,b]} \alpha) = \bigwedge_{i=a}^{b} (S^n,)^i \text{reg}(\alpha)\\
+     &\text{reg}(\alpha \ \mathcal{U}_{[a,b]} \beta) =  \bigvee_{i=a}^{b} \text{reg}\left(\mathcal{G}_{[a,i-1]}\alpha \land \mathcal{G}_{[i, i]} \beta\right) \\
+     &\text{reg}(\alpha \mathcal{R}_{[a,b]} \beta) =  \text{reg}\left(\mathcal{G}_{[a,b]}\beta\right) \lor \bigvee_{i=a}^{b-1} \text{reg}\left(\mathcal{G}_{[a,i]}\beta \land \mathcal{G}_{[i, i]} \alpha\right) \label{release}
+ \end{align}
+ 
+ \subsection{Minimum Computation Length}
+ These regular expressions describe all the satisfying computations of an MLTL formula of length $\text{complen}(\alpha)$, which is defined recursively below:
+\begin{align}
+    &\text{complen}(p_k) = \text{complen}(\neg p_k) = 1\\
+    &\text{complen}(\alpha \land \beta) = \text{complen}(\alpha \lor \beta) = \max(\text{complen}(\alpha), \text{complen}(\beta))\\
+    &\text{complen}(\mathcal{G}_{[a,b]} \alpha) = \text{complen}(\mathcal{F}_{[a,b]} \alpha) = b + \text{complen}(\alpha)\\
+    &\text{complen}(\alpha \mathcal{U}_{[a,b]} \beta) = \text{complen}(\alpha \mathcal{R}_{[a,b]} \beta) = b + \max(\text{complen}(\alpha)-1, \text{complen}(\beta))
+\end{align}
+ 
+Intuitively, $\text{complen}(\alpha)$ is the minimum computation length required to ensure that none of the intervals in $\alpha$ are out of bounds.
+Our minimum computation length for Until and Release are slight optimizations of what was previously considered the minimum computation length in the literature. In \cite{KZJZR20}, $$\text{complen}(\alpha \mathcal{U}_{[a,b]} \beta) = \text{complen}(\alpha \mathcal{R}_{[a,b]} \beta) = b + \max(\text{complen}(\alpha), \text{complen}(\beta))$$
+ 
+whereas our minimum computation length for Until and Release is 
+$$\text{complen}(\alpha \mathcal{U}_{[a,b]} \beta) = \text{complen}(\alpha \mathcal{R}_{[a,b]} \beta) = b + \max(\mathbf{\text{complen}(\alpha)-1}, \text{complen}(\beta)).$$
+We provide the proof for the minimum computation length of Until and Release below.
+\begin{theorem}[\emph{Minimum Computation Length of Until and Release}]
+    Let $0 \leq a\leq b \in \mathbb{N}$ and let $\alpha, \beta$ be well-formed MLTL formulas in NNF. The minimum computation length of Until and Release is given by $\text{complen}(\alpha \mathcal{U}_{[a,b]} \beta) = \text{complen}(\alpha \mathcal{R}_{[a,b]} \beta) = b + \max(\text{complen}(\alpha)-1, \text{complen}(\beta))$.
+\end{theorem}
+
+\begin{proof}
+The formulas for the minimum computation length follow directly from the regular expressions for the satisfying computations for Until and Release and the minimum computation lengths for Finally, Global, And, and Or.\\
+ Recall that $\text{reg}(\alpha \ \mathcal{U}_{[a,b]} \beta) =  \bigvee_{i=a}^{b} \text{reg}\left(\mathcal{G}_{[a,i-1]}\alpha \land \mathcal{G}_{[i, i]} \beta\right)$. Thus
+ \begin{align*}
+     \text{complen}(\alpha \mathcal{U}_{[a,b]} \beta) &= \max_{a \leq i \leq b} \left( \text{complen}(\mathcal{G}_{[a, i-1]} \alpha \land \mathcal{G}_{[i,i]} \beta) \right)\\
+     &= \max_{a \leq i \leq b} \left( \max(i-1 + \text{complen}(\alpha), i + \text{complen}(\beta))\right)\\
+     &= \max_{a \leq i \leq b} \left(i + \max(\text{complen}(\alpha) - 1, \text{complen}(\beta))\right)\\
+     &= b + \max(\text{complen}(\alpha) - 1, \text{complen}(\beta)).
+ \end{align*}
+ Now recall that $\text{reg}(\alpha \mathcal{R}_{[a,b]} \beta) =  \text{reg}\left(\mathcal{G}_{[a,b]}\beta\right) \lor \bigvee_{i=a}^{b-1} \text{reg}\left(\mathcal{G}_{[a,i]}\beta \land \mathcal{G}_{[i, i]} \alpha\right)$. Thus
+ \begin{align*}
+     \text{complen}(\alpha \mathcal{R}_{[a,b]} \beta) &= \max \left( \text{complen}(\mathcal{G}_{[a,b]} \beta), \text{complen}\left( \bigvee_{i=a}^{b-1} \text{reg}\left(\mathcal{G}_{[a,i]}\beta \land \mathcal{G}_{[i, i]} \alpha\right) \right)  \right)\\
+     &= \max\left( b + \text{complen}(\beta), \max_{a \leq i \leq b-1} \left(\mathcal{G}_{[a,i]}\beta \land \mathcal{G}_{[i, i]} \alpha\right) \right)\\
+     &= \max \left( b + \text{complen}(\beta), \max_{a \leq i \leq b-1} \left(\max(i + \text{complen}(\beta), i + \text{complen}(\alpha))\right) \right)\\
+     &= \max \left( b + \text{complen}(\beta), \max(b-1+\text{complen}(\alpha), b-1+\text{complen}(\beta))\right)\\
+     &= \max(b + \text{complen}(\beta), b-1+\text{complen}(\alpha), b-1+\text{complen}(\beta))\\
+     &= b + \max(\text{complen}(\alpha)-1, \text{complen}(\beta)).
+ \end{align*}
+ This completes the proof.
+ \end{proof}
+ 
+ \noindent Intuitively, this optimization of the minimum computation length of Until and Release makes sense:
+ \begin{itemize}
+     \item At the final time-step for $\alpha \mathcal{U}_{[a,b]} \beta$, if $\beta$ has not yet been assigned to be true in the computation, it will be assigned true because $\alpha \mathcal{U}_{[a,b]} \beta$ is a strong operator. Semantically, the truth value of $\alpha$ at this time interval doesn't matter; whether $\alpha$ is true or false, the computation for $\alpha \mathcal{U}_{[a,b]} \beta$ is satisfied.
+     \item Likewise, in the case for $\alpha \mathcal{R}_{[a,b]} \beta$, if $\beta$ is true from the first to the last time-step, the truth value of $\alpha$ at the final time-step doesn't matter - the computation satisfies $\alpha \mathcal{R}_{[a,b]} \beta$ regardless of whether $\alpha$ is true or false.
+ \end{itemize}
+ 
+\subsection{Soundness and Completeness}
+ We write $\mathscr{L}(\text{reg}(\alpha))$ to denote the language of reg($\alpha$). That is, the set of computations represented by the regular expression $\text{reg}(\alpha)$.
+ 
+ \begin{theorem}[\emph{Soundness and Completeness}]
+ For any well formed MLTL formula $\alpha$ in negation normal form, a computation $\pi$ with $|\pi| = \text{complen}(\alpha)$ satisfies $\alpha$ and  if and only if $\pi \in \mathscr{L}(\emph{reg}(\alpha))$.
+ \end{theorem}
+ \begin{proof}
+ We proceed by induction on the length of the formula.\\
+ 
+ \noindent \textbf{Base Cases.}\\
+ \noindent\textbf{reg($\top$)}\\
+ Any computation $\pi$ satisfies $\top$, and $\mathscr{L}(\text{reg}(\top))$ is the set of all computations of one time step. Padding conventions extends this to the set of all computations of any positive number of time steps, so we are done.\\
+ 
+ \noindent\textbf{reg($\bot$)}\\
+ There are no computations that satisfy $\bot$ and $\mathscr{L}(\text{reg}(\bot))$ is the empty string, so we are done.\\
+ 
+ \noindent\textbf{reg($p_k$)}\\
+ For $0\leq k \leq n-1$, consider the propositional variable $p_k$. If $\pi$ satisfies $p_k$, then $p_k$ evaluates to true at $\pi[0]$. This is equivalent to writing that $\pi[0]$ is of the form 
+ $$S^{k} 1 S^{n-k-1}$$
+ which is precisely reg($p_k$).\\
+ 
+ \noindent\textbf{reg($\neg p_k$)}\\
+ If $\pi$ satisfies $\neg p_k$, then $\neg p_k$ evaluates to true at $\pi[0]$. This is equivalent to writing that $\pi[0]$ is of the form 
+ $$S^{k} 0 S^{n-k-1}$$
+ which is precisely reg($\neg p_k$).\\
+ 
+ \noindent\textbf{Inductive Step.}\\
+ Suppose the theorem holds for MLTL formulas $\varphi$ and $\psi$. We now show that it holds for $\varphi \land \psi$, $\varphi \lor \psi$, $\mathcal{F}_{[a,b]} \varphi$, $\mathcal{G}_{[a,b]} \varphi$, $\varphi \ \mathcal{U}_{[a,b]} \psi$, and $\varphi \mathcal{R}_{[a,b]} \psi$.\\
+ 
+ \noindent \textbf{reg($\varphi \land \psi$)}\\
+ We know that $\pi \vDash \varphi \land \psi \text{ iff } \pi \vDash \varphi \text{ and } \pi \vDash \psi$.\\
+ By the inductive hypothesis, $\pi \vDash \varphi$ iff $\pi \in \mathscr{L}(\text{reg}(\varphi))$ and 
+ \\$\pi \vDash \psi$ iff $\pi \in \mathscr{L}(\text{reg}(\psi))$, so
+ $$\pi \vDash \varphi \land \psi \text{ iff } \pi \in (\mathscr{L}(\text{reg}(\varphi)) \land \mathscr{L}(\text{reg}(\psi))) = \mathscr{L}(\text{reg}(\varphi \land \psi)).$$
+ 
+ \noindent \textbf{reg($\varphi \lor \psi$)}\\
+ We know that $\pi \vDash \varphi \lor \psi \text{ iff } \pi \vDash \varphi \text{ or } \pi \vDash \psi$.\\
+ By the inductive hypothesis, $\pi \vDash \varphi$ iff $\pi \in \mathscr{L}(\text{reg}(\varphi))$ and 
+ \\$\pi \vDash \psi$ iff $\pi \in \mathscr{L}(\text{reg}(\psi))$, so
+ $$\pi \vDash \varphi \lor \psi \text{ iff } \pi \in (\mathscr{L}(\text{reg}(\varphi)) \lor \mathscr{L}(\text{reg}(\psi))) = \mathscr{L}(\text{reg}(\varphi \lor \psi)).$$
+ 
+ \noindent \textbf{reg($\mathcal{F}_{[a,b]} \varphi$)}\\
+ We know that $\pi \vDash \mathcal{F}_{[a,b]} \varphi \text{ iff } |\pi| > a \text{ and } \exists i \in [a,b] \text{ such that } \pi_i \vDash \varphi$.\\
+ If $|\pi| = \text{complen}(\mathcal{F}_{[a,b]} \varphi)$, $|\pi| > a$. Likewise, $\pi \in \mathscr{L}\left(\text{reg}\left(\mathcal{F}_{[a,b]} \varphi \right)\right)$ implies $|\pi| = \text{complen}(\mathcal{F}_{[a,b]} \varphi)$, so the length condition is satisfied.\\
+ By the inductive hypothesis, $\pi_i \vDash \varphi$ iff $\pi_i \in \mathscr{L}(\text{reg}(\varphi))$, so $\pi \in \mathscr{L}((S^n,)^i \text{reg}(\varphi))$ for some $i \in [a,b]$. Equivalently, 
+ $$\pi \in \mathscr{L}\left(\bigvee_{i=a}^{b} (S^n,)^i \text{reg}(\alpha)(,S^n)^{b-i}\right) = \mathscr{L}(\text{reg}(\mathcal{F}_{[a,b]}\varphi)).$$
+
+ \noindent \textbf{reg($\mathcal{G}_{[a,b]} \varphi$)}\\
+ We know that $\pi \vDash \mathcal{G}_{[a,b]}\varphi \text{ iff } |\pi| \leq a \text{ or } \forall i \in [a,b] \ \pi_i \vDash \varphi$.\\
+ Since $|\pi| = \text{complen}(\mathcal{G}_{[a,b]} \varphi)$ and $\text{complen}(\mathcal{G}_{[a,b]} \varphi) > a$, the first option for satisfying the formula never occurs.\\
+ By the inductive hypothesis, $\pi_i \vDash \varphi$ iff $\pi_i \in \mathscr{L}(\text{reg}(\varphi))$, so $\pi \in \mathscr{L}((S^n,)^i \text{reg}(\varphi))$ for all $i \in [a,b]$. Equivalently, 
+ $$\pi \in \mathscr{L}\left(\bigwedge_{i=a}^{b} (S^n,)^i \text{reg}(\alpha)(,S^n)^{b-i}\right) = \mathscr{L}(\text{reg}(\mathcal{F}_{[a,b]}\varphi)).$$
+ 
+ \noindent \textbf{reg($\varphi \ \mathcal{U}_{[a,b]} \psi$)}\\
+  We have that 
+  $$\pi \vDash \varphi \ \mathcal{U}_{[a,b]} \psi \text{ iff } |\pi| > a \text{ and } \exists i \in [a,b] \text{ such that } (\pi_i \vDash \psi \text{ and } \forall a \leq j < i, \pi_j \vDash \varphi).$$
+  As argued in the Finally case, the length condition is satisfied.\\
+  By the inductive hypothesis, $\pi_i \vDash \psi$ iff $\pi_i \in \mathscr{L}(\text{reg}(\psi))$, or equivalently, \\
+  $\pi \in \mathscr{L}(\text{reg}(\mathcal{G}_{[i,i]} \psi))$. Also, $\pi_j \vDash \varphi$ if and only if $\pi_j \in \mathscr{L}(\text{reg}(\varphi))$.\\
+  By the argument used in the Global case, we see that $\forall a \leq j < i, \ \pi_j \vDash \varphi$ is equivalent to $\pi \in \mathscr{L}(\text{reg}(\mathcal{G}_{[a, i-1]} \varphi))$.\\
+  Thus $\pi \vDash \varphi \ \mathcal{U}_{[a,b]} \psi$ iff $\pi \in \mathscr{L}((\text{reg}(\mathcal{G}_{[i,i]} \psi) \land \text{reg}( \mathcal{G}_{[a, i-1]} \varphi)))$ for some $i \in [a,b]$, or equivalently, 
+  $$\pi \in \mathscr{L}\left(\bigvee_{i=a}^{b} \text{reg}\left(\mathcal{G}_{[a,i-1]}\alpha \land \mathcal{G}_{[i, i]} \beta\right)\right) = \mathscr{L}\left(\text{reg}(\varphi \ \mathcal{U}_{[a,b]} \psi)\right).$$
+  
+  \noindent \textbf{reg($\varphi \mathcal{R}_{[a,b]} \psi$)}\\
+  We have that
+  \begin{align*}
+    &\pi \vDash \varphi \mathcal{R}_{[a,b]} \psi \text{ iff } |\pi| \leq a \text{ or } \forall i \in [a,b] \ \pi_i \vDash \psi \text{ or } \\ 
+    &\exists j\in[a,b] \text{ such that }
+    (\pi_j \vDash \varphi \text{ and } \forall a\leq k \leq j, \pi_k \vDash \psi).
+  \end{align*}
+  As argued in the Global case, the first option for satisfying the formula never occurs.\\
+  By the Global case, the statement $\forall i\in[a,b] \ \pi_i \vDash \psi$ is equivalent to $\pi \in \mathscr{L}(\text{reg}(\mathcal{G}_{[a,b]} \psi))$ and, by the Finally case. the statement $\exists j\in[a,b]$ such that ($\pi_j \vDash \varphi$ and $\forall a\leq k \leq j$, $\pi_k \vDash \psi$) is equivalent to $\pi \in \mathscr{L}\left(\bigvee_{i=a}^{b} \text{reg}\left(\mathcal{G}_{[a,i]}\beta \land \mathcal{G}_{[i, i]} \alpha\right)\right)$. Hence 
+  
+  \begin{align*}
+    \pi \vDash \varphi \mathcal{R}_{[a,b]} \psi \text{ iff } \pi &\in \mathscr{L}\left(\text{reg}(\mathcal{G}_{[a,b]} \psi) \lor \bigvee_{i=a}^{b} \text{reg}\left(\mathcal{G}_{[a,i]}\beta \land \mathcal{G}_{[i, i]} \alpha\right)\right) \\
+    &= \mathscr{L}\left(\text{reg}(\mathcal{G}_{[a,b]} \psi) \lor \bigvee_{i=a}^{b-1} \text{reg}\left(\mathcal{G}_{[a,i]}\beta \land \mathcal{G}_{[i, i]} \alpha\right)\right)\\
+    &= \mathscr{L}\left(\text{reg}(\varphi \mathcal{R}_{[a,b]} \psi)\right).
+  \end{align*}
+  
+ \noindent This completes the inductive step, and thus the proof. Since this proof addresses all possible MLTL formulas in negation normal form, it shows completeness along with soundness.
+ \end{proof}
+ \newpage
+\subsection{Nested Until and Release Rewriting Theorem}
+ We prove the following theorem using the regular expressions above. As detailed in section \ref{complex}, nested binary temporal operators create the worst case time and space complexity for the WEST program. Although the WEST program does not implement this theorem, we would expect an implementation of this theorem to improve runtime. On its own, this theorem can be used to simplify MLTL formulas, making them easier to interpret.
+
+\begin{theorem}[\emph{Nested Until and Release Rewriting Theorem}]  Any MLTL formula using the Until or Release operator can be rewritten with right-nested subformulas. Let $\mathcal{B} = \mathcal{R} \text{ or } \mathcal{U}$. Let $a,b,c \in \mathbb{Z}_{\geq 0} , a \leq b,$ \text{and} $ \alpha,   \beta$ \text{be well-formed MLTL formulas in NNF. Then,} $ \alpha \ \mathcal{B}_{[a,b+c]} \beta = \alpha \ \mathcal{B}_{[a,b]}(\alpha \ \mathcal{B}_{[0,c]} \beta)$. That is, $ \alpha \ \mathcal{U}_{[a,b+c]} \beta \equiv \alpha \ \mathcal{U}_{[a,b]}(\alpha \ \mathcal{U}_{[0,c]} \beta)$ and $ \alpha \ \mathcal{R}_{[a,b+c]} \beta \equiv \alpha \ \mathcal{R}_{[a,b]}(\alpha \ \mathcal{R}_{[0,c]} \beta)$.
+\end{theorem}
+\begin{proof}
+
+\textbf{Case 1: $\mathbf{\mathcal{B} = \mathcal{U}}$}\\
+
+\noindent Let $\gamma = \alpha \ \mathcal{U}_{[0,c]} \beta$. Then, $\alpha \ \mathcal{U}_{[a,b]}(\alpha \ \mathcal{U}_{[0,c]} \beta) = \alpha \ \mathcal{U}_{[a,b]}\gamma$ and $\text{reg}\left(\gamma\right) = \bigvee_{j=0}^{c} \text{reg}\left(\mathcal{G}_{[0,j-1]}\alpha \land \mathcal{G}_{[j, j]}\beta\right).$ Thus
+
+\begin{align*}
+\text{reg}\left(\alpha \ \mathcal{U}_{[a,b]}\gamma\right) &= \bigvee_{i=a}^{b} \text{reg}\left(\mathcal{G}_{[a,i-1]}\alpha \land \mathcal{G}_{[i, i]}\text{reg}\left(\gamma\right)\right)\\
+&= \bigvee_{i=a}^{b} \text{reg}\left(\mathcal{G}_{[a,i-1]}\alpha \land  \mathcal{G}_{[i, i]}\left( \bigvee_{j=0}^{c} \text{reg}\left(\mathcal{G}_{[0,j-1]}\alpha\right) \land \text{reg}\left(\mathcal{G}_{[j, j]}\beta\right) \right) \right).
+\end{align*}
+$\mathcal{G}_{[i, i]}$ distributes over $\land$ and $\lor$, so
+\begin{align*}
+\text{reg}\left(\alpha \ \mathcal{U}_{[a,b]}\gamma\right) &= \bigvee_{i=a}^{b} \text{reg}\left(\mathcal{G}_{[a,i-1]}\alpha \land  \bigvee_{j=0}^{c} \mathcal{G}_{[i, i]}\left( \text{reg}\left(\mathcal{G}_{[0,j-1]}\alpha\right) \land \text{reg}\left(\mathcal{G}_{[j, j]}\beta\right) \right) \right) \\
+&= \bigvee_{i=a}^{b} \text{reg}\left(\mathcal{G}_{[a,i-1]}\alpha \land \left( \bigvee_{j=0}^{c} \mathcal{G}_{[i, i]}\text{reg}\left(\mathcal{G}_{[0,j-1]}\alpha\right) \land \mathcal{G}_{[i, i]}\text{reg}\left(
+\mathcal{G}_{[j, j]}\beta \right) \right) \right).
+\end{align*}
+Since $\mathcal{G}_{[t_1,t_1]} \mathcal{G}_{[t_2,t_3]} \alpha \equiv \mathcal{G}_{[t_1+t_2,t_1+t_3]} \alpha$, we have
+\begin{align*}
+\text{reg}\left(\alpha \ \mathcal{U}_{[a,b]}\gamma\right) &= \bigvee_{i=a}^{b} \text{reg}\left(\mathcal{G}_{[a,i-1]}\alpha \land \left( \bigvee_{j=0}^{c} \text{reg}\left(\mathcal{G}_{[i,i+j-1]}\alpha\right) \land \text{reg}\left(\mathcal{G}_{[i+j, i+j]}\beta \right) \right) \right) \\
+&= \bigvee_{i=a}^{b}  \bigvee_{j=0}^{c} \text{reg}\left(\mathcal{G}_{[a,i-1]}\alpha\right) \land  \text{reg}\left(\mathcal{G}_{[i,i+j-1]}\alpha\right) \land \text{reg}\left(\mathcal{G}_{[i+j, i+j]}\beta \right).
+\end{align*}
+Since $\mathcal{G}_{[t_1,t_2-1]}\alpha \land \mathcal{G}_{[t_2,t_3]} \alpha \equiv \mathcal{G}_{[t_1,t_3]} \alpha$, we have
+\begin{align*}
+\text{reg}\left(\alpha \ \mathcal{U}_{[a,b]}\gamma\right) &= \bigvee_{i=a}^{b}  \bigvee_{j=0}^{c} \text{reg}\left(\mathcal{G}_{[a,i+j-1]}\alpha\right) \land \text{reg}\left(\mathcal{G}_{[i+j, i+j]}\beta  \right)\\
+&= \bigvee_{i+j=a}^{b+c} \text{reg}\left(\mathcal{G}_{[a,i+j-1]}\alpha\right) \land \text{reg}\left(\mathcal{G}_{[i+j, i+j]}\beta  \right).
+\end{align*}
+Finally, let $k = i + j$. Thus
+\begin{align*}
+\text{reg}\left(\alpha \ \mathcal{U}_{[a,b]}\gamma\right) &= \bigvee_{k=a}^{b+c} \text{reg}\left(\mathcal{G}_{[a,k-1]}\alpha\right) \land \text{reg}\left(\mathcal{G}_{[k, k]}\beta  \right) \\
+&= \text{reg}\left(\alpha \ \mathcal{U}_{[a,b+c]} \beta\right).
+\end{align*}
+This shows that $\alpha \ \mathcal{U}_{[a,b]}(\alpha \ \mathcal{U}_{[0,c]} \beta) \equiv \alpha \ \mathcal{U}_{[a,b+c]} \beta$.\\
+
+\noindent \textbf{Case 2: $\mathbf{\mathcal{B} = \mathcal{R}}$} \\
+We begin by rewriting the regex for Release in an equivalent form to better mirror the structure of the Until case. The Release operator is the dual of the Until operator. Thus,  \\
+\begin{align*}
+\text{reg}\left(\alpha \ \mathcal{R}_{[a,b]}\beta\right) &= \text{reg}\left(\neg\left(\neg\alpha \ \mathcal{U}_{[a,b]}\neg\beta\right)\right) \\
+&= \neg\left(\bigvee_{i=a}^{b} \text{reg}\left(\mathcal{G}_{[a,i-1]}\neg\alpha \land \mathcal{G}_{[i, i]}\neg\beta\right)\right).
+\end{align*}
+Global is the dual of Finally, so
+\begin{align*}
+\text{reg}\left(\alpha \ \mathcal{R}_{[a,b]}\beta\right) &= \neg\left(\bigvee_{i=a}^{b} \text{reg}\left(\neg\mathcal{F}_{[a,i-1]}\alpha \land \neg\mathcal{F}_{[i, i]}\beta\right)\right)\\
+&= \neg\left(\bigvee_{i=a}^{b} \text{reg}\left(\neg\left(\mathcal{F}_{[a,i-1]}\alpha \lor \mathcal{F}_{[i, i]}\beta\right)\right)\right)\\
+&= \neg\neg\left(\bigwedge_{i=a}^{b} \text{reg}\left(\mathcal{F}_{[a,i-1]}\alpha \lor \mathcal{F}_{[i, i]}\beta\right)\right)\\
+&= \bigwedge_{i=a}^{b} \text{reg}\left(\mathcal{F}_{[a,i-1]}\alpha \lor \mathcal{F}_{[i, i]}\beta\right).
+\end{align*}
+This completes the rewriting of the regex for Release. Now let $\gamma = \alpha \ \mathcal{R}_{[0,c]} \beta$. Then $\alpha \ \mathcal{R}_{[a,b]}(\alpha \ \mathcal{R}_{[0,c]} \beta) = \alpha \ \mathcal{R}_{[a,b]}\gamma$ and
+$\text{reg}\left(\gamma\right) = \bigwedge_{j=0}^{c} \text{reg}\left(\mathcal{F}_{[0,j-1]}\alpha \lor \mathcal{F}_{[j, j]}\beta\right)$. Thus
+\begin{align*}
+\text{reg}\left(\alpha \ \mathcal{R}_{[a,b]}\gamma\right) &= \bigwedge_{i=a}^{b} \text{reg}\left(\mathcal{F}_{[a,i-1]}\alpha \lor \mathcal{F}_{[i, i]}\text{reg}\left(\gamma\right)\right)\\
+&= \bigwedge_{i=a}^{b} \text{reg}\left(\mathcal{F}_{[a,i-1]}\alpha \lor  \mathcal{F}_{[i, i]}\left( \bigwedge_{j=0}^{c} \text{reg}\left(\mathcal{F}_{[0,j-1]}\alpha\right) \lor \text{reg}\left(\mathcal{F}_{[j, j]}\beta\right) \right) \right).
+\end{align*}
+$\mathcal{F}_{[i, i]} \equiv \mathcal{G}_{[i, i]}$, so this operation distributes over $\land$ and $\lor$. Thus
+\begin{align*}
+\text{reg}\left(\alpha \ \mathcal{R}_{[a,b]}\gamma\right) &= \bigwedge_{i=a}^{b} \text{reg}\left(\mathcal{F}_{[a,i-1]}\alpha \lor  \bigwedge_{j=0}^{c} \mathcal{F}_{[i, i]}\left( \text{reg}\left(\mathcal{F}_{[0,j-1]}\alpha\right) \lor \text{reg}\left(\mathcal{F}_{[j, j]}\beta\right) \right) \right) \\
+&= \bigwedge_{i=a}^{b} \text{reg}\left(\mathcal{F}_{[a,i-1]}\alpha \lor \left( \bigwedge_{j=0}^{c} \mathcal{F}_{[i, i]}\text{reg}\left(\mathcal{F}_{[0,j-1]}\alpha\right) \lor \mathcal{F}_{[i, i]}\text{reg}\left(\mathcal{F}_{[j, j]}\beta \right) \right) \right).
+\end{align*}
+Since $\mathcal{F}_{[t_1,t_1]}\mathcal{F}_{[t_2,t_3]} \alpha \equiv \mathcal{F}_{[t_1+t_2,t_1+t_3]} \alpha$, we have
+\begin{align*}
+\text{reg}\left(\alpha \ \mathcal{R}_{[a,b]}\gamma\right) &= \bigwedge_{i=a}^{b} \text{reg}\left(\mathcal{F}_{[a,i-1]}\alpha \lor \left( \bigwedge_{j=0}^{c} \text{reg}\left(\mathcal{F}_{[i,i+j-1]}\alpha\right) \lor \text{reg}\left(\mathcal{F}_{[i+j, i+j]}\beta \right) \right) \right) \\
+&= \bigwedge_{i=a}^{b}  \bigwedge_{j=0}^{c} \text{reg}\left(\mathcal{F}_{[a,i-1]}\alpha\right) \lor  \text{reg}\left(\mathcal{F}_{[i,i+j-1]}\alpha\right) \lor \text{reg}\left(\mathcal{F}_{[i+j, i+j]}\beta \right).
+\end{align*}
+Since $\mathcal{F}_{[t_1,t_2-1]} \alpha \land \mathcal{F}_{[t_2,t_3]} \alpha \equiv \mathcal{F}_{[t_1, t_3]} \alpha$, we have
+\begin{align*}
+\text{reg}\left(\alpha \ \mathcal{R}_{[a,b]}\gamma\right) &= \bigwedge_{i=a}^{b}  \bigwedge_{j=0}^{c} \text{reg}\left(\mathcal{F}_{[a,i+j-1]}\alpha\right) \lor \text{reg}\left(\mathcal{F}_{[i+j, i+j]}\beta  \right) \\
+&= \bigwedge_{i+j=a}^{b+c} \text{reg}\left(\mathcal{F}_{[a,i+j-1]}\alpha\right) \lor \text{reg}\left(\mathcal{F}_{[i+j, i+j]}\beta  \right).
+\end{align*}
+Let $k = i + j$. Thus
+\begin{align*}
+\text{reg}\left(\alpha \ \mathcal{R}_{[a,b]}\gamma\right) &= \bigwedge_{k=a}^{b+c} \text{reg}\left(\mathcal{F}_{[a,k-1]}\alpha\right) \lor \text{reg}\left(\mathcal{F}_{[k, k]}\beta  \right) \\
+&= \text{reg}\left(\alpha \ \mathcal{R}_{[a,b+c]} \beta\right).
+\end{align*}
+Thus  $\alpha \ \mathcal{R}_{[a,b]}(\alpha \ \mathcal{R}_{[0,c]} \beta) \equiv \alpha \ \mathcal{R}_{[a,b+c]} \beta$, so $\alpha \ \mathcal{B}_{[a,b+c]} \beta \equiv \alpha \ \mathcal{B}_{[a,b]}(\alpha \ \mathcal{B}_{[0,c]} \beta)$. This completes the proof.
+\end{proof}
+
+\section{WEST Code Specifications} \label{specs}
+ The code for the WEST program can be found on its \href{https://github.com/zwang271/2022-Iowa-State-REU-Temporal-Logic-.git}{Github} repository. The MLTL syntax for our program is given as the context free grammar below. In the alphabet, $T$ and $!$ refer to the propositional constants `true' and `false', respectively. $\&$, $v$, $=$, $>$ refer to propositional logic operators `and', `or, `equivalent', and `implies', respectively. Note that the last comma listed is not a typo and indeed part of the alphabet. \\
+\textbf{Alphabet}: 
+\begin{align*}
+    \Sigma = \{&\text{`0' , `1' , `2' , `3' , `4' , `5' , `6' , `7' , `8' , `9' , `T' , `!' , `p' , `$\scriptstyle{\sim}$' , `v' , `\&' , `=' , `>' ,}\\
+    &\text{ `F' , `G' , `U', `R' , `(' , `)' , `[' , `]' , `:' , `,'}\}
+\end{align*}
+
+\begin{align*}
+    \text{Digit} &\to 0 \,|\, 1 \,|\,2 \,|\,3 \,|\,4 \,|\,5 \,|\,6 \,|\,7 \,|\, 8 \,|\, 9 \\
+    \text{Num} &\to \text{Digit} \; \text{Num} \,|\, \text{Digit} \\
+    \text{Interval} &\to [ \; \text{Num} \; : \; \text{Num} \; ] \\
+    \text{Prop\_cons} &\to \text{T} \;|\; ! \\
+    \text{Prop\_var} &\to \text{p} \; \text{Num} \\
+    \text{Unary\_Prop\_conn} &\to \hspace{1mm}\scriptstyle{\sim} \\
+    \text{Binary\_Prop\_conn} &\to \text{v} \;|\; \& \;|\; = \;|\; > \\
+    \text{Assoc\_Prop\_conn} &\to \text{v} \;|\; \& \;|\; = \\
+    \text{Array\_entry} &\to \text{Wff} \; , \; \text{Array\_entry} \;|\; \text{Wff} \\
+    \text{Unary\_Temp\_conn} &\to \text{F} \;|\; \text{G} \\
+    \text{Binary\_Temp\_conn} &\to \text{U} \;|\; \text{R} \\
+    \text{Wff} &\to \text{Prop\_cons} \;|\; \text{Prop\_var} \\
+               &\hspace{5mm} \;|\; \text{Unary\_Prop\_conn} \;\; \text{Wff} \\
+               &\hspace{5mm} \;|\; \text{Wff} \;\; \text{Binary\_Prop\_conn} \;\; \text{Wff}\\
+               &\hspace{5mm} \;|\; ( \; \text{Assoc\_Prop\_conn} \; [ \; \text{Array\_entry} \; ] \; ) \\
+               &\hspace{5mm} \;|\; \text{Unary\_Temp\_conn} \;\; \text{Interval} \;\; \text{Wff} \\
+               &\hspace{5mm} \;|\; ( \; \text{Wff} \;\; \text{Binar\_Temp\_conn} \;\; \text{Interval} \;\; \text{Wff} \; )
+\end{align*}
+
+In the grammar, associative propositional connectives (\textit{Assoc\_Prop\_conn}) are included for the ease of the user. Given well-formed formulas $\alpha_1, \alpha_2, \alpha_3$, the following formula in prefix notation $(\lor[\alpha_1, \alpha_2, \alpha_3])$ is parsed into $((\alpha_1 \lor \alpha_2) \lor \alpha_3)$, which is in turn equivalent to $(\alpha_1 \lor \alpha_2 \lor \alpha_3)$. \\
+\begin{remark}
+For two propositional variables, the associative equivalence operator functions identically to the binary propositional connective equivalence operator. For formulas with 3 or more propositional variables, however , the associative equivalence operator does not mean that each propositional variable in the list is equivalent. Instead, it means that the equivalence of the first two propositional variables in the list is equivalent to the next propositional variable in the list, and the truth value for this expression is equivalent to the next propositional variable, and so on. For example, =[p1,p2,p3] is equivalent to (p1=p2)=p3 rather than p1=p2=p3.
+\end{remark}
+
+In Appendix \ref{pseudocode appendix}, we provide the full pseudocode of the WEST program. Below we summarize only the important points to provide analysis of time and space complexity in the next section. The regular expression $R = \{R_1 | R_2 | ... | R_k\}$, where for all $1 \leq i \leq k$, $R_i \in \{$`0', `1', `S', `,'$\}^*$, is represented as a vector $R = {R_1, R_2, ..., R_k}$.
+
+In order to compute MLTL operations, we define functions for handling union and intersection of such vectors. 
+The \textit{join} function performs simple concatenation of two vectors, while the \textit{set\_intersect} function calculates pairwise intersection of strings from two vectors.
+The intersection of two strings is performed by \textit{bit\_wise\_and}, which computes intersection character by character.
+For example, \textit{bit\_wise\_and}$(1s, 0s)$ is the empty string while \textit{bit\_wise\_and}$(s11, 0s1) = 011$. 
+
+The main focus is on the recursive function \textit{reg}, which is based on the structure of the grammar. It computes the propositional logic operators $>$ and  $=$ through formula rewriting in terms of And and Or. The four temporal operators in the grammar are computed according to the definitions of their regexes (See section \ref{regex}).
+
+If the user would like to see the satisfying computations for all the subformulas in their original formula, \textit{reg} contains a boolean to enable this functionality. 
+
+It is often the case that a vector of regular expression strings contains many redundancies, and can be simplified to a smaller vector of regular expressions that improves space complexity and drastically enhances user readability. 
+As such, the \textit{simplify} function performs this by iterating through pairs of strings from the vector to search for valid simplifications. 
+If a pair of strings$(w, v)$ can be written in the form $w = w_1 c_w w_2$ and $v = v_1 c_v v_2$ such that $w_1 = v_1$ and $w_2 = v_2$, then they are combined into one string $w_1 (c_w | c_v) w_2$.
+
+\section{Complexity} \label{complex}
+
+\subsection{Theoretical Complexity}
+ In order to reason about the complexity of our algorithms, we make a few reasonable assumptions about our inputs.
+Suppose that the lower and upper intervals of temporal operators are bounded by some constant $d \in \mathbb{N}$, and that the difference between any bound is less than some constant $\delta \in \mathbb{N}$. 
+We provide a summary of the complexity of each of the helper functions described for \textit{reg}. 
+For any function $f(\alpha)$ taking a string argument $\alpha$, we use $|\alpha|$ to denote the number of characters in $\alpha$ and $S(f(\alpha))$ to denote the space complexity of $f$ in terms of the number of characters in the output.\\
+ 
+\textbf{If $\alpha$ is a propositional constant or variable:}
+%\begin{adjustwidth}{10mm}{3em}
+    It's easy to see that $S(\text{\emph{reg}}(!)) = 0$ since only the empty vector is returned. \\
+    By definition $\text{\emph{reg}}(T) = S^n$, so we have that $S(\text{\emph{reg}}(T)) = O(n)$. Similar to $\alpha = T$, $\text{\emph{reg}}(p_k)$ and $\text{\emph{reg}}(\scriptstyle{\sim} \textstyle p_k)$ both return strings of the same length and thus we also have $S(\text{\emph{reg}}(p_k)) = S(\text{\emph{reg}}(\scriptstyle{\sim} \textstyle p_k)) = S(\text{\emph{reg}}(T)) = n$.\\
+%\end{adjustwidth}
+ 
+\textbf{If} $\alpha$ \textbf{is} ``$\alpha_{1} \lor \alpha_{2}$'' \textbf{:}
+%\begin{adjustwidth}{10mm}{3em}
+    For this case in our \emph{reg} function, we return $\textit{join}(\text{\emph{reg}}(\alpha_{1}), \text{\emph{reg}}(\alpha_{2}))$ \\
+    Thus, our space complexity is:
+    \[
+    S(\text{\emph{reg}}(\alpha_{1} \lor \alpha_{2})) = S(\text{\emph{reg}}(\alpha_{1})) + S(\text{\emph{reg}}(\alpha_{2})).
+    \]
+%\end{adjustwidth}
+ 
+
+\textbf{If} $\alpha$ \textbf{is} ``$\alpha_{1} \; \& \; \alpha_{2}$'' \textbf{:}
+%\begin{adjustwidth}{10mm}{3em}
+    For this case in our \emph{reg} function, we return $ \textit{set\_intersect}(\text{\emph{reg}}(\alpha_{1}), \text{\emph{reg}}(\alpha_{2}), n)$ \\
+    In the worst case, \textit{set\_intersect}($A$, $B$, $n$) will return a vector of size $S(A) \cdot S(B)$.\\
+    Thus, our space complexity is:
+    \[ 
+    S(\text{\emph{reg}}(\alpha_{1} \; \& \; \alpha_{2})) = S(\text{\emph{reg}}(\alpha_{1})) \cdot S(\text{\emph{reg}}(\alpha_{2})).
+    \]
+%\end{adjustwidth}
+
+\textbf{If} $\alpha$ \textbf{is} ``$\alpha_{1} >  \alpha_{2}$'' \textbf{:}
+%\begin{adjustwidth}{10mm}{3em}
+    For this case in our \emph{reg} function, we first rewrite $\alpha_{1} > \alpha_{2}$ to the equivalent formula:
+    \[ 
+    \textit{equiv\_formula} = \text{``(''} + \textit{wff\_to\_nnf}(\scriptstyle{\sim}\textstyle \alpha_{1}) + \text{``} \lor \text{''} + \alpha_{2} + \text{``)''}.
+    \]
+    Then we return $\text{\emph{reg}}(\textit{equiv\_formula})$.
+    So for space complexity, we have:
+    \[ 
+    S(\text{\emph{reg}}(\alpha_{1} > \alpha_{2})) = S(\text{\emph{reg}}(\textit{wff\_to\_nnf}(\scriptstyle{\sim}\textstyle \alpha_{1})) + S(\text{\emph{reg}}(\alpha_{2})).
+    \]
+%\end{adjustwidth}
+
+\textbf{If} $\alpha$ \textbf{is} ``$\alpha_{1} = \alpha_{2}$'' \textbf{:}
+%\begin{adjustwidth}{10mm}{3em}
+    For this case in our \emph{reg} function, we first rewrite $\alpha_{1} = \alpha_{2}$ to the equivalent formula:
+    \[ 
+    \textit{equiv\_formula} = 
+    \text{``((''} + \alpha_{1} + \text{``} \& \text{''} + \alpha_{2} + \text{``)}
+    \lor 
+    \text{(''} + \textit{wff\_to\_nnf}(\scriptstyle{\sim}\textstyle \alpha_{1}) + \text{``} \& \text{''} +  \textit{wff\_to\_nnf}(\scriptstyle{\sim}\textstyle \alpha_{2}) + \text{``))''}.
+    \]
+    Then we return $\text{\emph{reg}}(\textit{equiv\_formula})$.
+    So for space complexity, we have:
+    \[ 
+    S(\text{\emph{reg}}(\alpha_{1} = \alpha_{2})) =
+    S(\text{\emph{reg}}(\alpha_{1})) \cdot S(\text{\emph{reg}}(\alpha_{2})) \; + \;  
+    S(\text{\emph{reg}}(\textit{wff\_to\_nnf}(\scriptstyle{\sim}\textstyle \alpha_{1})) \cdot S(\text{\emph{reg}}(\textit{wff\_to\_nnf}(\scriptstyle{\sim}\textstyle \alpha_{2})).
+    \]
+%\end{adjustwidth}
+
+
+\textbf{If} $\alpha$ \textbf{is} ``$\lor$ [ $\alpha_{1}$, .., $\alpha_{k}$]'' \textbf{:} 
+%\begin{adjustwidth}{10mm}{3em}
+For this case in our \emph{reg} function, we first rewrite $\lor [\alpha_{1}, .., \alpha_{k}]$ to the equivalent formula:
+    \[ 
+    \textit{equiv\_formula} = \text{``}( ... (\alpha_{1} \lor \alpha_{2}) \lor ... \alpha_{k})\text{''}.
+    \]
+Using the space complexity of $\lor$, we have that:
+    \[
+    S(\text{\emph{reg}}(\lor [\alpha_{1}, .., \alpha_{k}])) = 
+    \sum_{i=1}^{k} S(\text{\emph{reg}}(\alpha_{i})).
+    \]
+%\end{adjustwidth}
+
+\textbf{If} $\alpha$ \textbf{is} ``$\&$ [ $\alpha_{1}$, .., $\alpha_{k}$]'' \textbf{:} 
+%\begin{adjustwidth}{10mm}{3em}
+For this case in our \emph{reg} function, we first rewrite $\& [\alpha_{1}, .., \alpha_{k}]$ to the equivalent formula:
+    \[ 
+    \textit{equiv\_formula} = \text{``}( ... (\alpha_{1} \& \alpha_{2}) \& ... \alpha_{k})\text{''}.
+    \]
+Using the space complexity of $\&$, we have that:
+    \[
+    S(\text{\emph{reg}}(\& [\alpha_{1}, .., \alpha_{k}])) = 
+    \prod_{i=1}^{k} S(\text{\emph{reg}}(\alpha_{i})).
+    \]
+%\end{adjustwidth}
+
+\textbf{If} $\alpha$ \textbf{is} ``$=$ [$\alpha_{1}$, .., $\alpha_{k}$]'' \textbf{:}
+%\begin{adjustwidth}{10mm}{3em}
+For this case in our \emph{reg} function, we first rewrite $= [\alpha_{1}, .., \alpha_{k}]$ to the equivalent formula:
+    \[ 
+    \textit{equiv\_formula} = \text{``}( ... (\alpha_{1} = \alpha_{2}) = ... \alpha_{k})\text{''}.
+    \]
+Based on the space complexities of $\&$ and $\lor$, this gives:
+    \[
+    S(\text{\emph{reg}}(= [\alpha_{1}, .., \alpha_{k}])) = 
+    \prod_{i=1}^{k} S(\text{\emph{reg}}(\alpha_{i}))
+    + \prod_{i=1}^{k} S(\text{\emph{reg}}(\textit{wff\_to\_nnf}(\scriptstyle{\sim}\textstyle \alpha_{i}))).
+    \]
+%\end{adjustwidth}
+
+ \textbf{If} $\alpha \text{ is } ``\mathcal{G}_{[a,b]} \alpha_{1}$"\textbf{:}
+% \begin{adjustwidth}{10mm}{3em}
+ Recall that $\text{\emph{reg}}(\mathcal{G}_{[a,b]} \alpha) = \bigwedge_{i=a}^{b} (S^n,)^i \text{\emph{reg}}(\alpha) (,S^n)^{b-i}$.\\
+ As shown in the \textit{Assoc\_Prop\_Conn} case, if $\alpha$ is ``$\&[\alpha_1, ... ,\alpha_k$]", then \\
+ $\text{S(\emph{reg}}(\& [\alpha_{1}, .., \alpha_{k}])) = 
+    \prod_{i=1}^{k} \text{S(\emph{reg}}(\alpha_{i}))$. We have that:
+ \begin{align*}
+     \text{S(\emph{reg}}(\alpha)) &= \prod_{i=a}^{b} (n+1)i \cdot \text{S(\emph{reg}}(\alpha_{1}))\\
+     &< \Bigl([(n+1)b+1] \cdot \text{S(\emph{reg}}(\alpha_1))\Bigl)^\delta \\
+     &= \mathcal{C}_{G} \cdot \text{S(\emph{reg}}(\alpha_1)^\delta 
+ \end{align*}
+ where $\mathcal{C}_{G} = [(n+1)b+1]^{\delta}$.
+ In the calculation, $(n+1)i$ counts the concatenation of the padded component of the computation in the worse case when we have a vector of only length 1 strings. \\
+% \end{adjustwidth}
+
+
+ \textbf{If} $\alpha \text{ is } ``\mathcal{F}_{[a,b]} \alpha_{1}$"\textbf{:}
+% \begin{adjustwidth}{10mm}{3em}
+ Recall that $\text{\emph{reg}}(\mathcal{F}_{[a,b]} \alpha) = \bigvee_{i=a}^{b} (S^n,)^i \text{\emph{reg}}(\alpha)(,S^n)^{b-i}$. \\
+ As shown in the \textit{Assoc\_Prop\_Conn} case, if $\alpha$ is ``$\lor[\alpha_1, ... ,\alpha_k$]", then \\
+ $S(\text{\emph{reg}}(\lor [\alpha_{1}, .., \alpha_{k}])) = 
+    \sum_{i=1}^{k} S(\text{\emph{reg}}(\alpha_{i}))$. Thus with similar calculation to $\mathcal{G}$,
+ \begin{align*}
+     \text{S(\emph{reg}}(\alpha)) &= \sum_{i=a}^{b} (n+1)i \cdot \text{S(\emph{reg}}(\alpha_{1})) \\
+     &< \delta\Bigl(((n+1)b+1) \cdot \text{S(\emph{reg}}(\alpha_1))\Bigl) \\
+     &= \mathcal{C}_{F} \cdot \text{S(\emph{reg}}(\alpha_1)
+ \end{align*}
+ where $\mathcal{C}_{F} = \delta[(n+1)b+1]$.
+% \end{adjustwidth}
+ 
+ \textbf{If $\alpha$ = $``\alpha_1 \mathcal{U}_{[a, b]} \alpha_2"$:}
+% \begin{adjustwidth}{10mm}{3em}
+    By our previous definitions, 
+    $\text{\emph{reg}}(\alpha_1 \ \mathcal{U}_{[a,b]} \alpha_2) =  \bigvee_{i=a}^{b} \text{\emph{reg}}\left(\mathcal{G}_{[a,i-1]}\alpha_1 \land \mathcal{G}_{[i, i]} \alpha_2\right)$. \\
+    We can bound $S(\text{\emph{reg}}(\mathcal{G}_{[i, i]} \alpha_2))$ by $(n+1) \cdot i \cdot S(\text{\emph{reg}}(\alpha_2))$ because the operation is equivalent to simply prepending $(S^n ,)^i$.
+    Thus using our previous results for the $\mathcal{G}$, $\&$ and $\lor$ operators, we have that:
+    \begin{align*}
+        S(\text{\emph{reg}}(\alpha)) &= 
+        \sum_{i = a}^b [((n+1)(i-1) + 1) \cdot S(\text{\emph{reg}}(\alpha_1))]^\delta 
+        [(n+1) \cdot i \cdot S(\text{\emph{reg}}(\alpha_2))] \\
+        &< \delta [((n+1)(b-1) + 1) \cdot S(\text{\emph{reg}}(\alpha_1))]^\delta 
+        [(n+1) \cdot b \cdot S(\text{\emph{reg}}(\alpha_2))] \\
+        &< \delta ((n+1)(b-1) + 1)^\delta \cdot (n+1) \cdot d \cdot S(\text{\emph{reg}}(\alpha_1))^\delta \cdot S(\text{\emph{reg}}(\alpha_2)) \\
+        &= \mathcal{C}_U \cdot S(\text{\emph{reg}}(\alpha_1))^\delta \cdot S(\text{\emph{reg}}(\alpha_2))
+    \end{align*}
+    where $\mathcal{C}_U = \delta ((n+1)(b-1) + 1)^\delta \cdot (n+1) \cdot d$.
+%  \end{adjustwidth}
+ 
+  \textbf{If $\alpha$ = $``\alpha_1 \mathcal{R}_{[a, b]} \alpha_2"$:}
+%  \begin{adjustwidth}{10mm}{3em}
+        By our previous definitions, $\text{\emph{reg}}(\alpha_1 \mathcal{R}_{[a,b]} \alpha_2) =  \text{\emph{reg}}\left(\mathcal{G}_{[a,b]}\alpha_2\right) \lor \bigvee_{i=a}^{b-1} \text{\emph{reg}}\left(\mathcal{G}_{[a,i]}\alpha_2 \land \mathcal{G}_{[i, i]} \alpha_1\right)$. Thus, a similar argument to the $\mathcal{U}$ case gives us that: 
+        \begin{align*}
+            S(\text{\emph{reg}}(\alpha)) &< 
+            \mathcal{C}_G \cdot S(\text{\emph{reg}}(\alpha_1))^
+            \delta + \sum_{i = a}^{b-1} [\mathcal{C}_G \cdot S(\text{\emph{reg}}(\alpha_1))^
+            \delta \cdot (n+1)\cdot i \cdot S(\text{\emph{reg}}(\alpha_2))] \\
+            &< \mathcal{C}_G \cdot S(\text{\emph{reg}}(\alpha_1))^
+            \delta + \delta[\mathcal{C}_G \cdot S(\text{\emph{reg}}(\alpha_1))^
+            \delta \cdot (n+1)(b-1) \cdot S(\text{\emph{reg}}(\alpha_2))] \\
+            &= \mathcal{C}_G \cdot S(\text{\emph{reg}}(\alpha_1))^
+            \delta [1 + \delta(n+1)(b-1)S(\text{\emph{reg}}(\alpha_2))] \\
+            &< \mathcal{C}_G \cdot S(\text{\emph{reg}}(\alpha_1))^
+            \delta (\delta(n+1)d \cdot S(\text{\emph{reg}}(\alpha_2))) \\
+            &= \mathcal{C}_R \cdot S(\text{\emph{reg}}(\alpha_1))^\delta \cdot S(\text{\emph{reg}}(\alpha_2))
+        \end{align*}
+        where $\mathcal{C}_R = \mathcal{C}_G \cdot \delta (n+1)d$. \\
+%  \end{adjustwidth}
+
+\begin{theorem}[\emph{Space Complexity}]
+Given a well formed MLTL formula $\alpha$, $\text{\emph{reg}}(\alpha)$ has worst-case space complexity that is $O(\mathcal{C}_U^{\delta ^ \ell} \cdot (\ell + 1)^{\delta^{\ell + 1}})$, where $\ell$ is the number of logical connectives ($\land, \lor, \mathcal{F}, \mathcal{G}, \mathcal{R}, \mathcal{U}$) in $\alpha$. 
+\end{theorem}
+\begin{proof}
+    To analyze worst-case complexity, it's clear from the analysis above that $\mathcal{U}$ and $\mathcal{R}$ give the largest complexity. From the constants in their respective bounds, we can show that $\mathcal{C}_U = ((n+1)d - n)^\delta \cdot \mathcal{C}_R > \mathcal{C}_R$, and so we'll analyze only repeated nesting of the operator $\mathcal{U}$.
+    
+    However, notice that the structure of the parse tree is important. For example, formulas similar to $(a \mathcal{U} b) \mathcal{U} (c \mathcal{U} d)$ generate a balanced binary parse tree where the maximum depth of recursion is $O(\log \ell)$. However if the nesting is only from one side, such as formulas similar to $(((p_0 \mathcal{U} p_1) \mathcal{U} p_2) \mathcal{U} p_3)$, then the maximum depth of recursion is $O(\ell)$. Thus we'll focus on the formula $$\alpha = (((p_0 \mathcal{U}_{[a_1, b_1]} p_1) \mathcal{U}_{[a_2, b_2]} p_2) \mathcal{U}_{[a_3, b_3]}... \mathcal{U}_{[a_{\ell - 1}, b_{\ell - 1}]} p_{\ell - 1}) \mathcal{U}_{[a_\ell, b_\ell]} p_\ell$$ where there are $\ell$ logical connectives $\mathcal{U}$ and $n = \ell + 1$ propositional variables. 
+    
+    We'll derive the complexity of $S(\text{\emph{reg}}(\alpha))$ by defining the recursive sequence $\{s_k\}_{k = 1}^\ell$ such that $s_1 = S(\text{\emph{reg}}(p_0 \mathcal{U}_{[a_1, b_1]} p_1))$, and $s_{k+1} = \mathcal{C}_U (s_k)^\delta \cdot S(\text{\emph{reg}}(p_{k+1}))$. The recurrence relation captures an extra nesting of the $\mathcal{U}$ operator, based on the complexity of $\mathcal{U}$ defined above. We calculate $S(p_m) = n = \ell + 1$ for all $m$ such that $0 \leq m \leq \ell$, thus $s_1 = \mathcal{C}_U(\ell + 1)^{\delta + 1}$ and $s_{k+1} = \mathcal{C}_U (s_k)^\delta \cdot (\ell + 1)$. 
+    
+    The explicit formula is given by $s_k = \mathcal{C}_U^{\sum_{i = 0}^{k - 1} \delta^i} \cdot (\ell + 1)^{\sum_{i = 0}^{k} \delta^i}$. It's easy to check that the base case $k = 1$ holds, and we prove the claim by induction:
+    \begin{align*}
+        S_{k + 1} &= \mathcal{C}_U (\mathcal{C}_U^{\sum_{i = 0}^{k - 1} \delta^i} \cdot (\ell + 1)^{\sum_{i = 0}^{k} \delta^i}) ^ \delta \cdot (\ell + 1) \\
+        &= \mathcal{C}_U^{1 + \sum_{i = 0}^{k - 1} \delta^{i + 1}} \cdot (\ell + 1)^{1 + \sum_{i = 0}^{k} \delta^{i + 1}} \\
+        &= \mathcal{C}_U^{\sum_{i = 0}^k \delta^i} \cdot (\ell + 1)^{\sum_{i = 0}^{k+1} \delta^i}.
+    \end{align*}
+    
+    \noindent Thus we have that $S(\text{\emph{reg}}(\alpha)) = \mathcal{C}_U^{\sum_{i = 0}^{\ell - 1} \delta^i} \cdot (\ell + 1)^{\sum_{i = 0}^{\ell} \delta^i} = O(\mathcal{C}_U^{\delta ^ \ell} \cdot (\ell + 1)^{\delta^{\ell + 1}})$.
+    
+ \end{proof}
+
+For time complexity, through a similar analysis, we've found that the time-complexity of all of the above functions is the same as their space complexity. In particular, the time complexities of $\alpha = p_k, \scriptstyle{\sim}\textstyle p_k, T, !$, as well as that of set intersection, \textit{join}, and the operator $\mathcal{C}_U$ match their respective space complexities. Thus the worst case time complexity is $O(\mathcal{C}_U^{\delta ^ \ell} \cdot (\ell + 1)^{\delta^{\ell + 1}})$ as well. 
+
+One feature within our implementation of \textit{reg} is to apply the \textit{simplify} function to all intermediary vector calculations in order to decrease the output size. In the worst case if no simplification occurs, space complexity remains unchanged, but time complexity of \textit{simplify} is cubic in input size. In practice however, both time and space complexities are much more optimistic than worst-case estimates. 
+ 
+\subsection{Experimental Benchmarking}
+ Along with theoretical space and time complexity, we provide some experimental benchmarking of these complexities using randomly generated MLTL formulas.
+This was done on an Intel(R) Core(TM) i7-4770S CPU at 3.10GHz with 32gb RAM.
+For each simulation, we generated 1000 MLTL formulas using the parameters DELTA, INTERVAL\_MAX, number of propositional variables, and number of iterations. DELTA is the maximum length we allow for any interval. INTERVAL\_MAX is the largest allowed upper bound for any interval. Number of iterations refers to the level of nesting in the generated formulas. For example, $\mathcal{G}_{[0,2]}p_0$ is a formula generated with one iteration, while $\mathcal{G}_{[0,2]}(p_0 \land p_1)$ is a formula generated with two iterations. We measure the number of characters in the output and the amount of time in milliseconds taken to run the program. Note that these simulations run the \textit{reg} function with the subformula boolean set to false and the simplify boolean set to true.
+
+\subsubsection{Simulation 1}
+For the first simulation, we consider 2 iterations, 5 propositional variables, 10 for DELTA, and 10 for INTERVAL\_MAX. Below are some examples of generated formulas:
+\begin{itemize}
+  \item $(p_4 \land p_0) \mathcal{U}_{[2,3]} (\neg p_1)$.
+  \item $(\mathcal{G}_{[3,5]} p_3) \mathcal{R}_{[7,8]} (p_3 \rightarrow p_0)$.
+  \item $\mathcal{F}_{[1,6]} (p_4 = p_3)$.
+\end{itemize}
+We obtain the following plots:
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.75]{images/Sim1Length.png}
+    \caption{Input length in number of characters vs output length in number of characters for simulation 1. Input length counts all characters, including parentheses, of the inputted formulas. Output length counts all the characters outputted, including commas.}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.75]{images/Sim1Time.png}
+    \caption{Input length in number of characters vs run time in milliseconds for simulation 1. Input length counts all characters, including parentheses, of the inputted formulas.}
+\end{figure}
+\noindent The extreme outlier seen in the output length plot corresponds to the formula $(p_0 = p_1) \mathcal{U}_{[2,9]} (p_1 \mathcal{U}_{[7,9]} p_3)$.\\
+The three extreme outliers seen in the time plot correspond to the formulas 
+\begin{itemize}
+    \item $(p_0 = p_1) \mathcal{U}_{[2,9]} (p_1 \mathcal{U}_{[7,9]} p_3)$ (same formula as the complexity outlier).
+    \item $(p_4 \rightarrow p_2) \mathcal{R}_{[1,8]} (p_3 \mathcal{U}_{[3,4]} p_0)$.
+    \item $(p_3 \mathcal{R}_{[2,7]} p_4) \mathcal{R}_{[1,9]} (p_4 \mathcal{R}_{[4,9]} p_3)$.
+\end{itemize}
+
+\subsubsection{Simulation 2}
+For the second simulation, we consider 1 iteration, 10 propositional variables, 20 for DELTA, and 20 for INTERVAL\_MAX. Below are some examples of generated formulas:
+\begin{itemize}
+    \item $\mathcal{F}_{[10,17]} p_4$.
+    \item $\neg p_6$.
+    \item $p_6 \mathcal{U}_{[6,14]} p_8$.
+\end{itemize}
+We obtain the following plots:
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.75]{images/Sim2Length.png}
+    \caption{Input length in number of characters vs output length in number of characters for simulation 2. Input length counts all characters, including parentheses, of the inputted formulas. Output length counts all the characters outputted, including commas.}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.75]{images/Sim2Time.png}
+    \caption{Input length in number of characters vs run time in milliseconds for simulation 2. Input length counts all characters, including parentheses, of the inputted formulas.}
+\end{figure}
+
+\subsubsection{Simulation 3}
+For the third simulation, we consider 2 iterations, 10 propositional variables, 5 for DELTA, and 10 for INTERVAL\_MAX. Below are some examples of generated formulas:
+\begin{itemize}
+    \item $(p_5 \land p_0) = (p_8 \mathcal{U}_{[3,6]} p_8)$.
+    \item $(\mathcal{G}_{[6,7]} p_4) \land (\mathcal{F}_{[5,7]} p_1)$.
+    \item $\neg (p_0 \mathcal{U}_{[2,5]} p_7)$.
+\end{itemize}
+We obtain the following plots:
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.75]{images/Sim3Length.png}
+    \caption{Input length in number of characters vs run time in milliseconds for simulation 3. Input length counts all characters, including parentheses, of the inputted formulas.}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.75]{images/Sim3Time.png}
+    \caption{Input length in number of characters vs run time in milliseconds for simulation 3. Input length counts all characters, including parentheses, of the inputted formulas.}
+\end{figure}
+The three outliers in the output length plot are the formulas 
+\begin{itemize}
+    \item $(p_7 \mathcal{U}_{[5,7]} p_9) \mathcal{U}_{[3,7]} (\mathcal{F}_{[1,4]} p_4)$.
+    \item $\mathcal{G}_{[3,7]} (p_9 \mathcal{U}_{[0,4]} p_0)$.
+    \item $(\neg p_9) \mathcal{R}_{[5,9]} (p_5 \mathcal{U}_{[2,4]} p_3)$.
+\end{itemize}
+The former two are also the time complexity outliers.
+
+\subsubsection{Simulation 4}
+For the fourth simulation, we consider 1 iteration, 5 propositional variables, 10 for DELTA, and 10 for INTERVAL\_MAX. Below are some examples of generated formulas:
+\begin{itemize}
+    \item $\neg p_1$.
+    \item $p_1 \mathcal{R}_{[6,7]} p_3$.
+    \item $\mathcal{F}_{[5,5]} p_3$.
+\end{itemize}
+
+We obtain the following plots:
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.75]{images/Sim4Length.png}
+    \caption{Input length in number of characters vs run time in milliseconds for simulation 4. Input length counts all characters, including parentheses, of the inputted formulas.}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.75]{images/Sim4Time.png}
+    \caption{Input length in number of characters vs run time in milliseconds for simulation 4. Input length counts all characters, including parentheses, of the inputted formulas.}
+\end{figure}
+
+\noindent What we observe from the simulations is that the worst case complexity, both for space and time, is relatively sparse. We also observe that these worst cases are extreme outliers and that in nearly every case, are examples of nested binary temporal operators. As seen in \cite{HLR21}, \cite{KZJZR20}, \cite{AJR22}, and \cite{HCHJR21}, nested binary temporal operators do not appear in any specifications, and thus are likely rare in practical applications.
+
+\section{Verification of Correctness} \label{test}
+ The correctness of an abstract algorithm one can describe on pencil and paper differs from the correctness of an actual implementation of the algorithm (the program). 
+On one hand, correctness of an algorithm is assured by mathematical analysis of the algorithm on all possible inputs and showing that it behaves as desired. 
+However, assuring correctness of the program is a difficult task.
+One naive approach is to test every possible input up to a certain size, and verify the output or behavior of the program.
+This often times involves a test suite that is too large to be computationally feasible, and the test suite may be overtly redundant. 
+For instance, there is little sense in testing all MLTL formulas of the form $p_0 \mathcal{U}_{[0,t]} p_1$ for all $t$ such that $0 \leq t \leq 99$; verification of a few should give sufficient confidence of correctness of the program for any reasonable party. 
+
+We approach this problem more intelligently. In the following sections, we prove the correctness of our algorithm and also test our implementation with a test suite that explores all control paths (up to a certain depth) of the algorithm. A control path can be thought of as a sequence of lines of code that are executed in one calculation of an input formula. Differing structures of formulas will lead to different sequences of lines of code to be executed, and a test suite to explore all such paths provides high confidence in the correctness of the WEST program.
+
+\subsection{Theoretical Correctness of the WEST Algorithm}
+ Correctness of the WEST algorithm is dependent on the correctness of subroutines \textit{reg\_prop\_cons}, \textit{reg\_prop\_var}, \textit{join}, \textit{set\_intersect}, \textit{reg\_F}, \textit{reg\_G}, \textit{reg\_U}, and \textit{reg\_R}. 
+
+The routines \textit{reg\_prop\_cons} and \textit{reg\_prop\_var} takes as input a MLTL formula of the appropriate form, and returns the regular expression as previously defined in section \ref{regex}.
+
+\textit{Join} takes as input two vectors of computation strings $R$ and $T$, and simply returns a vector containing all strings in $R$ and $T$, which is equivalent to $R \cup T$. 
+
+\textit{Set\_intersect} takes as input two vectors of computation strings $R$ and $T$, where $R$ represents $r_1 | ... | r_a$ and $T$ represents $t_1 | ... | t_b$ such that each $r_i$ and $t_j$ are regular expressions over $\Sigma = \{`0', `1', `S', `,'\}$. Assume that all strings of regular expressions are right padded to equal length. We show that $\mathscr{L}(\textit{set\_intersect}(R, T)) = \mathscr{L}(R) \cap \mathscr{L}(T)$. Since a vector of regular expressions is synonymous to the collective Or of each of them, we have that 
+\begin{align*}
+    \mathscr{L}(R) \cap \mathscr{L}(T) &= \left(\bigcup_{i = 0}^a \mathscr{L}(r_i) \right)\cap \left( \bigcup_{j = 0}^b \mathscr{L}(t_j)\right) = \bigcup_{i = 0}^a \bigcup_{j = 0}^b \left(\mathscr{L}(r_i) \cap \mathscr{L}(t_j)\right).
+\end{align*}
+
+\textit{Set\_intersect} computes the union of \textit{bit\_wise\_and}$(r_i, t_j)$ over all such pairs, and so it suffices to show $\mathscr{L}(\textit{bit\_wise\_and}(r_i, t_j)) = \mathscr{L}(r_i) \cap \mathscr{L}(t_j)$.  Given a computation $\pi$, $\pi \in \mathscr{L}(r_i) \cap \mathscr{L}(t_j)$ if and only if $\pi$ matches every character of both $r_i$ and $t_j$. $\textit{Bit\_wise\_and}(r_i, t_j)$ compares $r_i$ and $t_j$ character by character and computes their intersection, which is defined naturally: $0 \cap 1 = \emptyset,\ 0 \cap S = 0,\ 1 \cap S = 1, \ 0 \cap 0 = 0, \ 1 \cap 1= 1,\text{ and } S \cap S = S$. Note that this operation is commutative. This exhaustively captures all the cases for which $\pi$ must match corresponding characters from $r_i$ and $t_j$. Thus $\mathscr{L}(\textit{bit\_wise\_and}(r_i, t_j)) = \mathscr{L}(r_i) \cap \mathscr{L}(t_j)$ and the claim holds.
+
+The correctness for \textit{reg\_F}, \textit{reg\_G}, \textit{reg\_U}, \textit{reg\_R}, and \textit{reg} will be proven by induction on depth of recursion to \textit{reg}. 
+The depth of recursion is exactly the depth of the parse tree of the input formula.
+
+For the base case (depth $0$), \textit{reg\_prop\_var} and \textit{reg\_prop\_cons} are called to handle input formulas that consist of a propositional variable, the negation of a propositional variable, or a propositional constant.
+
+Then assume \textit{reg} is correct on all formulas of depth at most $d$, for some integer $d \geq 0$. Let $\gamma$ be a MLTL formula in negation normal form of depth $d + 1$. $\gamma$ must be of the form $\mathcal{G}_{[a,b]}\alpha$, $\mathcal{F}_{[a,b]}\alpha$, $\alpha \mathcal{U}_{[a,b]} \beta$, or $\alpha \mathcal{R}_{[a,b]} \beta$, such that $\alpha$ and $\beta$ are of depth at most $d$, and $a$, $b$ are positive integers. The proof for all four cases are of similar structure, and it suffices to verify that the algorithms compute appropriate regular expressions correctly using \textit{join} and \textit{set\_intersect}.
+
+We give the explicit proof for the case $\gamma = \alpha \mathcal{U}_{[a,b]} \beta$ as an example.
+In this case, \textit{reg} will call the helper function \textit{reg\_U} and pass in the parameters $\textit{reg\_alpha} = \textit{reg}(\alpha)$ and $\textit{reg\_beta} = \textit{reg}(\beta)$, which, by the induction hypothesis, are correctly and recursively computed.
+The regular expression for the Until operator may be rewritten as follows: 
+\begin{align*}
+   \text{reg}(\alpha \ \mathcal{U}_{[a,b]} \beta) &=  \bigvee_{i=a}^{b} \text{reg}\left(\mathcal{G}_{[a,i-1]}\alpha \land \mathcal{G}_{[i, i]} \beta\right) \\
+   &= \text{reg}\left(\mathcal{G}_{[a,a-1]}\alpha \land \mathcal{G}_{[a, a]} \beta\right) \lor \bigvee_{i=a+1}^{b} \text{reg}\left(\mathcal{G}_{[a,i-1]}\alpha \land \mathcal{G}_{[i, i]} \beta\right) \\
+   &= \text{reg}\left(\mathcal{G}_{[a, a]} \beta \right)\lor \bigvee_{i=a}^{b-1} \text{reg}\left(\mathcal{G}_{[a,i]}\alpha \land \mathcal{G}_{[i+1, i+1]} \beta\right)
+\end{align*}
+
+The last line follows from the semantics of the Global operator, which defines out of bound time step behavior to be vacuously true. In the pseudocode for $reg\_U$ (\ref{regU}), the variable \textit{comp} is initialized to $(`1S"^n + ``,")^a$ pre-concatenated to \textit{reg\_beta}, and is the regular expression for $\mathcal{G}_[a, a] \beta$. Next, the Or block from $i = a + 1$ to $b - 1$ is iteratively computed using \textit{set\_intersect} for the inner expression, and added to \textit{comp} with the \textit{join} function, which are both proven correct above. This shows correctness of \textit{reg\_U}.
+Continue in the same fashion to prove the other three cases, \textit{reg} is correct on all depth $d+1$ inputs, and thus \textit{reg} is correct on all inputs by induction.
+
+\subsection{Correctness of WEST}
+ Negative testing is the process of checking that a program is able to handle unexpected inputs without crashing; fuzz testing (also know as fuzzing) is a form of negative testing.
+The earliest use of fuzzing by Miller \cite{Miller} was to discover bugs in Unix utilities by randomly generating command line inputs, and monitoring for unexpected crashes or security. This style of black box testing assumes no prior knowledge of the target program, and is centered on generating a large quantity of inputs. Miller describes his approach in \cite{Miller} as follows: \\
+
+ \textit{``If we consider a program to
+be a complex finite state machine, then our testing strategy can be thought of as a random walk through the state space, searching for undefined states.''} \\
+
+Intelligent fuzzing (sometimes referred to as whitebox fuzzing) is an alternate approach to fuzz testing that leverages knowledge about program structure to generate valid inputs and increase coverage. 
+Borrowing the words of Miller, our approach to testing the WEST program can be thought of as walking all possible paths up to a certain depth of the state space of our algorithm. 
+We first outline our overall approach to intelligent fuzzing: 
+\begin{enumerate}
+    \item Construct a state diagram of our algorithm, represented as a directed graph. 
+    The edges of the graph capture control flow of our algorithm, and vertices represent the remaining blocks of the code without branching statements.  
+    \item Construct a test suite that explores all possible paths in the digraph up to a certain depth. Run the WEST program on the test suite to produce a set of output files.
+    \item Run a naive brute force generator of satisfying computations on the test suite and verify that both outputs match for all test cases.
+\end{enumerate}
+
+\subsubsection{State Diagram Construction}
+ We choose to represent the states space of algorithm as a directed graph with the edges representing the control flow and vertices representing blocks of contiguous code without branching statements. 
+The core of the WEST program is executed in the recursive routine, \textit{reg}, which calls the $8$ different subroutines discussed earlier, as shown in the graph below: 
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=15mm}, bignode/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=20mm}, star/.style={circle, draw=red!60, fill=red!5, very thick, minimum size=1mm}]
+    
+    %Nodes
+    \node[bignode](reg){\textbf{Reg}};
+    \node[node](prop_var)[left=2 cm of reg]{Prop\_Var};
+    \node[node](prop_cons)[below=of prop_var]{Prop\_Cons};
+    \node[star](unary_star)[below=2 cm of reg]{};
+    \node[node](reg_f)[below=of unary_star]{Reg\_F};
+    \node[node](reg_g)[left= of reg_f]{Reg\_G};
+    \node[star](temp_binary_star1)[right=2 cm of unary_star]{};
+    \node[star](temp_binary_star2)[below= of temp_binary_star1]{};
+    \node[node](reg_u)[below=of temp_binary_star2]{Reg\_U};
+    \node[node](reg_r)[right=of reg_u]{Reg\_R};
+    \node[star](prop_binary_star1)[right= of reg]{};
+    \node[star](prop_binary_star2)[right= of prop_binary_star1]{};
+    \node[node](join)[right=of prop_binary_star2]{Join};
+    \node[node](set_intersect)[below=of join]{Set\_Intersect};
+    
+    %Lines
+    \draw[->] (reg.west) -- (prop_var.east);
+    \draw[->] (reg.south) -- (prop_cons.north);
+    \draw[->] (reg.south) -- (unary_star.north);
+    \draw[->] (unary_star.south) -- (reg_f.north);
+    \draw[->] (unary_star.south) -- (reg_g.north);
+    \draw[->] (reg.south) -- (temp_binary_star1.north);
+    \draw[->] (reg.east) -- (prop_binary_star1.west);
+    \draw[->] (temp_binary_star1.south) -- (temp_binary_star2.north);
+    \draw[->] (temp_binary_star2.south) -- (reg_r.north);
+    \draw[->] (temp_binary_star2.south) -- (reg_u.north);
+    \draw[->] (prop_binary_star1.east) -- (prop_binary_star2.west);
+    \draw[->] (prop_binary_star2.east) -- (join.west);
+    \draw[->] (prop_binary_star2.south) -- (set_intersect.north);
+    \end{tikzpicture}
+    
+    
+    
+    \caption{Abstracted graph of the \textit{reg} main routine (refer to Appendix \ref{graphs appendix} for expanded graph and graphs of helper functions). Red nodes signal recursive calls to \textit{reg} on sub formulas of the input formula.}
+    \label{fig:abstracted graph}
+\end{figure}
+
+In order to construct the intelligent fuzzing test suite, we make the design choice to abstract away the eight subroutines in the overall state space diagram, despite the fact that they may have different possible execution paths within them. Without this abstraction, attempting to explore all execution paths in this finer graph is infeasible due to the explosion in the number of paths \cite{Pham_2016}, some of which are provably impossible to construct a test input to explore.
+
+Additionally, the astute reader may observe that analysis of the $>$, $=$, and \textit{assoc\_prop\_conn} operators are not included in the state diagram. 
+These cases are handled in the algorithm through only formula rewriting to the core operators. This is done through simple string manipulation, which is relatively simple to guarantee and test correctness of through unit testing.
+
+\subsubsection{Creating the Test Suite}
+ We now give the procedure of how the intelligent fuzzing test suite is generated. 
+Firstly, we count the number of formulas $\phi(d)$ to be generated as a function of the exact depth $d$ of recursion desired. 
+For $d = 0$, only the paths leading to \textit{prop\_var} and \textit{prop\_cons} can be explored, so $\phi(0) = 2$. For $d \geq 1$, we recursively calculate $\phi(d + 1) = 2\phi(d) + 4\phi(d)^2$; paths to \textit{reg\_G} and \textit{reg\_F} is counted in the linear term, and paths \textit{reg\_U}, \textit{reg\_R}, \textit{set\_intersect}, and \textit{join} is counted by the quadratic term. 
+This gives $\phi(1) = 20$, $\phi(2) = 1640$, and $\phi(3) = 10761680$. 
+$d = 3$ is computationally infeasible, and $d = 1$ doesn't give us assurance about operators interacting with each other through nesting. Thus $d = 2$ is a happy medium. 
+
+The full test suite is generated in a similar recursive manner. 
+Firstly, the $d = 0$ test suite comprises of two formulas: a propositional variable or its negation, and a propositional constant. 
+Then for any $d \geq 1$, the test suite is constructed by iterating through all formulas in the depth $d-1$ test suite for \textit{reg\_G} and \textit{reg\_F}, and all pairs of formulas from the $d-1$ test suite for the remaining four recursive paths. 
+To ensure wider coverage, each of the propositional variables or their negation and propositional constants are randomly generated (full pseudocode description in Appendix \ref{pseudocode appendix}).
+
+\subsubsection{Verifying against Naive Brute Force}
+ A relatively straight forward approach to generating the set of all satisfying computations of a MLTL formula $\alpha$ over $n$ variables, such that $m = \text{complen}(\alpha)$, is to iterate over all $2^{m \cdot n}$ possible computations, which counts all possible length $m \cdot n$ bit strings. 
+The main work is done by an interpreter function that takes arguments of computation $\pi$ and MLTL formula $\alpha$ and determines if $\pi \vDash \alpha$ purely based on semantics that define MLTL.
+Every first-order quantifier is easily translated to loops, and checking for satisfying conditions of the suffix of a computation naturally lends itself to recursion.
+The full implementation details can be found on the \href{https://github.com/zwang271/2022-Iowa-State-REU-Temporal-Logic-.git}{GitHub} repository. 
+
+As expected for a brute force implementation, extensive run time poses a major limitation; the previously mentioned infeasibility of not abstracting away subroutines and running test suites for deeper depths is primarily caused by this stage of verification. 
+On an Intel(R) Core(TM) i7-4770S CPU at 3.10GHz with 32gb RAM, the brute force program took nearly nine hours to execute the depth two test suite of $1640$ formulas. 
+For this test suite, the number of propositional variables was fixed at $n = 4$ and the largest computation length was $m = 5$, from formulas with doubly-nested temporal operators. 
+In comparison, the WEST program executed the same test suite in under thirty minutes on the same machine. One thing to note is that the brute force program outputs only computations of zeros and ones, and thus comparing the outputs of the WEST program requires expanding out the `$S$' characters in the regular expressions. For instance, the regular expression ``$1SS0SS1$" yields $2^{\text{\# of `$S$'s}} = 2^4 = 16$ computations after expansion.
+
+It's important to state that although the full test suite matches between both implementations, absolute correctness on all inputs is not guaranteed for either program. However, the successful execution of the test suite gives us a much higher confidence in correctness of both the WEST program and the brute force program. 
+
+\section{Regular Expression Simplification Theorem} \label{simpsection}
+ As a final result of our paper, we provide a regular expression simplification theorem. This theorem describes a form of a set of computations that are guaranteed to simplify down to a string of all `$S$'s. Although not implemented in the WEST program, this theorem may help users identify tautologies, as the WEST program does not always output a single string of `$S$'s when a formula holds true for every computation. We first define some vocabulary.
+
+\begin{definition}[\emph{Arbitrary Computation}]
+We say a regular expression composed entirely of `$S$'s and commas is an \emph{arbitrary computation}. For the purposes of the following theorem, we remove all commas from computations.
+\end{definition}
+\begin{definition}[\emph{Fixed Truth Value}]
+We say `0' or a `1' in a regular expression is a \emph{fixed truth value}.
+\end{definition}
+\begin{definition}[\emph{Matrix}]
+We overload the definition of a matrix and say that a \emph{matrix} is a representation of a union of regular expressions, where each row is a regular expression. This aids significantly in the description and proof of the theorem; note, however, that matrix algebra does not apply in this definition. 
+\end{definition}
+
+\begin{theorem}[\emph{Regular Expression Simplification Theorem}] \label{simp}
+Let M be a $n+1$ by $n$ matrix, where each of the $n+1$ rows represents a regular expression of length n with commas stripped. If each column has one `$1$', one `$0$', and $n-1$ `$S$'s, then the union of this set of regular expressions can be simplified to $S^n$, the arbitrary computation of length $n$.
+\end{theorem}
+
+\noindent \textbf{Example:}
+\vspace{-0.05\textwidth}
+\begin{center}
+\[
+    \begin{pmatrix} \label{example1}
+    1 & S & S & S\\
+    S & 1 & S & S\\
+    S & S & 1 & S\\
+    S & S & S & 1\\
+    0 & 0 & 0 & 0
+    \end{pmatrix} = SSSS.
+\]
+\end{center}
+
+\noindent See Appendix \ref{simp appendix} for the proof of the theorem.\\
+
+Note that the theorem is a sufficient but not necessary condition for simplification to the arbitrary computation. One such example is the regular expression $101|S1S|1S0|0SS$, which fails the hypothesis of the simplification theorem but is still equivalent to $SSS$.
+
+\subsection{Implementation Challenges of the Regular Expression Simplification Theorem}
+
+\begin{example} \label{example1}
+Consider the MLTL formula:
+$T \ \mathcal{U_{[\text{0,3}]}} p_0 = \mathcal{F_{[\text{0,3}]}}p_0$
+\end{example}
+Our program outputs the following union of regular expressions to represent this formula:
+
+\begin{center}
+    $
+    \begin{pmatrix}
+    1 & S & S & S\\
+    S & 1 & S & S\\
+    S & S & 1 & S\\
+    S & S & S & 1\\
+    0 & 0 & 0 & 0
+    \end{pmatrix}.
+$
+\end{center}
+
+Instances like this demonstrate the utility of the regular expression simplification theorem; a recursive function implementation of this theorem would simplify output to the arbitrary computation. However, we foresee some challenges to the implementation of this algorithm. 
+
+First, the proof of our algorithm relies on a set of $n+1$ regular expressions, yet it is obvious that the inclusion of redundant regular expressions of the same computation length in the union wouldn't alter this equivalence. A program implementation of this theorem would require an algorithm to parse through and identify which of these regular expressions are redundant and don't match the format of those described in our proof. For example, adding the row ``$1,1,1,1$" to the matrix generated by example \ref{example1} would change the matrix to not match the specifications of the theorem, but the union would still simplify to the arbitrary computation.
+
+Next, it is possible that a regular expression could be appended with a substring of `$S$'s at the beginning or end. Consider the following MLTL formula:
+\begin{example} \label{example2}
+$T \ \mathcal{U_{[\text{2,3}]}} p_0 \equiv \mathcal{F_{[\text{2,3}]}}p_0$
+\end{example}
+\noindent The WEST program generates the following union of regular expressions:
+\begin{center}
+$
+    \begin{pmatrix}
+    S & S & 1 & S\\
+    S & S & S & 1\\
+    S & S & 0 & 0
+    \end{pmatrix}.
+$
+\end{center}
+
+It can clearly be seen that this is equivalent to the arbitrary computation, as one can remove the first two columns and apply the simplification theorem to the remaining columns.
+
+Furthermore, identical substrings may be interspersed throughout the set of regular expressions. Then, the union of them won't simplify to the arbitrary computation, but rather, the arbitrary computation ``broken up" by common substrings. Consider the following modification to the matrix generated by example \ref{example1}:
+\begin{center}
+$
+\begin{pmatrix}
+  0 & \mathbf{1} & \mathbf{S} & 1 & S & 0 & \mathbf{S} & \mathbf{S} & 1\\
+  0 & \mathbf{S} & \mathbf{1} & 1 & S & 0 & \mathbf{S} & \mathbf{S} & 1\\
+  0 & \mathbf{S} & \mathbf{S} & 1 & S & 0 & \mathbf{1} & \mathbf{S} & 1\\
+  0 & \mathbf{S} & \mathbf{S} & 1 & S & 0 & \mathbf{S} & \mathbf{1} & 1\\
+  0 & \mathbf{0} & \mathbf{0} & 1 & S & 0 & \mathbf{0} & \mathbf{0} & 1\\
+    \end{pmatrix} \equiv  0\mathbf{S}\mathbf{S}1S0  \mathbf{S}\mathbf{S}1
+$
+\end{center}
+
+The substrings ``$0$", ``$1S0$", and ``$1$" are inserted at the beginning, middle, and end, respectively. In general, a vector of length $m$ strings seeking to apply the theorem to $n$ of its columns has $m \choose n$ combinations of columns to check for. Implementation of this algorithm can drastically increase run-time while proving its utility in only a small number of circumstances.
+
+
+\section{Closing Remarks}
+\label{Conclusion}
+ One goal of this research project is to visually represent MLTL formulas as truth tables, similar to classical truth tables in propositional logic. 
+The goal is motivated by the fact that MLTL is widely used in industry by engineers and scientists to write specifications for safe critical systems, and the WEST program can aide in the debugging of such specifications. 
+The WEST program accomplishes this: given MLTL formula $\alpha$, we compute a way to capture all satisfying formulas $\pi$ in a relatively readable format that additionally captures structural patterns in such regular expressions. 
+The tool itself has demonstratively reasonable run time. 
+Although worst case theoretical complexity is doubly exponential, our benchmarking shows that the most severe case is very sparse in practice. 
+
+We have also applied techniques in intelligent fuzzing to explore the state space of the algorithm in a structured way. 
+For a reasonably complex program, a complete walk of the input space is infeasible. 
+However, basing testing on a (manually constructed) graph of the algorithm provides a middle ground where some level of coverage is guaranteed. 
+Although this isn't a magic box that generates test cases for arbitrary algorithms, the methods used in algorithmic analysis and test suite construction are easily adaptable to similar recursive algorithms.
+
+\subsection{Additional Research Directions}
+\textbf{Describe all satisfying computations to LTL formulas using $\omega$-regular expressions.}
+
+$\omega$-regular expression are defined to match only infinite words, and can be used to describe satisfying computations to LTL formulas (which has infinite time steps). 
+Our original efforts were spent reasoning about the general LTL case before restricting to MLTL. Particular difficulties revolves around the need for the Kleene star operation, which leads to messy arithmetic of infinite unions and intersections of regular expressions. \\
+
+\noindent \textbf{Simplifying unions of regular expressions to a minimal representation.}
+
+Theorem \ref{simp} addresses a non-trivial situation in which a vector of regular expressions may be simplified. A natural question to ask is what is the minimum number of strings of regular expressions needed to represent a language of computations. However, such a minimal representation is not unique. For instance, $\mathscr{L}(S1|1S) = \mathscr{L}(S1|10) = \{01, 10, 11\}$. There may be other schemes needed to simplify any arbitrary union of regular expressions to their minimal representation.\\
+
+\noindent \textbf{A more general application of intelligent fuzzing to recursive algorithms.}
+
+A tool to systematically convert a recursive algorithm (perhaps written in some strictly defined pseudocode syntax) into a directed graph representation of the state space would be a helpful aid for generating test suites. 
+Significant efforts were made to construct the graph of the WEST algorithm by hand, and an automated process would invaluable. 
+Additional care should be put into allowing for varying levels of abstractions of execution due to concerns of the path explosion problem. 
+
+
+% FUTURE WORK:
+% potentially recursive function implementation of Regular Expression Simplification Theorem
+
+%% \subsubsection{Acknowledgements}
+
+%% \hspace{\parindent} This work was done as part of Iowa State University's Research Experience for Undergraduates funded by NSF grant DMS-1950583. We would like to thank Iowa State University and the NSF for this research opportunity.
+
+%% The assistance of our mentors Dr. Kristin Yvonne Rozier and Laura Gamboa Guzmán was invaluable and greatly appreciated. In addition, we thank Dr. Steve Butler and Dr. Bernard Lidický for their management of this program and organization of its funding.
+
+%% Finally, we want to thank Brian Kempa for his guidance and suggestions on the intelligent fuzzing portion of our research, and Dr. Steve Butler for his intuition on the Regular Expression Simplification Theorem.
+
+
+%
+% ---- Bibliography ----
+%
+% BibTeX users should specify bibliography style 'splncs04'.
+% References will then be sorted and formatted in the correct style.
+%
+\bibliographystyle{splncs04}
+\bibliography{Citations}
+
+\newpage
+
+\appendix
+\section*{Appendix} \label{Appendix}
+\renewcommand{\thesection}{\Roman{section}}
+
+ 
+ \section{Until and Release Duality Lemma} \label{duality appendix}
+ \begin{lemma}[\emph{Until and Release Duality}]\label{dual_proof}
+ The definition of Release is equivalent to the dual of Until: 
+ $\alpha \mathcal{R} \beta \equiv \neg (\neg \alpha \mathcal{U} \neg \beta)$. That is to say,
+$\alpha \mathcal{R}_{[a,b]} \beta$ if and only if $|\pi| \le a \text{ or } \forall s \in [a,b] ,(\pi_s \vDash \beta \text{ or } \exists t \in [a, s-1] , \pi_t \vDash \alpha)$.
+ \end{lemma}
+ 
+\begin{proof} $ $\newline
+($\Rightarrow$):\\
+\indent Suppose $\pi \vDash \alpha \mathcal{R}_{[a,b]} \beta$, so:
+\[ |\pi| \leq a \text{ or } \forall i \in [a,b] \text{, (} \pi_i \vDash \beta \text{) or } \exists j \in [a,b-1] \text{, (} \pi_j \vDash \alpha \text{ and } \forall k \in [a, j] \pi_k \vDash \beta \text{)} \]
+
+We proceed by cases to show that:
+\[
+|\pi| \le a \text{ or } \forall s \in [a,b] \text{, (} \pi_s \vDash \beta \text{ or } \exists t \in [a, s-1] \text{, } \pi_t \vDash \alpha \text{)} \tag{A1}
+\]
+\indent Case 0: If $|\pi| \leq a$, then we are immediately done.
+
+\indent Case 1: Suppose $\forall i \in [a,b] \text{, } \pi_i \vDash \beta$.\\
+\indent Through re-labeling, we have $\forall s \in [a,b] \text{, } \pi_s \vDash \beta$. Then we clearly have:
+\[
+|\pi| \le a \text{ or } \forall s \in [a,b] \text{, (} \pi_s \vDash \beta \text{ or } \exists t \in [a, s-1] \text{, } \pi_t \vDash \alpha \text{)} \tag{A1}
+\]
+
+\indent Case 2: Suppose $\exists i \in [a,b] \text{, } \pi_i \cancel{\vDash} \beta$.\\
+\indent \indent Then we must have that:
+\[ \exists j \in [a,b-1] \text{, (} \pi_j \vDash \alpha \text{ and } \forall k \in [a, j] \ \pi_k \vDash \beta \text{)} \tag{1} \]
+\indent \indent We want to show that $ \forall s \in [a,b] \text{, (} \exists t \in [a, s-1] \text{, } \pi_t \vDash \alpha \text{)}$.\\
+\\
+\indent \indent Suppose by contradiction that: 
+\[ \exists s \in [a,b] \text{, (} \forall t \in [a, s-1] \text{, } \pi_t \cancel{\vDash} \alpha \text{)} \tag{2} \]
+\indent \indent Since $s \in [a,b] \text{ and }  t \in [a, s-1]$, we have that $t \in [a,b-1]$.\\
+\indent \indent Since $j \in [a,b-1]$ (from Line 1), we have that $\pi_j \cancel{\vDash} \alpha$ from Line 2.\\
+\indent \indent However from Line 1 we have that $\pi_j \vDash \alpha$ and have thus derived a contradiction.\\
+\indent \indent Thus, we now have that $ \forall s \in [a,b] \text{, (} \exists t \in [a, s-1] \text{, } \pi_t \vDash \alpha \text{)}$.\\ \indent \indent From this, we clearly have that:
+\[
+|\pi| \le a \text{ or } \forall s \in [a,b] \text{, (} \pi_s \vDash \beta \text{ or } \exists t \in [a, s-1] \text{, } \pi_t \vDash \alpha \text{)} \tag{A1}
+\]
+$ $ \newline
+\indent Since these $3$ cases exhaustively capture all cases fo the assumption, the ($\Rightarrow$) direction is proved.
+$ $ \newline
+
+\noindent ($\Leftarrow$):\\
+\indent Suppose that $\pi \vDash \neg (\neg \alpha \mathcal{U} \neg \beta)$:
+\[
+|\pi| \le a \text{ or } \forall s \in [a,b] \text{, (} \pi_s \vDash \beta \text{ or } \exists t \in [a, s-1] \text{, } \pi_t \vDash \alpha \text{) \tag{1}}
+\]
+$ $ \newline
+\indent We want to show $\pi \vDash \alpha R_{[a,b]} \beta$, that is:
+\[ |\pi| \leq a \text{ or } \forall i \in [a,b] \text{, (} \pi_i \vDash \beta \text{) or } \exists j \in [a,b-1] \text{, (} \pi_j \vDash \alpha \text{ and } \forall k \in [a, j] \ \pi_k \vDash \beta \text{)} \tag{B1} \]
+
+\indent Case 0: If $|\pi| \leq a$, again we are immediately done. \\
+\indent Case 1: Suppose $\forall s \in [a,b] \text{, (} \pi_s \vDash \beta \text{)}$.\\ 
+\indent \indent Relabeling $s$ to $i$, we now have that $\forall i \in [a, b] \text{, (}\pi_s \vDash \beta \text{)}$, which implies line B1. \\
+
+\indent Case 2: Suppose $\exists s \in [a,b], \pi_s \cancel{\vDash} \beta$.\\
+\indent \indent By re-labeling $s$ to $i$, we have that $\exists i \in [a,b], \pi_i \cancel{\vDash} \beta$.\\
+\indent \indent Since $[a,b]$ is a finite-discrete interval, there must exist a first $i_1$ s.t. $\pi_{i_1} \cancel{\vDash} \beta$, that is:
+\[ 
+\exists i_1 \in [a,b]\text{, (}  \pi_{i_1} \cancel{\vDash} \beta  \text{ and }  \forall k \in [a, i_1 - 1] \text{, } \pi_{k} \vDash \beta \text{)}
+\tag{2}\]
+
+\indent \indent Since (line 2) $\exists i_1 \in [a,b], \pi_{i_1} \cancel{\vDash} \beta$, by Line 1 we have that: $\pi_{i_1} \vDash \beta \text{ or } \exists t \in [a, i_1 - 1] \text{, } \pi_t \vDash \alpha$.\\
+\indent \indent Thus, we have that: 
+\[
+\exists t \in [a, i_1 - 1] \text{, } \pi_t \vDash \alpha \tag{3}
+\]
+\indent \indent Since  $[a, t] \subseteq [a, i_1 - 1]$ and $\forall k \in [a, i_1 - 1] \text{, } \pi_{k} \vDash \beta$, we have that:
+\[ 
+\forall k \in [a, t]\text{, } \pi_{k} \vDash \beta \tag{4}
+\]
+
+\indent \indent Since $[a,t] \subseteq [a, i_1 - 1] \subseteq [a,b-1]$, we have that $t \in [a,b-1]$, so let $j := t$.
+
+\indent \indent Then from lines 3 and 4, we have that:
+\[
+\exists j \in [a,b-1] \text{, (} \pi_j \vDash \alpha \text{ and } \forall k \in [a, j] \ \pi_k \vDash \beta \text{)} \tag{5}
+\]
+
+\indent \indent From line 5, we now get:
+\[ 
+|\pi| \leq a \text{ or } \forall i \in [a,b] \text{, (} \pi_i \vDash \beta \text{) or } \exists j \in [a,b-1] \text{, (} \pi_j \vDash \alpha \text{ and } \forall k \in [a, j] \ \pi_k \vDash \beta \text{)} \tag{B1}
+\]
+\indent Again the 3 cases are exhaustive of all cases in the assumption, this we have the ($\Leftarrow$) direction.\\
+\\
+This finishes the proof.
+\end{proof}
+
+\section{Regular Expression Simplification Theorem} \label{simp appendix}
+\begin{proof}[Proof of \ref{simp}]
+Assume no row is the arbitrary computation, because then the union of the set of regular expressions would trivially simplify to the arbitrary computation.\\
+
+We begin by showing that there must be at least one row in the matrix $M$ that is composed of one fixed truth value and $n-1$ `$S$'s. This will be of use later in the proof. Because there are $n$ columns and $2$ fixed truth values in each column, there are $2n$ fixed truth values. There are $n+1$ rows, so the average number of fixed truth values per row is strictly less than $2$ since $\frac{2n}{n+1} < \ 2$.
+Thus, there must exist at least one row composed of one fixed truth value and $n-1$ `$S$'s. \\
+
+\noindent We now proceed by induction on the length of computations, $n$. \\
+\textbf{Base Cases:} $n=1$ and $n=2$. \\
+The $n=1$ case holds by definition:
+    $$\begin{bmatrix}
+    1\\
+    0
+    \end{bmatrix}  \equiv S.$$
+For $n=2$, we can manually verify that each possible matrix indeed satisfies the theorem. Note that because the union of regular expressions is commutative, any permutation of rows is equivalent:
+        $$\begin{bmatrix}
+    1 & S\\
+    S & 1\\
+    0 & 0
+    \end{bmatrix}  \equiv \begin{bmatrix}
+    0 & S\\
+    S & 0\\
+    1 & 1
+    \end{bmatrix} \equiv \begin{bmatrix}
+    1 & S\\
+    S & 0\\
+    0 & 1
+    \end{bmatrix} \equiv \begin{bmatrix}
+    0 & S\\
+    S & 1\\
+    1 & 0
+    \end{bmatrix} \equiv SS.
+        $$
+
+\noindent \textbf{Inductive Hypothesis:}\\
+Let $n\geq 2$. Assume that a matrix of regular expressions, $H$, with the following characteristics is equivalent to the arbitrary computation of length $n-1$: $n$ rows, $n-1$ columns, one `$1$' per column, one `$0$' per column, and $n-2$ `$S$'s per column.\\
+\noindent \textbf{Inductive Step:}\\
+Consider a matrix of regular expressions, $J$, with the following characteristics: $n+1$ rows, $n$ columns, one `$1$' per column, one `$0$' per column, and $n-1$ `$S$'s per column. We show $J$ is equivalent to the arbitrary computation of length $n$.\\
+
+As aforementioned, there must exist at least one row composed of one fixed truth value and $n-1$ `$S$'s, and the union of regular expressions is commutative. Thus, WLOG, let the first row of $J$, $r_1$, be a row with one known truth value.
+Suppose this known truth value is in column $k$, $c_k$, where $1 \leq k \leq n$.. Assume WLOG that this value is a 0. Matrix $J$ can be represented as follows:
+
+\[
+J = \begin{blockarray}{cccccccc}
+\mathbf{c_1} & & \mathbf{c_{k-1}} & \mathbf{c_k} & \mathbf{c_{k+1}} & & \mathbf{c_n} \\
+\begin{block}{(ccccccc)c}
+    S & \hdots & S & 0 & S & \hdots & S & \mathbf{r_1}\\
+     &  &  & S &  &  &  & \mathbf{r_2}\\
+    &  &  & \vdots &  &  &  & \\
+    &  & & S &  &  &  & \\
+    & \vdots &  & 1 &  & \vdots &  & \\
+    & &  & S &  & &  & \\
+    &  &  & \vdots & &  &  & \\
+    &  & & S & &  & & \mathbf{r_{n+1}}\\
+\end{block}
+\end{blockarray}
+ \]
+
+The first row of $J$ represents half of the regular expressions contained in the arbitrary computation. The other half would be represented by a regular expression of all `S's, except for a `1' at the $k$th position. Thus, if the rest of $J$, rows $r_2$ through $r_{n+1}$, represents the other half of the arbitrary computation, then the matrix - the union of the set of the regular expressions - represents the arbitrary computation of length $n$. We show that this is indeed the case:
+
+Because the first row represents all the computations with `0' at the $k$th position, every `$S$' in $c_k$ can be replaced with a `1', to avoid redundancy; the case for which each `$S_k$' is `0' is a subset of $r_1$. Thus, matrix $J$ can be represented as follows:
+
+\[
+J = \begin{blockarray}{cccccccc}
+\mathbf{c_1} & & \mathbf{c_{k-1}} & \mathbf{c_k} & \mathbf{c_{k+1}} & & \mathbf{c_n} \\
+\begin{block}{(ccccccc)c}
+    S & \hdots & S & 0 & S & \hdots & S & \mathbf{r_1}\\
+     &  &  & 1 &  &  &  & \mathbf{r_2}\\
+    &  \vdots &  & \vdots &  &  \vdots &  & \\
+    &  &  &  &  & &  & \\
+    & & & 1 & &  & & \mathbf{r_{n+1}}\\
+\end{block}
+\end{blockarray}
+ \]
+
+The problem reduces to showing that $J - r_1$, that is, $J$ with the row $r_1$ removed, represents the other half of the arbitrary computation. Thus, let $J' = J - r_1$:
+
+\[
+J' = \begin{blockarray}{cccccc}
+\mathbf{c_1} &  & \mathbf{c_k} & & \mathbf{c_n} \\
+\begin{block}{(ccccc)c}
+     &   & 1 &   &  & \mathbf{r_2}\\
+     \vdots & &  \vdots & & \vdots  & \\
+    &   &   & &  & \\
+    & & 1 &  & & \mathbf{r_{n+1}}\\
+\end{block}
+\end{blockarray}
+ \]
+
+Again, we want to show that $J'$ represents the other half of the arbitrary computation. Recall that we specify this to be the union of regular expressions of all $`S'$s except for a $`1'$ at the $k$th position. Because each row indeed contains a $`1'$ at the $k$th position, the problem reduces to showing that $r_2 - c_k$ through $r_{n+1} - c_k$ represents the arbitrary computation, where $r_j - c_k$ is the row $r_j$ with the $k$th entry removed. Thus, we remove $c_k$ from $J'$ and call this new matrix $J''$:
+\[
+ J'' = \begin{pmatrix}
+    r_2 - c_k \\
+    . \\
+    . \\
+    . \\
+    r_{n+1} - c_k \\
+    
+  \end{pmatrix}
+\]
+
+Because $J''$ is the result removing one row and one column from $J$, $J''$ has $n$ rows and $n-1$ columns. In each column of $J''$, there remains one `$1$' and one `$0$'. Also, there are now $n-2$ `$S$'s in each column, because $r_1$ was removed. Thus, $J''$ is equivalent to $H$, and is therefore equivalent to the arbitrary computation by the inductive hypothesis.
+
+Because $r_1$ is equivalent to half of the arbitrary computation and $J'$ is equivalent to the other half of the arbitrary computation, $J$ is equivalent to the arbitrary computation, as the union of $r_1$ and $J'$ is equivalent to $J$.
+
+Therefore, by induction, the theorem holds.
+\end{proof}
+
+\section{Pseudocode for the WEST Algorithm Functions} \label{pseudocode appendix}
+ 
+To compute the satisfying computations of an MLTL formula, many of the functions in the WEST program require the regular expressions of the satisfying computations of the subformulas as inputs. We denote these regexes by $R$ and $B$, where $R = R_1 | R_2 | ... | R_k$ is represented as a vector of strings $R = {R_1, R_2, ..., R_k}$, and $B = B_1 | B_2 | ... | B_\ell$ is represented as a vector of strings $B = {B_1, B_2, ..., B_\ell}$. Additionally, $n$ will always refer to the number of propositional variables, and nnf refers to an input formula in negation normal form.
+
+\begin{algorithm}[H]
+\caption{Pad a vector to elements of all equal length}
+Input: Vector of strings that represents a regex, number of propositional variables \\
+Output: Vector of strings padded to equal length
+\begin{algorithmic}
+
+\Procedure{Pad}{vector $R$, int $n$} 
+    \State max\_Length $\leftarrow$ $max_{\{r \in R\}}$($r$.length()) \Comment{determines length to pad all strings to}
+    \For{($r \in R$)}
+        \State diff $\leftarrow$ (max\_length$- r$.length()) / $(n+1)$ 
+        \Comment{determines how many $S^n$s to append}
+        \State  $r \leftarrow r + (,S^n)^{\text{diff}}$
+    \EndFor
+    \State return $R$
+    
+\EndProcedure
+
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+\caption{Computes regex for propositional constant}
+Input: String that is either ``T" or ``!", number of propositional variables\\
+Output: Vector of strings that represents the appropriate satisfying computations
+\begin{algorithmic}
+\Procedure{reg\_prop\_cons}{string nnf, int $n$}
+    \If {(nnf $=$ ``T" and $n \neq 0$)}
+        \State return $\{S^n\}$ \Comment{regex of satisfying computations for ``T"}
+    \Else 
+        \State return $\{\}$ \Comment{regex of satisfying computations for ``!"}
+    \EndIf
+\EndProcedure
+
+\end{algorithmic}
+\end{algorithm}
+
+
+
+\begin{algorithm}[H]
+\caption{Output the vector of computation satisfying a propositional variable.}
+Input: String that represents a propositional variable or the negation of one, number of propositional variables \\
+Output: Vector of strings that represents the appropriate satisfying computations
+\begin{algorithmic}
+
+\Procedure{reg\_prop\_var}{string nnf, int $n$}
+    \If {(nnf $=$ ``p$k$", where $k$ is a nonnegative integer)}
+        \State return $\{S^k1S^{n-k-1}\}$ \Comment{regex of satisfying computations for ``p$k$"}
+    \EndIf 
+    \If {(nnf $=$ ``$\scriptstyle{\sim}$p$k$", where $k$ is a nonnegative integer)}
+        \State return $\{S^k0S^{n-k-1}\}$ \Comment{regex of satisfying computations for ``$\scriptstyle{\sim}$p$k$"}
+    \EndIf
+\EndProcedure
+
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+\caption{Combines two strings that differ only by one character into one}
+Input: Two strings that represent regexes\\
+Output: Single string that represents computations represented by both input strings or FAIL
+\begin{algorithmic}
+
+\Procedure{simplify\_string}{string $r$, string $b$}   
+    \If{($r$.length() $\neq$ $b$.length())}
+        \State exit \Comment{cannot compare strings if they differ in length}
+        \EndIf
+    \For{($0 \leq i < r$.length())}
+        \State pre\_r $\leftarrow r[0, i-1]$ \Comment{stores string $r$ up to comparison character}
+        \State char\_r $\leftarrow r[i]$ \Comment{stores character to compare in $r$}
+        \State post\_r $\leftarrow r[i+1, r\text{.length()}-1]$ \Comment{stores remaining part of string $r$}
+        \\
+        \State pre\_b $\leftarrow b[0, i-1]$ \Comment{stores string $b$ up to comparison character}
+        \State char\_b $\leftarrow b[i]$ \Comment{stores character to compare in $b$}
+        \State post\_b $\leftarrow b[i+1, b\text{.length()}-1]$ \Comment{stores remaining part of string $b$}
+        \\
+        \If{(pre\_r $=$ pre\_b and post\_r $=$ post\_b)} \Comment{\parbox[t]{.4\linewidth}{checks that strings $r$ and $b$ match for all but one character}}
+            \If{(char\_r $\neq$ char\_b)}
+                \State return pre\_r +``$S$" + post\_r \Comment{\parbox[t]{.5\linewidth}{if the comparison characters differ, replace character with $``S"$}}
+            \Else
+                \State return $r$ \Comment{if the comparison character match, strings are identical}
+            \EndIf
+        \EndIf
+    \EndFor
+    \State return FAIL 
+    \Comment{Indicates strings differed by more than one character}
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+ 
+
+\begin{algorithm}[H]
+\caption{Simplifies a vector of strings using simplify\_string}
+Input: Vector of strings representing a regex\\
+Output: Vector of strings representing a regex simplified using simplify\_string
+\begin{algorithmic}
+
+\Procedure{simplify}{vector $R$}    
+    \State Pad all strings in $R$ to the same length \Comment{ensures all inputs to simplify\_string are valid}
+    \If{($R$.length() $\leq 1$)}
+        \State return $R$ \Comment{insufficient strings in $R$ to use simplify\_string}
+        \EndIf
+    
+    \State $i = R\text{.length} - 1$
+    \State $j = i - 1$
+    
+    \State START
+    \While{($i \geq 1$)}
+        \While{($j \geq 0$)}
+            \State simplified = simplify\_string($R[i]$, $R[j]$) \Comment{\parbox[t]{.4\linewidth}{for each combination of strings in $R$, apply simplify\_string}}
+            \If{(simplified $\neq$ FAIL)}
+                \State replace string at index $j$ with simplified \Comment{updating $R[j]$ to be combined string}
+                \State remove string at index $i$ from $R$ \Comment{remove $R[i]$, as it's redundant}
+                \State $i = R\text{.length()} - 1$
+                \State $j = i - 1$
+                \State goto START
+                \EndIf
+                
+            \State -{}-$j$
+            \EndWhile
+            
+        \State -{}-$i$
+        \State $j = i - 1$
+        \EndWhile
+        
+    \State return $R$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+\caption{Takes the intersection of two computations}
+Input: Two strings representing regexes\\
+Output: Bitwise AND of the inputted strings
+\begin{algorithmic}
+\Procedure{bit\_wise\_and}{string $r$, string $b$}
+    \State ret $\leftarrow$ ``" \Comment{initializing string to store bitwise AND}
+    \For {(i $\in [0, \ r\text{.length()}]$)}
+        \If{($r[i] \land$ $b[i] = ``"$)}
+        \State return ``" \Comment{if bitwise AND is ever empty, entire string intersection is empty}
+        \Else 
+        \State ret $\leftarrow$ ret $+$ $r[i] \land b[i]$ \Comment{for each character, store bitwise AND}
+        \EndIf
+    \EndFor
+    \State return ret
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+\caption{Takes set intersection of the languages of two regexes}
+Input: Vectors of strings that represent regexes, simplify boolean\\
+Output: Vector of strings that represents set intersection of the languages of the inputted regexes
+\begin{algorithmic}
+
+\Procedure{set\_intersect}{vector $R$, vector $B$, bool simp}
+    \State Pad $R$ and $B$ to the same length
+    \State ret $\leftarrow \{\}$ \Comment{initializing a vector of strings to store set intersection}
+    \For{($r \in R$)}
+        \For{($b \in B$)} \Comment{take bitwise AND of every combination of strings from $R$ and $B$}
+            \State add bit\_wise\_and($r, b$) to ret 
+            \Comment{store results in ret}
+        \EndFor
+    \EndFor
+    \If{(simp is true)}
+    \State return simplify(ret) \Comment{if user requests simplified output, run ret through simplify}
+    \Else
+    \State return ret
+    \EndIf
+\EndProcedure
+
+\end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}[H]
+\caption{Takes union of two regexes (combines two vectors into one)}
+Input: Vectors of strings that represent regexes, simplify boolean\\
+Output: Vector of strings that represents union of inputted regexes
+\begin{algorithmic}
+
+\Procedure{join}{vector $R$, vector $B$, bool simp}
+    \State ret $\leftarrow \{\}$ \Comment{initializing a vector of strings to store union}
+    \For{($r \in R$)}
+        \State add $r$ to ret \Comment{add all vectors in $R$ to ret}
+    \EndFor
+    \For{($b \in B$)}
+        \State add $b$ to ret \Comment{add all vectors in $B$ to ret}
+    \EndFor
+    \If{(simp is true)}
+    \State return simplify(ret) \Comment{if user requests simplified output, run ret through simplify}
+    \Else
+    \State return ret
+    \EndIf
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+\caption{Computes the regex for a MLTL formula G[a:b]$\alpha$}
+Inputs: Vector of strings representing the regex for $\alpha$, interval bounds, number of propositional variables, simplify boolean\\
+Output: Vector of strings that represents the appropriate satisfying computations
+\begin{algorithmic}
+
+\Procedure{reg\_G}{vector reg\_alpha, int $a$, int $b$, int $n$, bool simp} 
+    \State pre $\leftarrow$ ((`$S$')$^{n}$ + `,')$^{a}$ \Comment{before the start of the interval, computation is arbitrary}
+    \State comp $\leftarrow$ reg\_alpha \Comment{\parbox[t]{.7\linewidth}{initializing vector of strings for outputted regex with subformula regex}}
+    \If{$a > b$} \Comment{empty interval, Global is trivially true}
+        \State return $\{S^n\}$
+    \EndIf
+    \For{($1 \leq i \leq b-a$)} \Comment{computing $\bigwedge_{i=1}^{b-a} (S^n,)^i \text{reg}(\alpha)$}
+        \State temp\_alpha $\leftarrow$ ((`$S$')$^{n}$ + `,')$^{i}$ + reg\_alpha
+        \State comp $\leftarrow$ set\_intersect(comp, temp\_alpha, simp)
+    \EndFor
+    \State return pre + comp \Comment{\parbox[t]{.6\linewidth}{prepending string pre to every string in comp; result is regex for Global defined in section \ref{regex}}}
+\EndProcedure
+
+\end{algorithmic}
+\end{algorithm}
+ 
+\begin{algorithm}[H]
+\caption{Computes the regex for a MLTL formula F[a:b]$\alpha$}
+Inputs: Vector of strings representing the regex for $\alpha$, interval bounds, number of propositional variables, simplify boolean\\
+Output: Vector of strings that represents the appropriate satisfying computations 
+\begin{algorithmic}
+
+\Procedure{reg\_F}{vector reg\_alpha, int $a$, int $b$, int $n$, bool simp} 
+    \State pre $\leftarrow$ ((`$S$')$^{n}$ + `,')$^{a}$ \Comment{before the start of the interval, computation is arbitrary}
+    \State comp $\leftarrow$ reg\_alpha \Comment{\parbox[t]{.7\linewidth}{initializing vector of strings for outputted regex with subformula regex}}
+    \If{$a > b$} \Comment{empty interval, Finally is trivially false}
+        \State return $\{\}$
+    \EndIf
+    \For{($1 \leq i \leq b-a$) } \Comment{computing $\bigvee_{i=1}^{b-a} (S^n,)^i \text{reg}(\alpha)$}
+        \State temp\_alpha $\leftarrow$ ((`$S$')$^{n}$ + `,')$^{i}$ + reg\_alpha
+        \State comp $\leftarrow$ join(comp, temp\_alpha, simp)
+    \EndFor
+    \State return pre + comp \Comment{\parbox[t]{.6\linewidth}{prepending string pre to every string in comp; result is regex for Finally defined in section \ref{regex}}}
+\EndProcedure
+
+\end{algorithmic}
+\end{algorithm}
+
+\label{regU}
+\begin{algorithm}[H]
+\caption{Computes the regex for a MLTL formula $\alpha$U[a:b]$\beta$} 
+Inputs: Vectors of strings representing the regexes for $\alpha$ and $\beta$, interval bounds, number of propositional variables, simplify boolean\\
+Output: Vector of strings that represents the appropriate satisfying computations 
+\begin{algorithmic}
+
+\Procedure{reg\_U}{vector reg\_alpha, vector reg\_beta int $a$, int $b$, int $n$, bool simp} 
+    \State comp $\leftarrow$ ((`$S$')$^{n}$ + `,')$^{a} + $ reg\_beta \Comment{\parbox[t]{.55\linewidth}{initializing vector of strings for outputted regex with regex for beta, prepended with $`S'$s up to start of interval}}
+    \If{$a > b$}
+        \State return $\{\}$ \Comment{empty interval, Until is trivially false}
+    \EndIf
+    \For{($a \leq i \leq b-1$) } \Comment{\parbox[t]{.65\linewidth}{computing $\bigvee_{i=a}^{b} \text{reg}\left(\mathcal{G}_{[a,i-1]}\alpha \land \mathcal{G}_{[i, i]} \beta\right)$, loop ends at $b-1$ because comp is initialized to $i=a$ case and loop is reindexed}}\\
+        \State{\parbox[t]{.9\linewidth}{temp\_comp $\leftarrow$ set\_intersect(reg\_G(reg\_alpha, $a$, $i$, $n$), reg\_G(reg\_beta, $i+1$, $i+1$, $n$), $n$, simp)}}
+        \State comp $\leftarrow$ join(comp, temp\_comp, simp)
+    \EndFor
+    
+    \State return comp
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+\caption{Computes the regex for a MLTL formula $\alpha$R[a:b]$\beta$}
+Inputs: Vectors of strings representing the regexes for $\alpha$ and $\beta$, interval bounds, number of propositional variables, simplify boolean\\
+Output: Vector of strings that represents the appropriate satisfying computations 
+\begin{algorithmic}
+
+\Procedure{reg\_R}{vector reg\_alpha, vector reg\_beta int $a$, int $b$, int $n$, bool simp} 
+    \State comp $\leftarrow$ reg\_G(reg\_beta, $a$, $b$, $n$, simp)
+    \Comment{\parbox[t]{.5\linewidth}{initializing vector of strings for output regex with regex for G[a:b]$\beta$}}
+    \If{$a > b$}
+        \State return $\{S^n\}$
+        \Comment empty interval, Release is trivially true
+    \EndIf
+    \For{($a \leq i \leq b-1$) } \Comment{\parbox[t]{.65\linewidth}{computing $\text{reg}\left(\mathcal{G}_{[a,b]}\beta\right) \lor \bigvee_{i=a}^{b-1} \text{reg}\left(\mathcal{G}_{[a,i]}\beta \land \mathcal{G}_{[i, i]} \alpha\right)$, first run through loop includes $\text{reg}\left(\mathcal{G}_{[a,b]}\beta\right)$}}\\
+        \State temp\_comp $\leftarrow$ set\_intersect(reg\_G(reg\_beta, $a$, $i$, $n$), reg\_G(reg\_alpha, $i$, $i$, $n$), $n$, simp)
+        \State comp $\leftarrow$ join(comp, temp\_comp, simp)
+    \EndFor
+    
+    \State return comp
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}[H]
+\caption{Computes the regex for an MLTL formula in NNF}
+Inputs: MLTL formula in negation normal form, number of propositional variables, boolean sub for storing subformula computations in global variable FORMULAS, simplify boolean\\
+Output: Vector of strings that represents the appropriate satisfying computations
+\begin{algorithmic}
+
+\Procedure{reg}{string nnf, int $n$, bool sub, bool simp} 
+    \If{(nnf is a prop. var. or $\scriptstyle{\sim}$prop. var)}
+        \If{(sub)}
+            \State Run reg on formula and store formula with its regular expression
+        \EndIf
+        \State return reg\_prop\_var(nnf, $n$)
+        \Comment call helper function for propositional variable
+    \EndIf\\
+    \If{(nnf is $T$ or $!$)}
+        \If{(sub)}
+            \State Run reg on formula and store formula with its regular expression
+        \EndIf
+        \State return reg\_prop\_cons(nnf, $n$)
+        \Comment call helper function for propositional constant
+    \EndIf
+    \\
+    \If{(nnf is of the form unary\_temp\_conn interval alpha)}
+        \State unary\_temp\_conn $\leftarrow$ unary\_temp\_conn in nnf
+        \Comment parse formula to find unary operator
+        \State $a$ $\leftarrow$ start of interval
+        \State $b$ $\leftarrow$ end of interval
+        \State reg\_alpha $\leftarrow$ reg(alpha, $n$, sub, simp)
+        \Comment recursive call to reg on subformula\\
+        \If{(unary\_temp\_conn $=$ `F')}
+            \If{(sub)}
+                \State Run reg on formula and store formula with its regular expression
+            \EndIf
+            \State return reg\_F(reg\_alpha, $a$, $b$, $n$, simp)
+            \Comment Call helper function for Finally operator
+        \EndIf\\
+        \If{(unary\_temp\_conn $=$ `G')}
+            \If{(sub)}
+                \State Run reg on formula and store formula with its regular expression
+            \EndIf
+            \State return reg\_G(reg\_alpha, $a$, $b$, $n$, simp)
+            \Comment Call helper function for Global operator
+        \EndIf
+    \EndIf
+    \\
+    \If{(nnf is of the form ``(Assoc\_prop\_conn[nnf\_array])")}
+    \Comment{Rewrite nnf in non-array form}
+        \State assoc\_prop\_conn $\leftarrow$ assoc\_prop\_conn in nnf
+        \State equiv\_formula $\leftarrow$ ``" 
+        \Comment For instance, $\&[\alpha_1, \alpha_2, \alpha_3]$ is rewritten to $((\alpha_1 \& \alpha_2) \& \alpha_3)$
+        \For{(array entry alpha in nnf\_array)}
+            \If{(alpha is first entry)}
+                \State equiv\_formula $\leftarrow$ alpha
+                \Comment First entry doesn't need parentheses
+            \Else
+                \State equiv\_formula $=$ ``(" + equiv\_formula + assoc\_prop\_conn + alpha + ``)"
+            \EndIf
+        \EndFor
+        \If{(sub)}
+            \State Run reg on formula and store formula with its regular expression
+        \EndIf
+        \State return reg(equiv\_formula, $n$, sub, simp)
+        \Comment recursively call reg on the rewritten formula
+    \EndIf
+    \algstore{myalg}
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+\begin{algorithmic}
+\algrestore{myalg}
+    \If{(nnf is of the form alpha binary\_prop\_conn beta)}
+        \State binary\_prop\_conn $\leftarrow$ binary\_prop\_conn in nnf
+        \Comment parse formula to find binary operator
+        \State reg\_alpha $\leftarrow$ reg(alpha, $n$, sub, simp)
+        \Comment recursive call to reg on subformula
+        \State reg\_beta $\leftarrow$ reg(beta, $n$, sub, simp)
+        \Comment recursive call to reg on subformula\\
+        \If{(binary\_prop\_conn $=$ ``\&")}
+            \If{(sub)}
+                \State Run reg on formula and store formula with its regular expression
+            \EndIf
+            \State return set\_intersect(reg\_alpha, reg\_beta, $n$, simp)
+            \Comment Call helper function for \& operator
+        \EndIf\\
+        \If{(binary\_prop\_conn $=$ ``$\lor$")}
+            \If{(sub)}
+                \State Run reg on formula and store formula with its regular expression
+            \EndIf
+            \State return join(reg\_alpha, reg\_beta, $n$, simp)
+            \Comment Call helper function for $\lor$ operator
+        \EndIf\\
+        \If{(binary\_prop\_conn $=$ ``=")}
+            \Comment{Rewrite in terms of OR, AND, and NOT}
+            \State equiv\_formula $=$ ``((" + alpha + ``\&" + beta + ``)$\lor$(" + wff\_to\_nnf($\scriptstyle{\sim}$alpha) + 
+            \State ``\&" + wff\_to\_nnf($\scriptstyle{\sim}$beta) + ``))"
+            \If{(sub)}
+                \State Run reg on formula and store formula with its regular expression
+            \EndIf
+            \State return reg(equiv\_formula, $n$, sub, simp)
+            \Comment recursive call to reg on rewritten formula
+        \EndIf\\
+        \If{(binary\_prop\_conn $=$ ``\textgreater")}
+            \Comment{Rewrite in terms of OR, AND, and NOT}
+            \State equiv\_formula $=$ ``(" + wff\_to\_nnf($\scriptstyle{\sim}$alpha) + "$\lor$" + beta + ``)"
+            \If{(sub)}
+                \State Run reg on formula and store formula with its regular expression
+            \EndIf
+            \State return reg(equiv\_formula, $n$, sub, simp)
+            \Comment recursive call to reg on rewritten formula
+        \EndIf
+    \EndIf\\
+   \If{(nnf is of the form alpha binary\_temp\_conn interval beta)}
+        \State binary\_temp\_conn $\leftarrow$ binary\_temp\_conn in nnf
+        \Comment parse for binary operator
+        \State $a$ $\leftarrow$ start of interval
+        \State $b$ $\leftarrow$ end of interval
+        \State reg\_alpha $\leftarrow$ reg(alpha, $n$, sub, simp)
+        \Comment recursive call to reg on subformula
+        \State reg\_beta $\leftarrow$ reg(beta, $n$, sub, simp)
+        \Comment recursive call to reg on subformula
+        \\
+        \If{(binary\_temp\_conn $=$ `U')}
+            \If{(sub)}
+                \State Run reg on formula and store formula with its regular expression
+            \EndIf
+            \State return reg\_U(reg\_alpha, reg\_beta, $a$, $b$, $n$, simp)
+            \Comment Call helper function for Until\\
+        \ElsIf{(binary\_temp\_conn $=$ `R')}
+            \If{(sub)}
+                \State Run reg on formula and store formula with its regular expression
+            \EndIf
+            \State return reg\_R(reg\_alpha, reg\_beta, $a$, $b$, $n$, simp)
+            \Comment Call helper function for Release
+        \EndIf
+    \EndIf\\
+    \State Throw exception \Comment{\parbox[t]{.7\linewidth}{If none of the previous statements held, there's an error with the formula nnf}}
+    \State return \{\}
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+
+
+\begin{algorithm}[H]
+    \caption{Generates test suite template without propositional constants, propositional variables, or negations of propositional variables filled in}
+    Inputs: Depth of desired test suite template to generate, interval bounds\\
+    Output: Vector of MLTL formulas (without propositional constants, propositional variables, or negations of propositional variables)
+    \begin{algorithmic}
+        \Procedure{generate\_test\_template}{int depth, int $a$, int $b$}
+        \If{(depth = 0)}
+            \State return $\{p, q\}$
+            \Comment{\parbox[t]{.54\linewidth}{$p$ represents a propositional variable or its negation, $q$ represents a propositional constant}}
+        \EndIf
+        
+        \State template $\leftarrow \{\}$
+        \Comment initialize variable to store final template
+        \State $V \leftarrow$ generate\_test\_template(depth$- 1$, $a$, $b$)
+        \Comment{\parbox[t]{.45\linewidth}{recursively generate all formulas of $1$ lower depth}}
+        \For{(string $\alpha \in V$)}
+            \State add ``G[a:b]" + $\alpha$ to template
+            \State add ``F[a:b]" + $\alpha$ to template
+            \Comment Add unary temporal operators to template
+            \For{string $\beta \in V$}
+                \State add $\alpha$ + ``U[a:b]" + $\beta$ to template
+                \State add  $\alpha$ + ``R[a:b]" + $\beta$ to template
+                \State add $\alpha$ + ``$\lor$" + $\beta$ to template
+                \State add $\alpha$ + ``\&" + $\beta$ to template
+                \Comment add binary operators to template
+            \EndFor
+        \EndFor
+        \State return template
+    \EndProcedure
+    \end{algorithmic}
+    
+\end{algorithm}
+
+
+\begin{algorithm}[H]
+    \caption{Generates a complete test suite of MLTL formulas in negation normal form up to a certain depth}
+    Inputs: Depth of desired test suite template to generate, interval bounds, number of propositional variables\\
+    Output: Vector of MLTL formulas
+    \begin{algorithmic}
+        \Procedure{generate\_test}{int depth, int $a$, int $b$, int $n$}
+        \State tests $\leftarrow$ generate\_test\_template(depth, $a$, $b$) 
+        \For{string $t \in $ tests}
+            \For{char ch $\in t$}
+                \If{ch $ = p$}
+                \Comment{\parbox[t]{.52\linewidth}{replace $a$ with a random propositional variable or the negation of a random propositional variable}}
+                    \State $k \leftarrow \text{rand()} \% n$ 
+                    \Comment assign $k$ as a random int between $0$ and $n - 1$
+                    \If{rand() $\% 2 = 0$}
+                    \Comment imitate randomness of a coin toss
+                        \State replace ch with p$k$
+                    \Else 
+                        \State replace ch with $\scriptstyle{\sim}$p$k$
+                    \EndIf
+                \ElsIf{ch $= q$}
+                \Comment Replace $q$ with a random propositional constant
+                    \If{rand() $\% 2 = 0$}
+                        \State replace ch with T
+                    \Else 
+                        \State replace ch with $!$
+                    \EndIf
+                \EndIf
+            \EndFor
+        \EndFor
+    \State return tests
+    \EndProcedure
+    \end{algorithmic}
+\end{algorithm}
+
+
+\newpage
+\section{State Diagram Graphs} \label{graphs appendix}
+Below we provide the graphs of state diagrams of the critical functions examined in our intelligent fuzzing. In general, nodes in the graph represent portions of the code without control flow statements. As a result, a single node can represent large chunks of code. Directed edges represent branching of control flow, such as IF statements and loops. Each graph directly corresponds with the pseudocode of their corresponding function, with nodes and edges being labeled accordingly. Note that these graphs, the option to run the \textit{simplify} function has been omitted for clarity. For the graph of the \textit{reg} function, the option to store subformulas has been omitted as well.\\
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=15mm}, bignode/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=20mm}, emptynode/.style={draw=none, fill=none, very thick, minimum size=1mm}]
+    
+    %Nodes
+    \node[emptynode](inputs){vector R, \# of propositional variables n};
+    \node[node](length)[below=of inputs]{Run max\_length on R};
+    \node[node](body)[below=of length]{pad r, update R};
+    \node[emptynode](empty_vector)[rotate=-70, left=1cm of body]{R $=\{\}$};
+    \node[emptynode](for_loop)[right=.75cm of body]{for r in R};
+    \node[node](return)[below=of body]{return R};
+    
+    %Lines
+    \draw[->] (inputs.south) -- (length.north);
+    \draw[->] (length.south) -- (body.north);
+    \draw[->] (body.south) -- (return.north);
+    \draw[->] (inputs.west) .. controls +(left:1 cm) and +(down:1 cm) .. (return.west);
+    \draw[->] (body.south) .. controls +(right:5 cm) and +(up:1.5 cm) .. (body.north);
+    
+    \end{tikzpicture}
+    
+    \caption{Pad Function}
+    \label{fig:pad graph}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=15mm}, bignode/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=20mm}, emptynode/.style={draw=none, fill=none, very thick, minimum size=1mm}]
+    
+    %Nodes
+    \node[emptynode](inputs){strings r, b};
+    \node[node](initialize)[below=of inputs]{Initialize string Ret};
+    \node[node](loop_entry)[below=of initialize]{Loop Entry};
+    \node[node](return)[below=2cm of loop_entry]{return Ret};
+    \node[node](empty)[left=of return]{return ``"};
+    \node[node](update)[right=of return]{Take bitwise AND, store in Ret};
+    \node[emptynode](placeholder)[below=0.05cm of loop_entry]{};
+    \node[emptynode](emptytext)[rotate=35, left=.75cm of placeholder]{\small{r$[i] \land$ b$[i] = ``"$}};
+    \node[emptynode](placeholder2)[below=0.05cm of placeholder]{};
+    \node[emptynode](else)[rotate=-23, right=1.9cm of placeholder2]{else};
+    \node[emptynode](updatetext)[right=3cm of loop_entry]{for $0 \leq i \leq$ r.length};
+    
+    %Lines
+    \draw[->] (inputs.south) -- (initialize.north);
+    \draw[->] (initialize.south) -- (loop_entry.north);
+    \draw[->] (loop_entry.south) -- (return.north);
+    \draw[->] (loop_entry.south) -- (empty.north);
+    \draw[->] (loop_entry.south) -- (update.north);
+    \draw[->] (update.east) .. controls +(right:3 cm) and +(up:1.5 cm) .. (loop_entry.north);
+    
+    \end{tikzpicture}
+    \caption{Bitwise\_And Function}
+    \label{fig:bitwise_and graph}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=15mm}, bignode/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=20mm}, emptynode/.style={draw=none, fill=none, very thick, minimum size=1mm}]
+    
+    %Nodes
+    \node[emptynode](inputs){vectors R, B};
+    \node[node](initialize)[below=of inputs]{Initialize vector Ret};
+    \node[node](add_r)[below=of initialize]{Add r to Ret};
+    \node[node](add_t)[below=of add_r]{Add b to Ret};
+    \node[node](return)[below=of add_t]{return Ret};
+    \node[emptynode](rtext)[right=of add_r]{for string r$\in$R};
+    \node[emptynode](ttext)[left=of add_t]{for string b$\in$B};
+    
+    %Lines
+    \draw[->] (inputs.south) -- (initialize.north);
+    \draw[->] (initialize.south) -- (add_r.north);
+    \draw[->] (add_r.south) -- (add_t.north);
+    \draw[->] (add_t.south) -- (return.north);
+    \draw[->] (add_r.south) .. controls +(right:5 cm) and +(up:1.5 cm) .. (add_r.north);
+    \draw[->] (add_t.south) .. controls +(left:5 cm) and +(up:1.5 cm) .. (add_t.north);
+    
+    \end{tikzpicture}
+    \caption{Join Function}
+    \label{fig:join graph}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=15mm}, bignode/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=20mm}, emptynode/.style={draw=none, fill=none, very thick, minimum size=1mm}]
+    
+    %Nodes
+    \node[emptynode](inputs){vectors R,B};
+    \node[node](initialize)[below=of inputs]{Pad R and B, Initialize vector Ret=\{\}};
+    \node[node](outer_loop)[below=of initialize]{Outer Loop Entry};
+    \node[node](inner_loop)[below=of outer_loop]{Update Ret};
+    \node[node](outer_exit)[below=of inner_loop]{Outer Loop Exit};
+    \node[node](return)[below=of outer_exit]{return Ret};
+    \node[emptynode](inner_text)[right=1.25cm of inner_loop]{for b$\in$B};
+    \node[emptynode](outer_text)[left=2.25 cm of inner_loop]{for r$\in$R};
+    
+    %Lines
+    \draw[->] (inputs.south) -- (initialize.north);
+    \draw[->] (initialize.south) -- (outer_loop.north);
+    \draw[->] (outer_loop.south) -- (inner_loop.north);
+    \draw[->] (inner_loop.south) -- (outer_exit.north);
+    \draw[->] (outer_exit.south) -- (return.north);
+    \draw[->] (inner_loop.south) .. controls +(right:5 cm) and +(up:2cm) .. (inner_loop.north);
+    \draw[->] (outer_exit.west) .. controls +(left:5 cm) and +(up:3 cm) .. (outer_loop.north);
+    
+    \end{tikzpicture}
+    \caption{Set\_Intersect Function}
+    \label{fig:set_intersect graph}
+\end{figure}
+\newpage
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=15mm}, bignode/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=20mm}, emptynode/.style={draw=none, fill=none, very thick, minimum size=1mm}]
+    
+    %Nodes
+    \node[emptynode](inputs){vector reg\_alpha, integers a, b, n};
+    \node[node](initialize)[below=of inputs]{Initialize string pre, vector Comp};
+    \node[node](loop)[below=2cm of initialize]{Update Comp};
+    \node[node](empty)[left=of loop]{return \{\}};
+    \node[node](return)[below=of loop]{return pre + Comp};
+    \node[emptynode](loop_text)[right= of loop]{for $i \in [1, \text{b}-\text{a}]$};
+    \node[emptynode](placeholder)[below=0.5cm of initialize]{};
+    \node[emptynode](empty_text)[rotate=30, left=1.3cm of placeholder]{If a$>$b};
+    
+    %Lines
+    \draw[->] (inputs.south) -- (initialize.north);
+    \draw[->] (initialize.south) -- (empty.north);
+    \draw[->] (initialize.south) -- (loop.north);
+    \draw[->] (loop.south) -- (return.north);
+    \draw[->] (loop.south) .. controls +(right:5 cm) and +(up:1.5 cm) .. (loop.north);
+    
+    \end{tikzpicture}
+    
+    \caption{Reg\_F Function}
+    \label{fig:reg_f graph}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=15mm}, bignode/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=20mm}, emptynode/.style={draw=none, fill=none, very thick, minimum size=1mm}]
+    
+    %Nodes
+    \node[emptynode](inputs){vector reg\_alpha, integers a, b, n};
+    \node[node](initialize)[below=of inputs]{Initialize string pre, vector Comp};
+    \node[node](loop)[below=2cm of initialize]{Update Comp};
+    \node[node](empty)[left=of loop]{return \{$S^n$\}};
+    \node[node](return)[below=of loop]{return pre + Comp};
+    \node[emptynode](loop_text)[right= of loop]{for $i \in [1, \text{b}-\text{a}]$};
+    \node[emptynode](placeholder)[below=0.5cm of initialize]{};
+    \node[emptynode](empty_text)[rotate=30, left=1.3cm of placeholder]{If a$>$b};
+    
+    %Lines
+    \draw[->] (inputs.south) -- (initialize.north);
+    \draw[->] (initialize.south) -- (empty.north);
+    \draw[->] (initialize.south) -- (loop.north);
+    \draw[->] (loop.south) -- (return.north);
+    \draw[->] (loop.south) .. controls +(right:5 cm) and +(up:1.5 cm) .. (loop.north);
+    
+    \end{tikzpicture}
+    
+    \caption{Reg\_G Function}
+    \label{fig:reg_g graph}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=15mm}, bignode/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=20mm}, emptynode/.style={draw=none, fill=none, very thick, minimum size=1mm}]
+    
+    %Nodes
+    \node[emptynode](inputs){vector reg\_alpha, reg\_beta and integers a, b, n};
+    \node[node](initialize)[below=of inputs]{Initialize vector Comp};
+    \node[node](loop)[below=2cm of initialize]{Update Comp};
+    \node[node](empty)[left=of loop]{return \{$S^n$\}};
+    \node[node](return)[below=of loop]{return Comp};
+    \node[emptynode](loop_text)[right= of loop]{for $i \in [\text{a}, \text{b}-1]$};
+    \node[emptynode](placeholder)[below=0.5cm of initialize]{};
+    \node[emptynode](empty_text)[rotate=30, left=1.3cm of placeholder]{If a$>$b};
+    
+    %Lines
+    \draw[->] (inputs.south) -- (initialize.north);
+    \draw[->] (initialize.south) -- (empty.north);
+    \draw[->] (initialize.south) -- (loop.north);
+    \draw[->] (loop.south) -- (return.north);
+    \draw[->] (loop.south) .. controls +(right:5 cm) and +(up:1.5 cm) .. (loop.north);
+    
+    \end{tikzpicture}
+    
+    \caption{Reg\_R Function}
+    \label{fig:reg_r graph}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=15mm}, bignode/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=20mm}, emptynode/.style={draw=none, fill=none, very thick, minimum size=1mm}]
+    
+    %Nodes
+    \node[emptynode](inputs){vector reg\_alpha, reg\_beta and integers a, b, n};
+    \node[node](initialize)[below=of inputs]{Initialize vector Comp};
+    \node[node](loop)[below=2cm of initialize]{Update Comp};
+    \node[node](empty)[left=of loop]{return \{\}};
+    \node[node](return)[below=of loop]{return Comp};
+    \node[emptynode](loop_text)[right= of loop]{for $i \in [\text{a}, \text{b}-1]$};
+    \node[emptynode](placeholder)[below=0.5cm of initialize]{};
+    \node[emptynode](empty_text)[rotate=30, left=1.3cm of placeholder]{If a$>$b};
+    
+    %Lines
+    \draw[->] (inputs.south) -- (initialize.north);
+    \draw[->] (initialize.south) -- (empty.north);
+    \draw[->] (initialize.south) -- (loop.north);
+    \draw[->] (loop.south) -- (return.north);
+    \draw[->] (loop.south) .. controls +(right:5 cm) and +(up:1.5 cm) .. (loop.north);
+    
+    \end{tikzpicture}
+    
+    \caption{Reg\_U Function}
+    \label{fig:reg_u graph}
+\end{figure}
+
+\begin{landscape}
+\begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[node/.style={rounded rectangle, draw=black!60, fill=black!5, text width=3cm,text centered, very thick, minimum size=15mm}, bignode/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=20mm}, emptynode/.style={draw=none, fill=none,text width=3cm,text centered, very thick, minimum size=1mm}, rednode/.style={rounded rectangle, draw=red!60, fill=red!5, text width=3cm,text centered, very thick, minimum size=15mm}]
+    
+    %Nodes
+    \node[emptynode](inputs){string nnf, integer n};
+    \node[bignode](start)[below=of inputs]{\textbf{Start Reg}};
+    
+    \node[node](prop_var)[left=2cm of inputs]{return reg\_prop\_var};
+    
+    \node[node](prop_cons)[left=3cm of start]{return reg\_prop\_cons};
+    
+    \node[rednode](parse_unary)[below=1cm of prop_cons]{Parse for unary temp conn, a, b, alpha and call reg(alpha, n)};
+    \node[node](reg_f)[below=1cm of parse_unary]{return reg\_F(alpha)};
+    \node[node](reg_g)[left=0.5cm of reg_f]{return reg\_G(alpha)};
+    
+    \node[node](parse_binary_prop)[below=0.5cm of start]{Parse for binary prop conn, alpha, beta};
+    \node[rednode](prop_alpha)[below=of parse_binary_prop]{reg\_alpha $\leftarrow$ reg(alpha,n)};
+    \node[rednode](prop_beta)[below=of prop_alpha]{reg\_beta $\leftarrow$ reg(beta,n)};
+    \node[rednode](equals)[left=0.5cm of prop_beta]{Rewrite as equiv\_formula, return reg(equiv\_formula,n)};
+    \node[node](set_intersect)[below=of prop_beta]{return set\_intersect};
+    \node[node](join)[left=of set_intersect]{return join};
+    \node[rednode](implies)[right=of set_intersect]{Rewrite as equiv\_formula, return reg(equiv\_formula,n)};
+    
+    \node[node](parse_binary_temp)[right=3cm of start]{Parse for binary temp conn, a, b, alpha, beta};
+    \node[rednode](temp_alpha)[below=of parse_binary_temp]{reg\_alpha $\leftarrow$ reg(alpha,n)};
+    \node[rednode](temp_beta)[below=of temp_alpha]{reg\_beta $\leftarrow$ reg(beta,n)};
+    \node[node](until)[below=of temp_beta]{return reg\_U};
+    \node[node](release)[right=of until]{return reg\_R};
+    
+    \node[node](parse_assoc)[right=2cm of inputs]{Parse for assoc prop conn, initialize string equiv\_formula};
+    \node[node](rewrite_assoc)[right=of parse_binary_temp]{Update equiv\_formula};
+    \node[rednode](assoc_return)[below=of rewrite_assoc]{return reg(equiv\_formula,n)};
+    
+    \node[emptynode](prop_cons_text)[left=0.01cm of start]{nnf is T or !$$~$$};
+    \node[emptynode](prop_var_text)[rotate=-43, above=1.1cm of prop_cons_text]{nnf is p or $\scriptstyle{\sim}\textstyle$p};
+    
+    \node[emptynode](unary_text)[rotate=45, below=0.3cm of prop_cons_text]{\small{nnf is X[a,b] alpha}};
+    \node[emptynode](reg_g_text)[above=0.2cm of reg_g]{X is G};
+    \node[emptynode](reg_f_text)[right=1.5cm of reg_g_text]{X is F};
+    
+    \node[emptynode](binary_temp_text)[right=0.01cm of start]{\small{nnf is alpha X[a,b] beta}};
+    \node[emptynode](release_text)[above=0.2cm of release]{X is R};
+    \node[emptynode](until_text)[left=1.75cm of release_text]{X is U};
+    
+    \node[emptynode](assoc_text)[rotate=45, above=1.1cm of binary_temp_text]{\footnotesize{nnf is X[nnf\_array]}};
+    \node[emptynode](loop_text)[right=1.75cm of parse_assoc]{$$~$$for alpha in nnf\_array};
+    
+    \node[emptynode](binary_prop_text)[right=1.4cm of unary_text]{$$~$$$$~$$$$~$$nnf is alpha X beta};
+    \node[emptynode](join_text)[above=0.2cm of join]{X is v};
+    \node[emptynode](intersect_text)[right=1.75cm of join_text]{X is \&};
+    \node[emptynode](implies_text)[right=-0.25cm of prop_beta]{X is $>$};
+    \node[emptynode](equals_text)[right=-1.2cm of reg_f_text]{X is =};
+    
+    %Lines
+    \draw[->] (inputs.south) -- (start.north);
+    \draw[->] (start.west) -- (prop_var.east);
+    \draw[->] (start.west) -- (prop_cons.east);
+    \draw[->] (start.west) -- (parse_unary.east);
+    \draw[->] (parse_unary.south) -- (reg_g.north);
+    \draw[->] (parse_unary.south) -- (reg_f.north);
+    \draw[->] (start.south) -- (parse_binary_prop.north);
+    \draw[->] (parse_binary_prop.south) -- (prop_alpha.north);
+    \draw[->] (prop_alpha.south) -- (prop_beta.north);
+    \draw[->] (prop_beta.south) -- (set_intersect.north);
+    \draw[->] (prop_beta.south) -- (join.north);
+    \draw[->] (parse_binary_prop.east) .. controls +(down:2cm) .. (implies.north);
+    \draw[->] (parse_binary_prop.west) .. controls +(down:2cm) .. (equals.north);
+    \draw[->] (start.east) -- (parse_binary_temp.west);
+    \draw[->] (parse_binary_temp.south) -- (temp_alpha.north);
+    \draw[->] (temp_alpha.south) -- (temp_beta.north);
+    \draw[->] (temp_beta.south) -- (until.north);
+    \draw[->] (temp_beta.south) -- (release.north);
+    \draw[->] (start.east) -- (parse_assoc.west);
+    \draw[->] (parse_assoc.east) -- (rewrite_assoc.north);
+    \draw[->] (rewrite_assoc.south) -- (assoc_return.north);
+    \draw[->] (rewrite_assoc.east) .. controls +(right:1 cm) and +(up:1.5 cm) .. (rewrite_assoc.north);
+    
+    \end{tikzpicture}
+    \caption{Control Flow of Reg. Red nodes indicate a recursive call to Reg.}
+    \label{fig:big boy}
+\end{figure}
+\end{landscape}
+\end{document}
