@@ -167,9 +167,9 @@ The structure of the paper is as follows. In section \ref{prereq}, we build on t
 %
 In section \ref{regex}, we recursively define regular expressions encapsulating the satisfying computations of MLTL formulas and prove that our new translation algorithm is both sound and complete. In addition, we provide a calculation for the minimum computation length required to describe all the satisfying computations of a MLTL formula that slightly improves upon existing calculations in the literature. Finally, we show an application of the regular expressions of the satisfying computations by using them to prove an MLTL theorem. In particular, we show that $\alpha\mathcal{U}_{[a,b]}(\alpha\mathcal{U}_{[0,c]}\beta) = \alpha\mathcal{U}_{[a,b+c]}\beta$ and $\alpha\mathcal{R}_{[a,b]}(\alpha\mathcal{R}_{[0,c]}\beta) = \alpha\mathcal{R}_{[a,b+c]}\beta$.
 %
-We introduce a new tool, called WEST, that implements automated validation in section \ref{specs} %, we give the WEST code specifications. In particular, we describe the grammar that the program follows and give an overview of the important functions in the program.
+We introduce a new tool, called WEST (acronym redacted for blind review), that implements automated validation in section \ref{specs} %, we give the WEST code specifications. In particular, we describe the grammar that the program follows and give an overview of the important functions in the program.
 %
-calculate its space and time complexity, both theoretically and experimentally, in section \ref{complex}. We show that the theoretical worst-case complexity for both space and time is doubly exponential, but that the average case fares far better.
+and calculate its space and time complexity, both theoretically and experimentally, in section \ref{complex}. We show that the theoretical worst-case complexity for both space and time is doubly exponential, but that the average case fares far better.
 %
 Section \ref{test} proves correctness of the algorithms and provides a test suite to show correctness of implementation with high confidence. Intelligent fuzzing techniques contribute to test suite construction from a state diagram representing the control flow of the algorithm. We also verify the correctness of outputs of the WEST program against a naive brute force implementation.
 %
