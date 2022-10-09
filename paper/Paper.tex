@@ -175,7 +175,8 @@ Section \ref{test} proves correctness of the algorithms and provides a test suit
 %
 Section \ref{simpsection}, provides a combinatorial theorem for simplifying certain outputs of the WEST program. Formulas of the form $\alpha \equiv \beta$ to check for equivalence between two expressions can lead to outputs that are non-trivial to simplify. Section \ref{Conclusion} discusses impacts and future work. 
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Mission-time LTL and Regular Expressions} \label{prereq}
 \subsection{Mission-time Linear Temporal Logic}
 Mission-time Linear Temporal Logic (MLTL) \cite{LVR22} is a finite variation of Linear Temporal Logic (LTL) \cite{bmc} over bounded discrete intervals. Instead of taking the LTL operators over an infinite time line, we restrict the operators to a finite time line, taking each temporal operator over a closed interval $[a,b]$ where $a,b \in \mathbb{N}$ and $0 \leq a \leq b$. The syntax of an MLTL formula over a set of atomic propositions $\mathcal{AP}$, where $p \in \mathcal{AP}$ is a propositional variable, is given by the following BNF grammar:
@@ -272,6 +273,8 @@ Let `$a$', `$b$', and `$c$' denote characters in a finite alphabet.
 \end{itemize}
 \end{example}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{MLTL Regular Expressions} \label{regex}
   We introduce the following additional notation for our regular expressions that describe the satisfying computations of a MLTL formula:
 \begin{definition}[\emph{Additional Notation}]
@@ -516,6 +519,9 @@ Let $k = i + j$. Thus
 Thus  $\alpha \ \mathcal{R}_{[a,b]}(\alpha \ \mathcal{R}_{[0,c]} \beta) \equiv \alpha \ \mathcal{R}_{[a,b+c]} \beta$, so $\alpha \ \mathcal{B}_{[a,b+c]} \beta \equiv \alpha \ \mathcal{B}_{[a,b]}(\alpha \ \mathcal{B}_{[0,c]} \beta)$. This completes the proof.
 \end{proof}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{WEST Code Specifications} \label{specs}
  The code for the WEST program can be found on its \href{https://github.com/zwang271/2022-Iowa-State-REU-Temporal-Logic-.git}{Github} repository. The MLTL syntax for our program is given as the context free grammar below. In the alphabet, $T$ and $!$ refer to the propositional constants `true' and `false', respectively. $\&$, $v$, $=$, $>$ refer to propositional logic operators `and', `or, `equivalent', and `implies', respectively. Note that the last comma listed is not a typo and indeed part of the alphabet. \\
 \textbf{Alphabet}: 
@@ -564,6 +570,9 @@ It is often the case that a vector of regular expression strings contains many r
 As such, the \textit{simplify} function performs this by iterating through pairs of strings from the vector to search for valid simplifications. 
 If a pair of strings$(w, v)$ can be written in the form $w = w_1 c_w w_2$ and $v = v_1 c_v v_2$ such that $w_1 = v_1$ and $w_2 = v_2$, then they are combined into one string $w_1 (c_w | c_v) w_2$.
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Complexity} \label{complex}
 
 \subsection{Theoretical Complexity}
@@ -861,6 +870,9 @@ We obtain the following plots:
 
 \noindent What we observe from the simulations is that the worst case complexity, both for space and time, is relatively sparse. We also observe that these worst cases are extreme outliers and that in nearly every case, are examples of nested binary temporal operators. As seen in \cite{HLR21}, \cite{KZJZR20}, \cite{AJR22}, and \cite{HCHJR21}, nested binary temporal operators do not appear in any specifications, and thus are likely rare in practical applications.
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Verification of Correctness} \label{test}
  The correctness of an abstract algorithm one can describe on pencil and paper differs from the correctness of an actual implementation of the algorithm (the program). 
 On one hand, correctness of an algorithm is assured by mathematical analysis of the algorithm on all possible inputs and showing that it behaves as desired. 
@@ -997,6 +1009,9 @@ In comparison, the WEST program executed the same test suite in under thirty min
 
 It's important to state that although the full test suite matches between both implementations, absolute correctness on all inputs is not guaranteed for either program. However, the successful execution of the test suite gives us a much higher confidence in correctness of both the WEST program and the brute force program. 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Regular Expression Simplification Theorem} \label{simpsection}
  As a final result of our paper, we provide a regular expression simplification theorem. This theorem describes a form of a set of computations that are guaranteed to simplify down to a string of all `$S$'s. Although not implemented in the WEST program, this theorem may help users identify tautologies, as the WEST program does not always output a single string of `$S$'s when a formula holds true for every computation. We first define some vocabulary.
 
@@ -1089,6 +1104,8 @@ $
 The substrings ``$0$", ``$1S0$", and ``$1$" are inserted at the beginning, middle, and end, respectively. In general, a vector of length $m$ strings seeking to apply the theorem to $n$ of its columns has $m \choose n$ combinations of columns to check for. Implementation of this algorithm can drastically increase run-time while proving its utility in only a small number of circumstances.
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Closing Remarks}
 \label{Conclusion}
  One goal of this research project is to visually represent MLTL formulas as truth tables, similar to classical truth tables in propositional logic. 
@@ -1142,10 +1159,12 @@ Additional care should be put into allowing for varying levels of abstractions o
 
 \newpage
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \appendix
 \section*{Appendix} \label{Appendix}
 \renewcommand{\thesection}{\Roman{section}}
-
+Content in the appendix will appear online, on the paper's website, but appears here for now due to blind review.
  
  \section{Until and Release Duality Lemma} \label{duality appendix}
  \begin{lemma}[\emph{Until and Release Duality}]\label{dual_proof}
@@ -1235,6 +1254,9 @@ $ $ \newline
 This finishes the proof.
 \end{proof}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Regular Expression Simplification Theorem} \label{simp appendix}
 \begin{proof}[Proof of \ref{simp}]
 Assume no row is the arbitrary computation, because then the union of the set of regular expressions would trivially simplify to the arbitrary computation.\\
@@ -1343,6 +1365,8 @@ Because $r_1$ is equivalent to half of the arbitrary computation and $J'$ is equ
 Therefore, by induction, the theorem holds.
 \end{proof}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Pseudocode for the WEST Algorithm Functions} \label{pseudocode appendix}
  
 To compute the satisfying computations of an MLTL formula, many of the functions in the WEST program require the regular expressions of the satisfying computations of the subformulas as inputs. We denote these regexes by $R$ and $B$, where $R = R_1 | R_2 | ... | R_k$ is represented as a vector of strings $R = {R_1, R_2, ..., R_k}$, and $B = B_1 | B_2 | ... | B_\ell$ is represented as a vector of strings $B = {B_1, B_2, ..., B_\ell}$. Additionally, $n$ will always refer to the number of propositional variables, and nnf refers to an input formula in negation normal form.
@@ -1848,6 +1872,8 @@ Output: Vector of strings that represents the appropriate satisfying computation
 
 
 \newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{State Diagram Graphs} \label{graphs appendix}
 Below we provide the graphs of state diagrams of the critical functions examined in our intelligent fuzzing. In general, nodes in the graph represent portions of the code without control flow statements. As a result, a single node can represent large chunks of code. Directed edges represent branching of control flow, such as IF statements and loops. Each graph directly corresponds with the pseudocode of their corresponding function, with nodes and edges being labeled accordingly. Note that these graphs, the option to run the \textit{simplify} function has been omitted for clarity. For the graph of the \textit{reg} function, the option to store subformulas has been omitted as well.\\
 
