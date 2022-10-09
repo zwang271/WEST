@@ -163,7 +163,7 @@ We show that our contributions not only fill a critical gap in temporal logic va
 
 %% In this paper, we offer a remedy to the state explosion problem by using regular expressions to describe the set of all computations satisfying a MLTL formula, which significantly reduces the space needed to express the computations. We implement these regular expressions into the WEST program, which allows the user to input a MLTL formula and obtain the satisfying computations. The WEST program can be found on its \href{https://github.com/zwang271/2022-Iowa-State-REU-Temporal-Logic-.git}{Github} repository.
 
-The structure of the paper is as follows. In section \ref{prereq}, we build on the semantics of MLTL to define a computation, and its bit string representation. % of a computation that is used throughout the paper and the WEST program. Finally, we describe negation normal form (NNF), a standardized way to express MLTL formulas. By writing the MLTL formulas in NNF, the WEST program is able to run much more efficiently.
+We structure the paper around our contributions as follows. In section \ref{prereq}, we build on the semantics of MLTL to define a computation, and its bit string representation. % of a computation that is used throughout the paper and the WEST program. Finally, we describe negation normal form (NNF), a standardized way to express MLTL formulas. By writing the MLTL formulas in NNF, the WEST program is able to run much more efficiently.
 %
 In section \ref{regex}, we recursively define regular expressions encapsulating the satisfying computations of MLTL formulas and prove that our new translation algorithm is both sound and complete. In addition, we provide a calculation for the minimum computation length required to describe all the satisfying computations of a MLTL formula that slightly improves upon existing calculations in the literature. Finally, we show an application of the regular expressions of the satisfying computations by using them to prove an MLTL theorem. In particular, we show that $\alpha\mathcal{U}_{[a,b]}(\alpha\mathcal{U}_{[0,c]}\beta) = \alpha\mathcal{U}_{[a,b+c]}\beta$ and $\alpha\mathcal{R}_{[a,b]}(\alpha\mathcal{R}_{[0,c]}\beta) = \alpha\mathcal{R}_{[a,b+c]}\beta$.
 %
@@ -178,9 +178,9 @@ Section \ref{simpsection}, provides a combinatorial theorem for simplifying cert
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Mission-time LTL and Regular Expressions} \label{prereq}
-\subsection{Mission-time Linear Temporal Logic}
-Mission-time Linear Temporal Logic (MLTL) \cite{LVR22} is a finite variation of Linear Temporal Logic (LTL) \cite{bmc} over bounded discrete intervals. Instead of taking the LTL operators over an infinite time line, we restrict the operators to a finite time line, taking each temporal operator over a closed interval $[a,b]$ where $a,b \in \mathbb{N}$ and $0 \leq a \leq b$. The syntax of an MLTL formula over a set of atomic propositions $\mathcal{AP}$, where $p \in \mathcal{AP}$ is a propositional variable, is given by the following BNF grammar:
-$$\alpha := \top \ | \ \bot \ | \ p \ | \ \neg \alpha \ | \ \alpha \land \alpha \ | \ \alpha \lor \alpha \ | \ \mathcal{F}_{[a,b]} \alpha \ | \ \mathcal{G}_{[a,b]} \alpha \ | \ \alpha \mathcal{U}_{[a,b]} \alpha \ | \ \alpha \mathcal{R}_{[a,b]} \alpha \footnote{For simplicity, we do not include parentheses in the grammar, but they may used as needed. The WEST program uses parentheses (see section \ref{specs} for more details).}$$
+%\subsection{Mission-time Linear Temporal Logic}
+{\bf Mission-time Linear Temporal Logic (MLTL)} \cite{LVR22} is a finite variation of LTL over bounded, closed, discrete intervals of the form $[a,b]$ where $a,b \in \mathbb{N}$ and $0 \leq a \leq b$. The syntax of an MLTL formula over a set of atomic propositions $\mathcal{AP}$, where $p \in \mathcal{AP}$ is a propositional variable, is given by the following BNF grammar:
+$$\alpha := \top \ | \ \bot \ | \ p \ | \ \neg \alpha \ | \ \alpha \land \alpha \ | \ \alpha \lor \alpha \ | \ \mathcal{F}_{[a,b]} \alpha \ | \ \mathcal{G}_{[a,b]} \alpha \ | \ \alpha \mathcal{U}_{[a,b]} \alpha \ | \ \alpha \mathcal{R}_{[a,b]} \alpha \footnote{For simplicity, we do not include parentheses in the grammar, but the WEST program requires parentheses (see Section \ref{specs}). We encode the Release operator directly rather than as the dual of Until \cite{bmc,LVR22}.}$$
 
 \begin{definition}[\emph{Computation}]
 A computation of length $m$ is a sequence $\{\pi[i]\}_{i = 0}^{m-1}$ of sets of propositional variables, $\pi[i] \subseteq \mathcal{AP}$, where the $i$th set holds the propositional variables that are satisfied at the $i$th time step. That is, a propositional variable $p$ is true at time step $i$ if and only if $p \in \pi[i]$. We denote the suffix of $\pi$ starting at $i$ (including $i$) by $\pi_i$. Note that $\pi_0 = \pi$.
@@ -203,24 +203,28 @@ Let $p_0, p_1, ..., p_{n-1}$ be propositional variables for a fixed $n \in \math
 Suppose $n=2$. The bit string representation $\pi = 10, 01$ means that $p_0$ is true in the first time step and false in the second one, and that $p_1$ is false in the first time step and true in the second one.
 \end{example}
 
-\subsubsection{Semantics}
-We say a computation $\pi$ as satisfies a given MLTL formula $\alpha$, written $\pi \vDash \alpha$, when\footnote{In MLTL, we do not include the Next ($\chi$) operator since $\mathcal{G}_{[1,1]}$ is equivalent to it.}:
-\begin{align}
-    &\pi \vDash p \text{ iff } p \in \pi[0]\\
-    &\pi \vDash \neg \alpha \text{ iff } \pi \nvDash \alpha\\
-    &\pi \vDash \alpha \land \beta \text{ iff } \pi \vDash \alpha \text{ and } \pi \vDash \beta\\
-    &\pi \vDash \alpha \lor \beta \text{ iff } \pi \vDash \alpha \text{ or } \pi \vDash \beta\\
-    &\pi \vDash \mathcal{F}_{[a,b]}\alpha \text{ iff } |\pi| > a \text{ and } \exists i \in [a,b] \text{ such that } \pi_i \vDash \alpha\\
-    &\pi \vDash \mathcal{G}_{[a,b]}\alpha \text{ iff } |\pi| \leq a \text{ or } \forall i \in [a,b] \ \pi_i \vDash \alpha\\
-    &\pi \vDash \alpha \ \mathcal{U}_{[a,b]} \beta \text{ iff } |\pi| > a \text{ and } \exists i \in [a,b] \text{ such that } \pi_i \vDash \beta \text{ and }\\
-    & \indent \forall j \in [a, i-1]\ \pi_j \vDash \alpha \nonumber \\
-    &\pi \vDash \alpha \ \mathcal{R}_{[a,b]} \beta \text{ iff } |\pi| \leq a \text{ or } \forall i \in [a,b] \ \pi_i \vDash \beta \text{ or }\\
-    & \indent \exists j \in [a,b-1] \text{ such that } \pi_j \vDash \alpha \text{ and } \forall a \leq k \leq j \ \pi_k \vDash \beta \nonumber
-\end{align}
 
-The reader may observe that in this paper, we define Release independently from Until. 
-It is not uncommon for Release instead to be defined as the dual of Until \cite{bmc} \cite{LVR22}. 
-These two definitions are in fact equivalent, and the full proof is provided in Appendix \ref{duality appendix}.
+%KYR: the following is very useful for a tech report, but in a space-constrained conference paper, we refer the reader to LVR22 instead. (Maybe if there's a journal version we can include semantics again.)
+%
+%% \subsubsection{Semantics}
+%% We say a computation $\pi$ as satisfies a given MLTL formula $\alpha$, written $\pi \vDash \alpha$, when\footnote{In MLTL, we do not include the Next ($\chi$) operator since $\mathcal{G}_{[1,1]}$ is equivalent to it.}:
+%% \begin{align}
+%%     &\pi \vDash p \text{ iff } p \in \pi[0]\\
+%%     &\pi \vDash \neg \alpha \text{ iff } \pi \nvDash \alpha\\
+%%     &\pi \vDash \alpha \land \beta \text{ iff } \pi \vDash \alpha \text{ and } \pi \vDash \beta\\
+%%     &\pi \vDash \alpha \lor \beta \text{ iff } \pi \vDash \alpha \text{ or } \pi \vDash \beta\\
+%%     &\pi \vDash \mathcal{F}_{[a,b]}\alpha \text{ iff } |\pi| > a \text{ and } \exists i \in [a,b] \text{ such that } \pi_i \vDash \alpha\\
+%%     &\pi \vDash \mathcal{G}_{[a,b]}\alpha \text{ iff } |\pi| \leq a \text{ or } \forall i \in [a,b] \ \pi_i \vDash \alpha\\
+%%     &\pi \vDash \alpha \ \mathcal{U}_{[a,b]} \beta \text{ iff } |\pi| > a \text{ and } \exists i \in [a,b] \text{ such that } \pi_i \vDash \beta \text{ and }\\
+%%     & \indent \forall j \in [a, i-1]\ \pi_j \vDash \alpha \nonumber \\
+%%     &\pi \vDash \alpha \ \mathcal{R}_{[a,b]} \beta \text{ iff } |\pi| \leq a \text{ or } \forall i \in [a,b] \ \pi_i \vDash \beta \text{ or }\\
+%%     & \indent \exists j \in [a,b-1] \text{ such that } \pi_j \vDash \alpha \text{ and } \forall a \leq k \leq j \ \pi_k \vDash \beta \nonumber
+%% \end{align}
+
+%KYR: moved up to earlier footnote
+%% The reader may observe that in this paper, we define Release independently from Until. 
+%% It is not uncommon for Release instead to be defined as the dual of Until \cite{bmc} \cite{LVR22}. 
+%% These two definitions are in fact equivalent, and the full proof is provided in Appendix \ref{duality appendix}.
 
 \subsection{Negation Normal Form}
 All MLTL formulas can be written in negation normal form (NNF) \cite{bmc}. We require MLTL formulas to be written in NNF to generate the satisfying computations using regular expressions. Without this requirement, generating the satisfying computations requires taking complements of the languages described by regular expressions, which is a very expensive operation.
