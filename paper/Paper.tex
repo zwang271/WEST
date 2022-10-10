@@ -302,7 +302,7 @@ Let $R$ and $T$ denote regular expressions, and let $S$ be an abbreviation for $
     \item We do not use the Kleene star since our computations are a fixed finite length.
 \end{itemize}
 \end{definition}
-An example of these operations follows.
+%An example of these operations follows.
 \begin{example}
 Let there be $n = 2$ propositional variables, and let $R = S1$ and $T = 1S,1S | S1,S1$.\\
 To compute $R \land T$ and $R \lor T$, we use Pad($R$,$T$). Clearly $T$ is the longer regex by one time step, so we concatenate $,S^2$ to the right of $R$. Thus $T =1S,1S | S1,S1$ and $R = S1,SS$. Now the regexes are the same length, so we can perform set intersection and alternation:
