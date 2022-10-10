@@ -25,6 +25,7 @@
 \usetikzlibrary{shapes.misc, positioning}
 \usetikzlibrary{arrows.meta}
 \tikzset{>={Latex[width=2mm,length=2mm]}}
+\usepackage{caption}
 
 %% \hypersetup{
 %%     colorlinks=true,
@@ -806,32 +807,55 @@ One feature within our implementation of \textit{reg} is to apply the \textit{si
  Along with theoretical space and time complexity, we provide some experimental benchmarking of these complexities using randomly generated MLTL formulas.
 This was done on an Intel(R) Core(TM) i7-4770S CPU at 3.10GHz with 32gb RAM.
 For each simulation, we generated 1000 MLTL formulas using the parameters DELTA, INTERVAL\_MAX, number of propositional variables, and number of iterations. DELTA is the maximum length we allow for any interval. INTERVAL\_MAX is the largest allowed upper bound for any interval. Number of iterations refers to the level of nesting in the generated formulas. For example, $\mathcal{G}_{[0,2]}p_0$ is a formula generated with one iteration, while $\mathcal{G}_{[0,2]}(p_0 \land p_1)$ is a formula generated with two iterations. We measure the number of characters in the output and the amount of time in milliseconds taken to run the program. Note that these simulations run the \textit{reg} function with the subformula boolean set to false and the simplify boolean set to true.
-\subsubsection{Simulation 1}
-For the first simulation, we consider 2 iterations, 5 propositional variables, 10 for DELTA, and 10 for INTERVAL\_MAX. Below are some examples of generated formulas:
-\begin{itemize}
-  \item $(p_4 \land p_0) \mathcal{U}_{[2,3]} (\neg p_1)$.
-  \item $(\mathcal{G}_{[3,5]} p_3) \mathcal{R}_{[7,8]} (p_3 \rightarrow p_0)$.
-  \item $\mathcal{F}_{[1,6]} (p_4 = p_3)$.
-\end{itemize}
-We obtain the following plots:
-\begin{figure}[H]
+
+\noindent\textbf{Simulation 1}
+For the first simulation, we consider 2 iterations, 5 propositional variables, 10 for DELTA, and 10 for INTERVAL\_MAX. We obtain the following plots:
+% ZILI: Seems redundant since example formulas are listed below for the outliers
+% Some examples of generated formulas:
+% \begin{itemize}
+%   \item $(p_4 \land p_0) \mathcal{U}_{[2,3]} (\neg p_1)$.
+%   \item $(\mathcal{G}_{[3,5]} p_3) \mathcal{R}_{[7,8]} (p_3 \rightarrow p_0)$.
+%   \item $\mathcal{F}_{[1,6]} (p_4 = p_3)$.
+% \end{itemize}
+\begin{minipage}{0.5 \textwidth}
+    \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.75]{images/Sim1Length.png}
-    \caption{Input length in number of characters vs output length in number of characters for simulation 1. Input length counts all characters, including parentheses, of the inputted formulas. Output length counts all the characters outputted, including commas.}
-\end{figure}
-\begin{figure}[H]
+    \includegraphics[scale=0.39]{images/Sim1Length.png}
+    \captionof{figure}{Input length vs output length in number of characters}
+    \end{figure}
+    \newline
+\struct\end{minipage}%
+\begin{minipage}{0.5 \textwidth}
+    \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.75]{images/Sim1Time.png}
-    \caption{Input length in number of characters vs run time in milliseconds for simulation 1. Input length counts all characters, including parentheses, of the inputted formulas.}
-\end{figure}
-\noindent The extreme outlier seen in the output length plot corresponds to the formula $(p_0 = p_1) \mathcal{U}_{[2,9]} (p_1 \mathcal{U}_{[7,9]} p_3)$.\\
-The three extreme outliers seen in the time plot correspond to the formulas 
+    \includegraphics[scale=0.39]{images/Sim1Time.png}
+    \captionof{figure}{Input length in number of characters vs run time in milliseconds.}
+    \end{figure}
+    \newline
+\struct\end{minipage}%
+\hfill\allowbreak%
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[scale=0.75]{images/Sim1Length.png}
+%     \caption{Input length in number of characters vs output length in number of characters for simulation 1. Input length counts all characters, including parentheses, of the inputted formulas. Output length counts all the characters outputted, including commas.}
+% \end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[scale=0.75]{images/Sim1Time.png}
+%     \caption{Input length in number of characters vs run time in milliseconds for simulation 1. Input length counts all characters, including parentheses, of the inputted formulas.}
+% \end{figure}
+
+% \noindent The extreme outlier seen in the output length plot corresponds to the formula $(p_0 = p_1) \mathcal{U}_{[2,9]} (p_1 \mathcal{U}_{[7,9]} p_3)$.\\
+% The three extreme outliers seen in the time plot correspond to the following formulas:
+\noindent The formulas corresponding to the outliers are as follows:
+\vspace{-10mm}
 \begin{itemize}
-    \item $(p_0 = p_1) \mathcal{U}_{[2,9]} (p_1 \mathcal{U}_{[7,9]} p_3)$ (same formula as the complexity outlier).
-    \item $(p_4 \rightarrow p_2) \mathcal{R}_{[1,8]} (p_3 \mathcal{U}_{[3,4]} p_0)$.
-    \item $(p_3 \mathcal{R}_{[2,7]} p_4) \mathcal{R}_{[1,9]} (p_4 \mathcal{R}_{[4,9]} p_3)$.
+    \item $(p_0 = p_1) \mathcal{U}_{[2,9]} (p_1 \mathcal{U}_{[7,9]} p_3)$ (both graphs).
+    \item $(p_4 \rightarrow p_2) \mathcal{R}_{[1,8]} (p_3 \mathcal{U}_{[3,4]} p_0)$ (time).
+    \item $(p_3 \mathcal{R}_{[2,7]} p_4) \mathcal{R}_{[1,9]} (p_4 \mathcal{R}_{[4,9]} p_3)$ (time).
 \end{itemize}
-\subsubsection{Simulation 2}
+\noindent\textbf{Simulation 2}
 For the second simulation, we consider 1 iteration, 10 propositional variables, 20 for DELTA, and 20 for INTERVAL\_MAX. Below are some examples of generated formulas:
 \begin{itemize}
     \item $\mathcal{F}_{[10,17]} p_4$.
