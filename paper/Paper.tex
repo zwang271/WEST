@@ -46,6 +46,7 @@
 %\usepackage{pslatex} % DON'T REMOVE!  BUYS US HALF A PAGE OR MORE!!!!!
 %Use only in case of emergencies: \linespread{0.98} %KYR: make lines spaces .99 instead of 1 to save space
 \usepackage{times} %KYR: substitute for pslatex that does not mess up math :)
+%\usepackage{savetrees} %KYR: maybe also helps... if we can fix the text to enable this
 
 \usepackage{enumitem}
 \setlist[itemize]{noitemsep, nolistsep, topsep=0pt, partopsep={0pt}} 
@@ -111,7 +112,7 @@
 \begin{document}
 %
 %\title{Contribution Title\thanks{Supported by organization x.}}
-\title{Mission-time LTL (MLTL) Formula Validation Via Regular Expressions\thanks{Work supported in part by [ommitted for blind review]}}
+\title{Mission-time LTL (MLTL) Formula Validation Via Regular Expressions\thanks{Work supported in part by [omitted for blind review]}}
 %
 \titlerunning{Abbreviated paper title}
 % If the paper title is too long for the running head, you can set
@@ -148,16 +149,16 @@
 
 \section{Introduction}
 
-System specifications, such as aerospace operational concepts, often utilize timelines to express critical requirements. We can cite examples of this from NASA's Automated Airspace Concept \cite{EH10}, the U.~S.~Navy's Aircraft Carrier Deck Scheduler \cite{RCRBS11}, the JAXA-NASA Global Precipitation Measurement (GPM) Observatory \cite{GPM}, and many others. Formal methods provide continuously-advancing tools and techniques to rigourously analyze timelines expressed in the form of temporal logic requirements, from early design-time model checking and theorem proving to on-board runtime verification. The U.~S.~Federal Aviation Administration (FAA) even advocates the use of formal methods for flight certification of these critical systems \cite{DO-178C,DO-254,DO-333}. Yet, a significant hurdle to the use of formal methods remains: how to convincingly demonstrate to the humans in the loop, from system designers to certifiers, that the analyzed formulas truly represent the system requirements \cite{Roz16}. We creatively address this validation question using regular expressions and truth tables.
+System specifications, such as aerospace operational concepts, often utilize timelines to express critical requirements. We can cite examples of this from NASA's Automated Airspace Concept \cite{EH10}, the U.~S.~Navy's Aircraft Carrier Deck Scheduler \cite{RCRBS11}, the JAXA-NASA Global Precipitation Measurement (GPM) Observatory \cite{GPM}, and many others. Formal methods provide continuously-advancing tools and techniques to rigorously analyze timelines expressed in the form of temporal logic requirements, from early design-time model checking and theorem proving to on-board runtime verification. The U.~S.~Federal Aviation Administration (FAA) even advocates the use of formal methods for flight certification of these critical systems \cite{DO-178C,DO-254,DO-333}. Yet, a significant hurdle to the use of formal methods remains: how to convincingly demonstrate to the humans in the loop, from system designers to certifiers, that the analyzed formulas truly represent the system requirements \cite{Roz16}. We creatively address this validation question using regular expressions and truth tables.
 
 NASA, for example, has developed several tools that operate over temporal logic requirements, such as FRET\cite{GMRPSS20}, R2U2\cite{RS17}, and a PVS library \cite{CTGPD22} for the logic MLTL (Mission-time Linear Temporal Logic) \cite{RRS14,LVR22}. MLTL was the logic used recently in NASA's Robonaut2 verification project \cite{KZJZR20} and is being used currently for both design-time and runtime verification of the NASA Lunar Gateway Vehicle System Manager \cite{DBR21}. Other recent verification %verification-for-certification
-efforts involving MLTL include a JAXA autonomous satellite \cite{JAXA}, a UAS Traffic Management (UTM) system involving Collins and Mosaic Aerospace \cite{HCHJR21}, a sounding rocket \cite{HLR21}, and multiple small satellites \cite{LLR21,LJBHCLR22,AJR22}. However, all of these successful verificaiton efforts were carried out by groups specializing in formal methods research. To enable broader application of formal verification, and adoption across larger projects, we critically need better validation, e.g., so that analysis over MLTL-specified requirements can tranparently contribute to flight certification. 
+efforts involving MLTL include a JAXA autonomous satellite \cite{JAXA}, a UAS Traffic Management (UTM) system involving Collins and Mosaic Aerospace \cite{HCHJR21}, a sounding rocket \cite{HLR21}, and multiple small satellites \cite{LLR21,LJBHCLR22,AJR22}. However, all of these successful verification efforts were carried out by groups specializing in formal methods research. To enable broader application of formal verification, and adoption across larger projects, we critically need better validation, e.g., so that analysis over MLTL-specified requirements can transparently contribute to flight certification. 
 
 Many specifications from case studies, in logics such as MTL \cite{AH90} and STL \cite{MN04} fall within the MLTL fragments of these logics. 
 Variations on Metric Temporal Logic (MTL) such as MLTL grow increasingly popular, in part due to their comparatively tractable complexity-to-expressibility trade-offs \cite{OW08}.
 The model checker {\sf nuXmv} encodes a popular subset of MLTL for use in symbolic model checking \cite{nuXmv-v1.1.0}.%, where the $\Box$ and $\Diamond$ operators of an \texttt{LTLSPEC} can have integer bounds \cite{nuXmv-v1.1.0}, though bounds cannot be placed on the $\U$ or $\V$ (the Release operator of \nuxmv) operators.
 
-We show that our contributions not only fill a critical gap in temporal logic valiation but also directly connect to parallel developments to enable better temporal logic formula analysis, benchmark generation, proof generation (e.g., in ACL2), and synthesis of verified C code from temporal logic behavior descriptions. 
+We show that our contributions not only fill a critical gap in temporal logic validation but also directly connect to parallel developments to enable better temporal logic formula analysis, benchmark generation, proof generation (e.g., in ACL2), and synthesis of verified C code from temporal logic behavior descriptions. 
 
 %% Mission-time Linear Temporal Logic (MLTL) extends propositional logic by including temporal operators over finite discrete intervals. It is useful for writing specifications for spacecraft, rovers, aircraft, and other robotic missions \cite{LVR22}. In standard propositional logic, a convenient way to check that a formula captures a specification correctly is to write out its truth table and check that the formula behaves in the desired manner. The same strategy can be employed for MLTL, but the truth tables increase in size at a much faster rate, making them too large to be useful. For instance, an MLTL formula with just two propositional variables and 10 time steps would require $\left(2^{10}\right)^2 = 2^{20}$ rows. This is often called the ``State Explosion Problem" \cite{stateexp}.
 
@@ -180,24 +181,24 @@ Section \ref{simpsection}, provides a combinatorial theorem for simplifying cert
 \section{Mission-time LTL and Regular Expressions} \label{prereq}
 %\subsection{Mission-time Linear Temporal Logic}
 {\bf Mission-time Linear Temporal Logic (MLTL)} \cite{LVR22} is a finite variation of LTL over bounded, closed, discrete intervals of the form $[a,b]$ where $a,b \in \mathbb{N}$ and $0 \leq a \leq b$. The syntax of an MLTL formula over a set of atomic propositions $\mathcal{AP}$, where $p \in \mathcal{AP}$ is a propositional variable, is given by the following BNF grammar:
-$$\alpha := \top \ | \ \bot \ | \ p \ | \ \neg \alpha \ | \ \alpha \land \alpha \ | \ \alpha \lor \alpha \ | \ \mathcal{F}_{[a,b]} \alpha \ | \ \mathcal{G}_{[a,b]} \alpha \ | \ \alpha \mathcal{U}_{[a,b]} \alpha \ | \ \alpha \mathcal{R}_{[a,b]} \alpha \footnote{For simplicity, we do not include parentheses in the grammar, but the WEST program requires parentheses (see Section \ref{specs}). We encode the Release operator directly rather than as the dual of Until \cite{bmc,LVR22}.}$$
+$$\alpha := \top \ | \ \bot \ | \ p \ | \ \neg \alpha \ | \ \alpha \land \alpha \ | \ \alpha \lor \alpha \ | \ \mathcal{F}_{[a,b]} \alpha \ | \ \mathcal{G}_{[a,b]} \alpha \ | \ \alpha \mathcal{U}_{[a,b]} \alpha \ | \ \alpha \mathcal{R}_{[a,b]} \alpha \footnote{For simplicity, we do not include parentheses in the grammar, but the WEST program requires parentheses (see Section \ref{specs}). We encode Release directly rather than as the dual of Until \cite{bmc,LVR22}.}$$
 
 \begin{definition}[\emph{Computation}]
-A computation of length $m$ is a sequence $\{\pi[i]\}_{i = 0}^{m-1}$ of sets of propositional variables, $\pi[i] \subseteq \mathcal{AP}$, where the $i$th set holds the propositional variables that are satisfied at the $i$th time step. That is, a propositional variable $p$ is true at time step $i$ if and only if $p \in \pi[i]$. We denote the suffix of $\pi$ starting at $i$ (including $i$) by $\pi_i$. Note that $\pi_0 = \pi$.
+A computation $\pi$ of length $m$ is a sequence $\{\pi[i]\}_{i = 0}^{m-1}$ of sets of propositional variables, $\pi[i] \subseteq \mathcal{AP}$, where the $i^{th}$ set holds the propositional variables that are satisfied at the $i^{th}$ time step. That is, a propositional variable $p$ is true at time step $i$ if and only if $p \in \pi[i]$. We denote the suffix of $\pi$ starting at $i$ (including $i$) by $\pi_i$. Note that $\pi_0 = \pi$.
 \end{definition}
 
-We use a bit string representation for our computations. This representation is easy to describe using regular expressions and is convenient to code.
+%We use a bit string representation for our computations. This representation is easy to describe using regular expressions and is convenient to code.
 
-\begin{definition}[\emph{Bit String Representation}]
+\begin{definition}[\emph{Bit String Representation of a Computation}]
 Let $p_0, p_1, ..., p_{n-1}$ be propositional variables for a fixed $n \in \mathbb{N}$. We represent a (finite) computation $\pi$ of length $m \in \mathbb{N}$ using a bit string representation as follows:
 \begin{itemize}
-    \item We represent a true assignment to a propositional variable by $1$ and a false assignment by $0$.
-    \item For each time step $j \in [0,1,\hdots,m-1]$, we have a bit string of length $n$ where the $k$-th bit represents the truth assignment of the proposition $p_{k-1}$.
-    \item We separate each time step by a comma and order the time steps in chronological order.
+%KYR: redundant    \item We represent a true assignment to a propositional variable by $1$ and a false assignment by $0$.
+    \item For each time step $j \in [0,1,\hdots,m-1]$, we have a bit string of length $n$ where the $k^{th}$ bit represents the truth assignment of the proposition $p_{k-1}$.
+    \item We separate each time step by a comma and order the time steps chronologically.
 \end{itemize}
 \end{definition}
 
-\noindent We write that a computation $\pi$ is equal to its bit string representation. An example is given below.
+%\noindent We write that a computation $\pi$ is equal to its bit string representation. An example is given below.
 
 \begin{example}
 Suppose $n=2$. The bit string representation $\pi = 10, 01$ means that $p_0$ is true in the first time step and false in the second one, and that $p_1$ is false in the first time step and true in the second one.
@@ -226,67 +227,78 @@ Suppose $n=2$. The bit string representation $\pi = 10, 01$ means that $p_0$ is 
 %% It is not uncommon for Release instead to be defined as the dual of Until \cite{bmc} \cite{LVR22}. 
 %% These two definitions are in fact equivalent, and the full proof is provided in Appendix \ref{duality appendix}.
 
-\subsection{Negation Normal Form}
-All MLTL formulas can be written in negation normal form (NNF) \cite{bmc}. We require MLTL formulas to be written in NNF to generate the satisfying computations using regular expressions. Without this requirement, generating the satisfying computations requires taking complements of the languages described by regular expressions, which is a very expensive operation.
-\begin{definition}[\emph{Negation Normal Form \cite{nnf}}] 
-An MLTL formula $\alpha$ is in \emph{negation normal form} if
-\begin{itemize}
-    \item Any negation symbols appear only in front of propositional variables.
-    \item We allow only the operations $\top$, $\bot$, $\land$, and $\lor$ from propositional logic.
-    \item We allow only the operations $\mathcal{U}$ and $\mathcal{R}$ from MLTL.
-\end{itemize}
-\end{definition}
+%\subsection{Negation Normal Form}
 
-In the literature, NNF does not include the Finally and Global operators, as $\bot \mathcal{R}_{[a,b]} \alpha = \mathcal{G}_{[a,b]} \alpha$ and $\top \mathcal{U}_{[a,b]} \alpha = \mathcal{F}_{[a,b]} \alpha$. In this paper, we stray from the literature and include Finally and Global as part of NNF, as this is far more natural for writing our regular expressions that describe the satisfying computations of a MLTL formula.
+%KYR: TODO: represent the following sentiment when introducing the translation instead:
+%All MLTL formulas can be written in negation normal form (NNF) \cite{bmc}. We require MLTL formulas to be written in NNF to generate the satisfying computations using regular expressions. Without this requirement, generating the satisfying computations requires taking complements of the languages described by regular expressions, which is a very expensive operation.
 
-\subsection{Regular Expressions}
-  We use regular expressions (regex) to describe the form of the satisfying computations. 
-\begin{definition}[\emph{Regular Expression \cite{sipser}}]
-A \emph{regular expression} is a string that describes the form of a language. 
-Let $\Sigma$ denote a finite alphabet. The empty set $\emptyset$, the empty string $\epsilon = ``"$, and any character in $\Sigma$ are constants defined to be a regular expression. 
-Beyond that, we define regular expressions recursively. 
-Suppose $R$ and $T$ are regular expressions. 
-Then the following operations generate regular expressions:
-\begin{itemize}
-    \item \emph{(Concatenation)} Denoted $RT$, this operation describes the set of strings obtained by concatenating any string generated by $R$ and any string generated by $T$ in that order.
-    \item \emph{(Alternation)} Denoted $R | T$, this operation describes the set union of the strings generated by $R$ and $T$.
-    \item \emph{(Kleene Star)} Denoted $R^*$, this operation describes the set of all strings made by concatenating any finite number (including zero) of strings described by $R$ together.
-    \item $R^i$ denotes regular expression consisting of $R$ repeated $i$ times for $i \geq 0$. $R^0 = \epsilon$.
-\end{itemize}
-\end{definition}
+%KYR: not necessary for TACAS; the audience alraedy knows this
+%% \begin{definition}[\emph{Negation Normal Form \cite{nnf}}] 
+%% An MLTL formula $\alpha$ is in \emph{negation normal form} if
+%% \begin{itemize}
+%%     \item Any negation symbols appear only in front of propositional variables.
+%%     \item We allow only the operations $\top$, $\bot$, $\land$, and $\lor$ from propositional logic.
+%%     \item We allow only the operations $\mathcal{U}$ and $\mathcal{R}$ from MLTL.
+%% \end{itemize}
+%% \end{definition}
 
-\noindent We provide an example of each operation.
-\begin{example}
-Let $R$ describe \{`$a$', `$b$'\} and $T$ describe \{ `$c$', `$d$' \}.
-\begin{itemize}
-    \item $RT$ describes the set \{ `$ac$', `$ad$', `$bc$', `$bd$' \}.
-    \item $R | T$ describes the set \{`$a$', `$b$', `$c$', `$d$' \}.
-    \item $R^*$ describes the set \{ $\epsilon$, `$a$', `$b$', `$aa$', `$bb$', `$ab$', `$ba$', `$aaa$', `$aba$',... \}.
-    \item $R^2$ describes the set \{ `$aa$', `$bb$', `$ab$', `$ba$' \}.
-\end{itemize}
-\end{example}
+%% In the literature, NNF does not include the Finally and Global operators, as $\bot \mathcal{R}_{[a,b]} \alpha = \mathcal{G}_{[a,b]} \alpha$ and $\top \mathcal{U}_{[a,b]} \alpha = \mathcal{F}_{[a,b]} \alpha$. In this paper, we stray from the literature and include Finally and Global as part of NNF, as this is far more natural for writing our regular expressions that describe the satisfying computations of a MLTL formula.
 
-\noindent We provide examples of different regex and possible combinations of the above operations.
-\begin{example}
-Let `$a$', `$b$', and `$c$' denote characters in a finite alphabet.
-\begin{itemize}
-    \item $ab^*$ describes the set \{ `$a$', `$ab$', `$abb$', `$abbb$', ... \}.
-    \item $a^*|b$ describes the set \{ $\epsilon$, `$b$', `$a$', `$aa$', `$aaa$', ...\}.
-    \item $a(b^*)c$ describes the set \{ `$ac$', `$abc$', `$abbc$', `$abbbc$', ... \}.
-    \item $(a | b)^3$ describes the set \{ `$aaa$', `$aba$', `$aab$', `$abb$', `$bbb$', ... \}.
-\end{itemize}
-\end{example}
+
+%\subsection{Regular Expressions}
+%  We use regular expressions (regex) to describe the form of the satisfying computations.
+
+%KYR: Take this out and replace it with a statement that we use the standard RE operators:...
+%% \begin{definition}[\emph{Regular Expression \cite{sipser}}]
+%% A \emph{regular expression} is a string that describes the form of a language. 
+%% Let $\Sigma$ denote a finite alphabet. The empty set $\emptyset$, the empty string $\epsilon = ``"$, and any character in $\Sigma$ are constants defined to be a regular expression. 
+%% Beyond that, we define regular expressions recursively. 
+%% Suppose $R$ and $T$ are regular expressions. 
+%% Then the following operations generate regular expressions:
+%% \begin{itemize}
+%%     \item \emph{(Concatenation)} Denoted $RT$, this operation describes the set of strings obtained by concatenating any string generated by $R$ and any string generated by $T$ in that order.
+%%     \item \emph{(Alternation)} Denoted $R | T$, this operation describes the set union of the strings generated by $R$ and $T$.
+%%     \item \emph{(Kleene Star)} Denoted $R^*$, this operation describes the set of all strings made by concatenating any finite number (including zero) of strings described by $R$ together.
+%%     \item $R^i$ denotes regular expression consisting of $R$ repeated $i$ times for $i \geq 0$. $R^0 = \epsilon$.
+%% \end{itemize}
+%% \end{definition}
+%
+%KYR: Examples are super nice, but if we have them we should have them after the MLTL regex example
+%\noindent We provide an example of each operation.
+%% \begin{example}
+%% Let $R$ describe \{`$a$', `$b$'\} and $T$ describe \{ `$c$', `$d$' \}.
+%% \begin{itemize}
+%%     \item $RT$ describes the set \{ `$ac$', `$ad$', `$bc$', `$bd$' \}.
+%%     \item $R | T$ describes the set \{`$a$', `$b$', `$c$', `$d$' \}.
+%%     \item $R^*$ describes the set \{ $\epsilon$, `$a$', `$b$', `$aa$', `$bb$', `$ab$', `$ba$', `$aaa$', `$aba$',... \}.
+%%     \item $R^2$ describes the set \{ `$aa$', `$bb$', `$ab$', `$ba$' \}.
+%% \end{itemize}
+%% \end{example}
+
+%% %\noindent We provide examples of different regex and possible combinations of the above operations.
+%% \begin{example}
+%% Let `$a$', `$b$', and `$c$' denote characters in a finite alphabet.
+%% \begin{itemize}
+%%     \item $ab^*$ describes the set \{ `$a$', `$ab$', `$abb$', `$abbb$', ... \}.
+%%     \item $a^*|b$ describes the set \{ $\epsilon$, `$b$', `$a$', `$aa$', `$aaa$', ...\}.
+%%     \item $a(b^*)c$ describes the set \{ `$ac$', `$abc$', `$abbc$', `$abbbc$', ... \}.
+%%     \item $(a | b)^3$ describes the set \{ `$aaa$', `$aba$', `$aab$', `$abb$', `$bbb$', ... \}.
+%% \end{itemize}
+%% \end{example}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{MLTL Regular Expressions} \label{regex}
-  We introduce the following additional notation for our regular expressions that describe the satisfying computations of a MLTL formula:
-\begin{definition}[\emph{Additional Notation}]
-Let $R$ and $T$ denote regular expressions, and let $S$ be an abbreviation for $(0 \ | \ 1)$. Let fixed $n \in \mathbb{N}$ denote the number of propositional variables in a MLTL formula. We use the following operations in the next section to describe the form of satisfying computations of the formula in the bit string representation:
+We add to the standard definition of Regular Expressions (regex) \cite{sipser} to introduce notation that describes the satisfying computations of a MLTL formula.
+\begin{definition}[\emph{Temporal Regular Expression}]
+Let $R$ and $T$ denote regular expressions, and let $S$ be an abbreviation for $(0 \ | \ 1)$. Let fixed $n \in \mathbb{N}$ denote the number of propositional variables in a MLTL formula. We use the following operations to describe the form of satisfying computations of the formula in the bit string representation:
 \begin{itemize}
+  \item \emph{(Concatenation)} Denoted $RT$, this operation describes the set of strings obtained by concatenating any string generated by $R$ and any string generated by $T$ in that order.
+%    \item \emph{(Alternation)} Denoted $R | T$, this operation describes the set union of the strings generated by $R$ and $T$.
     \item $R \lor T$ denotes alternation. We use this notation to match our notation for set intersection defined below.
     \item Pad($R$, $T$) determines which regular expression is longer and concatenate $(,S^n)$ repeatedly to the end of the shorter regular expression until the two regular expressions are the same length. Note that in the bit string representation, $(,S^n)$, denotes a time step in which the truth value of all $n$ propositional variables does not matter.
     \item For $R \land T$, we first use Pad($R$, $T$), and then take the set intersection of the sets of strings described by the two regular expressions.
+      \item $R^i$ denotes regular expression consisting of $R$ repeated $i$ times for $i \geq 0$. $R^0 = \epsilon$. %KYR: is this one relevant or should we take it out?
     \item We do not use the Kleene star since our computations are a fixed finite length.
 \end{itemize}
 \end{definition}
@@ -1319,9 +1331,9 @@ J = \begin{blockarray}{cccccccc}
 \end{blockarray}
  \]
 
-The first row of $J$ represents half of the regular expressions contained in the arbitrary computation. The other half would be represented by a regular expression of all `S's, except for a `1' at the $k$th position. Thus, if the rest of $J$, rows $r_2$ through $r_{n+1}$, represents the other half of the arbitrary computation, then the matrix - the union of the set of the regular expressions - represents the arbitrary computation of length $n$. We show that this is indeed the case:
+The first row of $J$ represents half of the regular expressions contained in the arbitrary computation. The other half would be represented by a regular expression of all `S's, except for a `1' at the $k^{th}$ position. Thus, if the rest of $J$, rows $r_2$ through $r_{n+1}$, represents the other half of the arbitrary computation, then the matrix - the union of the set of the regular expressions - represents the arbitrary computation of length $n$. We show that this is indeed the case:
 
-Because the first row represents all the computations with `0' at the $k$th position, every `$S$' in $c_k$ can be replaced with a `1', to avoid redundancy; the case for which each `$S_k$' is `0' is a subset of $r_1$. Thus, matrix $J$ can be represented as follows:
+Because the first row represents all the computations with `0' at the $k^{th}$ position, every `$S$' in $c_k$ can be replaced with a `1', to avoid redundancy; the case for which each `$S_k$' is `0' is a subset of $r_1$. Thus, matrix $J$ can be represented as follows:
 
 \[
 J = \begin{blockarray}{cccccccc}
@@ -1350,7 +1362,7 @@ J' = \begin{blockarray}{cccccc}
 \end{blockarray}
  \]
 
-Again, we want to show that $J'$ represents the other half of the arbitrary computation. Recall that we specify this to be the union of regular expressions of all $`S'$s except for a $`1'$ at the $k$th position. Because each row indeed contains a $`1'$ at the $k$th position, the problem reduces to showing that $r_2 - c_k$ through $r_{n+1} - c_k$ represents the arbitrary computation, where $r_j - c_k$ is the row $r_j$ with the $k$th entry removed. Thus, we remove $c_k$ from $J'$ and call this new matrix $J''$:
+Again, we want to show that $J'$ represents the other half of the arbitrary computation. Recall that we specify this to be the union of regular expressions of all $`S'$s except for a $`1'$ at the $k^{th}$ position. Because each row indeed contains a $`1'$ at the $k^{th}$ position, the problem reduces to showing that $r_2 - c_k$ through $r_{n+1} - c_k$ represents the arbitrary computation, where $r_j - c_k$ is the row $r_j$ with the $k^{th}$ entry removed. Thus, we remove $c_k$ from $J'$ and call this new matrix $J''$:
 \[
  J'' = \begin{pmatrix}
     r_2 - c_k \\
