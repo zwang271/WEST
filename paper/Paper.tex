@@ -312,8 +312,8 @@ Let $R$ and $T$ denote regular expressions, and let $S$ be an abbreviation for $
 Let $n = 2$, and let $R = S1$ and $T = 1S,1S | S1,S1$.\\
 To compute $R \land T$ and $R \lor T$, we use Pad($R$,$T$). Since $T$ is the longer regex by one time step, we concatenate $,S^2$ to the right of $R$. Thus $T =1S,1S | S1,S1$ and $R = S1,SS$. Now the regexes are the same length, so we can perform set intersection and alternation:
 \begin{itemize}
-    \item $R \land T = 11,1S | S1, S1$.
-    \item $R \lor T = S1,SS | 1S,1S | S1,S1 = S1,SS | 1S,1S$.
+    \item $R \land T = 11,1S \lor S1, S1$.
+    \item $R \lor T = S1,SS \lor 1S,1S \lor S1,S1 = S1,SS \lor 1S,1S$.
 \end{itemize}
 \end{example}
 
@@ -381,7 +381,7 @@ We define computation length $\text{cplen}(\phi)$ of an MLTL formula recursively
  
 Intuitively, $\text{cplen}(\phi)$ is the minimum computation length required to ensure that none of the intervals in $\phi$ are out of bounds.
 Our minimum computation length for Until and Release are slight optimizations of what was previously considered the minimum computation length in the literature. In \cite{KZJZR20}, $$\text{cplen}(\phi \mathcal{U}_{[a,b]} \psi) = \text{cplen}(\phi \mathcal{R}_{[a,b]} \psi) = b + \max(\text{cplen}(\phi), \text{cplen}(\psi))$$
- 
+
 whereas our minimum computation length for Until and Release is 
 $$\text{cplen}(\phi \mathcal{U}_{[a,b]} \psi) = \text{cplen}(\phi \mathcal{R}_{[a,b]} \psi) = b + \max(\mathbf{\text{cplen}(\phi)-1}, \text{cplen}(\psi)).$$
 We provide the proof for the minimum computation length of Until and Release below.
