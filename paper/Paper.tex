@@ -614,13 +614,15 @@ Theorem \ref{NestedUR}'s proof appears in Appendix \ref{Appendix-NestedUR}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{WEST Code Specifications} \label{specs}
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ \vspace{-0.1in}
+ \section{WEST Code Specifications} \label{specs}
+  \vspace{-0.1in}
 The code for the WEST program can be found on its %\href{https://github.com/zwang271/2022-Iowa-State-REU-Temporal-Logic-.git} KYR: blind review
-{Github} repository. The MLTL syntax for our program is given as the context free grammar below. In the alphabet, $T$ and $!$ refer to the propositional constants `true' and `false', respectively. $\&$, $v$, $=$, $>$ refer to propositional logic operators `and', `or, `equivalent', and `implies', respectively. Note that the last comma listed is not a typo and indeed part of the alphabet. \\
+{GitHub} repository. The MLTL syntax for our program is given as the context free grammar below. In the alphabet, $T$ and $!$ refer to the propositional constants `true' and `false', respectively. $\&$, $v$, $=$, $>$ refer to propositional logic operators `and', `or, `equivalent', and `implies', respectively. Note that the last comma listed is not a typo and indeed part of the alphabet. \\
 \textbf{Alphabet}: 
 \begin{align*}
-    \Sigma = \{&\text{`0' , `1' , `2' , `3' , `4' , `5' , `6' , `7' , `8' , `9' , `T' , `!' , `p' , `$\scriptstyle{\sim}$' , `v' , `\&' , `=' , `>' ,}\\
+    \Sigma = \{&\text{`0' , `1' , `2' , `3' , `4' , `5' , `6' , `7' , `8' , `9' , `T' , `!' , `p' , `$\scriptstyle{\sim}$' , `v' , `\&' , `=' , `\mbox{$>$}' ,}\\
     &\text{ `F' , `G' , `U', `R' , `(' , `)' , `[' , `]' , `:' , `,'}\}
 \end{align*}
 
@@ -646,10 +648,11 @@ The code for the WEST program can be found on its %\href{https://github.com/zwan
 
 In the grammar, associative propositional connectives (\textit{Assoc\_Prop\_conn}) are included for the ease of the user. Given well-formed formulas $\phi_1, \phi_2, \phi_3$, the following formula in prefix notation $(\lor[\phi_1, \phi_2, \phi_3])$ is parsed into $((\phi_1 \lor \phi_2) \lor \phi_3)$, which is in turn equivalent to $(\phi_1 \lor \phi_2 \lor \phi_3)$. \\
 \begin{remark}
-For two propositional variables, the associative equivalence operator functions identically to the binary propositional connective equivalence operator. For formulas with 3 or more propositional variables, however , the associative equivalence operator does not mean that each propositional variable in the list is equivalent. Instead, it means that the equivalence of the first two propositional variables in the list is equivalent to the next propositional variable in the list, and the truth value for this expression is equivalent to the next propositional variable, and so on. For example, =[p1,p2,p3] is equivalent to (p1=p2)=p3 rather than p1=p2=p3.
+For two propositional variables, the associative equivalence operator functions identically to the binary propositional connective equivalence operator. For formulas with 3 or more propositional variables, however, the associative equivalence operator does not mean that each propositional variable in the list is equivalent. Instead, it means that the equivalence of the first two propositional variables in the list is equivalent to the next propositional variable in the list, and the truth value for this expression is equivalent to the next propositional variable, and so on. For example, $=[p1,p2,p3]$ is equivalent to $(p1=p2)=p3$ rather than $p1=p2=p3$.
 \end{remark}
 
-In Appendix \ref{pseudocode appendix}, we provide the full pseudocode of the WEST program. Below we summarize only the important points to provide analysis of time and space complexity in the next section. The regular expression $R = \{R_1 | R_2 | ... | R_k\}$, where for all $1 \leq i \leq k$, $R_i \in \{$`0', `1', `S', `,'$\}^*$, is represented as a vector $R = {R_1, R_2, ..., R_k}$.
+In Appendix \ref{pseudocode appendix}, we provide the full pseudocode of the WEST program.
+We summarize the important points to provide analysis of time and space complexity. The regular expression $R = \{R_1 | R_2 | ... | R_k\}$, where for all $1 \leq i \leq k$, $R_i \in \{$`0', `1', `S', `,'$\}^*$, is represented as a vector $R = {R_1, R_2, ..., R_k}$.
 
 In order to compute MLTL operations, we define functions for handling union and intersection of such vectors. 
 The \textit{join} function performs simple concatenation of two vectors, while the \textit{set\_intersect} function calculates pairwise intersection of strings from two vectors.
@@ -658,7 +661,7 @@ For example, \textit{bit\_wise\_and}$(1s, 0s)$ is the empty string while \textit
 
 The main focus is on the recursive function \textit{reg}, which is based on the structure of the grammar. It computes the propositional logic operators $>$ and  $=$ through formula rewriting in terms of And and Or. The four temporal operators in the grammar are computed according to the definitions of their regexes (See section \ref{regex}).
 
-If the user would like to see the satisfying computations for all the subformulas in their original formula, \textit{reg} contains a boolean to enable this functionality. 
+If the user would like to see the satisfying computations for all the subformulas in their original formula, \textit{reg} contains a Boolean to enable this functionality. 
 
 It is often the case that a vector of regular expression strings contains many redundancies, and can be simplified to a smaller vector of regular expressions that improves space complexity and drastically enhances user readability. 
 As such, the \textit{simplify} function performs this by iterating through pairs of strings from the vector to search for valid simplifications. 
