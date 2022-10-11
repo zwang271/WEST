@@ -842,7 +842,8 @@ One feature within our implementation of \textit{reg} is to apply the \textit{si
  Along with theoretical space and time complexity, we provide some experimental benchmarking of these complexities using randomly generated MLTL formulas.
 This was done on an Intel(R) Core(TM) i7-4770S CPU at 3.10GHz with 32gb RAM.
 For each simulation, we generated 1000 MLTL formulas using the parameters DELTA, INTERVAL\_MAX, number of propositional variables, and number of iterations. DELTA is the maximum length we allow for any interval. INTERVAL\_MAX is the largest allowed upper bound for any interval. Number of iterations refers to the level of nesting in the generated formulas. For example, $\mathcal{G}_{[0,2]}p_0$ is a formula generated with one iteration, while $\mathcal{G}_{[0,2]}(p_0 \land p_1)$ is a formula generated with two iterations. We measure the number of characters in the output and the amount of time in milliseconds taken to run the program. Note that these simulations run the \textit{reg} function with the subformula boolean set to false and the simplify boolean set to true.
-
+\\
+\\
 \noindent\textbf{Simulation 1}
 For the first simulation, we consider 2 iterations, 5 propositional variables, 10 for DELTA, and 10 for INTERVAL\_MAX. We obtain the following plots:
 % ZILI: Seems redundant since example formulas are listed below for the outliers
@@ -856,7 +857,7 @@ For the first simulation, we consider 2 iterations, 5 propositional variables, 1
     \begin{figure}[H]
     \centering
     \includegraphics[scale=0.39]{images/Sim1Length.png}
-    \captionof{figure}{Input length vs output length}
+    \captionof{figure}{Input length vs output length.}
     \end{figure}
 \end{minipage}%
 \begin{minipage}{0.5 \textwidth}
@@ -867,6 +868,7 @@ For the first simulation, we consider 2 iterations, 5 propositional variables, 1
     \end{figure}
 \end{minipage}%
 
+% ZILI: I've reduced the length of the caption discription, otherwise the two captions display extremely close side by side
 % \begin{figure}[H]
 %     \centering
 %     \includegraphics[scale=0.75]{images/Sim1Length.png}
@@ -878,76 +880,140 @@ For the first simulation, we consider 2 iterations, 5 propositional variables, 1
 %     \caption{Input length in number of characters vs run time in milliseconds for simulation 1. Input length counts all characters, including parentheses, of the inputted formulas.}
 % \end{figure}
 
+\vspace{2mm}
+\noindent The formula $(p_0 = p_1) \mathcal{U}_{[2,9]} (p_1 \mathcal{U}_{[7,9]} p_3)$ was an outlier for both figures, and the formulas $(p_4 \rightarrow p_2) \mathcal{R}_{[1,8]} (p_3 \mathcal{U}_{[3,4]} p_0)$ and $(p_3 \mathcal{R}_{[2,7]} p_4) \mathcal{R}_{[1,9]} (p_4 \mathcal{R}_{[4,9]} p_3)$ were outliers for figure 2. 
+
+% ZILI: Chose not to use itemize due to formatting difficulties with vertical spacing.
 % \noindent The extreme outlier seen in the output length plot corresponds to the formula $(p_0 = p_1) \mathcal{U}_{[2,9]} (p_1 \mathcal{U}_{[7,9]} p_3)$.\\
 % The three extreme outliers seen in the time plot correspond to the following formulas:
-\noindent The formulas corresponding to the outliers are as follows:
-\vspace{-10mm}
-\begin{itemize}
-    \item $(p_0 = p_1) \mathcal{U}_{[2,9]} (p_1 \mathcal{U}_{[7,9]} p_3)$ (both graphs).
-    \item $(p_4 \rightarrow p_2) \mathcal{R}_{[1,8]} (p_3 \mathcal{U}_{[3,4]} p_0)$ (time).
-    \item $(p_3 \mathcal{R}_{[2,7]} p_4) \mathcal{R}_{[1,9]} (p_4 \mathcal{R}_{[4,9]} p_3)$ (time).
-\end{itemize}
+% \begin{itemize}
+%     \item $(p_0 = p_1) \mathcal{U}_{[2,9]} (p_1 \mathcal{U}_{[7,9]} p_3)$ (both graphs).
+%     \item $(p_4 \rightarrow p_2) \mathcal{R}_{[1,8]} (p_3 \mathcal{U}_{[3,4]} p_0)$ (time).
+%     \item $(p_3 \mathcal{R}_{[2,7]} p_4) \mathcal{R}_{[1,9]} (p_4 \mathcal{R}_{[4,9]} p_3)$ (time).
+% \end{itemize}
+
+\vspace{\baselineskip}
 \noindent\textbf{Simulation 2}
-For the second simulation, we consider 1 iteration, 10 propositional variables, 20 for DELTA, and 20 for INTERVAL\_MAX. Below are some examples of generated formulas:
-\begin{itemize}
-    \item $\mathcal{F}_{[10,17]} p_4$.
-    \item $\neg p_6$.
-    \item $p_6 \mathcal{U}_{[6,14]} p_8$.
-\end{itemize}
-We obtain the following plots:
-\begin{figure}[H]
+For the second simulation, we consider 1 iteration, 10 propositional variables, 20 for DELTA, and 20 for INTERVAL\_MAX. Here are some examples of generated formulas:
+$\mathcal{F}_{[10,17]} p_4$, $\neg p_6$, $p_6 \mathcal{U}_{[6,14]} p_8$. We obtain the following plots:
+
+% ZILI: removed itemize due to vertical spacing issues.
+% \begin{itemize}
+%     \item $\mathcal{F}_{[10,17]} p_4$.
+%     \item $\neg p_6$.
+%     \item $p_6 \mathcal{U}_{[6,14]} p_8$.
+% \end{itemize}
+
+\vspace{-4mm}
+\begin{minipage}{0.5 \textwidth}
+    \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.75]{images/Sim2Length.png}
-    \caption{Input length in number of characters vs output length in number of characters for simulation 2. Input length counts all characters, including parentheses, of the inputted formulas. Output length counts all the characters outputted, including commas.}
-\end{figure}
-\begin{figure}[H]
+    \includegraphics[scale=0.39]{images/Sim2Length.png}
+    \captionof{figure}{Input length vs output length}
+    \end{figure}
+\end{minipage}%
+\begin{minipage}{0.5 \textwidth}
+    \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.75]{images/Sim2Time.png}
-    \caption{Input length in number of characters vs run time in milliseconds for simulation 2. Input length counts all characters, including parentheses, of the inputted formulas.}
-\end{figure}
+    \includegraphics[scale=0.39]{images/Sim2Time.png}
+    \captionof{figure}{Input length vs run time.}
+    \end{figure}
+\end{minipage}%
+% ZILI: Old graph formatting and captions
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[scale=0.75]{images/Sim2Length.png}
+%     \caption{Input length in number of characters vs output length in number of characters for simulation 2. Input length counts all characters, including parentheses, of the inputted formulas. Output length counts all the characters outputted, including commas.}
+% \end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[scale=0.75]{images/Sim2Time.png}
+%     \caption{Input length in number of characters vs run time in milliseconds for simulation 2. Input length counts all characters, including parentheses, of the inputted formulas.}
+% \end{figure}
+
 \subsubsection{Simulation 3}
-For the third simulation, we consider 2 iterations, 10 propositional variables, 5 for DELTA, and 10 for INTERVAL\_MAX. Below are some examples of generated formulas:
-\begin{itemize}
-    \item $(p_5 \land p_0) = (p_8 \mathcal{U}_{[3,6]} p_8)$.
-    \item $(\mathcal{G}_{[6,7]} p_4) \land (\mathcal{F}_{[5,7]} p_1)$.
-    \item $\neg (p_0 \mathcal{U}_{[2,5]} p_7)$.
-\end{itemize}
+For the third simulation, we consider 2 iterations, 10 propositional variables, 5 for DELTA, and 10 for INTERVAL\_MAX. 
+% Below are some examples of generated formulas:
+% \begin{itemize}
+%     \item $(p_5 \land p_0) = (p_8 \mathcal{U}_{[3,6]} p_8)$.
+%     \item $(\mathcal{G}_{[6,7]} p_4) \land (\mathcal{F}_{[5,7]} p_1)$.
+%     \item $\neg (p_0 \mathcal{U}_{[2,5]} p_7)$.
+% \end{itemize}
 We obtain the following plots:
-\begin{figure}[H]
+
+\begin{minipage}{0.5 \textwidth}
+    \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.75]{images/Sim3Length.png}
-    \caption{Input length in number of characters vs run time in milliseconds for simulation 3. Input length counts all characters, including parentheses, of the inputted formulas.}
-\end{figure}
-\begin{figure}[H]
+    \includegraphics[scale=0.39]{images/Sim3Length.png}
+    \captionof{figure}{Input length vs output length}
+    \end{figure}
+\end{minipage}%
+\begin{minipage}{0.5 \textwidth}
+    \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.75]{images/Sim3Time.png}
-    \caption{Input length in number of characters vs run time in milliseconds for simulation 3. Input length counts all characters, including parentheses, of the inputted formulas.}
-\end{figure}
-The three outliers in the output length plot are the formulas 
-\begin{itemize}
-    \item $(p_7 \mathcal{U}_{[5,7]} p_9) \mathcal{U}_{[3,7]} (\mathcal{F}_{[1,4]} p_4)$.
-    \item $\mathcal{G}_{[3,7]} (p_9 \mathcal{U}_{[0,4]} p_0)$.
-    \item $(\neg p_9) \mathcal{R}_{[5,9]} (p_5 \mathcal{U}_{[2,4]} p_3)$.
-\end{itemize}
-The former two are also the time complexity outliers.
-\subsubsection{Simulation 4}
-For the fourth simulation, we consider 1 iteration, 5 propositional variables, 10 for DELTA, and 10 for INTERVAL\_MAX. Below are some examples of generated formulas:
-\begin{itemize}
-    \item $\neg p_1$.
-    \item $p_1 \mathcal{R}_{[6,7]} p_3$.
-    \item $\mathcal{F}_{[5,5]} p_3$.
-\end{itemize}
+    \includegraphics[scale=0.39]{images/Sim3Time.png}
+    \captionof{figure}{Input length vs run time.}
+    \end{figure}
+\end{minipage}%
+% ZILI: Old graph formatting and captions
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[scale=0.75]{images/Sim3Length.png}
+%     \caption{Input length in number of characters vs run time in milliseconds for simulation 3. Input length counts all characters, including parentheses, of the inputted formulas.}
+% \end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[scale=0.75]{images/Sim3Time.png}
+%     \caption{Input length in number of characters vs run time in milliseconds for simulation 3. Input length counts all characters, including parentheses, of the inputted formulas.}
+% \end{figure}
+\vspace{\baselineskip}
+The formulas $(p_7 \mathcal{U}_{[5,7]} p_9) \mathcal{U}_{[3,7]} (\mathcal{F}_{[1,4]} p_4)$ and $\mathcal{G}_{[3,7]} (p_9 \mathcal{U}_{[0,4]} p_0)$ were outliers in both figures, and figure 5 had one more outlier from the formula $(\neg p_9) \mathcal{R}_{[5,9]} (p_5 \mathcal{U}_{[2,4]} p_3)$.
+% The three outliers in the output length plot are the formulas 
+% \begin{itemize}
+%     \item $(p_7 \mathcal{U}_{[5,7]} p_9) \mathcal{U}_{[3,7]} (\mathcal{F}_{[1,4]} p_4)$.
+%     \item $\mathcal{G}_{[3,7]} (p_9 \mathcal{U}_{[0,4]} p_0)$.
+%     \item $(\neg p_9) \mathcal{R}_{[5,9]} (p_5 \mathcal{U}_{[2,4]} p_3)$.
+% \end{itemize}
+% The former two are also the time complexity outliers.
+\\
+\\
+\noindent\textbf{Simulation 4}
+For the fourth simulation, we consider 1 iteration, 5 propositional variables, 10 for DELTA, and 10 for INTERVAL\_MAX. Some examples of generated formulas are: 
+$\neg p_1$, $p_1 \mathcal{R}_{[6,7]} p_3$, $\mathcal{F}_{[5,5]} p_3$.
+% \begin{itemize}
+%     \item $\neg p_1$.
+%     \item $p_1 \mathcal{R}_{[6,7]} p_3$.
+%     \item $\mathcal{F}_{[5,5]} p_3$.
+% \end{itemize}
 We obtain the following plots:
-\begin{figure}[H]
+
+\begin{minipage}{0.5 \textwidth}
+    \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.75]{images/Sim4Length.png}
-    \caption{Input length in number of characters vs run time in milliseconds for simulation 4. Input length counts all characters, including parentheses, of the inputted formulas.}
-\end{figure}
-\begin{figure}[H]
+    \includegraphics[scale=0.39]{images/Sim4Length.png}
+    \captionof{figure}{Input length vs output length}
+    \end{figure}
+\end{minipage}%
+\begin{minipage}{0.5 \textwidth}
+    \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.75]{images/Sim4Time.png}
-    \caption{Input length in number of characters vs run time in milliseconds for simulation 4. Input length counts all characters, including parentheses, of the inputted formulas.}
-\end{figure}
+    \includegraphics[scale=0.39]{images/Sim4Time.png}
+    \captionof{figure}{Input length vs run time.}
+    \end{figure}
+\end{minipage}%
+
+% ZILI: Old figures
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[scale=0.75]{images/Sim4Length.png}
+%     \caption{Input length in number of characters vs run time in milliseconds for simulation 4. Input length counts all characters, including parentheses, of the inputted formulas.}
+% \end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[scale=0.75]{images/Sim4Time.png}
+%     \caption{Input length in number of characters vs run time in milliseconds for simulation 4. Input length counts all characters, including parentheses, of the inputted formulas.}
+% \end{figure}
+\vspace{\baselineskip}
 \noindent What we observe from the simulations is that the worst case complexity, both for space and time, is relatively sparse. We also observe that these worst cases are extreme outliers and that in nearly every case, are examples of nested binary temporal operators. As seen in \cite{HLR21}, \cite{KZJZR20}, \cite{AJR22}, and \cite{HCHJR21}, nested binary temporal operators do not appear in any specifications, and thus are likely rare in practical applications.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
