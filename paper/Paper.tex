@@ -615,6 +615,51 @@ Theorem \ref{NestedUR}'s proof appears in Appendix \ref{Appendix-NestedUR}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{WEST Algorithm and Analysis} \label{WESTalg}
+We now present the  full WEST algorithm, which takes MLTL formula $\phi$ (in NNF) and number of propositional variables $n$, and recursively computes all satisfying temporal regular expressions to $\phi$. We use C++ vectors of strings to represent alternation of regular expressions; for instance $\{t_1, t_2, ..., t_n\} = \bigcup_{i=1}^n t_i$.
+
+    \begin{algorithm}[H]
+    \caption{WEST Algorithm}
+\begin{algorithmic}[1]
+    \Procedure{reg}{string $\phi$, int $n$}
+        \If{$\alpha$ is $\top$ or $\bot$}
+            \State return reg\_prop\_const($\alpha$, n)
+        \EndIf
+        
+        \If{$\alpha$ is $p_k$ or $\neg p_k$}
+            \State return reg\_prop\_var($\alpha$, n)
+        \EndIf
+
+        \If{$\alpha  = \alpha_1 \land \alpha_2$}
+            \State return set\_intersect(reg($\alpha_1$), reg($\alpha_2$), n)
+        \EndIf
+
+        \If{$\alpha  = \alpha_1 \lor \alpha_2$}
+            \State return join(reg($\alpha_1$), reg($\alpha_2$), n)
+        \EndIf
+
+        \If{$\alpha = \mathcal{F}_{[a, b]}\alpha_1$}
+            \State return reg\_F(reg($\alpha_1$), a, b, n)
+        \EndIf
+
+        \If{$\alpha = \mathcal{G}_{[a, b]}\alpha_1$}
+            \State return reg\_G(reg($\alpha_1$), a, b, n)
+        \EndIf
+
+        \If{$\alpha = \alpha_1 \mathcal{U}_{[a, b]} \alpha_2$}
+            \State return reg\_U(reg($\alpha_1$), reg($alpha_2$), a, b, n)
+        \EndIf
+
+        \If{$\alpha = \alpha_1 \mathcal{R}_{[a, b]} \alpha_2$}
+            \State return reg\_R(reg($\alpha_1$), reg($\alpha_2$), a, b, n)
+        \EndIf
+    \EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+
+ 
  \vspace{-0.1in}
  \section{WEST Code Specifications} \label{specs}
   \vspace{-0.1in}
