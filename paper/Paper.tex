@@ -1087,38 +1087,40 @@ We first outline our overall approach to intelligent fuzzing:
 The core of the WEST program is executed in the recursive routine, \textit{reg}, which calls the $8$ different subroutines discussed earlier, as shown in the graph below: 
 \begin{figure}[H]
     \centering
-    \begin{tikzpicture}[node/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=15mm}, bignode/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=20mm}, star/.style={circle, draw=red!60, fill=red!5, very thick, minimum size=1mm}]
-    
+    \begin{tikzpicture}[ node/.style={rounded rectangle, draw=black!60, fill=black!5, thick, minimum size=10mm},
+    bignode/.style={rounded rectangle, draw=black!60, fill=black!5, thick, minimum size=12mm},
+    star/.style={circle, draw=red!60, fill=red!5, thick, minimum size=1mm} ]
+
     %Nodes
-    \node[bignode](reg){\textbf{Reg}};
-    \node[node](prop_var)[left=2 cm of reg]{Prop\_Var};
-    \node[node](prop_cons)[below=of prop_var]{Prop\_Cons};
-    \node[star](unary_star)[below=2 cm of reg]{};
-    \node[node](reg_f)[below=of unary_star]{Reg\_F};
-    \node[node](reg_g)[left= of reg_f]{Reg\_G};
-    \node[star](temp_binary_star1)[right=2 cm of unary_star]{};
-    \node[star](temp_binary_star2)[below= of temp_binary_star1]{};
-    \node[node](reg_u)[below=of temp_binary_star2]{Reg\_U};
-    \node[node](reg_r)[right=of reg_u]{Reg\_R};
+    \node[bignode] (reg) {\textbf{Reg}};
     \node[star](prop_binary_star1)[right= of reg]{};
     \node[star](prop_binary_star2)[right= of prop_binary_star1]{};
     \node[node](join)[right=of prop_binary_star2]{Join};
-    \node[node](set_intersect)[below=of join]{Set\_Intersect};
-    
+    \node[node](set_intersect)[below=0.5 cm of join]{Set\_Intersect};
+    \node[node] (prop_var) [left=of reg] {Prop\_Var};
+    \node[node] (prop_cons) [below=0.5 cm of prop_var] {Prop\_Cons};
+    \node[star](unary_star)[below=0.9 cm of reg]{};
+    \node[node](reg_f)[below=0.7 cm of unary_star]{Reg\_F};
+    \node[node](reg_g)[left= of reg_f]{Reg\_G};
+    \node[star](temp_binary_star1)[below=0.5 cm of prop_binary_star1]{};
+    \node[star](temp_binary_star2)[below=0.5 cm of temp_binary_star1]{};
+    \node[node](reg_u)[below=0.7 cm of temp_binary_star2]{Reg\_U};
+    \node[node](reg_r)[right=of reg_u]{Reg\_R};
+
     %Lines
-    \draw[->] (reg.west) -- (prop_var.east);
-    \draw[->] (reg.south) -- (prop_cons.north);
-    \draw[->] (reg.south) -- (unary_star.north);
+    \draw[->] (reg.west) -- (prop_var);
+    \draw[->] (reg.south) -- (prop_cons);
+    \draw[->] (reg.south) -- (unary_star);
     \draw[->] (unary_star.south) -- (reg_f.north);
-    \draw[->] (unary_star.south) -- (reg_g.north);
-    \draw[->] (reg.south) -- (temp_binary_star1.north);
+    \draw[->] (unary_star.south) -- (reg_g);
+    \draw[->] (reg.south) -- (temp_binary_star1);
     \draw[->] (reg.east) -- (prop_binary_star1.west);
     \draw[->] (temp_binary_star1.south) -- (temp_binary_star2.north);
-    \draw[->] (temp_binary_star2.south) -- (reg_r.north);
+    \draw[->] (temp_binary_star2.south) -- (reg_r);
     \draw[->] (temp_binary_star2.south) -- (reg_u.north);
     \draw[->] (prop_binary_star1.east) -- (prop_binary_star2.west);
     \draw[->] (prop_binary_star2.east) -- (join.west);
-    \draw[->] (prop_binary_star2.south) -- (set_intersect.north);
+    \draw[->] (prop_binary_star2.south) -- (set_intersect);
     \end{tikzpicture}
     
     

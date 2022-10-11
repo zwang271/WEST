@@ -8,3 +8,11 @@
 
 # Ignore Mac system files
 .DS_store
+
+# Ignore aux files
+*.aux
+*.blg
+*.out
+*.log
+*.bbl
+*.pdf
