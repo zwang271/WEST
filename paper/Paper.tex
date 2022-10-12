@@ -613,15 +613,15 @@ The formulas for the minimum computation length follow directly from the regular
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{WEST Algorithm and Analysis} \label{WESTalg}
-We now present the  full WEST algorithm, which takes MLTL formula $\phi$ (in NNF) and number of propositional variables $n$, and recursively computes all satisfying temporal regular expressions to $\phi$. 
+We now present the  full WEST algorithm, which recursively computes all satisfying temporal regular expressions to a given MLTL formula (in NNF). 
 We use C++ vectors of strings to represent alternation of regular expressions; for instance $\{t_1, t_2, ..., t_n\} = \bigcup_{i=1}^n t_i$. 
 Additionally, we provide details for performing set intersection of temporal regular expressions, and the algorithm for the temporal operator $\mathcal{F}$. 
 Note how the algorithm parallels the regular expression defined for $\mathcal{F}$, and the algorithms for the other three temporal operators follow an identical structure. 
 
 One major detail that drastically improves running time is applying a simplifying function to the output of set intersection. 
 This is because the set intersection operation is repeatedly used to compute the temporal operators $\mathcal{G}, \mathcal{U}, \mathcal{R}$. 
-Although set intersection does blow up exponentially in space in the worse case, it rarely does in practice; thus why we frequently simplify outputs. 
-We simplify alternation by using the fact that for regular expressions $w_1$ and $w_2$, $w_1 1 w_2 \lor w_1 0 w_2 = w_1 s w_2$, and check for the reduction between at every index between every pair of strings in a given vector. 
+Although repeated set intersection blows up exponentially in space in the worse case, it rarely does in practice; thus why we frequently simplify outputs. 
+We simplify alternation by using the fact that for regular expressions $w_1$ and $w_2$, $\mathscr{L}(w_1 1 w_2 \lor w_1 0 w_2) = \mathscr{L}(w_1 s w_2)$, and check if the reduction applies at every index between every pair of strings in a given vector. 
 
 % \begin{algorithm}[H]
 % \caption{WEST Algorithm}
@@ -658,7 +658,11 @@ We simplify alternation by using the fact that for regular expressions $w_1$ and
 \hspace{-5mm}
 \begin{minipage}{0.52\textwidth}
 \begin{algorithm}[H]
-\caption{WEST Algorithm}
+\caption{WEST Algorithm \\
+Inputs: $\phi$ - MLTL formula in NNF \\
+$\phi_1$ and $\phi_2$ below are subformulas of $\phi$\\
+$n$ - number of propositional variables \\
+Output: Vector of REGEX satsfying $\phi$}
 \begin{algorithmic}[1]
     \Procedure{reg}{string $\phi$, int $n$}
         \If{$\phi$ is $\top$ or $\bot$}
@@ -695,16 +699,18 @@ We simplify alternation by using the fact that for regular expressions $w_1$ and
     \EndProcedure
 \end{algorithmic}
 \end{algorithm}
+\vspace{5.9mm}
 \end{minipage}
 \hfill
 \begin{minipage}{0.48\textwidth}
 \begin{algorithm}[H]
-\caption{Takes set intersection of the languages of two regexes}
-%Input: Vectors of strings that represent regexes, simplify boolean\\
-%Output: Vector of strings that represents set intersection of the languages of the inputted regexes
-\begin{algorithmic}
-\Procedure{set\_intersect}{vector $R$, vector $T$, bool simp}
-    \State Pad($R$, $T$), return $\leftarrow \{\}$
+\caption{set\_intersect}
+Inputs: $R, T$ - Two Vectors of REGEX\\
+$n$ - number of propositional variables\\
+Output: Vector equal to $R \land T$
+\begin{algorithmic}[1]
+\Procedure{set\_intersect}{$R$, $T$, n}
+    \State Pad($R$, $T$, n), return $\leftarrow \{\}$
     \For{$(r, t) \in R\times T$}
             \State add bit\_wise\_and($r, t$) to ret 
     \EndFor
@@ -712,20 +718,24 @@ We simplify alternation by using the fact that for regular expressions $w_1$ and
 \EndProcedure
 \end{algorithmic}
 \end{algorithm}
+\vspace{-6.5mm}
 \begin{algorithm}[H]
-\caption{Computes the regex for a MLTL formula $\phi$U[a:b]$\psi$} 
-%Inputs: Vectors of strings representing the regexes for $\phi$ and $\psi$, interval bounds, number of propositional variables, simplify boolean\\
-%Output: Vector of strings that represents the appropriate satisfying computations 
-\begin{algorithmic}
-\Procedure{reg\_U}{vector reg\_phi, vector reg\_psi int $a$, int $b$, int $n$, bool simp} 
-    \State comp $\leftarrow$ ((`$S$')$^{n}$ + `,')$^{a} + $ reg\_psi
+\caption{reg\_U} 
+Inputs: r\_phi, r\_psi - vectors of REGEX for MLTL formulas $\phi$ and $\psi$ \\
+$a, b$ - integers representing interval bound \\
+$n$ - number of propositional variables\\
+Output: Vector of REGEX for $\phi \mathcal{U}_{[a, b]} \psi$
+\begin{algorithmic}[1]
+\Procedure{reg\_U}{r\_phi, r\_psi, $a$, $b$, $n$} 
+    \State comp $\leftarrow$ ((`$S$')$^{n}$ + `,')$^{a} + $ r\_psi
     \If{$a > b$} return $\{\}$
     \EndIf
     \For{($a \leq i \leq b-1$) }
-        \State temp\_G1 $\leftarrow$ reg\_G(reg\_phi, $a$, $i$, $n$)
-        \State \parbox[t]{.8\linewidth}{temp\_G2 $\leftarrow$ reg\_G(reg\_psi, $i+1$, \hspace*{5mm}$i+1$, $n$)}
-        \State \parbox[t]{.8\linewidth}{temp\_comp $\leftarrow$ set\_intersect( \hspace*{5mm}temp\_G1, temp\_G2, $n$, simp)}
-        \State \parbox[t]{.8\linewidth}{comp $\leftarrow$ join( comp, temp\_comp, \hspace*{5mm}simp)}
+        \State temp\_G1 $\leftarrow$ reg\_G(r\_phi, $a$, $i$, $n$)
+        \State \parbox[t]{.8\linewidth}{temp\_G2 $\leftarrow$ reg\_G(r\_psi, $i+1$, \hspace*{5mm}$i+1$, $n$)}
+        \State \parbox[t]{.8\linewidth}{temp\_comp $\leftarrow$ set\_intersect( \hspace*{5mm}temp\_G1, temp\_G2, n)}
+        \State \parbox[t]{.8\linewidth}{comp $\leftarrow$ join( comp, temp\_comp)}
+        % , \hspace*{5mm}simp)}
     \EndFor
     \State return comp
 \EndProcedure
@@ -734,21 +744,38 @@ We simplify alternation by using the fact that for regular expressions $w_1$ and
 \end{minipage}
 
 \subsection{Theoretical Correctness of the WEST Algorithm}
- Correctness of the WEST algorithm is dependent on the correctness of subroutines \textit{reg\_prop\_cons}, \textit{reg\_prop\_var}, \textit{join}, \textit{set\_intersect}, \textit{reg\_F}, \textit{reg\_G}, \textit{reg\_U}, and \textit{reg\_R}. 
+Correctness of the WEST algorithm is dependent on the correctness of subroutines \textit{reg\_prop\_cons}, \textit{reg\_prop\_var}, \textit{join}, \textit{set\_intersect}, \textit{reg\_F}, \textit{reg\_G}, \textit{reg\_U}, and \textit{reg\_R}. 
 The routines \textit{reg\_prop\_cons} and \textit{reg\_prop\_var} takes as input a MLTL formula of the appropriate form, and returns the regular expression as previously defined in section \ref{regex}.
-\textit{Join} takes as input two vectors of computation strings $R$ and $B$, and simply returns a vector containing all strings in $R$ and $B$, which is equivalent to $R \cup B$. 
-\textit{Set\_intersect} takes as input two vectors of computation strings $R$ and $T$, where $R$ represents $r_1 | ... | r_a$ and $T$ represents $t_1 | ... | t_b$ such that each $r_i$ and $t_j$ are regular expressions over $\Sigma = \{`0', `1', `S', `,'\}$. Assume that all strings of regular expressions are right padded to equal length. We show that $\mathscr{L}(\textit{set\_intersect}(R, T)) = \mathscr{L}(R) \cap \mathscr{L}(T)$. Since a vector of regular expressions is synonymous to the collective Or of each of them, we have that 
+\textit{Join} concatenates two input vectors of computation strings $R$ and $T$, which is equivalent to $\mathscr{L}(R) \cup \mathscr{L}(T)$. 
+\textit{Set\_intersect} takes as input two vectors of computation strings $R$ and $T$, where $R$ represents $r_1 | ... | r_a$ and $T$ represents $t_1 | ... | t_b$ such that each $r_i$ and $t_j$ are regular expressions over $\Sigma = \{`0', `1', `S', `,'\}$.
+Assume that all strings of regular expressions are right padded to equal length. 
+We show that $\mathscr{L}(\textit{set\_intersect}(R, T)) = \mathscr{L}(R) \cap \mathscr{L}(T)$. Since a vector of regular expressions is synonymous to the collective Or of each of them, we have that 
 \begin{align*}
     \mathscr{L}(R) \cap \mathscr{L}(T) &= \left(\bigcup_{i = 0}^a \mathscr{L}(r_i) \right)\cap \left( \bigcup_{j = 0}^b \mathscr{L}(t_j)\right) = \bigcup_{i = 0}^a \bigcup_{j = 0}^b \left(\mathscr{L}(r_i) \cap \mathscr{L}(t_j)\right).
 \end{align*}
-\textit{Set\_intersect} computes the union of \textit{bit\_wise\_and}$(r_i, t_j)$ over all such pairs, and so it suffices to show $\mathscr{L}(\textit{bit\_wise\_and}(r_i, t_j)) = \mathscr{L}(r_i) \cap \mathscr{L}(t_j)$.  Given a computation $\pi$, $\pi \in \mathscr{L}(r_i) \cap \mathscr{L}(t_j)$ if and only if $\pi$ matches every character of both $r_i$ and $t_j$. $\textit{Bit\_wise\_and}(r_i, t_j)$ compares $r_i$ and $t_j$ character by character and computes their intersection, which is defined naturally: $0 \cap 1 = \emptyset,\ 0 \cap S = 0,\ 1 \cap S = 1, \ 0 \cap 0 = 0, \ 1 \cap 1= 1,\text{ and } S \cap S = S$. Note that this operation is commutative. This exhaustively captures all the cases for which $\pi$ must match corresponding characters from $r_i$ and $t_j$. Thus $\mathscr{L}(\textit{bit\_wise\_and}(r_i, t_j)) = \mathscr{L}(r_i) \cap \mathscr{L}(t_j)$ and the claim holds.
+The for loop in line 3 of \textit{set\_intersect} computes the union of \textit{bit\_wise\_and}$(r_i, t_j)$ over all such pairs, and so it suffices to show $\mathscr{L}(\textit{bit\_wise\_and}(r_i, t_j)) = \mathscr{L}(r_i) \cap \mathscr{L}(t_j)$.  
+Given a computation $\pi$, $\pi \in \mathscr{L}(r_i) \cap \mathscr{L}(t_j)$ if and only if $\pi$ matches every character of both $r_i$ and $t_j$. 
+$\textit{Bit\_wise\_and}(r_i, t_j)$ compares $r_i$ and $t_j$ character by character and computes their intersection, which is defined naturally: $0 \cap 1 = \emptyset,\ 0 \cap S = 0,\ 1 \cap S = 1, \ 0 \cap 0 = 0, \ 1 \cap 1= 1,\text{ and } S \cap S = S$. 
+Note that this operation is commutative. This exhaustively captures all the cases for which $\pi$ must match corresponding characters from $r_i$ and $t_j$. 
+Thus $\mathscr{L}(\textit{bit\_wise\_and}(r_i, t_j)) = \mathscr{L}(r_i) \cap \mathscr{L}(t_j)$ and the claim holds.
+
+
 The correctness for \textit{reg\_F}, \textit{reg\_G}, \textit{reg\_U}, \textit{reg\_R}, and \textit{reg} will be proven by induction on depth of recursion to \textit{reg}. 
 The depth of recursion is exactly the depth of the parse tree of the input formula.
 For the base case (depth $0$), \textit{reg\_prop\_var} and \textit{reg\_prop\_cons} are called to handle input formulas that consist of a propositional variable, the negation of a propositional variable, or a propositional constant.
-Then assume \textit{reg} is correct on all formulas of depth at most $d$, for some integer $d \geq 0$. Let $\gamma$ be a MLTL formula in negation normal form of depth $d + 1$. $\gamma$ must be of the form $\mathcal{G}_{[a,b]}\phi$, $\mathcal{F}_{[a,b]}\phi$, $\phi \mathcal{U}_{[a,b]} \psi$, or $\phi \mathcal{R}_{[a,b]} \psi$, such that $\phi$ and $\psi$ are of depth at most $d$, and $a$, $b$ are positive integers. The proof for all four cases are of similar structure, and it suffices to verify that the algorithms compute appropriate regular expressions correctly using \textit{join} and \textit{set\_intersect}.
+Then assume \textit{reg} is correct on all formulas of depth at most $d$, for some integer $d \geq 0$. 
+Let $\gamma$ be a MLTL formula in negation normal form of depth $d + 1$. $\gamma$ must be of the form $\phi \lor \psi$, $\phi \land \psi$, $\mathcal{G}_{[a,b]}\phi$, $\mathcal{F}_{[a,b]}\phi$, $\phi \mathcal{U}_{[a,b]} \psi$, or $\phi \mathcal{R}_{[a,b]} \psi$, such that $\phi$ and $\psi$ are of depth at most $d$, and $a$, $b$ are positive integers. 
+Correctness of the first two cases have been proven. 
+The proof for the four temporal cases are of similar structure, and it suffices to verify that the algorithms compute appropriate regular expressions correctly using \textit{join} and \textit{set\_intersect}.
+
+
 We give the explicit proof for the case $\gamma = \phi \mathcal{U}_{[a,b]} \psi$ as an example.
-In this case, \textit{reg} will call the helper function \textit{reg\_U} and pass in the parameters $\textit{reg\_phi} = \textit{reg}(\phi)$ and $\textit{reg\_psi} = \textit{reg}(\psi)$, which, by the induction hypothesis, are correctly and recursively computed. The regular expression for the Until operator may be rewritten as $\text{reg}(\phi \ \mathcal{U}_{[a,b]} \psi) = \text{reg}\left(\mathcal{G}_{[a, a]} \psi \right)\lor \bigvee_{i=a}^{b-1} \text{reg}\left(\mathcal{G}_{[a,i]}\phi \land \mathcal{G}_{[i+1, i+1]} \psi\right)$. In the pseudocode for $reg\_U$, the variable \textit{comp} is initialized to $(`1S"^n + ``,")^a$ pre-concatenated to \textit{reg\_psi}, and is the regular expression for $\mathcal{G}_[a, a] \psi$. Next, the Or block from $i = a + 1$ to $b - 1$ is iteratively computed using \textit{set\_intersect} for the inner expression, and added to \textit{comp} with the \textit{join} function, which are both proven correct above. This shows correctness of \textit{reg\_U}.
-Continue in the same fashion to prove the other three cases, \textit{reg} is correct on all depth $d+1$ inputs, and thus \textit{reg} is correct on all inputs by induction.
+\textit{reg\_U} takes as input \textit{r\_phi} $=$ reg($\phi$) and \textit{r\_psi} $ = $ reg($\psi$), which by the induction hypothesis are correctly and recursively computed. 
+The regular expression for the Until operator may be rewritten as $\text{reg}(\phi \ \mathcal{U}_{[a,b]} \psi) = \text{reg}\left(\mathcal{G}_{[a, a]} \psi \right)\lor \bigvee_{i=a}^{b-1} \text{reg}\left(\mathcal{G}_{[a,i]}\phi \land \mathcal{G}_{[i+1, i+1]} \psi\right)$. 
+In line $2$ of \textit{reg\_U}, the variable \textit{comp} is initialized to $(`1S"^n + ``,")^a$ pre-concatenated to \textit{r\_psi}, and is the regular expression for $\mathcal{G}_[a, a] \psi$. 
+Next, the $\lor$ from $i = a + 1$ to $b - 1$ is computed by the for loop in line 4; lines 5 through 7 computes $\text{reg}\left(\mathcal{G}_{[a,i]}\phi \land \mathcal{G}_{[i+1, i+1]} \psi\right)$. 
+This shows correctness of \textit{reg\_U} (note that in a complete proof, correctness of \textit{reg\_G} needs to be shown first since lines 5 and 6 calls \textit{reg\_G}).
+Continuing in the same fashion to prove the other three cases, \textit{reg} is correct on all depth $d+1$ inputs, and thus \textit{reg} is correct on all inputs by induction.
 
 \subsection{Theoretical Complexity}
 \begin{flushleft}
