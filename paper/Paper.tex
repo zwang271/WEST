@@ -266,7 +266,7 @@ Suppose $n=2$. The bit string representation $\pi = 10, 01$ means that $p_0$ is 
 %KYR: Take this out and replace it with a statement that we use the standard RE operators:...
 %% \begin{definition}[\emph{Regular Expression \cite{sipser}}]
 %% A \emph{regular expression} is a string that describes the form of a language. 
-%% Let $\Sigma$ denote a finite alphabet. The empty set $\emptyset$, the empty string $\epsilon = ``"$, and any character in $\Sigma$ are constants defined to be a regular expression. 
+%% Let $\Sigma$ denote a finite phibet. The empty set $\emptyset$, the empty string $\epsilon = ``"$, and any character in $\Sigma$ are constants defined to be a regular expression. 
 %% Beyond that, we define regular expressions recursively. 
 %% Suppose $R$ and $T$ are regular expressions. 
 %% Then the following operations generate regular expressions:
@@ -292,7 +292,7 @@ Suppose $n=2$. The bit string representation $\pi = 10, 01$ means that $p_0$ is 
 
 %% %\noindent We provide examples of different regex and possible combinations of the above operations.
 %% \begin{example}
-%% Let `$a$', `$b$', and `$c$' denote characters in a finite alphabet.
+%% Let `$a$', `$b$', and `$c$' denote characters in a finite phibet.
 %% \begin{itemize}
 %%     \item $ab^*$ describes the set \{ `$a$', `$ab$', `$abb$', `$abbb$', ... \}.
 %%     \item $a^*|b$ describes the set \{ $\epsilon$, `$b$', `$a$', `$aa$', `$aaa$', ...\}.
@@ -433,12 +433,8 @@ The formulas for the minimum computation length follow directly from the regular
  \begin{itemize}
      \item At the final time-step for $\phi \mathcal{U}_{[a,b]} \psi$, if $\psi$ has not yet been assigned to be true in the computation, it will be assigned true because $\phi \mathcal{U}_{[a,b]} \psi$ is a strong operator. Semantically, the truth value of $\phi$ at this time interval doesn't matter; whether $\phi$ is true or false, the computation for $\phi \mathcal{U}_{[a,b]} \psi$ is satisfied.
      \item Likewise, in the case for $\phi \mathcal{R}_{[a,b]} \psi$, if $\psi$ is true from the first to the last time-step, the truth value of $\phi$ at the final time-step doesn't matter - the computation satisfies $\phi \mathcal{R}_{[a,b]} \psi$ regardless of whether $\phi$ is true or false.
- \end{itemize}
-
-% \vspace{-0.1in}
-% \subsection{Soundness and Completeness}
-%  \vspace{-0.1in}
- We write $\mathscr{L}(\text{reg}(\phi))$ to denote the language of reg($\phi$). That is, the set of computations represented by the regular expression $\text{reg}(\phi)$. The proof of Theorem \ref{SoundComplete} appears in Appendix \ref{Appendix-SoundComplete}.
+ \end{itemize} % \vspace{-0.1in} % \subsection{Soundness and Completeness} %  \vspace{-0.1in}
+ We write $\mathscr{L}(\text{reg}(\phi))$ to denote the language of reg($\phi$). That is, the set of computations represented by the regular expression $\text{reg}(\phi)$. % The proof of Theorem \ref{SoundComplete} appears in Appendix \ref{Appendix-SoundComplete}.
  
  \begin{theorem}[\emph{Soundness and Completeness}] \label{SoundComplete}
  For any well formed MLTL formula $\phi$ in negation normal form, a computation $\pi$ with $|\pi| = \text{cplen}(\phi)$ satisfies $\phi$ and  if and only if $\pi \in \mathscr{L}(\emph{reg}(\phi))$.
@@ -527,7 +523,7 @@ The formulas for the minimum computation length follow directly from the regular
 %\subsection{Nested Until and Release Rewriting Theorem}
 %\vspace{-0,1in}
  We prove the correctness of our formula rewriting algorithm using our regular expressions from Definition \ref{TRE}. As detailed in Section \ref{complex}, nested binary temporal operators create the worst-case time and space complexity for the WEST program. Although the WEST program does not implement this theorem by default, we would expect selected applications of rewriting to improve runtime. We use this theorem to simplify MLTL formulas, making them easier to interpret.
-Theorem \ref{NestedUR}'s proof appears in Appendix \ref{Appendix-NestedUR}.
+% Theorem \ref{NestedUR}'s proof appears in Appendix \ref{Appendix-NestedUR}.
  
  \begin{theorem}[\emph{Nested Until and Release Rewriting Theorem}] \label{NestedUR}
    Any MLTL formula using the Until or Release operator can be rewritten with right-nested subformulas. Let $\mathcal{B} = \mathcal{R} \text{ or } \mathcal{U}$. Let $a,b,c \in \mathbb{Z}_{\geq 0} , a \leq b,$ \text{and} $ \phi,   \psi$ \text{be well-formed MLTL formulas in NNF. Then,} $ \phi \ \mathcal{B}_{[a,b+c]} \psi = \phi \ \mathcal{B}_{[a,b]}(\phi \ \mathcal{B}_{[0,c]} \psi)$. That is, $ \phi \ \mathcal{U}_{[a,b+c]} \psi \equiv \phi \ \mathcal{U}_{[a,b]}(\phi \ \mathcal{U}_{[0,c]} \psi)$ and $ \phi \ \mathcal{R}_{[a,b+c]} \psi \equiv \phi \ \mathcal{R}_{[a,b]}(\phi \ \mathcal{R}_{[0,c]} \psi)$.
@@ -617,483 +613,130 @@ Theorem \ref{NestedUR}'s proof appears in Appendix \ref{Appendix-NestedUR}.
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{WEST Algorithm and Analysis} \label{WESTalg}
-We now present the  full WEST algorithm, which takes MLTL formula $\phi$ (in NNF) and number of propositional variables $n$, and recursively computes all satisfying temporal regular expressions to $\phi$. We use C++ vectors of strings to represent alternation of regular expressions; for instance $\{t_1, t_2, ..., t_n\} = \bigcup_{i=1}^n t_i$.
+We now present the  full WEST algorithm, which takes MLTL formula $\phi$ (in NNF) and number of propositional variables $n$, and recursively computes all satisfying temporal regular expressions to $\phi$. 
+We use C++ vectors of strings to represent alternation of regular expressions; for instance $\{t_1, t_2, ..., t_n\} = \bigcup_{i=1}^n t_i$. 
+Additionally, we provide details for performing set intersection of temporal regular expressions, and the algorithm for the temporal operator $\mathcal{F}$. 
+Note how the algorithm parallels the regular expression defined for $\mathcal{F}$, and the algorithms for the other three temporal operators follow an identical structure. 
 
-    \begin{algorithm}[H]
-    \caption{WEST Algorithm}
+One major detail that drastically improves running time is applying a simplifying function to the output of set intersection. 
+This is because the set intersection operation is repeatedly used to compute the temporal operators $\mathcal{G}, \mathcal{U}, \mathcal{R}$. 
+Although set intersection does blow up exponentially in space in the worse case, it rarely does in practice; thus why we frequently simplify outputs. 
+We simplify alternation by using the fact that for regular expressions $w_1$ and $w_2$, $w_1 1 w_2 \lor w_1 0 w_2 = w_1 s w_2$, and check for the reduction between at every index between every pair of strings in a given vector. 
+
+% \begin{algorithm}[H]
+% \caption{WEST Algorithm}
+% \begin{algorithmic}[1]
+%     \Procedure{reg}{string $\phi$, int $n$}
+%         \If{$\phi$ is $\top$ or $\bot$} return reg\_prop\_const($\phi$, n)
+%         \EndIf
+        
+%         \If{$\phi$ is $p_k$ or $\neg p_k$} return reg\_prop\_var($\phi$, n)
+%         \EndIf
+
+%         \If{$\phi  = \phi_1 \land \phi_2$} return set\_intersect(reg($\phi_1$), reg($\phi_2$), n)
+%         \EndIf
+
+%         \If{$\phi  = \phi_1 \lor \phi_2$} return join(reg($\phi_1$), reg($\phi_2$), n)
+%         \EndIf
+
+%         \If{$\phi = \mathcal{F}_{[a, b]}\phi_1$} return reg\_F(reg($\phi_1$), a, b, n)
+%         \EndIf
+
+%         \If{$\phi = \mathcal{G}_{[a, b]}\phi_1$} return reg\_G(reg($\phi_1$), a, b, n)
+%         \EndIf
+
+%         \If{$\phi = \phi_1 \mathcal{U}_{[a, b]} \phi_2$} return reg\_U(reg($\phi_1$), reg($\phi_2$), a, b, n)
+%         \EndIf
+
+%         \If{$\phi = \phi_1 \mathcal{R}_{[a, b]} \phi_2$} return reg\_R(reg($\phi_1$), reg($\phi_2$), a, b, n)
+%         \EndIf
+%     \EndProcedure
+% \end{algorithmic}
+% \end{algorithm}
+
+% ZILI: Presenting algorithm vertically instead
+\hspace{-5mm}
+\begin{minipage}{0.52\textwidth}
+\begin{algorithm}[H]
+\caption{WEST Algorithm}
 \begin{algorithmic}[1]
     \Procedure{reg}{string $\phi$, int $n$}
-        \If{$\alpha$ is $\top$ or $\bot$}
-            \State return reg\_prop\_const($\alpha$, n)
+        \If{$\phi$ is $\top$ or $\bot$}
+            \State return reg\_prop\_const($\phi$, n)
         \EndIf
         
-        \If{$\alpha$ is $p_k$ or $\neg p_k$}
-            \State return reg\_prop\_var($\alpha$, n)
+        \If{$\phi$ is $p_k$ or $\neg p_k$}
+            \State return reg\_prop\_var($\phi$, n)
         \EndIf
 
-        \If{$\alpha  = \alpha_1 \land \alpha_2$}
-            \State return set\_intersect(reg($\alpha_1$), reg($\alpha_2$), n)
+        \If{$\phi  = \phi_1 \land \phi_2$}
+            \State \parbox[t]{.82\linewidth}{return set\_intersect(reg($\phi_1$), reg($\phi_2$), \hspace*{5mm}n)}
         \EndIf
 
-        \If{$\alpha  = \alpha_1 \lor \alpha_2$}
-            \State return join(reg($\alpha_1$), reg($\alpha_2$), n)
+        \If{$\phi  = \phi_1 \lor \phi_2$}
+            \State return join(reg($\phi_1$), reg($\phi_2$), n)
         \EndIf
 
-        \If{$\alpha = \mathcal{F}_{[a, b]}\alpha_1$}
-            \State return reg\_F(reg($\alpha_1$), a, b, n)
+        \If{$\phi = \mathcal{F}_{[a, b]}\phi_1$}
+            \State return reg\_F(reg($\phi_1$), a, b, n)
         \EndIf
 
-        \If{$\alpha = \mathcal{G}_{[a, b]}\alpha_1$}
-            \State return reg\_G(reg($\alpha_1$), a, b, n)
+        \If{$\phi = \mathcal{G}_{[a, b]}\phi_1$}
+            \State return reg\_G(reg($\phi_1$), a, b, n)
         \EndIf
 
-        \If{$\alpha = \alpha_1 \mathcal{U}_{[a, b]} \alpha_2$}
-            \State return reg\_U(reg($\alpha_1$), reg($alpha_2$), a, b, n)
+        \If{$\phi = \phi_1 \mathcal{U}_{[a, b]} \phi_2$}
+            \State return reg\_U(reg($\phi_1$), reg($\phi_2$), a, b, n)
         \EndIf
 
-        \If{$\alpha = \alpha_1 \mathcal{R}_{[a, b]} \alpha_2$}
-            \State return reg\_R(reg($\alpha_1$), reg($\alpha_2$), a, b, n)
+        \If{$\phi = \phi_1 \mathcal{R}_{[a, b]} \phi_2$}
+            \State return reg\_R(reg($\phi_1$), reg($\phi_2$), a, b, n)
         \EndIf
     \EndProcedure
 \end{algorithmic}
 \end{algorithm}
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+\begin{algorithm}[H]
+\caption{Takes set intersection of the languages of two regexes}
+%Input: Vectors of strings that represent regexes, simplify boolean\\
+%Output: Vector of strings that represents set intersection of the languages of the inputted regexes
+\begin{algorithmic}
+\Procedure{set\_intersect}{vector $R$, vector $T$, bool simp}
+    \State Pad($R$, $T$), return $\leftarrow \{\}$
+    \For{$(r, t) \in R\times T$}
+            \State add bit\_wise\_and($r, t$) to ret 
+    \EndFor
+    \State return simplify(ret)
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+\begin{algorithm}[H]
+\caption{Computes the regex for a MLTL formula $\phi$U[a:b]$\psi$} 
+%Inputs: Vectors of strings representing the regexes for $\phi$ and $\psi$, interval bounds, number of propositional variables, simplify boolean\\
+%Output: Vector of strings that represents the appropriate satisfying computations 
+\begin{algorithmic}
+\Procedure{reg\_U}{vector reg\_phi, vector reg\_psi int $a$, int $b$, int $n$, bool simp} 
+    \State comp $\leftarrow$ ((`$S$')$^{n}$ + `,')$^{a} + $ reg\_psi
+    \If{$a > b$} return $\{\}$
+    \EndIf
+    \For{($a \leq i \leq b-1$) }
+        \State temp\_G1 $\leftarrow$ reg\_G(reg\_phi, $a$, $i$, $n$)
+        \State \parbox[t]{.8\linewidth}{temp\_G2 $\leftarrow$ reg\_G(reg\_psi, $i+1$, \hspace*{5mm}$i+1$, $n$)}
+        \State \parbox[t]{.8\linewidth}{temp\_comp $\leftarrow$ set\_intersect( \hspace*{5mm}temp\_G1, temp\_G2, $n$, simp)}
+        \State \parbox[t]{.8\linewidth}{comp $\leftarrow$ join( comp, temp\_comp, \hspace*{5mm}simp)}
+    \EndFor
+    \State return comp
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+\end{minipage}
 
-
- 
- \vspace{-0.1in}
- \section{WEST Code Specifications} \label{specs}
-  \vspace{-0.1in}
-The code for the WEST program can be found on its %\href{https://github.com/zwang271/2022-Iowa-State-REU-Temporal-Logic-.git} KYR: blind review
-{GitHub} repository. The MLTL syntax for our program is given as the context free grammar below. In the alphabet, $T$ and $!$ refer to the propositional constants `true' and `false', respectively. $\&$, $v$, $=$, $>$ refer to propositional logic operators `and', `or, `equivalent', and `implies', respectively. Note that the last comma listed is not a typo and indeed part of the alphabet. \\
-\textbf{Alphabet}: 
-\begin{align*}
-    \Sigma = \{&\text{`0' , `1' , `2' , `3' , `4' , `5' , `6' , `7' , `8' , `9' , `T' , `!' , `p' , `$\scriptstyle{\sim}$' , `v' , `\&' , `=' , `\mbox{$>$}' ,}\\
-    &\text{ `F' , `G' , `U', `R' , `(' , `)' , `[' , `]' , `:' , `,'}\}
-\end{align*}
-
-\begin{align*}
-    \text{Digit} &\to 0 \,|\, 1 \,|\,2 \,|\,3 \,|\,4 \,|\,5 \,|\,6 \,|\,7 \,|\, 8 \,|\, 9 \\
-    \text{Num} &\to \text{Digit} \; \text{Num} \,|\, \text{Digit} \\
-    \text{Interval} &\to [ \; \text{Num} \; : \; \text{Num} \; ] \\
-    \text{Prop\_cons} &\to \text{T} \;|\; ! \\
-    \text{Prop\_var} &\to \text{p} \; \text{Num} \\
-    \text{Unary\_Prop\_conn} &\to \hspace{1mm}\scriptstyle{\sim} \\
-    \text{Binary\_Prop\_conn} &\to \text{v} \;|\; \& \;|\; = \;|\; > \\
-    \text{Assoc\_Prop\_conn} &\to \text{v} \;|\; \& \;|\; = \\
-    \text{Array\_entry} &\to \text{Wff} \; , \; \text{Array\_entry} \;|\; \text{Wff} \\
-    \text{Unary\_Temp\_conn} &\to \text{F} \;|\; \text{G} \\
-    \text{Binary\_Temp\_conn} &\to \text{U} \;|\; \text{R} \\
-    \text{Wff} &\to \text{Prop\_cons} \;|\; \text{Prop\_var} \\
-               &\hspace{5mm} \;|\; \text{Unary\_Prop\_conn} \;\; \text{Wff} \\
-               &\hspace{5mm} \;|\; \text{Wff} \;\; \text{Binary\_Prop\_conn} \;\; \text{Wff}\\
-               &\hspace{5mm} \;|\; ( \; \text{Assoc\_Prop\_conn} \; [ \; \text{Array\_entry} \; ] \; ) \\
-               &\hspace{5mm} \;|\; \text{Unary\_Temp\_conn} \;\; \text{Interval} \;\; \text{Wff} \\
-               &\hspace{5mm} \;|\; ( \; \text{Wff} \;\; \text{Binar\_Temp\_conn} \;\; \text{Interval} \;\; \text{Wff} \; )
-\end{align*}
-
-In the grammar, associative propositional connectives (\textit{Assoc\_Prop\_conn}) are included for the ease of the user. Given well-formed formulas $\phi_1, \phi_2, \phi_3$, the following formula in prefix notation $(\lor[\phi_1, \phi_2, \phi_3])$ is parsed into $((\phi_1 \lor \phi_2) \lor \phi_3)$, which is in turn equivalent to $(\phi_1 \lor \phi_2 \lor \phi_3)$. \\
-\begin{remark}
-For two propositional variables, the associative equivalence operator functions identically to the binary propositional connective equivalence operator. For formulas with 3 or more propositional variables, however, the associative equivalence operator does not mean that each propositional variable in the list is equivalent. Instead, it means that the equivalence of the first two propositional variables in the list is equivalent to the next propositional variable in the list, and the truth value for this expression is equivalent to the next propositional variable, and so on. For example, $=[p1,p2,p3]$ is equivalent to $(p1=p2)=p3$ rather than $p1=p2=p3$.
-\end{remark}
-
-In Appendix \ref{pseudocode appendix}, we provide the full pseudocode of the WEST program.
-We summarize the important points to provide analysis of time and space complexity. The regular expression $R = \{R_1 | R_2 | ... | R_k\}$, where for all $1 \leq i \leq k$, $R_i \in \{$`0', `1', `S', `,'$\}^*$, is represented as a vector $R = {R_1, R_2, ..., R_k}$.
-
-In order to compute MLTL operations, we define functions for handling union and intersection of such vectors. 
-The \textit{join} function performs simple concatenation of two vectors, while the \textit{set\_intersect} function calculates pairwise intersection of strings from two vectors.
-The intersection of two strings is performed by \textit{bit\_wise\_and}, which computes intersection character by character.
-For example, \textit{bit\_wise\_and}$(1s, 0s)$ is the empty string while \textit{bit\_wise\_and}$(s11, 0s1) = 011$. 
-
-The main focus is on the recursive function \textit{reg}, which is based on the structure of the grammar. It computes the propositional logic operators $>$ and  $=$ through formula rewriting in terms of And and Or. The four temporal operators in the grammar are computed according to the definitions of their regexes (See section \ref{regex}).
-
-If the user would like to see the satisfying computations for all the subformulas in their original formula, \textit{reg} contains a Boolean to enable this functionality. 
-
-It is often the case that a vector of regular expression strings contains many redundancies, and can be simplified to a smaller vector of regular expressions that improves space complexity and drastically enhances user readability. 
-As such, the \textit{simplify} function performs this by iterating through pairs of strings from the vector to search for valid simplifications. 
-If a pair of strings$(w, v)$ can be written in the form $w = w_1 c_w w_2$ and $v = v_1 c_v v_2$ such that $w_1 = v_1$ and $w_2 = v_2$, then they are combined into one string $w_1 (c_w | c_v) w_2$.
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Complexity} \label{complex}
-
-\subsection{Theoretical Complexity}
- In order to reason about the complexity of our algorithms, we make a few reasonable assumptions about our inputs.
-Suppose that the lower and upper intervals of temporal operators are bounded by some constant $d \in \mathbb{N}$, and that the difference between any bound is less than some constant $\delta \in \mathbb{N}$. 
-We provide a summary of the complexity of each of the helper functions described for \textit{reg}. 
-For any function $f(\phi)$ taking a string argument $\phi$, we use $|\phi|$ to denote the number of characters in $\phi$ and $S(f(\phi))$ to denote the space complexity of $f$ in terms of the number of characters in the output.\\
- 
-\textbf{If $\phi$ is a propositional constant or variable:}
-%\begin{adjustwidth}{10mm}{3em}
-    It's easy to see that $S(\text{\emph{reg}}(!)) = 0$ since only the empty vector is returned. \\
-    By definition $\text{\emph{reg}}(T) = S^n$, so we have that $S(\text{\emph{reg}}(T)) = O(n)$. Similar to $\phi = T$, $\text{\emph{reg}}(p_k)$ and $\text{\emph{reg}}(\scriptstyle{\sim} \textstyle p_k)$ both return strings of the same length and thus we also have $S(\text{\emph{reg}}(p_k)) = S(\text{\emph{reg}}(\scriptstyle{\sim} \textstyle p_k)) = S(\text{\emph{reg}}(T)) = n$.\\
-%\end{adjustwidth}
- 
-\textbf{If} $\phi$ \textbf{is} ``$\phi_{1} \lor \phi_{2}$'' \textbf{:}
-%\begin{adjustwidth}{10mm}{3em}
-    For this case in our \emph{reg} function, we return $\textit{join}(\text{\emph{reg}}(\phi_{1}), \text{\emph{reg}}(\phi_{2}))$ \\
-    Thus, our space complexity is:
-    \[
-    S(\text{\emph{reg}}(\phi_{1} \lor \phi_{2})) = S(\text{\emph{reg}}(\phi_{1})) + S(\text{\emph{reg}}(\phi_{2})).
-    \]
-%\end{adjustwidth}
- 
-
-\textbf{If} $\phi$ \textbf{is} ``$\phi_{1} \; \& \; \phi_{2}$'' \textbf{:}
-%\begin{adjustwidth}{10mm}{3em}
-    For this case in our \emph{reg} function, we return $ \textit{set\_intersect}(\text{\emph{reg}}(\phi_{1}), \text{\emph{reg}}(\phi_{2}), n)$ \\
-    In the worst case, \textit{set\_intersect}($A$, $B$, $n$) will return a vector of size $S(A) \cdot S(B)$.\\
-    Thus, our space complexity is:
-    \[ 
-    S(\text{\emph{reg}}(\phi_{1} \; \& \; \phi_{2})) = S(\text{\emph{reg}}(\phi_{1})) \cdot S(\text{\emph{reg}}(\phi_{2})).
-    \]
-%\end{adjustwidth}
-
-\textbf{If} $\phi$ \textbf{is} ``$\phi_{1} >  \phi_{2}$'' \textbf{:}
-%\begin{adjustwidth}{10mm}{3em}
-    For this case in our \emph{reg} function, we first rewrite $\phi_{1} > \phi_{2}$ to the equivalent formula:
-    \[ 
-    \textit{equiv\_formula} = \text{``(''} + \textit{wff\_to\_nnf}(\scriptstyle{\sim}\textstyle \phi_{1}) + \text{``} \lor \text{''} + \phi_{2} + \text{``)''}.
-    \]
-    Then we return $\text{\emph{reg}}(\textit{equiv\_formula})$.
-    So for space complexity, we have:
-    \[ 
-    S(\text{\emph{reg}}(\phi_{1} > \phi_{2})) = S(\text{\emph{reg}}(\textit{wff\_to\_nnf}(\scriptstyle{\sim}\textstyle \phi_{1})) + S(\text{\emph{reg}}(\phi_{2})).
-    \]
-%\end{adjustwidth}
-\textbf{If} $\phi$ \textbf{is} ``$\phi_{1} = \phi_{2}$'' \textbf{:}
-%\begin{adjustwidth}{10mm}{3em}
-    For this case in our \emph{reg} function, we first rewrite $\phi_{1} = \phi_{2}$ to the equivalent formula:
-    \[ 
-    \textit{equiv\_formula} = 
-    \text{``((''} + \phi_{1} + \text{``} \& \text{''} + \phi_{2} + \text{``)}
-    \lor 
-    \text{(''} + \textit{wff\_to\_nnf}(\scriptstyle{\sim}\textstyle \phi_{1}) + \text{``} \& \text{''} +  \textit{wff\_to\_nnf}(\scriptstyle{\sim}\textstyle \phi_{2}) + \text{``))''}.
-    \]
-    Then we return $\text{\emph{reg}}(\textit{equiv\_formula})$.
-    So for space complexity, we have:
-    \[ 
-    S(\text{\emph{reg}}(\phi_{1} = \phi_{2})) =
-    S(\text{\emph{reg}}(\phi_{1})) \cdot S(\text{\emph{reg}}(\phi_{2})) \; + \;  
-    S(\text{\emph{reg}}(\textit{wff\_to\_nnf}(\scriptstyle{\sim}\textstyle \phi_{1})) \cdot S(\text{\emph{reg}}(\textit{wff\_to\_nnf}(\scriptstyle{\sim}\textstyle \phi_{2})).
-    \]
-%\end{adjustwidth}
-\textbf{If} $\phi$ \textbf{is} ``$\lor$ [ $\phi_{1}$, .., $\phi_{k}$]'' \textbf{:} 
-%\begin{adjustwidth}{10mm}{3em}
-For this case in our \emph{reg} function, we first rewrite $\lor [\phi_{1}, .., \phi_{k}]$ to the equivalent formula:
-    \[ 
-    \textit{equiv\_formula} = \text{``}( ... (\phi_{1} \lor \phi_{2}) \lor ... \phi_{k})\text{''}.
-    \]
-Using the space complexity of $\lor$, we have that:
-    \[
-    S(\text{\emph{reg}}(\lor [\phi_{1}, .., \phi_{k}])) = 
-    \sum_{i=1}^{k} S(\text{\emph{reg}}(\phi_{i})).
-    \]
-%\end{adjustwidth}
-\textbf{If} $\phi$ \textbf{is} ``$\&$ [ $\phi_{1}$, .., $\phi_{k}$]'' \textbf{:} 
-%\begin{adjustwidth}{10mm}{3em}
-For this case in our \emph{reg} function, we first rewrite $\& [\phi_{1}, .., \phi_{k}]$ to the equivalent formula:
-    \[ 
-    \textit{equiv\_formula} = \text{``}( ... (\phi_{1} \& \phi_{2}) \& ... \phi_{k})\text{''}.
-    \]
-Using the space complexity of $\&$, we have that:
-    \[
-    S(\text{\emph{reg}}(\& [\phi_{1}, .., \phi_{k}])) = 
-    \prod_{i=1}^{k} S(\text{\emph{reg}}(\phi_{i})).
-    \]
-%\end{adjustwidth}
-\textbf{If} $\phi$ \textbf{is} ``$=$ [$\phi_{1}$, .., $\phi_{k}$]'' \textbf{:}
-%\begin{adjustwidth}{10mm}{3em}
-For this case in our \emph{reg} function, we first rewrite $= [\phi_{1}, .., \phi_{k}]$ to the equivalent formula:
-    \[ 
-    \textit{equiv\_formula} = \text{``}( ... (\phi_{1} = \phi_{2}) = ... \phi_{k})\text{''}.
-    \]
-Based on the space complexities of $\&$ and $\lor$, this gives:
-    \[
-    S(\text{\emph{reg}}(= [\phi_{1}, .., \phi_{k}])) = 
-    \prod_{i=1}^{k} S(\text{\emph{reg}}(\phi_{i}))
-    + \prod_{i=1}^{k} S(\text{\emph{reg}}(\textit{wff\_to\_nnf}(\scriptstyle{\sim}\textstyle \phi_{i}))).
-    \]
-%\end{adjustwidth}
- \textbf{If} $\phi \text{ is } ``\mathcal{G}_{[a,b]} \phi_{1}$"\textbf{:}
-% \begin{adjustwidth}{10mm}{3em}
- Recall that $\text{\emph{reg}}(\mathcal{G}_{[a,b]} \phi) = \bigwedge_{i=a}^{b} (S^n,)^i \text{\emph{reg}}(\phi) (,S^n)^{b-i}$.\\
- As shown in the \textit{Assoc\_Prop\_Conn} case, if $\phi$ is ``$\&[\phi_1, ... ,\phi_k$]", then \\
- $\text{S(\emph{reg}}(\& [\phi_{1}, .., \phi_{k}])) = 
-    \prod_{i=1}^{k} \text{S(\emph{reg}}(\phi_{i}))$. We have that:
- \begin{align*}
-     \text{S(\emph{reg}}(\phi)) &= \prod_{i=a}^{b} (n+1)i \cdot \text{S(\emph{reg}}(\phi_{1}))\\
-     &< \Bigl([(n+1)b+1] \cdot \text{S(\emph{reg}}(\phi_1))\Bigl)^\delta \\
-     &= \mathcal{C}_{G} \cdot \text{S(\emph{reg}}(\phi_1)^\delta 
- \end{align*}
- where $\mathcal{C}_{G} = [(n+1)b+1]^{\delta}$.
- In the calculation, $(n+1)i$ counts the concatenation of the padded component of the computation in the worse case when we have a vector of only length 1 strings. \\
-% \end{adjustwidth}
- \textbf{If} $\phi \text{ is } ``\mathcal{F}_{[a,b]} \phi_{1}$"\textbf{:}
-% \begin{adjustwidth}{10mm}{3em}
- Recall that $\text{\emph{reg}}(\mathcal{F}_{[a,b]} \phi) = \bigvee_{i=a}^{b} (S^n,)^i \text{\emph{reg}}(\phi)(,S^n)^{b-i}$. \\
- As shown in the \textit{Assoc\_Prop\_Conn} case, if $\phi$ is ``$\lor[\phi_1, ... ,\phi_k$]", then \\
- $S(\text{\emph{reg}}(\lor [\phi_{1}, .., \phi_{k}])) = 
-    \sum_{i=1}^{k} S(\text{\emph{reg}}(\phi_{i}))$. Thus with similar calculation to $\mathcal{G}$,
- \begin{align*}
-     \text{S(\emph{reg}}(\phi)) &= \sum_{i=a}^{b} (n+1)i \cdot \text{S(\emph{reg}}(\phi_{1})) \\
-     &< \delta\Bigl(((n+1)b+1) \cdot \text{S(\emph{reg}}(\phi_1))\Bigl) \\
-     &= \mathcal{C}_{F} \cdot \text{S(\emph{reg}}(\phi_1)
- \end{align*}
- where $\mathcal{C}_{F} = \delta[(n+1)b+1]$.
-% \end{adjustwidth}
- 
- \textbf{If $\phi$ = $``\phi_1 \mathcal{U}_{[a, b]} \phi_2"$:}
-% \begin{adjustwidth}{10mm}{3em}
-    By our previous definitions, 
-    $\text{\emph{reg}}(\phi_1 \ \mathcal{U}_{[a,b]} \phi_2) =  \bigvee_{i=a}^{b} \text{\emph{reg}}\left(\mathcal{G}_{[a,i-1]}\phi_1 \land \mathcal{G}_{[i, i]} \phi_2\right)$. \\
-    We can bound $S(\text{\emph{reg}}(\mathcal{G}_{[i, i]} \phi_2))$ by $(n+1) \cdot i \cdot S(\text{\emph{reg}}(\phi_2))$ because the operation is equivalent to simply prepending $(S^n ,)^i$.
-    Thus using our previous results for the $\mathcal{G}$, $\&$ and $\lor$ operators, we have that:
-    \begin{align*}
-        S(\text{\emph{reg}}(\phi)) &= 
-        \sum_{i = a}^b [((n+1)(i-1) + 1) \cdot S(\text{\emph{reg}}(\phi_1))]^\delta 
-        [(n+1) \cdot i \cdot S(\text{\emph{reg}}(\phi_2))] \\
-        &< \delta [((n+1)(b-1) + 1) \cdot S(\text{\emph{reg}}(\phi_1))]^\delta 
-        [(n+1) \cdot b \cdot S(\text{\emph{reg}}(\phi_2))] \\
-        &< \delta ((n+1)(b-1) + 1)^\delta \cdot (n+1) \cdot d \cdot S(\text{\emph{reg}}(\phi_1))^\delta \cdot S(\text{\emph{reg}}(\phi_2)) \\
-        &= \mathcal{C}_U \cdot S(\text{\emph{reg}}(\phi_1))^\delta \cdot S(\text{\emph{reg}}(\phi_2))
-    \end{align*}
-    where $\mathcal{C}_U = \delta ((n+1)(b-1) + 1)^\delta \cdot (n+1) \cdot d$.
-%  \end{adjustwidth}
- 
-  \textbf{If $\phi$ = $``\phi_1 \mathcal{R}_{[a, b]} \phi_2"$:}
-%  \begin{adjustwidth}{10mm}{3em}
-        By our previous definitions, $\text{\emph{reg}}(\phi_1 \mathcal{R}_{[a,b]} \phi_2) =  \text{\emph{reg}}\left(\mathcal{G}_{[a,b]}\phi_2\right) \lor \bigvee_{i=a}^{b-1} \text{\emph{reg}}\left(\mathcal{G}_{[a,i]}\phi_2 \land \mathcal{G}_{[i, i]} \phi_1\right)$. Thus, a similar argument to the $\mathcal{U}$ case gives us that: 
-        \begin{align*}
-            S(\text{\emph{reg}}(\phi)) &< 
-            \mathcal{C}_G \cdot S(\text{\emph{reg}}(\phi_1))^
-            \delta + \sum_{i = a}^{b-1} [\mathcal{C}_G \cdot S(\text{\emph{reg}}(\phi_1))^
-            \delta \cdot (n+1)\cdot i \cdot S(\text{\emph{reg}}(\phi_2))] \\
-            &< \mathcal{C}_G \cdot S(\text{\emph{reg}}(\phi_1))^
-            \delta + \delta[\mathcal{C}_G \cdot S(\text{\emph{reg}}(\phi_1))^
-            \delta \cdot (n+1)(b-1) \cdot S(\text{\emph{reg}}(\phi_2))] \\
-            &= \mathcal{C}_G \cdot S(\text{\emph{reg}}(\phi_1))^
-            \delta [1 + \delta(n+1)(b-1)S(\text{\emph{reg}}(\phi_2))] \\
-            &< \mathcal{C}_G \cdot S(\text{\emph{reg}}(\phi_1))^
-            \delta (\delta(n+1)d \cdot S(\text{\emph{reg}}(\phi_2))) \\
-            &= \mathcal{C}_R \cdot S(\text{\emph{reg}}(\phi_1))^\delta \cdot S(\text{\emph{reg}}(\phi_2))
-        \end{align*}
-        where $\mathcal{C}_R = \mathcal{C}_G \cdot \delta (n+1)d$. \\
-%  \end{adjustwidth}
-\begin{theorem}[\emph{Space Complexity}]
-Given a well formed MLTL formula $\phi$, $\text{\emph{reg}}(\phi)$ has worst-case space complexity that is $O(\mathcal{C}_U^{\delta ^ \ell} \cdot (\ell + 1)^{\delta^{\ell + 1}})$, where $\ell$ is the number of logical connectives ($\land, \lor, \mathcal{F}, \mathcal{G}, \mathcal{R}, \mathcal{U}$) in $\phi$. 
-\end{theorem}
-\begin{proof}
-    To analyze worst-case complexity, it's clear from the analysis above that $\mathcal{U}$ and $\mathcal{R}$ give the largest complexity. From the constants in their respective bounds, we can show that $\mathcal{C}_U = ((n+1)d - n)^\delta \cdot \mathcal{C}_R > \mathcal{C}_R$, and so we'll analyze only repeated nesting of the operator $\mathcal{U}$.
-    
-    However, notice that the structure of the parse tree is important. For example, formulas similar to $(a \mathcal{U} b) \mathcal{U} (c \mathcal{U} d)$ generate a balanced binary parse tree where the maximum depth of recursion is $O(\log \ell)$. However if the nesting is only from one side, such as formulas similar to $(((p_0 \mathcal{U} p_1) \mathcal{U} p_2) \mathcal{U} p_3)$, then the maximum depth of recursion is $O(\ell)$. Thus we'll focus on the formula $$\phi = (((p_0 \mathcal{U}_{[a_1, b_1]} p_1) \mathcal{U}_{[a_2, b_2]} p_2) \mathcal{U}_{[a_3, b_3]}... \mathcal{U}_{[a_{\ell - 1}, b_{\ell - 1}]} p_{\ell - 1}) \mathcal{U}_{[a_\ell, b_\ell]} p_\ell$$ where there are $\ell$ logical connectives $\mathcal{U}$ and $n = \ell + 1$ propositional variables. 
-    
-    We'll derive the complexity of $S(\text{\emph{reg}}(\phi))$ by defining the recursive sequence $\{s_k\}_{k = 1}^\ell$ such that $s_1 = S(\text{\emph{reg}}(p_0 \mathcal{U}_{[a_1, b_1]} p_1))$, and $s_{k+1} = \mathcal{C}_U (s_k)^\delta \cdot S(\text{\emph{reg}}(p_{k+1}))$. The recurrence relation captures an extra nesting of the $\mathcal{U}$ operator, based on the complexity of $\mathcal{U}$ defined above. We calculate $S(p_m) = n = \ell + 1$ for all $m$ such that $0 \leq m \leq \ell$, thus $s_1 = \mathcal{C}_U(\ell + 1)^{\delta + 1}$ and $s_{k+1} = \mathcal{C}_U (s_k)^\delta \cdot (\ell + 1)$. 
-    
-    The explicit formula is given by $s_k = \mathcal{C}_U^{\sum_{i = 0}^{k - 1} \delta^i} \cdot (\ell + 1)^{\sum_{i = 0}^{k} \delta^i}$. It's easy to check that the base case $k = 1$ holds, and we prove the claim by induction:
-    \begin{align*}
-        S_{k + 1} &= \mathcal{C}_U (\mathcal{C}_U^{\sum_{i = 0}^{k - 1} \delta^i} \cdot (\ell + 1)^{\sum_{i = 0}^{k} \delta^i}) ^ \delta \cdot (\ell + 1) \\
-        &= \mathcal{C}_U^{1 + \sum_{i = 0}^{k - 1} \delta^{i + 1}} \cdot (\ell + 1)^{1 + \sum_{i = 0}^{k} \delta^{i + 1}} \\
-        &= \mathcal{C}_U^{\sum_{i = 0}^k \delta^i} \cdot (\ell + 1)^{\sum_{i = 0}^{k+1} \delta^i}.
-    \end{align*}
-    
-    \noindent Thus we have that $S(\text{\emph{reg}}(\phi)) = \mathcal{C}_U^{\sum_{i = 0}^{\ell - 1} \delta^i} \cdot (\ell + 1)^{\sum_{i = 0}^{\ell} \delta^i} = O(\mathcal{C}_U^{\delta ^ \ell} \cdot (\ell + 1)^{\delta^{\ell + 1}})$.
-    
- \end{proof}
-For time complexity, through a similar analysis, we've found that the time-complexity of all of the above functions is the same as their space complexity. In particular, the time complexities of $\phi = p_k, \scriptstyle{\sim}\textstyle p_k, T, !$, as well as that of set intersection, \textit{join}, and the operator $\mathcal{C}_U$ match their respective space complexities. Thus the worst case time complexity is $O(\mathcal{C}_U^{\delta ^ \ell} \cdot (\ell + 1)^{\delta^{\ell + 1}})$ as well. 
-One feature within our implementation of \textit{reg} is to apply the \textit{simplify} function to all intermediary vector calculations in order to decrease the output size. In the worst case if no simplification occurs, space complexity remains unchanged, but time complexity of \textit{simplify} is cubic in input size. In practice however, both time and space complexities are much more optimistic than worst-case estimates. 
- 
-\subsection{Experimental Benchmarking}
- Along with theoretical space and time complexity, we provide some experimental benchmarking of these complexities using randomly generated MLTL formulas.
-This was done on an Intel(R) Core(TM) i7-4770S CPU at 3.10GHz with 32gb RAM.
-For each simulation, we generated 1000 MLTL formulas using the parameters DELTA, INTERVAL\_MAX, number of propositional variables, and number of iterations. DELTA is the maximum length we allow for any interval. INTERVAL\_MAX is the largest allowed upper bound for any interval. Number of iterations refers to the level of nesting in the generated formulas. For example, $\mathcal{G}_{[0,2]}p_0$ is a formula generated with one iteration, while $\mathcal{G}_{[0,2]}(p_0 \land p_1)$ is a formula generated with two iterations. We measure the number of characters in the output and the amount of time in milliseconds taken to run the program. Note that these simulations run the \textit{reg} function with the subformula boolean set to false and the simplify boolean set to true.
-\\
-\\
-\noindent\textbf{Simulation 1}
-For the first simulation, we consider 2 iterations, 5 propositional variables, 10 for DELTA, and 10 for INTERVAL\_MAX. We obtain the following plots:
-% ZILI: Seems redundant since example formulas are listed below for the outliers
-% Some examples of generated formulas:
-% \begin{itemize}
-%   \item $(p_4 \land p_0) \mathcal{U}_{[2,3]} (\neg p_1)$.
-%   \item $(\mathcal{G}_{[3,5]} p_3) \mathcal{R}_{[7,8]} (p_3 \rightarrow p_0)$.
-%   \item $\mathcal{F}_{[1,6]} (p_4 = p_3)$.
-% \end{itemize}
-\begin{minipage}{0.5 \textwidth}
-    \begin{figure}[H]
-    \centering
-    \includegraphics[scale=0.39]{images/Sim1Length.png}
-    \captionof{figure}{Input length vs output length.}
-    \end{figure}
-\end{minipage}%
-\begin{minipage}{0.5 \textwidth}
-    \begin{figure}[H]
-    \centering
-    \includegraphics[scale=0.39]{images/Sim1Time.png}
-    \captionof{figure}{Input length vs run time.}
-    \end{figure}
-\end{minipage}%
-
-% ZILI: I've reduced the length of the caption discription, otherwise the two captions display extremely close side by side
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[scale=0.75]{images/Sim1Length.png}
-%     \caption{Input length in number of characters vs output length in number of characters for simulation 1. Input length counts all characters, including parentheses, of the inputted formulas. Output length counts all the characters outputted, including commas.}
-% \end{figure}
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[scale=0.75]{images/Sim1Time.png}
-%     \caption{Input length in number of characters vs run time in milliseconds for simulation 1. Input length counts all characters, including parentheses, of the inputted formulas.}
-% \end{figure}
-
-\vspace{2mm}
-\noindent The formula $(p_0 = p_1) \mathcal{U}_{[2,9]} (p_1 \mathcal{U}_{[7,9]} p_3)$ was an outlier for both figures, and the formulas $(p_4 \rightarrow p_2) \mathcal{R}_{[1,8]} (p_3 \mathcal{U}_{[3,4]} p_0)$ and $(p_3 \mathcal{R}_{[2,7]} p_4) \mathcal{R}_{[1,9]} (p_4 \mathcal{R}_{[4,9]} p_3)$ were outliers for figure 2. 
-
-% ZILI: Chose not to use itemize due to formatting difficulties with vertical spacing.
-% \noindent The extreme outlier seen in the output length plot corresponds to the formula $(p_0 = p_1) \mathcal{U}_{[2,9]} (p_1 \mathcal{U}_{[7,9]} p_3)$.\\
-% The three extreme outliers seen in the time plot correspond to the following formulas:
-% \begin{itemize}
-%     \item $(p_0 = p_1) \mathcal{U}_{[2,9]} (p_1 \mathcal{U}_{[7,9]} p_3)$ (both graphs).
-%     \item $(p_4 \rightarrow p_2) \mathcal{R}_{[1,8]} (p_3 \mathcal{U}_{[3,4]} p_0)$ (time).
-%     \item $(p_3 \mathcal{R}_{[2,7]} p_4) \mathcal{R}_{[1,9]} (p_4 \mathcal{R}_{[4,9]} p_3)$ (time).
-% \end{itemize}
-
-\vspace{\baselineskip}
-\noindent\textbf{Simulation 2}
-For the second simulation, we consider 1 iteration, 10 propositional variables, 20 for DELTA, and 20 for INTERVAL\_MAX. Here are some examples of generated formulas:
-$\mathcal{F}_{[10,17]} p_4$, $\neg p_6$, $p_6 \mathcal{U}_{[6,14]} p_8$. We obtain the following plots:
-
-% ZILI: removed itemize due to vertical spacing issues.
-% \begin{itemize}
-%     \item $\mathcal{F}_{[10,17]} p_4$.
-%     \item $\neg p_6$.
-%     \item $p_6 \mathcal{U}_{[6,14]} p_8$.
-% \end{itemize}
-
-\vspace{-4mm}
-\begin{minipage}{0.5 \textwidth}
-    \begin{figure}[H]
-    \centering
-    \includegraphics[scale=0.39]{images/Sim2Length.png}
-    \captionof{figure}{Input length vs output length}
-    \end{figure}
-\end{minipage}%
-\begin{minipage}{0.5 \textwidth}
-    \begin{figure}[H]
-    \centering
-    \includegraphics[scale=0.39]{images/Sim2Time.png}
-    \captionof{figure}{Input length vs run time.}
-    \end{figure}
-\end{minipage}%
-% ZILI: Old graph formatting and captions
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[scale=0.75]{images/Sim2Length.png}
-%     \caption{Input length in number of characters vs output length in number of characters for simulation 2. Input length counts all characters, including parentheses, of the inputted formulas. Output length counts all the characters outputted, including commas.}
-% \end{figure}
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[scale=0.75]{images/Sim2Time.png}
-%     \caption{Input length in number of characters vs run time in milliseconds for simulation 2. Input length counts all characters, including parentheses, of the inputted formulas.}
-% \end{figure}
-
-\subsubsection{Simulation 3}
-For the third simulation, we consider 2 iterations, 10 propositional variables, 5 for DELTA, and 10 for INTERVAL\_MAX. 
-% Below are some examples of generated formulas:
-% \begin{itemize}
-%     \item $(p_5 \land p_0) = (p_8 \mathcal{U}_{[3,6]} p_8)$.
-%     \item $(\mathcal{G}_{[6,7]} p_4) \land (\mathcal{F}_{[5,7]} p_1)$.
-%     \item $\neg (p_0 \mathcal{U}_{[2,5]} p_7)$.
-% \end{itemize}
-We obtain the following plots:
-
-\begin{minipage}{0.5 \textwidth}
-    \begin{figure}[H]
-    \centering
-    \includegraphics[scale=0.39]{images/Sim3Length.png}
-    \captionof{figure}{Input length vs output length}
-    \end{figure}
-\end{minipage}%
-\begin{minipage}{0.5 \textwidth}
-    \begin{figure}[H]
-    \centering
-    \includegraphics[scale=0.39]{images/Sim3Time.png}
-    \captionof{figure}{Input length vs run time.}
-    \end{figure}
-\end{minipage}%
-% ZILI: Old graph formatting and captions
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[scale=0.75]{images/Sim3Length.png}
-%     \caption{Input length in number of characters vs run time in milliseconds for simulation 3. Input length counts all characters, including parentheses, of the inputted formulas.}
-% \end{figure}
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[scale=0.75]{images/Sim3Time.png}
-%     \caption{Input length in number of characters vs run time in milliseconds for simulation 3. Input length counts all characters, including parentheses, of the inputted formulas.}
-% \end{figure}
-\vspace{\baselineskip}
-The formulas $(p_7 \mathcal{U}_{[5,7]} p_9) \mathcal{U}_{[3,7]} (\mathcal{F}_{[1,4]} p_4)$ and $\mathcal{G}_{[3,7]} (p_9 \mathcal{U}_{[0,4]} p_0)$ were outliers in both figures, and figure 5 had one more outlier from the formula $(\neg p_9) \mathcal{R}_{[5,9]} (p_5 \mathcal{U}_{[2,4]} p_3)$.
-% The three outliers in the output length plot are the formulas 
-% \begin{itemize}
-%     \item $(p_7 \mathcal{U}_{[5,7]} p_9) \mathcal{U}_{[3,7]} (\mathcal{F}_{[1,4]} p_4)$.
-%     \item $\mathcal{G}_{[3,7]} (p_9 \mathcal{U}_{[0,4]} p_0)$.
-%     \item $(\neg p_9) \mathcal{R}_{[5,9]} (p_5 \mathcal{U}_{[2,4]} p_3)$.
-% \end{itemize}
-% The former two are also the time complexity outliers.
-\\
-\\
-\noindent\textbf{Simulation 4}
-For the fourth simulation, we consider 1 iteration, 5 propositional variables, 10 for DELTA, and 10 for INTERVAL\_MAX. Some examples of generated formulas are: 
-$\neg p_1$, $p_1 \mathcal{R}_{[6,7]} p_3$, $\mathcal{F}_{[5,5]} p_3$.
-% \begin{itemize}
-%     \item $\neg p_1$.
-%     \item $p_1 \mathcal{R}_{[6,7]} p_3$.
-%     \item $\mathcal{F}_{[5,5]} p_3$.
-% \end{itemize}
-We obtain the following plots:
-
-\begin{minipage}{0.5 \textwidth}
-    \begin{figure}[H]
-    \centering
-    \includegraphics[scale=0.39]{images/Sim4Length.png}
-    \captionof{figure}{Input length vs output length}
-    \end{figure}
-\end{minipage}%
-\begin{minipage}{0.5 \textwidth}
-    \begin{figure}[H]
-    \centering
-    \includegraphics[scale=0.39]{images/Sim4Time.png}
-    \captionof{figure}{Input length vs run time.}
-    \end{figure}
-\end{minipage}%
-
-% ZILI: Old figures
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[scale=0.75]{images/Sim4Length.png}
-%     \caption{Input length in number of characters vs run time in milliseconds for simulation 4. Input length counts all characters, including parentheses, of the inputted formulas.}
-% \end{figure}
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[scale=0.75]{images/Sim4Time.png}
-%     \caption{Input length in number of characters vs run time in milliseconds for simulation 4. Input length counts all characters, including parentheses, of the inputted formulas.}
-% \end{figure}
-\vspace{\baselineskip}
-\noindent What we observe from the simulations is that the worst case complexity, both for space and time, is relatively sparse. We also observe that these worst cases are extreme outliers and that in nearly every case, are examples of nested binary temporal operators. As seen in \cite{HLR21}, \cite{KZJZR20}, \cite{AJR22}, and \cite{HCHJR21}, nested binary temporal operators do not appear in any specifications, and thus are likely rare in practical applications.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Verification of Correctness} \label{test}
- The correctness of an abstract algorithm one can describe on pencil and paper differs from the correctness of an actual implementation of the algorithm (the program). 
-On one hand, correctness of an algorithm is assured by mathematical analysis of the algorithm on all possible inputs and showing that it behaves as desired. 
-However, assuring correctness of the program is a difficult task.
-One naive approach is to test every possible input up to a certain size, and verify the output or behavior of the program.
-This often times involves a test suite that is too large to be computationally feasible, and the test suite may be overtly redundant. 
-For instance, there is little sense in testing all MLTL formulas of the form $p_0 \mathcal{U}_{[0,t]} p_1$ for all $t$ such that $0 \leq t \leq 99$; verification of a few should give sufficient confidence of correctness of the program for any reasonable party. 
-We approach this problem more intelligently. In the following sections, we prove the correctness of our algorithm and also test our implementation with a test suite that explores all control paths (up to a certain depth) of the algorithm. A control path can be thought of as a sequence of lines of code that are executed in one calculation of an input formula. Differing structures of formulas will lead to different sequences of lines of code to be executed, and a test suite to explore all such paths provides high confidence in the correctness of the WEST program.
 \subsection{Theoretical Correctness of the WEST Algorithm}
  Correctness of the WEST algorithm is dependent on the correctness of subroutines \textit{reg\_prop\_cons}, \textit{reg\_prop\_var}, \textit{join}, \textit{set\_intersect}, \textit{reg\_F}, \textit{reg\_G}, \textit{reg\_U}, and \textit{reg\_R}. 
 The routines \textit{reg\_prop\_cons} and \textit{reg\_prop\_var} takes as input a MLTL formula of the appropriate form, and returns the regular expression as previously defined in section \ref{regex}.
-\textit{Join} takes as input two vectors of computation strings $R$ and $T$, and simply returns a vector containing all strings in $R$ and $T$, which is equivalent to $R \cup T$. 
+\textit{Join} takes as input two vectors of computation strings $R$ and $B$, and simply returns a vector containing all strings in $R$ and $B$, which is equivalent to $R \cup B$. 
 \textit{Set\_intersect} takes as input two vectors of computation strings $R$ and $T$, where $R$ represents $r_1 | ... | r_a$ and $T$ represents $t_1 | ... | t_b$ such that each $r_i$ and $t_j$ are regular expressions over $\Sigma = \{`0', `1', `S', `,'\}$. Assume that all strings of regular expressions are right padded to equal length. We show that $\mathscr{L}(\textit{set\_intersect}(R, T)) = \mathscr{L}(R) \cap \mathscr{L}(T)$. Since a vector of regular expressions is synonymous to the collective Or of each of them, we have that 
 \begin{align*}
     \mathscr{L}(R) \cap \mathscr{L}(T) &= \left(\bigcup_{i = 0}^a \mathscr{L}(r_i) \right)\cap \left( \bigcup_{j = 0}^b \mathscr{L}(t_j)\right) = \bigcup_{i = 0}^a \bigcup_{j = 0}^b \left(\mathscr{L}(r_i) \cap \mathscr{L}(t_j)\right).
@@ -1104,17 +747,156 @@ The depth of recursion is exactly the depth of the parse tree of the input formu
 For the base case (depth $0$), \textit{reg\_prop\_var} and \textit{reg\_prop\_cons} are called to handle input formulas that consist of a propositional variable, the negation of a propositional variable, or a propositional constant.
 Then assume \textit{reg} is correct on all formulas of depth at most $d$, for some integer $d \geq 0$. Let $\gamma$ be a MLTL formula in negation normal form of depth $d + 1$. $\gamma$ must be of the form $\mathcal{G}_{[a,b]}\phi$, $\mathcal{F}_{[a,b]}\phi$, $\phi \mathcal{U}_{[a,b]} \psi$, or $\phi \mathcal{R}_{[a,b]} \psi$, such that $\phi$ and $\psi$ are of depth at most $d$, and $a$, $b$ are positive integers. The proof for all four cases are of similar structure, and it suffices to verify that the algorithms compute appropriate regular expressions correctly using \textit{join} and \textit{set\_intersect}.
 We give the explicit proof for the case $\gamma = \phi \mathcal{U}_{[a,b]} \psi$ as an example.
-In this case, \textit{reg} will call the helper function \textit{reg\_U} and pass in the parameters $\textit{reg\_alpha} = \textit{reg}(\phi)$ and $\textit{reg\_beta} = \textit{reg}(\psi)$, which, by the induction hypothesis, are correctly and recursively computed.
-The regular expression for the Until operator may be rewritten as follows: 
-\begin{align*}
-   \text{reg}(\phi \ \mathcal{U}_{[a,b]} \psi) &=  \bigvee_{i=a}^{b} \text{reg}\left(\mathcal{G}_{[a,i-1]}\phi \land \mathcal{G}_{[i, i]} \psi\right) \\
-   &= \text{reg}\left(\mathcal{G}_{[a,a-1]}\phi \land \mathcal{G}_{[a, a]} \psi\right) \lor \bigvee_{i=a+1}^{b} \text{reg}\left(\mathcal{G}_{[a,i-1]}\phi \land \mathcal{G}_{[i, i]} \psi\right) \\
-   &= \text{reg}\left(\mathcal{G}_{[a, a]} \psi \right)\lor \bigvee_{i=a}^{b-1} \text{reg}\left(\mathcal{G}_{[a,i]}\phi \land \mathcal{G}_{[i+1, i+1]} \psi\right)
-\end{align*}
-The last line follows from the semantics of the Global operator, which defines out of bound time step behavior to be vacuously true. In the pseudocode for $reg\_U$ (\ref{regU}), the variable \textit{comp} is initialized to $(`1S"^n + ``,")^a$ pre-concatenated to \textit{reg\_beta}, and is the regular expression for $\mathcal{G}_[a, a] \psi$. Next, the Or block from $i = a + 1$ to $b - 1$ is iteratively computed using \textit{set\_intersect} for the inner expression, and added to \textit{comp} with the \textit{join} function, which are both proven correct above. This shows correctness of \textit{reg\_U}.
+In this case, \textit{reg} will call the helper function \textit{reg\_U} and pass in the parameters $\textit{reg\_phi} = \textit{reg}(\phi)$ and $\textit{reg\_psi} = \textit{reg}(\psi)$, which, by the induction hypothesis, are correctly and recursively computed. The regular expression for the Until operator may be rewritten as $\text{reg}(\phi \ \mathcal{U}_{[a,b]} \psi) = \text{reg}\left(\mathcal{G}_{[a, a]} \psi \right)\lor \bigvee_{i=a}^{b-1} \text{reg}\left(\mathcal{G}_{[a,i]}\phi \land \mathcal{G}_{[i+1, i+1]} \psi\right)$. In the pseudocode for $reg\_U$, the variable \textit{comp} is initialized to $(`1S"^n + ``,")^a$ pre-concatenated to \textit{reg\_psi}, and is the regular expression for $\mathcal{G}_[a, a] \psi$. Next, the Or block from $i = a + 1$ to $b - 1$ is iteratively computed using \textit{set\_intersect} for the inner expression, and added to \textit{comp} with the \textit{join} function, which are both proven correct above. This shows correctness of \textit{reg\_U}.
 Continue in the same fashion to prove the other three cases, \textit{reg} is correct on all depth $d+1$ inputs, and thus \textit{reg} is correct on all inputs by induction.
-\subsection{Correctness of WEST}
- Negative testing is the process of checking that a program is able to handle unexpected inputs without crashing; fuzz testing (also know as fuzzing) is a form of negative testing.
+
+\subsection{Theoretical Complexity}
+\begin{flushleft}
+In order to reason about the complexity of our algorithms, we make a few reasonable assumptions about our inputs.
+Suppose that the lower and upper intervals of temporal operators are bounded by some constant $d \in \mathbb{N}$, and that the difference between any bound is less than some constant $\delta \in \mathbb{N}$. 
+We provide a summary of the complexity of each of the helper functions that contribute to the worst case behavior of final output.\\
+For any function $f(\phi)$ taking a string argument $\phi$, we use $|\phi|$ to denote the number of characters in $\phi$ and $S(f(\phi))$ to denote the space complexity of $f$ in terms of the number of characters in the output.\\
+\hspace{3mm} If $\phi$ is a propositional constant or variable, it's easy to see that $S(\text{\emph{reg}}(\bot)) = 0$ since only the empty vector is returned. By definition $\text{\emph{reg}}(\top) = S^n$, so we have that $S(\text{\emph{reg}}(\top)) = O(n)$. Similarly, $\text{\emph{reg}}(p_k)$ and $\text{\emph{reg}}(\neg p_k)$ both return strings of the same length and thus $S(\text{\emph{reg}}(p_k)) = S(\text{\emph{reg}}(\neg p_k)) = S(\text{\emph{reg}}(\top)) = n$.\\
+\hspace{3mm} If $\phi$ is ``$\phi_{1} \lor \phi_{2}$'' we return $\textit{join}(\text{\emph{reg}}(\phi_{1}), \text{\emph{reg}}(\phi_{2}))$, which simply concatenates the contents of the two vectors. 
+Thus $S(\text{\emph{reg}}(\phi_{1} \lor \phi_{2})) = S(\text{\emph{reg}}(\phi_{1})) + S(\text{\emph{reg}}(\phi_{2})).$\\
+\hspace{3mm} If $\phi$ is ``$\phi_{1} \land \phi_{2}$''
+$ \textit{set\_intersect}(\text{\emph{reg}}(\phi_{1}), \text{\emph{reg}}(\phi_{2}), n)$ returns a vector of size $S(A) \cdot S(B)$ in the worst case when no simplification can be made. 
+Thus, our space complexity is $S(\text{\emph{reg}}(\phi_{1} \land \phi_{2})) = S(\text{\emph{reg}}(\phi_{1})) \cdot S(\text{\emph{reg}}(\phi_{2})).$\\
+\hspace{3mm} For the next cases, we use these two bounds and define the constants $\mathcal{C}_G$ and $\mathcal{C}_F$:
+{\centering $\prod_{i = a}^b (n+1)i &= (n+1)^{b-a} \cdot \frac{b!}{(a-1)!} \leq (n+1)^\delta b! \leq (n+1)^\delta d!  = \mathcal{C}_G$ \\ $\sum_{i = a}^b (n+1)i &\leq (n+1)b\delta \leq (n+1)d\delta  = \mathcal{C}_F$\par}\\
+\hspace{3mm} If $\phi \text{ is } ``\mathcal{G}_{[a,b]} \phi_{1}$":
+recall that $\text{\emph{reg}}(\mathcal{G}_{[a,b]} \phi) = \bigwedge_{i=a}^{b} (S^n,)^i \text{\emph{reg}}(\phi) (,S^n)^{b-i}$.
+From the analysis of \textit{set\_intersect}, worst case space complexity is multiplicative. Thus\\ $\text{S(\emph{reg}}(\phi)) = \prod_{i=a}^{b} (n+1)i \cdot \text{S(\emph{reg}}(\phi_{1})) < \mathcal{C}_G \text{S(\emph{reg}}(\phi_1))$.
+In this calculation, $(n+1)i$ counts the concatenation of the padded component of the computation in the worse case when we have a vector of only length 1 strings. \\
+\hspace{3mm} If $\phi \text{ is } ``\mathcal{F}_{[a,b]} \phi_{1}$":
+Recall that $\text{\emph{reg}}(\mathcal{F}_{[a,b]} \phi) = \bigvee_{i=a}^{b} (S^n,)^i \text{\emph{reg}}(\phi)(,S^n)^{b-i}$. \\
+From the analysis of \textit{join}, worst case space complexity is additive and thus 
+$\text{S(\emph{reg}}(\phi)) &= \sum_{i=a}^{b} (n+1)i \cdot \text{S(\emph{reg}}(\phi_{1})) < \mathcal{C}_{F} \text{S(\emph{reg}}(\phi_1)$.\\
+\hspace{3mm}If $\phi$ = $``\phi_1 \mathcal{U}_{[a, b]} \phi_2"$: Recall that 
+    $\text{\emph{reg}}(\phi_1 \ \mathcal{U}_{[a,b]} \phi_2) =  \bigvee_{i=a}^{b} \text{\emph{reg}}\left(\mathcal{G}_{[a,i-1]}\phi_1 \land \mathcal{G}_{[i, i]} \phi_2\right)$.
+    We can bound $S(\text{\emph{reg}}(\mathcal{G}_{[i, i]} \phi_2))$ by $(n+1) \cdot i \cdot S(\text{\emph{reg}}(\phi_2))$ because the operation is equivalent to simply prepending $(S^n ,)^i$.
+    Thus using our previous results for the $\mathcal{G}$, $\land$ and $\lor$ operators, we have that:
+    \vspace{-.4cm}
+    \begin{align*}
+        S(\text{\emph{reg}}(\phi)) &= 
+        \sum_{i = a}^b [((n+1)(i-1) + 1) \cdot S(\text{\emph{reg}}(\phi_1))]^\delta 
+        [(n+1) \cdot i \cdot S(\text{\emph{reg}}(\phi_2))] \\
+        &< \delta [((n+1)(b-1) + 1) \cdot S(\text{\emph{reg}}(\phi_1))]^\delta 
+        [(n+1) \cdot b \cdot S(\text{\emph{reg}}(\phi_2))] \\
+        &< \delta ((n+1)(b-1) + 1)^\delta \cdot (n+1) \cdot d \cdot S(\text{\emph{reg}}(\phi_1))^\delta \cdot S(\text{\emph{reg}}(\phi_2)) \\
+        &= \mathcal{C}_U \cdot S(\text{\emph{reg}}(\phi_1))^\delta \cdot S(\text{\emph{reg}}(\phi_2))
+    \end{align*}
+    where $\mathcal{C}_U = \delta ((n+1)(b-1) + 1)^\delta \cdot (n+1) \cdot d$.\\
+\hspace{3mm} If $\phi$ = $``\phi_1 \mathcal{R}_{[a, b]} \phi_2"$:
+    $\text{\emph{reg}}(\phi_1 \mathcal{R}_{[a,b]} \phi_2) =  \text{\emph{reg}}\left(\mathcal{G}_{[a,b]}\phi_2\right) \lor \bigvee_{i=a}^{b-1} \text{\emph{reg}}\left(\mathcal{G}_{[a,i]}\phi_2 \land \mathcal{G}_{[i, i]} \phi_1\right)$. Thus, a similar argument to the $\mathcal{U}$ case shows
+    $S(\text{\emph{reg}}(\phi)) < \mathcal{C}_R \cdot S(\text{\emph{reg}}(\phi_1))^\delta \cdot S(\text{\emph{reg}}(\phi_2))$, \\
+    where $\mathcal{C}_R = \mathcal{C}_G \cdot \delta (n+1)d$.
+\end{flushleft}
+\begin{theorem}[\emph{Space Complexity}]
+Given a well formed MLTL formula $\phi$, $\text{\emph{reg}}(\phi)$ has worst-case space complexity that is $O(\mathcal{C}_U^{\delta ^ \ell} \cdot (\ell + 1)^{\delta^{\ell + 1}})$, where $\ell$ is the number of logical connectives ($\land, \lor, \mathcal{F}, \mathcal{G}, \mathcal{R}, \mathcal{U}$) in $\phi$. 
+\end{theorem}
+\begin{proof}
+    To analyze worst-case complexity, it's clear from the analysis above that $\mathcal{U}$ and $\mathcal{R}$ give the largest complexity. From the constants in their respective bounds, we can show that $\mathcal{C}_U = ((n+1)d - n)^\delta \cdot \mathcal{C}_R > \mathcal{C}_R$, and so we'll analyze only repeated nesting of the operator $\mathcal{U}$.\\
+    However, notice that the structure of the parse tree is important. For example, formulas similar to $(a \mathcal{U} b) \mathcal{U} (c \mathcal{U} d)$ generate a balanced binary parse tree where the maximum depth of recursion is $O(\log \ell)$. However if the nesting is only from one side, such as formulas similar to $(((p_0 \mathcal{U} p_1) \mathcal{U} p_2) \mathcal{U} p_3)$, then the maximum depth of recursion is $O(\ell)$. Thus we'll focus on the formula $$\phi = (((p_0 \mathcal{U}_{[a_1, b_1]} p_1) \mathcal{U}_{[a_2, b_2]} p_2) \mathcal{U}_{[a_3, b_3]}... \mathcal{U}_{[a_{\ell - 1}, b_{\ell - 1}]} p_{\ell - 1}) \mathcal{U}_{[a_\ell, b_\ell]} p_\ell$$ where there are $\ell$ logical connectives $\mathcal{U}$ and $n = \ell + 1$ propositional variables.\\
+    We'll derive the complexity of $S(\text{\emph{reg}}(\phi))$ by defining the recursive sequence $\{s_k\}_{k = 1}^\ell$ such that $s_1 = S(\text{\emph{reg}}(p_0 \mathcal{U}_{[a_1, b_1]} p_1))$, and $s_{k+1} = \mathcal{C}_U (s_k)^\delta \cdot S(\text{\emph{reg}}(p_{k+1}))$. The recurrence relation captures an extra nesting of the $\mathcal{U}$ operator, based on the complexity of $\mathcal{U}$ defined above. We calculate $S(p_m) = n = \ell + 1$ for all $m$ such that $0 \leq m \leq \ell$, thus $s_1 = \mathcal{C}_U(\ell + 1)^{\delta + 1}$ and $s_{k+1} = \mathcal{C}_U (s_k)^\delta \cdot (\ell + 1)$. \\
+    The explicit formula is given by $s_k = \mathcal{C}_U^{\sum_{i = 0}^{k - 1} \delta^i} \cdot (\ell + 1)^{\sum_{i = 0}^{k} \delta^i}$. It's easy to check that the base case $k = 1$ holds, and we prove the claim by induction:
+    \vspace{-0.2cm}
+    \begin{align*}
+        S_{k + 1} &= \mathcal{C}_U (\mathcal{C}_U^{\sum_{i = 0}^{k - 1} \delta^i} \cdot (\ell + 1)^{\sum_{i = 0}^{k} \delta^i}) ^ \delta \cdot (\ell + 1) \\
+        &= \mathcal{C}_U^{1 + \sum_{i = 0}^{k - 1} \delta^{i + 1}} \cdot (\ell + 1)^{1 + \sum_{i = 0}^{k} \delta^{i + 1}} \\
+        &= \mathcal{C}_U^{\sum_{i = 0}^k \delta^i} \cdot (\ell + 1)^{\sum_{i = 0}^{k+1} \delta^i}.
+    \end{align*}
+    Thus we have that $S(\text{\emph{reg}}(\phi)) = \mathcal{C}_U^{\sum_{i = 0}^{\ell - 1} \delta^i} \cdot (\ell + 1)^{\sum_{i = 0}^{\ell} \delta^i} = O(\mathcal{C}_U^{\delta ^ \ell} \cdot (\ell + 1)^{\delta^{\ell + 1}})$.
+ \end{proof}
+For time complexity, through a similar analysis, we've found that the time-complexity of all of the above functions is the same as their space complexity. In particular, the time complexities of $\phi = p_k, \scriptstyle{\sim}\textstyle p_k, \top, \bot$, as well as that of set intersection, \textit{join}, and the operator $\mathcal{U}$ match their respective space complexities. Thus the worst case time complexity is $O(\mathcal{C}_U^{\delta ^ \ell} \cdot (\ell + 1)^{\delta^{\ell + 1}})$ as well. 
+If in the worst case no simplification occurs in any call of \textit{set\_intersect}, space complexity remains unchanged, but simplifying a vector of regular expressions is cubic in input size. In practice however, both time and space complexities are much more optimistic than worst-case estimates. 
+ 
+\subsection{Experimental Benchmarking}
+ Along with theoretical space and time complexity, we provide some experimental benchmarking of these complexities using randomly generated MLTL formulas.
+This was done on an Intel(R) Core(TM) i7-4770S CPU at 3.10GHz with 32gb RAM.
+For each simulation, we generated 1000 MLTL formulas using the parameters DELTA, INTERVAL\_MAX, number of propositional variables, and number of iterations. DELTA is the maximum length we allow for any interval. INTERVAL\_MAX is the largest allowed upper bound for any interval. Number of iterations refers to the level of nesting in the generated formulas. For example, $\mathcal{G}_{[0,2]}p_0$ is a formula generated with one iteration, while $\mathcal{G}_{[0,2]}(p_0 \land p_1)$ is a formula generated with two iterations. We measure the number of characters in the output and the amount of time in milliseconds taken to run the program. Note that these simulations run the \textit{reg} function with the subformula boolean set to false and the simplify boolean set to true.\\
+\noindent\textbf{Simulation 1}
+For the first simulation, we consider 2 iterations, 5 propositional variables, 10 for DELTA, and 10 for INTERVAL\_MAX. We obtain the following plots:\\
+\begin{minipage}{0.5 \textwidth}
+    \begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.39]{images/Sim1Length.png}
+    \captionof{figure}{Input length vs output length.\vspace{3mm}}
+    \end{figure}
+\end{minipage}
+\begin{minipage}{0.5 \textwidth}
+    \begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.39]{images/Sim1Time.png}
+    \captionof{figure}{Input length vs run time.\vspace{3mm}}
+    \end{figure}
+\end{minipage}\\
+\noindent The formula $(p_0 = p_1) \mathcal{U}_{[2,9]} (p_1 \mathcal{U}_{[7,9]} p_3)$ was an outlier for both figures, and the formulas $(p_4 \rightarrow p_2) \mathcal{R}_{[1,8]} (p_3 \mathcal{U}_{[3,4]} p_0)$ and $(p_3 \mathcal{R}_{[2,7]} p_4) \mathcal{R}_{[1,9]} (p_4 \mathcal{R}_{[4,9]} p_3)$ were outliers for figure 2.\\
+\noindent\textbf{Simulation 2}
+For the second simulation, we consider 1 iteration, 10 propositional variables, 20 for DELTA, and 20 for INTERVAL\_MAX. Here are some examples of generated formulas:
+$\mathcal{F}_{[10,17]} p_4$, $\neg p_6$, $p_6 \mathcal{U}_{[6,14]} p_8$. We obtain the following plots:\\
+\begin{minipage}{0.5 \textwidth}
+    \begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.39]{images/Sim2Length.png}
+    \captionof{figure}{Input length vs output length\vspace{3mm}}
+    \end{figure}
+\end{minipage}
+\begin{minipage}{0.5 \textwidth}
+    \begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.39]{images/Sim2Time.png}
+    \captionof{figure}{Input length vs run time.\vspace{3mm}}
+    \end{figure}
+\end{minipage}\\
+\noindent\textbf{Simulation 3}
+For the third simulation, we consider 2 iterations, 10 propositional variables, 5 for DELTA, and 10 for INTERVAL\_MAX. We obtain the following plots:\\
+\begin{minipage}{0.5 \textwidth}
+    \begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.39]{images/Sim3Length.png}
+    \captionof{figure}{Input length vs output length\vspace{3mm}}
+    \end{figure}
+\end{minipage}
+\begin{minipage}{0.5 \textwidth}
+    \begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.39]{images/Sim3Time.png}
+    \captionof{figure}{Input length vs run time.\vspace{3mm}}
+    \end{figure}
+\end{minipage}\\
+The formulas $(p_7 \mathcal{U}_{[5,7]} p_9) \mathcal{U}_{[3,7]} (\mathcal{F}_{[1,4]} p_4)$ and $\mathcal{G}_{[3,7]} (p_9 \mathcal{U}_{[0,4]} p_0)$ were outliers in both figures, and figure 5 had one more outlier from the formula $(\neg p_9) \mathcal{R}_{[5,9]} (p_5 \mathcal{U}_{[2,4]} p_3)$.
+\\
+\noindent\textbf{Simulation 4}
+For the fourth simulation, we consider 1 iteration, 5 propositional variables, 10 for DELTA, and 10 for INTERVAL\_MAX. Some examples of generated formulas are: $\neg p_1$, $p_1 \mathcal{R}_{[6,7]} p_3$, $\mathcal{F}_{[5,5]} p_3$. We obtain the following plots:\\
+\begin{minipage}{0.5 \textwidth}
+    \begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.39]{images/Sim4Length.png}
+    \captionof{figure}{Input length vs output length\vspace{3mm}}
+    \end{figure}
+\end{minipage}%
+\begin{minipage}{0.5 \textwidth}
+    \begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.39]{images/Sim4Time.png}
+    \captionof{figure}{Input length vs run time.\vspace{3mm}}
+    \end{figure}
+\end{minipage}
+\noindent What we observe from the simulations is that the worst case complexity, both for space and time, is relatively sparse. We also observe that these worst cases are extreme outliers and that in nearly every case, are examples of nested binary temporal operators. As seen in \cite{HLR21}, \cite{KZJZR20}, \cite{AJR22}, and \cite{HCHJR21}, nested binary temporal operators do not appear in any specifications, and thus are likely rare in practical applications.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Correctness of WEST} \label{test}
+ The correctness of an abstract algorithm one can describe on pencil and paper differs from the correctness of an actual implementation of the algorithm (the program). 
+On one hand, correctness of an algorithm is assured by mathematical analysis of the algorithm on all possible inputs and showing that it behaves as desired. 
+However, assuring correctness of the program is a difficult task.
+One naive approach is to test every possible input up to a certain size, and verify the output or behavior of the program.
+This often times involves a test suite that is too large to be computationally feasible, and the test suite may be overtly redundant. 
+For instance, there is little sense in testing all MLTL formulas of the form $p_0 \mathcal{U}_{[0,t]} p_1$ for all $t$ such that $0 \leq t \leq 99$; verification of a few should give sufficient confidence of correctness of the program for any reasonable party. 
+We approach this problem more intelligently. In the following section, we test our implementation with a test suite that explores all control paths (up to a certain depth) of the algorithm. A control path can be thought of as a sequence of lines of code that are executed in one calculation of an input formula. Differing structures of formulas will lead to different sequences of lines of code to be executed, and a test suite to explore all such paths provides high confidence in the correctness of the WEST program.
+
+\subsection{Intelligent Fuzzing}
+Negative testing is the process of checking that a program is able to handle unexpected inputs without crashing; fuzz testing (also know as fuzzing) is a form of negative testing.
 The earliest use of fuzzing by Miller \cite{Miller} was to discover bugs in Unix utilities by randomly generating command line inputs, and monitoring for unexpected crashes or security. This style of black box testing assumes no prior knowledge of the target program, and is centered on generating a large quantity of inputs. Miller describes his approach in \cite{Miller} as follows: \\
  \textit{``If we consider a program to
 be a complex finite state machine, then our testing strategy can be thought of as a random walk through the state space, searching for undefined states.''} \\
@@ -1129,8 +911,8 @@ We first outline our overall approach to intelligent fuzzing:
 \end{enumerate}
 \subsubsection{State Diagram Construction}
  We choose to represent the states space of algorithm as a directed graph with the edges representing the control flow and vertices representing blocks of contiguous code without branching statements. 
-The core of the WEST program is executed in the recursive routine, \textit{reg}, which calls the $8$ different subroutines discussed earlier, as shown in the graph below: 
-\begin{figure}[H]
+The core of the WEST program is executed in the recursive routine, \textit{reg}, which calls the $8$ different subroutines discussed earlier, as shown in \ref{fig:abstracted graph}.
+\begin{figure}[t]
     \centering
     \begin{tikzpicture}[ node/.style={rounded rectangle, draw=black!60, fill=black!5, thick, minimum size=10mm},
     bignode/.style={rounded rectangle, draw=black!60, fill=black!5, thick, minimum size=12mm},
@@ -1170,22 +952,20 @@ The core of the WEST program is executed in the recursive routine, \textit{reg},
     
     
     
-    \caption{Abstracted graph of the \textit{reg} main routine (refer to Appendix \ref{graphs appendix} for expanded graph and graphs of helper functions). Red nodes signal recursive calls to \textit{reg} on sub formulas of the input formula.}
+    \caption{Abstracted graph of the \textit{reg} main routine. Red nodes signal recursive calls to \textit{reg} on sub formulas of the input formula.}
     \label{fig:abstracted graph}
 \end{figure}
 In order to construct the intelligent fuzzing test suite, we make the design choice to abstract away the eight subroutines in the overall state space diagram, despite the fact that they may have different possible execution paths within them. Without this abstraction, attempting to explore all execution paths in this finer graph is infeasible due to the explosion in the number of paths \cite{Pham_2016}, some of which are provably impossible to construct a test input to explore.
-Additionally, the astute reader may observe that analysis of the $>$, $=$, and \textit{assoc\_prop\_conn} operators are not included in the state diagram. 
-These cases are handled in the algorithm through only formula rewriting to the core operators. This is done through simple string manipulation, which is relatively simple to guarantee and test correctness of through unit testing.
 \subsubsection{Creating the Test Suite}
  We now give the procedure of how the intelligent fuzzing test suite is generated. 
 Firstly, we count the number of formulas $\phi(d)$ to be generated as a function of the exact depth $d$ of recursion desired. 
-For $d = 0$, only the paths leading to \textit{prop\_var} and \textit{prop\_cons} can be explored, so $\phi(0) = 2$. For $d \geq 1$, we recursively calculate $\phi(d + 1) = 2\phi(d) + 4\phi(d)^2$; paths to \textit{reg\_G} and \textit{reg\_F} is counted in the linear term, and paths \textit{reg\_U}, \textit{reg\_R}, \textit{set\_intersect}, and \textit{join} is counted by the quadratic term. 
+For $d = 0$, only the paths leading to \textit{prop\_var} and \textit{prop\_cons} can be explored, so $\phi(0) = 2$. For $d \geq 1$, we recursively calculate $\phi(d + 1) = 2\phi(d) + 4\phi(d)^2$; paths to \textit{reg\_G} and \textit{reg\_F} is counted in the linear term, and paths to \textit{reg\_U}, \textit{reg\_R}, \textit{set\_intersect}, and \textit{join} is counted by the quadratic term. 
 This gives $\phi(1) = 20$, $\phi(2) = 1640$, and $\phi(3) = 10761680$. 
 $d = 3$ is computationally infeasible, and $d = 1$ doesn't give us assurance about operators interacting with each other through nesting. Thus $d = 2$ is a happy medium. 
 The full test suite is generated in a similar recursive manner. 
 Firstly, the $d = 0$ test suite comprises of two formulas: a propositional variable or its negation, and a propositional constant. 
 Then for any $d \geq 1$, the test suite is constructed by iterating through all formulas in the depth $d-1$ test suite for \textit{reg\_G} and \textit{reg\_F}, and all pairs of formulas from the $d-1$ test suite for the remaining four recursive paths. 
-To ensure wider coverage, each of the propositional variables or their negation and propositional constants are randomly generated (full pseudocode description in Appendix \ref{pseudocode appendix}).
+To ensure wider coverage, each of the propositional variables or their negation and propositional constants are randomly generated.
 \subsubsection{Verifying against Naive Brute Force}
  A relatively straight forward approach to generating the set of all satisfying computations of a MLTL formula $\phi$ over $n$ variables, such that $m = \text{cplen}(\phi)$, is to iterate over all $2^{m \cdot n}$ possible computations, which counts all possible length $m \cdot n$ bit strings. 
 The main work is done by an interpreter function that takes arguments of computation $\pi$ and MLTL formula $\phi$ and determines if $\pi \vDash \phi$ purely based on semantics that define MLTL.
@@ -1200,74 +980,60 @@ It's important to state that although the full test suite matches between both i
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Regular Expression Simplification Theorem} \label{simpsection}
- As a final result of our paper, we provide a regular expression simplification theorem. This theorem describes a form of a set of computations that are guaranteed to simplify down to a string of all `$S$'s. Although not implemented in the WEST program, this theorem may help users identify tautologies, as the WEST program does not always output a single string of `$S$'s when a formula holds true for every computation. We first define some vocabulary.
-\begin{definition}[\emph{Arbitrary Computation}]
-We say a regular expression composed entirely of `$S$'s and commas is an \emph{arbitrary computation}. For the purposes of the following theorem, we remove all commas from computations.
-\end{definition}
-\begin{definition}[\emph{Fixed Truth Value}]
-We say `0' or a `1' in a regular expression is a \emph{fixed truth value}.
-\end{definition}
-\begin{definition}[\emph{Matrix}]
-We overload the definition of a matrix and say that a \emph{matrix} is a representation of a union of regular expressions, where each row is a regular expression. This aids significantly in the description and proof of the theorem; note, however, that matrix algebra does not apply in this definition. 
-\end{definition}
+ As a final result of our paper, we provide a regular expression simplification theorem. This theorem describes a form of a set of computations that are guaranteed to simplify down to a string of all `$S$'s. Although not implemented in the WEST program, this theorem may help users identify tautologies, as the WEST program does not always output a single string of `$S$'s when a formula holds true for every computation. We first define some vocabulary.\\
+ We say a regular expression composed entirely of `$S$'s and commas is an \emph{arbitrary computation}. For the purposes of the following theorem, we remove all commas from computations. We say `0' or a `1' in a regular expression is a \emph{fixed truth value}. We overload the definition of a matrix and say that a \emph{matrix} is a representation of a union of regular expressions, where each row is a regular expression. This aids significantly in the description and proof of the theorem; note, however, that matrix algebra does not apply in this definition. 
 \begin{theorem}[\emph{Regular Expression Simplification Theorem}] \label{simp}
-Let M be a $n+1$ by $n$ matrix, where each of the $n+1$ rows represents a regular expression of length n with commas stripped. If each column has one `$1$', one `$0$', and $n-1$ `$S$'s, then the union of this set of regular expressions can be simplified to $S^n$, the arbitrary computation of length $n$. \footnote{See Appendix \ref{simp appendix} for the proof of the theorem.}
+Let M be a $n+1$ by $n$ matrix, where each of the $n+1$ rows represents a regular expression of length n with commas stripped. If each column has one `$1$', one `$0$', and $n-1$ `$S$'s, then the union of this set of regular expressions can be simplified to $S^n$, the arbitrary computation of length $n$.
 \end{theorem}
-\begin{figure}[h!]
-\begin{minipage}{.50\textwidth}
-    \noindent \textbf{Example:}
-    \vspace{-0.05\textwidth}
-    \begin{equation*}
-        \begin{pmatrix} \label{example1_regex_simp_thm}
-        1 & S & S & S\\
-        S & 1 & S & S\\
-        S & S & 1 & S\\
-        S & S & S & 1\\
-        0 & 0 & 0 & 0
-        \end{pmatrix} = SSSS.
-    \end{equation*}
-    % \noindent See Appendix \ref{simp appendix} for the proof of the theorem.\\
-    \end{minipage}
-    \begin{minipage}{.50\textwidth}
-    Note that the theorem is a sufficient but not necessary condition for simplification to the arbitrary computation. One such example is the regular expression $101|S1S|1S0|0SS$, which fails the hypothesis of the  simplification theorem but is still equivalent to $SSS$.
-    \end{minipage}
-\end{figure}
-
+Note that this theorem gives us a sufficient but not a necessary condition for simplification to the arbitrary computation. One such example is the regular expression $101|S1S|1S0|0SS$, which fails the hypothesis of the  simplification theorem but is still equivalent to $SSS$.
 \subsection{Implementation Challenges of the Regular Expression Simplification Theorem}
+\begin{figure}[H]
+\begin{minipage}{.62\textwidth}
 \begin{example} \label{example1}
 Consider the MLTL formula:
-$T \ \mathcal{U_{[\text{0,3}]}} p_0 = \mathcal{F_{[\text{0,3}]}}p_0$
+$T \ \mathcal{U_{[\text{0,3}]}} p_0 = \mathcal{F_{[\text{0,3}]}}p_0$.
+The WEST program outputs a union of regular expressions represented by the matrix in \eqref{matrix_ex3}. Instances like this demonstrate the utility of the regular expression simplification theorem; a recursive function implementation of this theorem would simplify output to the arbitrary computation. However, we foresee some challenges to the implementation of this algorithm.
 \end{example}
-Our program outputs the following union of regular expressions to represent this formula:
-% \begin{wrapfigure}{l}{0.5\textwidth} \vspace{-\baselineskip}
-\[
+\end{minipage}
+\begin{minipage}{.38\textwidth}
+%     \noindent \textbf{Example:}
+    % \vspace{-0.05\textwidth}
+\begin{equation} \label{matrix_ex3}
     \begin{pmatrix}
     1 & S & S & S\\
     S & 1 & S & S\\
     S & S & 1 & S\\
     S & S & S & 1\\
     0 & 0 & 0 & 0
-    \end{pmatrix}.
-\]
-% \end{wrapfigure}
-Instances like this demonstrate the utility of the regular expression simplification theorem; a recursive function implementation of this theorem would simplify output to the arbitrary computation. However, we foresee some challenges to the implementation of this algorithm. 
+    \end{pmatrix}
+\end{equation}
+\end{minipage}
+\end{figure}
+
 First, the proof of our algorithm relies on a set of $n+1$ regular expressions, yet it is obvious that the inclusion of redundant regular expressions of the same computation length in the union wouldn't alter this equivalence. A program implementation of this theorem would require an algorithm to parse through and identify which of these regular expressions are redundant and don't match the format of those described in our proof. For example, adding the row ``$1,1,1,1$" to the matrix generated by example \ref{example1} would change the matrix to not match the specifications of the theorem, but the union would still simplify to the arbitrary computation.
-Next, it is possible that a regular expression could be appended with a substring of `$S$'s at the beginning or end. Consider the following MLTL formula:
+Next, it is possible that a regular expression could be appended with a substring of `$S$'s at the beginning or end. 
+\begin{figure}[h!]
+\begin{minipage}{.62\textwidth}
 \begin{example} \label{example2}
-$T \ \mathcal{U_{[\text{2,3}]}} p_0 \equiv \mathcal{F_{[\text{2,3}]}}p_0$
+Consider the following MLTL formula: $T \ \mathcal{U_{[\text{2,3}]}} p_0 \equiv \mathcal{F_{[\text{2,3}]}}p_0$. The WEST program generates a union of regular expressions corresponding to the matrix shown in \eqref{matrix_ex4}. It can clearly be seen that this is equivalent to the arbitrary computation, as one can remove the first two columns and apply the simplification theorem to the remaining columns.
 \end{example}
-\noindent The WEST program generates the following union of regular expressions:
-\begin{center}
-$
+\end{minipage}
+\begin{minipage}{.38\textwidth}
+\begin{equation} \label{matrix_ex4}
     \begin{pmatrix}
-    S & S & 1 & S\\
-    S & S & S & 1\\
-    S & S & 0 & 0
-    \end{pmatrix}.
-$
-\end{center}
-It can clearly be seen that this is equivalent to the arbitrary computation, as one can remove the first two columns and apply the simplification theorem to the remaining columns.
-Furthermore, identical substrings may be interspersed throughout the set of regular expressions. Then, the union of them won't simplify to the arbitrary computation, but rather, the arbitrary computation ``broken up" by common substrings. Consider the following modification to the matrix generated by example \ref{example1}:
+      S & S & 1 & S \\
+      S & S & S & 1 \\
+      S & S & 0 & 0
+    \end{pmatrix}
+\end{equation}
+\end{minipage}
+\end{figure}
+
+Furthermore, identical substrings may be interspersed throughout the set of regular expressions. Then, the union of them won't simplify to the arbitrary computation, but rather, the arbitrary computation ``broken up" by common substrings. Consider the following modification to the matrix generated by example \ref{example1}:\\
+\begin{minipage}{.5\textwidth}
+The substrings ``$0$", ``$1S0$", and ``$1$" are inserted at the beginning, middle, and end, respectively. In general, a vector of length $m$ strings seeking to apply the theorem to $n$ of its columns has $m \choose n$ combinations of columns to check for. Implementation of this algorithm can drastically increase run-time while proving its utility in only a small number of circumstances.
+\end{minipage}
+\begin{minipage}{.5\textwidth}
 \begin{center}
 $
 \begin{pmatrix}
@@ -1276,10 +1042,12 @@ $
   0 & \mathbf{S} & \mathbf{S} & 1 & S & 0 & \mathbf{1} & \mathbf{S} & 1\\
   0 & \mathbf{S} & \mathbf{S} & 1 & S & 0 & \mathbf{S} & \mathbf{1} & 1\\
   0 & \mathbf{0} & \mathbf{0} & 1 & S & 0 & \mathbf{0} & \mathbf{0} & 1\\
-    \end{pmatrix} \equiv  0\mathbf{S}\mathbf{S}1S0  \mathbf{S}\mathbf{S}1
+    \end{pmatrix} 
+    \vspace{2mm}
+    \\\equiv  0\mathbf{S}\mathbf{S}1S0  \mathbf{S}\mathbf{S}1
 $
 \end{center}
-The substrings ``$0$", ``$1S0$", and ``$1$" are inserted at the beginning, middle, and end, respectively. In general, a vector of length $m$ strings seeking to apply the theorem to $n$ of its columns has $m \choose n$ combinations of columns to check for. Implementation of this algorithm can drastically increase run-time while proving its utility in only a small number of circumstances.
+\end{minipage}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Closing Remarks}
@@ -1325,7 +1093,7 @@ Additional care should be put into allowing for varying levels of abstractions o
 \renewcommand{\thesection}{\Roman{section}}
 Content in the appendices will appear online, on the paper's website, but appears here for now due to blind review.
 
- \subsection{Soundness and Completeness} \label{Appendix-SoundComplete}
+ \section{Soundness and Completeness} \label{Appendix-SoundComplete}
 %  \vspace{-0.1in}
  We write $\mathscr{L}(\text{reg}(\phi))$ to denote the language of reg($\phi$). That is, the set of computations represented by the regular expression $\text{reg}(\phi)$.
 
@@ -1413,7 +1181,7 @@ Content in the appendices will appear online, on the paper's website, but appear
 
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Nested Until and Release Rewriting Theorem} \label{Appendix-NestedUR}
+\section{Nested Until and Release Rewriting Theorem} \label{Appendix-NestedUR}
 
  \begin{theorem}[\emph{Nested Until and Release Rewriting Theorem}] \label{NestedUR}
    Any MLTL formula using the Until or Release operator can be rewritten with right-nested subformulas. Let $\mathcal{B} = \mathcal{R} \text{ or } \mathcal{U}$. Let $a,b,c \in \mathbb{Z}_{\geq 0} , a \leq b,$ \text{and} $ \phi,   \psi$ \text{be well-formed MLTL formulas in NNF. Then,} $ \phi \ \mathcal{B}_{[a,b+c]} \psi = \phi \ \mathcal{B}_{[a,b]}(\phi \ \mathcal{B}_{[0,c]} \psi)$. That is, $ \phi \ \mathcal{U}_{[a,b+c]} \psi \equiv \phi \ \mathcal{U}_{[a,b]}(\phi \ \mathcal{U}_{[0,c]} \psi)$ and $ \phi \ \mathcal{R}_{[a,b+c]} \psi \equiv \phi \ \mathcal{R}_{[a,b]}(\phi \ \mathcal{R}_{[0,c]} \psi)$.
@@ -1679,17 +1447,16 @@ Therefore, by induction, the theorem holds.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Pseudocode for the WEST Algorithm Functions} \label{pseudocode appendix}
  
-To compute the satisfying computations of an MLTL formula, many of the functions in the WEST program require the regular expressions of the satisfying computations of the subformulas as inputs. We denote these regexes by $R$ and $B$, where $R = R_1 | R_2 | ... | R_k$ is represented as a vector of strings $R = {R_1, R_2, ..., R_k}$, and $B = B_1 | B_2 | ... | B_\ell$ is represented as a vector of strings $B = {B_1, B_2, ..., B_\ell}$. Additionally, $n$ will always refer to the number of propositional variables, and nnf refers to an input formula in negation normal form.
+To compute the satisfying computations of an MLTL formula, many of the functions in the WEST program require the regular expressions of the satisfying computations of the subformulas as inputs. We denote these regexes by $R$ and $T$, where $R = R_1 | R_2 | ... | R_k$ is represented as a vector of strings $R = {R_1, R_2, ..., R_k}$, and $T = T_1 | T_2 | ... | T_\ell$ is represented as a vector of strings $T = {T_1, T_2, ..., T_\ell}$. Additionally, $n$ will always refer to the number of propositional variables, and nnf refers to an input formula in negation normal form.
 \begin{algorithm}[H]
 \caption{Pad a vector to elements of all equal length}
-Input: Vector of strings that represents a regex, number of propositional variables \\
-Output: Vector of strings padded to equal length
+%Input: Vector of strings that represents a regex, number of propositional variables \\
+%Output: Vector of strings padded to equal length
 \begin{algorithmic}
 \Procedure{Pad}{vector $R$, int $n$} 
-    \State max\_Length $\leftarrow$ $max_{\{r \in R\}}$($r$.length()) \Comment{determines length to pad all strings to}
+    \State max\_Length $\leftarrow$ $\max_{\{r \in R\}}$($r$.length())
     \For{($r \in R$)}
         \State diff $\leftarrow$ (max\_length$- r$.length()) / $(n+1)$ 
-        \Comment{determines how many $S^n$s to append}
         \State  $r \leftarrow r + (,S^n)^{\text{diff}}$
     \EndFor
     \State return $R$
@@ -1699,94 +1466,82 @@ Output: Vector of strings padded to equal length
 \end{algorithm}
 \begin{algorithm}[H]
 \caption{Computes regex for propositional constant}
-Input: String that is either ``T" or ``!", number of propositional variables\\
-Output: Vector of strings that represents the appropriate satisfying computations
+%Input: String that is either ``T" or ``!", number of propositional variables\\
+%Output: Vector of strings that represents the appropriate satisfying computations
 \begin{algorithmic}
 \Procedure{reg\_prop\_cons}{string nnf, int $n$}
-    \If {(nnf $=$ ``T" and $n \neq 0$)}
-        \State return $\{S^n\}$ \Comment{regex of satisfying computations for ``T"}
-    \Else 
-        \State return $\{\}$ \Comment{regex of satisfying computations for ``!"}
+    \If {(nnf $=$ ``T" and $n \neq 0$)} return $\{S^n\}$
+    \Else \hspace{1mm} return $\{\}$ 
     \EndIf
 \EndProcedure
 \end{algorithmic}
 \end{algorithm}
 \begin{algorithm}[H]
 \caption{Output the vector of computation satisfying a propositional variable.}
-Input: String that represents a propositional variable or the negation of one, number of propositional variables \\
-Output: Vector of strings that represents the appropriate satisfying computations
+%Input: String that represents a propositional variable or the negation of one, number of propositional variables \\
+%Output: Vector of strings that represents the appropriate satisfying computations
 \begin{algorithmic}
 \Procedure{reg\_prop\_var}{string nnf, int $n$}
-    \If {(nnf $=$ ``p$k$", where $k$ is a nonnegative integer)}
-        \State return $\{S^k1S^{n-k-1}\}$ \Comment{regex of satisfying computations for ``p$k$"}
+    \If {(nnf $=$ ``p$k$", where $k$ is a nonnegative integer)} return $\{S^k1S^{n-k-1}\}$
     \EndIf 
-    \If {(nnf $=$ ``$\scriptstyle{\sim}$p$k$", where $k$ is a nonnegative integer)}
-        \State return $\{S^k0S^{n-k-1}\}$ \Comment{regex of satisfying computations for ``$\scriptstyle{\sim}$p$k$"}
+    \If {(nnf $=$ ``$\scriptstyle{\sim}$p$k$", where $k$ is a nonnegative integer)} return $\{S^k0S^{n-k-1}\}$
     \EndIf
 \EndProcedure
 \end{algorithmic}
 \end{algorithm}
 \begin{algorithm}[H]
 \caption{Combines two strings that differ only by one character into one}
-Input: Two strings that represent regexes\\
-Output: Single string that represents computations represented by both input strings or FAIL
+%Input: Two strings that represent regexes\\
+%Output: Single string that represents computations represented by both input strings or FAIL
 \begin{algorithmic}
-\Procedure{simplify\_string}{string $r$, string $b$}   
-    \If{($r$.length() $\neq$ $b$.length())}
-        \State exit \Comment{cannot compare strings if they differ in length}
+\Procedure{simplify\_string}{string $r$, string $t$}   
+    \If{($r$.length() $\neq$ $t$.length())} exit
         \EndIf
     \For{($0 \leq i < r$.length())}
-        \State pre\_r $\leftarrow r[0, i-1]$ \Comment{stores string $r$ up to comparison character}
-        \State char\_r $\leftarrow r[i]$ \Comment{stores character to compare in $r$}
-        \State post\_r $\leftarrow r[i+1, r\text{.length()}-1]$ \Comment{stores remaining part of string $r$}
-        \\
-        \State pre\_b $\leftarrow b[0, i-1]$ \Comment{stores string $b$ up to comparison character}
-        \State char\_b $\leftarrow b[i]$ \Comment{stores character to compare in $b$}
-        \State post\_b $\leftarrow b[i+1, b\text{.length()}-1]$ \Comment{stores remaining part of string $b$}
-        \\
-        \If{(pre\_r $=$ pre\_b and post\_r $=$ post\_b)} \Comment{\parbox[t]{.4\linewidth}{checks that strings $r$ and $b$ match for all but one character}}
-            \If{(char\_r $\neq$ char\_b)}
-                \State return pre\_r +``$S$" + post\_r \Comment{\parbox[t]{.5\linewidth}{if the comparison characters differ, replace character with $``S"$}}
+        \State pre\_r $\leftarrow r[0, i-1]$ 
+        \State char\_r $\leftarrow r[i]$ 
+        \State post\_r $\leftarrow r[i+1, r\text{.length()}-1]$ 
+        \State pre\_t $\leftarrow t[0, i-1]$ 
+        \State char\_t $\leftarrow t[i]$ 
+        \State post\_t $\leftarrow t[i+1, t\text{.length()}-1]$
+        \If{(pre\_r $=$ pre\_t and post\_r $=$ post\_t)}
+            \If{(char\_r $\neq$ char\_t)}
+                \State return pre\_r +``$S$" + post\_r 
             \Else
-                \State return $r$ \Comment{if the comparison character match, strings are identical}
+                \State return $r$
             \EndIf
         \EndIf
     \EndFor
     \State return FAIL 
-    \Comment{Indicates strings differed by more than one character}
 \EndProcedure
 \end{algorithmic}
 \end{algorithm}
  
 \begin{algorithm}[H]
 \caption{Simplifies a vector of strings using simplify\_string}
-Input: Vector of strings representing a regex\\
-Output: Vector of strings representing a regex simplified using simplify\_string
+%Input: Vector of strings representing a regex\\
+%Output: Vector of strings representing a regex simplified using simplify\_string
 \begin{algorithmic}
 \Procedure{simplify}{vector $R$}    
-    \State Pad all strings in $R$ to the same length \Comment{ensures all inputs to simplify\_string are valid}
-    \If{($R$.length() $\leq 1$)}
-        \State return $R$ \Comment{insufficient strings in $R$ to use simplify\_string}
+    \State Pad all strings in $R$ to the same length
+    \If{($R$.length() $\leq 1$)} return $R$
         \EndIf
-    
     \State $i = R\text{.length} - 1$
     \State $j = i - 1$
     
     \State START
     \While{($i \geq 1$)}
         \While{($j \geq 0$)}
-            \State simplified = simplify\_string($R[i]$, $R[j]$) \Comment{\parbox[t]{.4\linewidth}{for each combination of strings in $R$, apply simplify\_string}}
+            \State simplified = simplify\_string($R[i]$, $R[j]$) 
             \If{(simplified $\neq$ FAIL)}
-                \State replace string at index $j$ with simplified \Comment{updating $R[j]$ to be combined string}
-                \State remove string at index $i$ from $R$ \Comment{remove $R[i]$, as it's redundant}
+                \State replace string at index $j$ with simplified
+                \State remove string at index $i$ from $R$
                 \State $i = R\text{.length()} - 1$
                 \State $j = i - 1$
                 \State goto START
                 \EndIf
-                
             \State -{}-$j$
             \EndWhile
-            
         \State -{}-$i$
         \State $j = i - 1$
         \EndWhile
@@ -1797,309 +1552,109 @@ Output: Vector of strings representing a regex simplified using simplify\_string
 \end{algorithm}
 \begin{algorithm}[H]
 \caption{Takes the intersection of two computations}
-Input: Two strings representing regexes\\
-Output: Bitwise AND of the inputted strings
+%Input: Two strings representing regexes\\
+%Output: Bitwise AND of the inputted strings
 \begin{algorithmic}
-\Procedure{bit\_wise\_and}{string $r$, string $b$}
-    \State ret $\leftarrow$ ``" \Comment{initializing string to store bitwise AND}
+\Procedure{bit\_wise\_and}{string $r$, string $t$}
+    \State ret $\leftarrow$ ``" 
     \For {(i $\in [0, \ r\text{.length()}]$)}
-        \If{($r[i] \land$ $b[i] = ``"$)}
-        \State return ``" \Comment{if bitwise AND is ever empty, entire string intersection is empty}
-        \Else 
-        \State ret $\leftarrow$ ret $+$ $r[i] \land b[i]$ \Comment{for each character, store bitwise AND}
+        \If{($r[i] \land$ $t[i] = ``"$)} return ``"
+        \Else \hspace{1mm} ret $\leftarrow$ ret $+$ $r[i] \land t[i]$
         \EndIf
     \EndFor
     \State return ret
 \EndProcedure
 \end{algorithmic}
 \end{algorithm}
+
 \begin{algorithm}[H]
-\caption{Takes set intersection of the languages of two regexes}
-Input: Vectors of strings that represent regexes, simplify boolean\\
-Output: Vector of strings that represents set intersection of the languages of the inputted regexes
+\caption{Takes union of two regexes (combines two vectors into one)}
+%Input: Vectors of strings that represent regexes, simplify boolean\\
+%Output: Vector of strings that represents union of inputted regexes
 \begin{algorithmic}
-\Procedure{set\_intersect}{vector $R$, vector $B$, bool simp}
-    \State Pad $R$ and $B$ to the same length
-    \State ret $\leftarrow \{\}$ \Comment{initializing a vector of strings to store set intersection}
-    \For{($r \in R$)}
-        \For{($b \in B$)} \Comment{take bitwise AND of every combination of strings from $R$ and $B$}
-            \State add bit\_wise\_and($r, b$) to ret 
-            \Comment{store results in ret}
-        \EndFor
+\Procedure{join}{vector $R$, vector $T$, bool simp}
+    \State ret $\leftarrow \{\}$
+    \For{($r \in R$)} add $r$ to ret
     \EndFor
-    \If{(simp is true)}
-    \State return simplify(ret) \Comment{if user requests simplified output, run ret through simplify}
-    \Else
-    \State return ret
+    \For{($t \in T$)} add $t$ to ret
+    \EndFor
+    \If{(simp is true)} return simplify(ret)
+    \Else \hspace{1mm}return ret
     \EndIf
 \EndProcedure
 \end{algorithmic}
 \end{algorithm}
 \begin{algorithm}[H]
-\caption{Takes union of two regexes (combines two vectors into one)}
-Input: Vectors of strings that represent regexes, simplify boolean\\
-Output: Vector of strings that represents union of inputted regexes
+\caption{Computes the regex for a MLTL formula F[a:b]$\phi$}
+% Inputs: Vector of strings representing the regex for $\phi$, interval bounds, number of propositional variables, simplify boolean\\
+% Output: Vector of strings that represents the appropriate satisfying computations 
 \begin{algorithmic}
-\Procedure{join}{vector $R$, vector $B$, bool simp}
-    \State ret $\leftarrow \{\}$ \Comment{initializing a vector of strings to store union}
-    \For{($r \in R$)}
-        \State add $r$ to ret \Comment{add all vectors in $R$ to ret}
-    \EndFor
-    \For{($b \in B$)}
-        \State add $b$ to ret \Comment{add all vectors in $B$ to ret}
-    \EndFor
-    \If{(simp is true)}
-    \State return simplify(ret) \Comment{if user requests simplified output, run ret through simplify}
-    \Else
-    \State return ret
+\Procedure{reg\_F}{vector reg\_phi, int $a$, int $b$, int $n$, bool simp} 
+    \State pre $\leftarrow$ ((`$S$')$^{n}$ + `,')$^{a}$
+    \State comp $\leftarrow$ reg\_phi
+    \If{$a > b$} return $\{\}$
     \EndIf
+    \For{($1 \leq i \leq b-a$) }
+        \State temp\_phi $\leftarrow$ ((`$S$')$^{n}$ + `,')$^{i}$ + reg\_phi
+        \State comp $\leftarrow$ join(comp, temp\_phi, simp)
+    \EndFor
+    \State return pre + comp
 \EndProcedure
 \end{algorithmic}
 \end{algorithm}
 \begin{algorithm}[H]
 \caption{Computes the regex for a MLTL formula G[a:b]$\phi$}
-Inputs: Vector of strings representing the regex for $\phi$, interval bounds, number of propositional variables, simplify boolean\\
-Output: Vector of strings that represents the appropriate satisfying computations
+%Inputs: Vector of strings representing the regex for $\phi$, interval bounds, number of propositional variables, simplify boolean\\
+%Output: Vector of strings that represents the appropriate satisfying computations
 \begin{algorithmic}
-\Procedure{reg\_G}{vector reg\_alpha, int $a$, int $b$, int $n$, bool simp} 
-    \State pre $\leftarrow$ ((`$S$')$^{n}$ + `,')$^{a}$ \Comment{before the start of the interval, computation is arbitrary}
-    \State comp $\leftarrow$ reg\_alpha \Comment{\parbox[t]{.7\linewidth}{initializing vector of strings for outputted regex with subformula regex}}
-    \If{$a > b$} \Comment{empty interval, Global is trivially true}
-        \State return $\{S^n\}$
+\Procedure{reg\_G}{vector reg\_phi, int $a$, int $b$, int $n$, bool simp} 
+    \State pre $\leftarrow$ ((`$S$')$^{n}$ + `,')$^{a}$
+    \State comp $\leftarrow$ reg\_phi 
+    \If{$a > b$} return $\{S^n\}$
     \EndIf
-    \For{($1 \leq i \leq b-a$)} \Comment{computing $\bigwedge_{i=1}^{b-a} (S^n,)^i \text{reg}(\phi)$}
-        \State temp\_alpha $\leftarrow$ ((`$S$')$^{n}$ + `,')$^{i}$ + reg\_alpha
-        \State comp $\leftarrow$ set\_intersect(comp, temp\_alpha, simp)
+    \For{($1 \leq i \leq b-a$)}
+        \State temp\_phi $\leftarrow$ ((`$S$')$^{n}$ + `,')$^{i}$ + reg\_phi
+        \State comp $\leftarrow$ set\_intersect(comp, temp\_phi, simp)
     \EndFor
-    \State return pre + comp \Comment{\parbox[t]{.6\linewidth}{prepending string pre to every string in comp; result is regex for Global defined in section \ref{regex}}}
-\EndProcedure
-\end{algorithmic}
-\end{algorithm}
- 
-\begin{algorithm}[H]
-\caption{Computes the regex for a MLTL formula F[a:b]$\phi$}
-Inputs: Vector of strings representing the regex for $\phi$, interval bounds, number of propositional variables, simplify boolean\\
-Output: Vector of strings that represents the appropriate satisfying computations 
-\begin{algorithmic}
-\Procedure{reg\_F}{vector reg\_alpha, int $a$, int $b$, int $n$, bool simp} 
-    \State pre $\leftarrow$ ((`$S$')$^{n}$ + `,')$^{a}$ \Comment{before the start of the interval, computation is arbitrary}
-    \State comp $\leftarrow$ reg\_alpha \Comment{\parbox[t]{.7\linewidth}{initializing vector of strings for outputted regex with subformula regex}}
-    \If{$a > b$} \Comment{empty interval, Finally is trivially false}
-        \State return $\{\}$
-    \EndIf
-    \For{($1 \leq i \leq b-a$) } \Comment{computing $\bigvee_{i=1}^{b-a} (S^n,)^i \text{reg}(\phi)$}
-        \State temp\_alpha $\leftarrow$ ((`$S$')$^{n}$ + `,')$^{i}$ + reg\_alpha
-        \State comp $\leftarrow$ join(comp, temp\_alpha, simp)
-    \EndFor
-    \State return pre + comp \Comment{\parbox[t]{.6\linewidth}{prepending string pre to every string in comp; result is regex for Finally defined in section \ref{regex}}}
-\EndProcedure
-\end{algorithmic}
-\end{algorithm}
-\label{regU}
-\begin{algorithm}[H]
-\caption{Computes the regex for a MLTL formula $\phi$U[a:b]$\psi$} 
-Inputs: Vectors of strings representing the regexes for $\phi$ and $\psi$, interval bounds, number of propositional variables, simplify boolean\\
-Output: Vector of strings that represents the appropriate satisfying computations 
-\begin{algorithmic}
-\Procedure{reg\_U}{vector reg\_alpha, vector reg\_beta int $a$, int $b$, int $n$, bool simp} 
-    \State comp $\leftarrow$ ((`$S$')$^{n}$ + `,')$^{a} + $ reg\_beta \Comment{\parbox[t]{.55\linewidth}{initializing vector of strings for outputted regex with regex for beta, prepended with $`S'$s up to start of interval}}
-    \If{$a > b$}
-        \State return $\{\}$ \Comment{empty interval, Until is trivially false}
-    \EndIf
-    \For{($a \leq i \leq b-1$) } \Comment{\parbox[t]{.65\linewidth}{computing $\bigvee_{i=a}^{b} \text{reg}\left(\mathcal{G}_{[a,i-1]}\phi \land \mathcal{G}_{[i, i]} \psi\right)$, loop ends at $b-1$ because comp is initialized to $i=a$ case and loop is reindexed}}\\
-        \State{\parbox[t]{.9\linewidth}{temp\_comp $\leftarrow$ set\_intersect(reg\_G(reg\_alpha, $a$, $i$, $n$), reg\_G(reg\_beta, $i+1$, $i+1$, $n$), $n$, simp)}}
-        \State comp $\leftarrow$ join(comp, temp\_comp, simp)
-    \EndFor
-    
-    \State return comp
+    \State return pre + comp
 \EndProcedure
 \end{algorithmic}
 \end{algorithm}
 \begin{algorithm}[H]
 \caption{Computes the regex for a MLTL formula $\phi$R[a:b]$\psi$}
-Inputs: Vectors of strings representing the regexes for $\phi$ and $\psi$, interval bounds, number of propositional variables, simplify boolean\\
-Output: Vector of strings that represents the appropriate satisfying computations 
+%Inputs: Vectors of strings representing the regexes for $\phi$ and $\psi$, interval bounds, number of propositional variables, simplify boolean\\
+%Output: Vector of strings that represents the appropriate satisfying computations 
 \begin{algorithmic}
-\Procedure{reg\_R}{vector reg\_alpha, vector reg\_beta int $a$, int $b$, int $n$, bool simp} 
-    \State comp $\leftarrow$ reg\_G(reg\_beta, $a$, $b$, $n$, simp)
-    \Comment{\parbox[t]{.5\linewidth}{initializing vector of strings for output regex with regex for G[a:b]$\psi$}}
-    \If{$a > b$}
-        \State return $\{S^n\}$
-        \Comment empty interval, Release is trivially true
+\Procedure{reg\_R}{vector reg\_phi, vector reg\_psi, int $a$, int $b$, int $n$, bool simp} 
+    \State comp $\leftarrow$ reg\_G(reg\_psi, $a$, $b$, $n$, simp)
+    \If{$a > b$} return $\{S^n\}$
     \EndIf
-    \For{($a \leq i \leq b-1$) } \Comment{\parbox[t]{.65\linewidth}{computing $\text{reg}\left(\mathcal{G}_{[a,b]}\psi\right) \lor \bigvee_{i=a}^{b-1} \text{reg}\left(\mathcal{G}_{[a,i]}\psi \land \mathcal{G}_{[i, i]} \phi\right)$, first run through loop includes $\text{reg}\left(\mathcal{G}_{[a,b]}\psi\right)$}}\\
-        \State temp\_comp $\leftarrow$ set\_intersect(reg\_G(reg\_beta, $a$, $i$, $n$), reg\_G(reg\_alpha, $i$, $i$, $n$), $n$, simp)
+    \For{($a \leq i \leq b-1$) }
+        \State temp\_comp $\leftarrow$ set\_intersect(reg\_G(reg\_psi, $a$, $i$, $n$), reg\_G(reg\_phi, $i$, $i$, $n$), $n$, simp)
         \State comp $\leftarrow$ join(comp, temp\_comp, simp)
     \EndFor
-    
     \State return comp
 \EndProcedure
 \end{algorithmic}
 \end{algorithm}
 \begin{algorithm}[H]
-\caption{Computes the regex for an MLTL formula in NNF}
-Inputs: MLTL formula in negation normal form, number of propositional variables, boolean sub for storing subformula computations in global variable FORMULAS, simplify boolean\\
-Output: Vector of strings that represents the appropriate satisfying computations
-\begin{algorithmic}
-\Procedure{reg}{string nnf, int $n$, bool sub, bool simp} 
-    \If{(nnf is a prop. var. or $\scriptstyle{\sim}$prop. var)}
-        \If{(sub)}
-            \State Run reg on formula and store formula with its regular expression
-        \EndIf
-        \State return reg\_prop\_var(nnf, $n$)
-        \Comment call helper function for propositional variable
-    \EndIf\\
-    \If{(nnf is $T$ or $!$)}
-        \If{(sub)}
-            \State Run reg on formula and store formula with its regular expression
-        \EndIf
-        \State return reg\_prop\_cons(nnf, $n$)
-        \Comment call helper function for propositional constant
-    \EndIf
-    \\
-    \If{(nnf is of the form unary\_temp\_conn interval alpha)}
-        \State unary\_temp\_conn $\leftarrow$ unary\_temp\_conn in nnf
-        \Comment parse formula to find unary operator
-        \State $a$ $\leftarrow$ start of interval
-        \State $b$ $\leftarrow$ end of interval
-        \State reg\_alpha $\leftarrow$ reg(alpha, $n$, sub, simp)
-        \Comment recursive call to reg on subformula\\
-        \If{(unary\_temp\_conn $=$ `F')}
-            \If{(sub)}
-                \State Run reg on formula and store formula with its regular expression
-            \EndIf
-            \State return reg\_F(reg\_alpha, $a$, $b$, $n$, simp)
-            \Comment Call helper function for Finally operator
-        \EndIf\\
-        \If{(unary\_temp\_conn $=$ `G')}
-            \If{(sub)}
-                \State Run reg on formula and store formula with its regular expression
-            \EndIf
-            \State return reg\_G(reg\_alpha, $a$, $b$, $n$, simp)
-            \Comment Call helper function for Global operator
-        \EndIf
-    \EndIf
-    \\
-    \If{(nnf is of the form ``(Assoc\_prop\_conn[nnf\_array])")}
-    \Comment{Rewrite nnf in non-array form}
-        \State assoc\_prop\_conn $\leftarrow$ assoc\_prop\_conn in nnf
-        \State equiv\_formula $\leftarrow$ ``" 
-        \Comment For instance, $\&[\phi_1, \phi_2, \phi_3]$ is rewritten to $((\phi_1 \& \phi_2) \& \phi_3)$
-        \For{(array entry alpha in nnf\_array)}
-            \If{(alpha is first entry)}
-                \State equiv\_formula $\leftarrow$ alpha
-                \Comment First entry doesn't need parentheses
-            \Else
-                \State equiv\_formula $=$ ``(" + equiv\_formula + assoc\_prop\_conn + alpha + ``)"
-            \EndIf
-        \EndFor
-        \If{(sub)}
-            \State Run reg on formula and store formula with its regular expression
-        \EndIf
-        \State return reg(equiv\_formula, $n$, sub, simp)
-        \Comment recursively call reg on the rewritten formula
-    \EndIf
-    \algstore{myalg}
-\end{algorithmic}
-\end{algorithm}
-\begin{algorithm}[H]
-\begin{algorithmic}
-\algrestore{myalg}
-    \If{(nnf is of the form alpha binary\_prop\_conn beta)}
-        \State binary\_prop\_conn $\leftarrow$ binary\_prop\_conn in nnf
-        \Comment parse formula to find binary operator
-        \State reg\_alpha $\leftarrow$ reg(alpha, $n$, sub, simp)
-        \Comment recursive call to reg on subformula
-        \State reg\_beta $\leftarrow$ reg(beta, $n$, sub, simp)
-        \Comment recursive call to reg on subformula\\
-        \If{(binary\_prop\_conn $=$ ``\&")}
-            \If{(sub)}
-                \State Run reg on formula and store formula with its regular expression
-            \EndIf
-            \State return set\_intersect(reg\_alpha, reg\_beta, $n$, simp)
-            \Comment Call helper function for \& operator
-        \EndIf\\
-        \If{(binary\_prop\_conn $=$ ``$\lor$")}
-            \If{(sub)}
-                \State Run reg on formula and store formula with its regular expression
-            \EndIf
-            \State return join(reg\_alpha, reg\_beta, $n$, simp)
-            \Comment Call helper function for $\lor$ operator
-        \EndIf\\
-        \If{(binary\_prop\_conn $=$ ``=")}
-            \Comment{Rewrite in terms of OR, AND, and NOT}
-            \State equiv\_formula $=$ ``((" + alpha + ``\&" + beta + ``)$\lor$(" + wff\_to\_nnf($\scriptstyle{\sim}$alpha) + 
-            \State ``\&" + wff\_to\_nnf($\scriptstyle{\sim}$beta) + ``))"
-            \If{(sub)}
-                \State Run reg on formula and store formula with its regular expression
-            \EndIf
-            \State return reg(equiv\_formula, $n$, sub, simp)
-            \Comment recursive call to reg on rewritten formula
-        \EndIf\\
-        \If{(binary\_prop\_conn $=$ ``\textgreater")}
-            \Comment{Rewrite in terms of OR, AND, and NOT}
-            \State equiv\_formula $=$ ``(" + wff\_to\_nnf($\scriptstyle{\sim}$alpha) + "$\lor$" + beta + ``)"
-            \If{(sub)}
-                \State Run reg on formula and store formula with its regular expression
-            \EndIf
-            \State return reg(equiv\_formula, $n$, sub, simp)
-            \Comment recursive call to reg on rewritten formula
-        \EndIf
-    \EndIf\\
-   \If{(nnf is of the form alpha binary\_temp\_conn interval beta)}
-        \State binary\_temp\_conn $\leftarrow$ binary\_temp\_conn in nnf
-        \Comment parse for binary operator
-        \State $a$ $\leftarrow$ start of interval
-        \State $b$ $\leftarrow$ end of interval
-        \State reg\_alpha $\leftarrow$ reg(alpha, $n$, sub, simp)
-        \Comment recursive call to reg on subformula
-        \State reg\_beta $\leftarrow$ reg(beta, $n$, sub, simp)
-        \Comment recursive call to reg on subformula
-        \\
-        \If{(binary\_temp\_conn $=$ `U')}
-            \If{(sub)}
-                \State Run reg on formula and store formula with its regular expression
-            \EndIf
-            \State return reg\_U(reg\_alpha, reg\_beta, $a$, $b$, $n$, simp)
-            \Comment Call helper function for Until\\
-        \ElsIf{(binary\_temp\_conn $=$ `R')}
-            \If{(sub)}
-                \State Run reg on formula and store formula with its regular expression
-            \EndIf
-            \State return reg\_R(reg\_alpha, reg\_beta, $a$, $b$, $n$, simp)
-            \Comment Call helper function for Release
-        \EndIf
-    \EndIf\\
-    \State Throw exception \Comment{\parbox[t]{.7\linewidth}{If none of the previous statements held, there's an error with the formula nnf}}
-    \State return \{\}
-\EndProcedure
-\end{algorithmic}
-\end{algorithm}
-\begin{algorithm}[H]
     \caption{Generates test suite template without propositional constants, propositional variables, or negations of propositional variables filled in}
-    Inputs: Depth of desired test suite template to generate, interval bounds\\
-    Output: Vector of MLTL formulas (without propositional constants, propositional variables, or negations of propositional variables)
+    %Inputs: Depth of desired test suite template to generate, interval bounds\\
+    %Output: Vector of MLTL formulas (without propositional constants, propositional variables, or negations of propositional variables)
     \begin{algorithmic}
         \Procedure{generate\_test\_template}{int depth, int $a$, int $b$}
-        \If{(depth = 0)}
-            \State return $\{p, q\}$
-            \Comment{\parbox[t]{.54\linewidth}{$p$ represents a propositional variable or its negation, $q$ represents a propositional constant}}
+        \If{(depth = 0)} return $\{p, q\}$
         \EndIf
-        
         \State template $\leftarrow \{\}$
-        \Comment initialize variable to store final template
         \State $V \leftarrow$ generate\_test\_template(depth$- 1$, $a$, $b$)
-        \Comment{\parbox[t]{.45\linewidth}{recursively generate all formulas of $1$ lower depth}}
         \For{(string $\phi \in V$)}
             \State add ``G[a:b]" + $\phi$ to template
             \State add ``F[a:b]" + $\phi$ to template
-            \Comment Add unary temporal operators to template
             \For{string $\psi \in V$}
                 \State add $\phi$ + ``U[a:b]" + $\psi$ to template
                 \State add  $\phi$ + ``R[a:b]" + $\psi$ to template
                 \State add $\phi$ + ``$\lor$" + $\psi$ to template
                 \State add $\phi$ + ``\&" + $\psi$ to template
-                \Comment add binary operators to template
             \EndFor
         \EndFor
         \State return template
@@ -2109,29 +1664,21 @@ Output: Vector of strings that represents the appropriate satisfying computation
 \end{algorithm}
 \begin{algorithm}[H]
     \caption{Generates a complete test suite of MLTL formulas in negation normal form up to a certain depth}
-    Inputs: Depth of desired test suite template to generate, interval bounds, number of propositional variables\\
-    Output: Vector of MLTL formulas
+    %Inputs: Depth of desired test suite template to generate, interval bounds, number of propositional variables\\
+    %Output: Vector of MLTL formulas
     \begin{algorithmic}
         \Procedure{generate\_test}{int depth, int $a$, int $b$, int $n$}
         \State tests $\leftarrow$ generate\_test\_template(depth, $a$, $b$) 
         \For{string $t \in $ tests}
             \For{char ch $\in t$}
                 \If{ch $ = p$}
-                \Comment{\parbox[t]{.52\linewidth}{replace $a$ with a random propositional variable or the negation of a random propositional variable}}
                     \State $k \leftarrow \text{rand()} \% n$ 
-                    \Comment assign $k$ as a random int between $0$ and $n - 1$
-                    \If{rand() $\% 2 = 0$}
-                    \Comment imitate randomness of a coin toss
-                        \State replace ch with p$k$
-                    \Else 
-                        \State replace ch with $\scriptstyle{\sim}$p$k$
+                    \If{rand() $\% 2 = 0$} replace ch with p$k$
+                    \Else \hspace{1mm}replace ch with $\scriptstyle{\sim}$p$k$
                     \EndIf
                 \ElsIf{ch $= q$}
-                \Comment Replace $q$ with a random propositional constant
-                    \If{rand() $\% 2 = 0$}
-                        \State replace ch with T
-                    \Else 
-                        \State replace ch with $!$
+                    \If{rand() $\% 2 = 0$} replace ch with T
+                    \Else \hspace{1mm}replace ch with $!$
                     \EndIf
                 \EndIf
             \EndFor
@@ -2140,13 +1687,16 @@ Output: Vector of strings that represents the appropriate satisfying computation
     \EndProcedure
     \end{algorithmic}
 \end{algorithm}
-\newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{State Diagram Graphs} \label{graphs appendix}
-Below we provide the graphs of state diagrams of the critical functions examined in our intelligent fuzzing. In general, nodes in the graph represent portions of the code without control flow statements. As a result, a single node can represent large chunks of code. Directed edges represent branching of control flow, such as IF statements and loops. Each graph directly corresponds with the pseudocode of their corresponding function, with nodes and edges being labeled accordingly. Note that these graphs, the option to run the \textit{simplify} function has been omitted for clarity. For the graph of the \textit{reg} function, the option to store subformulas has been omitted as well.\\
+\vspace{-1.5cm}
+Below we provide the state diagram graphs of the functions examined in our intelligent fuzzing. Nodes in the graph represent portions of the code without control flow statements, so a single node can represent large chunks of code. Directed edges represent branching of control flow, such as IF statements and loops. Each graph directly corresponds with the pseudocode of their corresponding function, with nodes and edges being labeled accordingly. Note that the option to run \textit{simplify} has been omitted for clarity.\\
+
+\begin{minipage}{0.4\textwidth}
 \begin{figure}[H]
     \centering
+    \resizebox{7cm}{!}{
     \begin{tikzpicture}[node/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=15mm}, bignode/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=20mm}, emptynode/.style={draw=none, fill=none, very thick, minimum size=1mm}]
     
     %Nodes
@@ -2154,7 +1704,7 @@ Below we provide the graphs of state diagrams of the critical functions examined
     \node[node](length)[below=of inputs]{Run max\_length on R};
     \node[node](body)[below=of length]{pad r, update R};
     \node[emptynode](empty_vector)[rotate=-70, left=1cm of body]{R $=\{\}$};
-    \node[emptynode](for_loop)[right=.75cm of body]{for r in R};
+    \node[emptynode](for_loop)[right=1.1cm of body]{for r in R};
     \node[node](return)[below=of body]{return R};
     
     %Lines
@@ -2165,23 +1715,26 @@ Below we provide the graphs of state diagrams of the critical functions examined
     \draw[->] (body.south) .. controls +(right:5 cm) and +(up:1.5 cm) .. (body.north);
     
     \end{tikzpicture}
-    
+    }
     \caption{Pad Function}
     \label{fig:pad graph}
 \end{figure}
+\end{minipage}
+\begin{minipage}{0.5\textwidth}
 \begin{figure}[H]
     \centering
+    \resizebox{8.5cm}{!}{
     \begin{tikzpicture}[node/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=15mm}, bignode/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=20mm}, emptynode/.style={draw=none, fill=none, very thick, minimum size=1mm}]
     
     %Nodes
-    \node[emptynode](inputs){strings r, b};
+    \node[emptynode](inputs){strings r, t};
     \node[node](initialize)[below=of inputs]{Initialize string Ret};
     \node[node](loop_entry)[below=of initialize]{Loop Entry};
     \node[node](return)[below=2cm of loop_entry]{return Ret};
     \node[node](empty)[left=of return]{return ``"};
     \node[node](update)[right=of return]{Take bitwise AND, store in Ret};
     \node[emptynode](placeholder)[below=0.05cm of loop_entry]{};
-    \node[emptynode](emptytext)[rotate=35, left=.75cm of placeholder]{\small{r$[i] \land$ b$[i] = ``"$}};
+    \node[emptynode](emptytext)[rotate=35, left=.75cm of placeholder]{\small{r$[i] \land$ t$[i] = ``"$}};
     \node[emptynode](placeholder2)[below=0.05cm of placeholder]{};
     \node[emptynode](else)[rotate=-23, right=1.9cm of placeholder2]{else};
     \node[emptynode](updatetext)[right=3cm of loop_entry]{for $0 \leq i \leq$ r.length};
@@ -2195,21 +1748,26 @@ Below we provide the graphs of state diagrams of the critical functions examined
     \draw[->] (update.east) .. controls +(right:3 cm) and +(up:1.5 cm) .. (loop_entry.north);
     
     \end{tikzpicture}
+    }
     \caption{Bitwise\_And Function}
     \label{fig:bitwise_and graph}
 \end{figure}
+\end{minipage}
+
+\begin{minipage}{0.5\textwidth}
 \begin{figure}[H]
     \centering
+    \resizebox{8cm}{!}{
     \begin{tikzpicture}[node/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=15mm}, bignode/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=20mm}, emptynode/.style={draw=none, fill=none, very thick, minimum size=1mm}]
     
     %Nodes
-    \node[emptynode](inputs){vectors R, B};
+    \node[emptynode](inputs){vectors R, T};
     \node[node](initialize)[below=of inputs]{Initialize vector Ret};
     \node[node](add_r)[below=of initialize]{Add r to Ret};
-    \node[node](add_t)[below=of add_r]{Add b to Ret};
+    \node[node](add_t)[below=of add_r]{Add t to Ret};
     \node[node](return)[below=of add_t]{return Ret};
-    \node[emptynode](rtext)[right=of add_r]{for string r$\in$R};
-    \node[emptynode](ttext)[left=of add_t]{for string b$\in$B};
+    \node[emptynode](rtext)[right=1.2cm of add_r]{for string r$\in$R};
+    \node[emptynode](ttext)[left=1.2cm of add_t]{for string t$\in$T};
     
     %Lines
     \draw[->] (inputs.south) -- (initialize.north);
@@ -2220,21 +1778,26 @@ Below we provide the graphs of state diagrams of the critical functions examined
     \draw[->] (add_t.south) .. controls +(left:5 cm) and +(up:1.5 cm) .. (add_t.north);
     
     \end{tikzpicture}
+    }
     \caption{Join Function}
     \label{fig:join graph}
 \end{figure}
+\end{minipage}
+\hfill
+\begin{minipage}{0.5\textwidth}
 \begin{figure}[H]
     \centering
+    \resizebox{8cm}{!}{
     \begin{tikzpicture}[node/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=15mm}, bignode/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=20mm}, emptynode/.style={draw=none, fill=none, very thick, minimum size=1mm}]
     
     %Nodes
-    \node[emptynode](inputs){vectors R,B};
-    \node[node](initialize)[below=of inputs]{Pad R and B, Initialize vector Ret=\{\}};
+    \node[emptynode](inputs){vectors R,T};
+    \node[node](initialize)[below=of inputs]{Pad R and T, Initialize vector Ret=\{\}};
     \node[node](outer_loop)[below=of initialize]{Outer Loop Entry};
     \node[node](inner_loop)[below=of outer_loop]{Update Ret};
     \node[node](outer_exit)[below=of inner_loop]{Outer Loop Exit};
     \node[node](return)[below=of outer_exit]{return Ret};
-    \node[emptynode](inner_text)[right=1.25cm of inner_loop]{for b$\in$B};
+    \node[emptynode](inner_text)[right=1.25cm of inner_loop]{for t$\in$T};
     \node[emptynode](outer_text)[left=2.25 cm of inner_loop]{for r$\in$R};
     
     %Lines
@@ -2247,21 +1810,25 @@ Below we provide the graphs of state diagrams of the critical functions examined
     \draw[->] (outer_exit.west) .. controls +(left:5 cm) and +(up:3 cm) .. (outer_loop.north);
     
     \end{tikzpicture}
+    }
     \caption{Set\_Intersect Function}
     \label{fig:set_intersect graph}
 \end{figure}
-\newpage
+\end{minipage}
+
+\begin{minipage}{0.4\textwidth}
 \begin{figure}[H]
     \centering
+    \resizebox{7.25cm}{!}{
     \begin{tikzpicture}[node/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=15mm}, bignode/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=20mm}, emptynode/.style={draw=none, fill=none, very thick, minimum size=1mm}]
     
     %Nodes
-    \node[emptynode](inputs){vector reg\_alpha, integers a, b, n};
+    \node[emptynode](inputs){vector reg\_phi, integers a, b, n};
     \node[node](initialize)[below=of inputs]{Initialize string pre, vector Comp};
     \node[node](loop)[below=2cm of initialize]{Update Comp};
     \node[node](empty)[left=of loop]{return \{\}};
     \node[node](return)[below=of loop]{return pre + Comp};
-    \node[emptynode](loop_text)[right= of loop]{for $i \in [1, \text{b}-\text{a}]$};
+    \node[emptynode](loop_text)[right=1.1cm of loop]{for $i \in [1, \text{b}-\text{a}]$};
     \node[emptynode](placeholder)[below=0.5cm of initialize]{};
     \node[emptynode](empty_text)[rotate=30, left=1.3cm of placeholder]{If a$>$b};
     
@@ -2273,21 +1840,25 @@ Below we provide the graphs of state diagrams of the critical functions examined
     \draw[->] (loop.south) .. controls +(right:5 cm) and +(up:1.5 cm) .. (loop.north);
     
     \end{tikzpicture}
-    
+    }
     \caption{Reg\_F Function}
     \label{fig:reg_f graph}
 \end{figure}
+\end{minipage}
+\hfill
+\begin{minipage}{0.4\textwidth}
 \begin{figure}[H]
     \centering
+    \resizebox{7.25cm}{!}{
     \begin{tikzpicture}[node/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=15mm}, bignode/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=20mm}, emptynode/.style={draw=none, fill=none, very thick, minimum size=1mm}]
     
     %Nodes
-    \node[emptynode](inputs){vector reg\_alpha, integers a, b, n};
+    \node[emptynode](inputs){vector reg\_phi, integers a, b, n};
     \node[node](initialize)[below=of inputs]{Initialize string pre, vector Comp};
     \node[node](loop)[below=2cm of initialize]{Update Comp};
     \node[node](empty)[left=of loop]{return \{$S^n$\}};
     \node[node](return)[below=of loop]{return pre + Comp};
-    \node[emptynode](loop_text)[right= of loop]{for $i \in [1, \text{b}-\text{a}]$};
+    \node[emptynode](loop_text)[right=1.1cm of loop]{for $i \in [1, \text{b}-\text{a}]$};
     \node[emptynode](placeholder)[below=0.5cm of initialize]{};
     \node[emptynode](empty_text)[rotate=30, left=1.3cm of placeholder]{If a$>$b};
     
@@ -2299,47 +1870,25 @@ Below we provide the graphs of state diagrams of the critical functions examined
     \draw[->] (loop.south) .. controls +(right:5 cm) and +(up:1.5 cm) .. (loop.north);
     
     \end{tikzpicture}
-    
+    }
     \caption{Reg\_G Function}
     \label{fig:reg_g graph}
 \end{figure}
+\end{minipage}
+\vfill
+\begin{minipage}{0.4\textwidth}
 \begin{figure}[H]
     \centering
+    \resizebox{7.25cm}{!}{
     \begin{tikzpicture}[node/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=15mm}, bignode/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=20mm}, emptynode/.style={draw=none, fill=none, very thick, minimum size=1mm}]
     
     %Nodes
-    \node[emptynode](inputs){vector reg\_alpha, reg\_beta and integers a, b, n};
-    \node[node](initialize)[below=of inputs]{Initialize vector Comp};
-    \node[node](loop)[below=2cm of initialize]{Update Comp};
-    \node[node](empty)[left=of loop]{return \{$S^n$\}};
-    \node[node](return)[below=of loop]{return Comp};
-    \node[emptynode](loop_text)[right= of loop]{for $i \in [\text{a}, \text{b}-1]$};
-    \node[emptynode](placeholder)[below=0.5cm of initialize]{};
-    \node[emptynode](empty_text)[rotate=30, left=1.3cm of placeholder]{If a$>$b};
-    
-    %Lines
-    \draw[->] (inputs.south) -- (initialize.north);
-    \draw[->] (initialize.south) -- (empty.north);
-    \draw[->] (initialize.south) -- (loop.north);
-    \draw[->] (loop.south) -- (return.north);
-    \draw[->] (loop.south) .. controls +(right:5 cm) and +(up:1.5 cm) .. (loop.north);
-    
-    \end{tikzpicture}
-    
-    \caption{Reg\_R Function}
-    \label{fig:reg_r graph}
-\end{figure}
-\begin{figure}[H]
-    \centering
-    \begin{tikzpicture}[node/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=15mm}, bignode/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=20mm}, emptynode/.style={draw=none, fill=none, very thick, minimum size=1mm}]
-    
-    %Nodes
-    \node[emptynode](inputs){vector reg\_alpha, reg\_beta and integers a, b, n};
+    \node[emptynode](inputs){vector reg\_phi, reg\_psi and integers a, b, n};
     \node[node](initialize)[below=of inputs]{Initialize vector Comp};
     \node[node](loop)[below=2cm of initialize]{Update Comp};
     \node[node](empty)[left=of loop]{return \{\}};
     \node[node](return)[below=of loop]{return Comp};
-    \node[emptynode](loop_text)[right= of loop]{for $i \in [\text{a}, \text{b}-1]$};
+    \node[emptynode](loop_text)[right=1.1cm of loop]{for $i \in [\text{a}, \text{b}-1]$};
     \node[emptynode](placeholder)[below=0.5cm of initialize]{};
     \node[emptynode](empty_text)[rotate=30, left=1.3cm of placeholder]{If a$>$b};
     
@@ -2351,13 +1900,47 @@ Below we provide the graphs of state diagrams of the critical functions examined
     \draw[->] (loop.south) .. controls +(right:5 cm) and +(up:1.5 cm) .. (loop.north);
     
     \end{tikzpicture}
-    
+    }
     \caption{Reg\_U Function}
     \label{fig:reg_u graph}
 \end{figure}
+\end{minipage}
+\hfill
+\begin{minipage}{0.4\textwidth}
+\begin{figure}[H]
+    \centering
+    \resizebox{7.25cm}{!}{
+    \begin{tikzpicture}[node/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=15mm}, bignode/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=20mm}, emptynode/.style={draw=none, fill=none, very thick, minimum size=1mm}]
+    
+    %Nodes
+    \node[emptynode](inputs){vector reg\_phi, reg\_psi and integers a, b, n};
+    \node[node](initialize)[below=of inputs]{Initialize vector Comp};
+    \node[node](loop)[below=2cm of initialize]{Update Comp};
+    \node[node](empty)[left=of loop]{return \{$S^n$\}};
+    \node[node](return)[below=of loop]{return Comp};
+    \node[emptynode](loop_text)[right=1.1cm of loop]{for $i \in [\text{a}, \text{b}-1]$};
+    \node[emptynode](placeholder)[below=0.5cm of initialize]{};
+    \node[emptynode](empty_text)[rotate=30, left=1.3cm of placeholder]{If a$>$b};
+    
+    %Lines
+    \draw[->] (inputs.south) -- (initialize.north);
+    \draw[->] (initialize.south) -- (empty.north);
+    \draw[->] (initialize.south) -- (loop.north);
+    \draw[->] (loop.south) -- (return.north);
+    \draw[->] (loop.south) .. controls +(right:5 cm) and +(up:1.5 cm) .. (loop.north);
+    
+    \end{tikzpicture}
+    }
+    \caption{Reg\_R Function}
+    \label{fig:reg_r graph}
+\end{figure}
+\end{minipage}
+
 \begin{landscape}
+
 \begin{figure}[htbp]
     \centering
+    \resizebox{20cm}{!}{
     \begin{tikzpicture}[node/.style={rounded rectangle, draw=black!60, fill=black!5, text width=3cm,text centered, very thick, minimum size=15mm}, bignode/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=20mm}, emptynode/.style={draw=none, fill=none,text width=3cm,text centered, very thick, minimum size=1mm}, rednode/.style={rounded rectangle, draw=red!60, fill=red!5, text width=3cm,text centered, very thick, minimum size=15mm}]
     
     %Nodes
@@ -2368,22 +1951,22 @@ Below we provide the graphs of state diagrams of the critical functions examined
     
     \node[node](prop_cons)[left=3cm of start]{return reg\_prop\_cons};
     
-    \node[rednode](parse_unary)[below=1cm of prop_cons]{Parse for unary temp conn, a, b, alpha and call reg(alpha, n)};
-    \node[node](reg_f)[below=1cm of parse_unary]{return reg\_F(alpha)};
-    \node[node](reg_g)[left=0.5cm of reg_f]{return reg\_G(alpha)};
+    \node[rednode](parse_unary)[below=1cm of prop_cons]{Parse for unary temp conn, a, b, phi and call reg(phi, n)};
+    \node[node](reg_f)[below=1cm of parse_unary]{return reg\_F(phi)};
+    \node[node](reg_g)[left=0.5cm of reg_f]{return reg\_G(phi)};
     
-    \node[node](parse_binary_prop)[below=0.5cm of start]{Parse for binary prop conn, alpha, beta};
-    \node[rednode](prop_alpha)[below=of parse_binary_prop]{reg\_alpha $\leftarrow$ reg(alpha,n)};
-    \node[rednode](prop_beta)[below=of prop_alpha]{reg\_beta $\leftarrow$ reg(beta,n)};
-    \node[rednode](equals)[left=0.5cm of prop_beta]{Rewrite as equiv\_formula, return reg(equiv\_formula,n)};
-    \node[node](set_intersect)[below=of prop_beta]{return set\_intersect};
+    \node[node](parse_binary_prop)[below=0.5cm of start]{Parse for binary prop conn, phi, psi};
+    \node[rednode](prop_phi)[below=of parse_binary_prop]{reg\_phi $\leftarrow$ reg(phi,n)};
+    \node[rednode](prop_psi)[below=of prop_phi]{reg\_psi $\leftarrow$ reg(psi,n)};
+    \node[rednode](equals)[left=0.5cm of prop_psi]{Rewrite as equiv\_formula, return reg(equiv\_formula,n)};
+    \node[node](set_intersect)[below=of prop_psi]{return set\_intersect};
     \node[node](join)[left=of set_intersect]{return join};
     \node[rednode](implies)[right=of set_intersect]{Rewrite as equiv\_formula, return reg(equiv\_formula,n)};
     
-    \node[node](parse_binary_temp)[right=3cm of start]{Parse for binary temp conn, a, b, alpha, beta};
-    \node[rednode](temp_alpha)[below=of parse_binary_temp]{reg\_alpha $\leftarrow$ reg(alpha,n)};
-    \node[rednode](temp_beta)[below=of temp_alpha]{reg\_beta $\leftarrow$ reg(beta,n)};
-    \node[node](until)[below=of temp_beta]{return reg\_U};
+    \node[node](parse_binary_temp)[right=3cm of start]{Parse for binary temp conn, a, b, phi, psi};
+    \node[rednode](temp_phi)[below=of parse_binary_temp]{reg\_phi $\leftarrow$ reg(phi,n)};
+    \node[rednode](temp_psi)[below=of temp_phi]{reg\_psi $\leftarrow$ reg(psi,n)};
+    \node[node](until)[below=of temp_psi]{return reg\_U};
     \node[node](release)[right=of until]{return reg\_R};
     
     \node[node](parse_assoc)[right=2cm of inputs]{Parse for assoc prop conn, initialize string equiv\_formula};
@@ -2393,21 +1976,21 @@ Below we provide the graphs of state diagrams of the critical functions examined
     \node[emptynode](prop_cons_text)[left=0.01cm of start]{nnf is T or !$$~$$};
     \node[emptynode](prop_var_text)[rotate=-43, above=1.1cm of prop_cons_text]{nnf is p or $\scriptstyle{\sim}\textstyle$p};
     
-    \node[emptynode](unary_text)[rotate=45, below=0.3cm of prop_cons_text]{\small{nnf is X[a,b] alpha}};
+    \node[emptynode](unary_text)[rotate=45, below=0.3cm of prop_cons_text]{\small{nnf is X[a,b] phi}};
     \node[emptynode](reg_g_text)[above=0.2cm of reg_g]{X is G};
     \node[emptynode](reg_f_text)[right=1.5cm of reg_g_text]{X is F};
     
-    \node[emptynode](binary_temp_text)[right=0.01cm of start]{\small{nnf is alpha X[a,b] beta}};
+    \node[emptynode](binary_temp_text)[right=0.01cm of start]{\small{nnf is phi X[a,b] psi}$$~$$};
     \node[emptynode](release_text)[above=0.2cm of release]{X is R};
     \node[emptynode](until_text)[left=1.75cm of release_text]{X is U};
     
     \node[emptynode](assoc_text)[rotate=45, above=1.1cm of binary_temp_text]{\footnotesize{nnf is X[nnf\_array]}};
-    \node[emptynode](loop_text)[right=1.75cm of parse_assoc]{$$~$$for alpha in nnf\_array};
+    \node[emptynode](loop_text)[right=1.75cm of parse_assoc]{$$~$$for phi in nnf\_array};
     
-    \node[emptynode](binary_prop_text)[right=1.4cm of unary_text]{$$~$$$$~$$$$~$$nnf is alpha X beta};
+    \node[emptynode](binary_prop_text)[right=1.4cm of unary_text]{$$~$$$$~$$$$~$$nnf is phi X psi};
     \node[emptynode](join_text)[above=0.2cm of join]{X is v};
     \node[emptynode](intersect_text)[right=1.75cm of join_text]{X is \&};
-    \node[emptynode](implies_text)[right=-0.25cm of prop_beta]{X is $>$};
+    \node[emptynode](implies_text)[right=-0.25cm of prop_psi]{X is $>$};
     \node[emptynode](equals_text)[right=-1.2cm of reg_f_text]{X is =};
     
     %Lines
@@ -2418,23 +2001,25 @@ Below we provide the graphs of state diagrams of the critical functions examined
     \draw[->] (parse_unary.south) -- (reg_g.north);
     \draw[->] (parse_unary.south) -- (reg_f.north);
     \draw[->] (start.south) -- (parse_binary_prop.north);
-    \draw[->] (parse_binary_prop.south) -- (prop_alpha.north);
-    \draw[->] (prop_alpha.south) -- (prop_beta.north);
-    \draw[->] (prop_beta.south) -- (set_intersect.north);
-    \draw[->] (prop_beta.south) -- (join.north);
+    \draw[->] (parse_binary_prop.south) -- (prop_phi.north);
+    \draw[->] (prop_phi.south) -- (prop_psi.north);
+    \draw[->] (prop_psi.south) -- (set_intersect.north);
+    \draw[->] (prop_psi.south) -- (join.north);
     \draw[->] (parse_binary_prop.east) .. controls +(down:2cm) .. (implies.north);
     \draw[->] (parse_binary_prop.west) .. controls +(down:2cm) .. (equals.north);
     \draw[->] (start.east) -- (parse_binary_temp.west);
-    \draw[->] (parse_binary_temp.south) -- (temp_alpha.north);
-    \draw[->] (temp_alpha.south) -- (temp_beta.north);
-    \draw[->] (temp_beta.south) -- (until.north);
-    \draw[->] (temp_beta.south) -- (release.north);
+    \draw[->] (parse_binary_temp.south) -- (temp_phi.north);
+    \draw[->] (temp_phi.south) -- (temp_psi.north);
+    \draw[->] (temp_psi.south) -- (until.north);
+    \draw[->] (temp_psi.south) -- (release.north);
     \draw[->] (start.east) -- (parse_assoc.west);
     \draw[->] (parse_assoc.east) -- (rewrite_assoc.north);
     \draw[->] (rewrite_assoc.south) -- (assoc_return.north);
     \draw[->] (rewrite_assoc.east) .. controls +(right:1 cm) and +(up:1.5 cm) .. (rewrite_assoc.north);
     
     \end{tikzpicture}
+    }
+    $$~$$
     \caption{Control Flow of Reg. Red nodes indicate a recursive call to Reg.}
     \label{fig:big boy}
 \end{figure}
