@@ -874,6 +874,7 @@ $\mathcal{F}_{[10,17]} p_4$, $\neg p_6$, $p_6 \mathcal{U}_{[6,14]} p_8$. We obta
     \centering
     \includegraphics[scale=0.38]{images/Sim2Length_large.png}
     \captionof{figure}{Input length vs output length\vspace{3mm}}
+    \label{fig:InVsOutLen}
     \end{figure}
 \end{minipage}
 \begin{minipage}{0.5 \textwidth}
@@ -881,6 +882,7 @@ $\mathcal{F}_{[10,17]} p_4$, $\neg p_6$, $p_6 \mathcal{U}_{[6,14]} p_8$. We obta
     \centering
     \includegraphics[scale=0.38]{images/Sim2Time_large.png}
     \captionof{figure}{Input length vs run time.\vspace{3mm}}
+    \label{fig:InLenVsRunTime}
     \end{figure}
 \end{minipage}\\
 \noindent\textbf{Simulation 3}
@@ -890,6 +892,7 @@ For the third simulation, we consider 2 iterations, 10 propositional variables, 
     \centering
     \includegraphics[scale=0.38]{images/Sim3Length_large.png}
     \captionof{figure}{Input length vs output length\vspace{3mm}}
+    \label{fig:InLenVsOutLen3}
     \end{figure}
 \end{minipage}
 \begin{minipage}{0.5 \textwidth}
@@ -897,6 +900,7 @@ For the third simulation, we consider 2 iterations, 10 propositional variables, 
     \centering
     \includegraphics[scale=0.38]{images/Sim3Time_large.png}
     \captionof{figure}{Input length vs run time.\vspace{3mm}}
+    \label{fig:InLenVsRunTime3}
     \end{figure}
 \end{minipage}\\
 The formulas $(p_7 \mathcal{U}_{[5,7]} p_9) \mathcal{U}_{[3,7]} (\mathcal{F}_{[1,4]} p_4)$ and $\mathcal{G}_{[3,7]} (p_9 \mathcal{U}_{[0,4]} p_0)$ were outliers in both figures, and Figure 5 had one more outlier from the formula $(\neg p_9) \mathcal{R}_{[5,9]} (p_5 \mathcal{U}_{[2,4]} p_3)$.
@@ -908,6 +912,7 @@ For the fourth simulation, we consider 1 iteration, 5 propositional variables, 1
     \centering
     \includegraphics[scale=0.38]{images/Sim4Length_large.png}
     \captionof{figure}{Input length vs output length\vspace{3mm}}
+    \label{InLenVsOutLen4}
     \end{figure}
 \end{minipage}%
 \begin{minipage}{0.5 \textwidth}
@@ -915,26 +920,31 @@ For the fourth simulation, we consider 1 iteration, 5 propositional variables, 1
     \centering
     \includegraphics[scale=0.38]{images/Sim4Time_large.png}
     \captionof{figure}{Input length vs run time.\vspace{3mm}}
+    \label{InLenVsRunTime4}
     \end{figure}
 \end{minipage}
-\noindent What we observe from the simulations is that the worst case complexity, both for space and time, is relatively sparse. We also observe that these worst cases are extreme outliers and that in nearly every case, are examples of nested binary temporal operators. As seen in \cite{HLR21}, \cite{KZJZR20}, \cite{AJR22}, and \cite{HCHJR21}, nested binary temporal operators do not appear in any specifications, and thus are likely rare in practical applications.
+\noindent What we observe from the simulations is that the worst case complexity, both for space and time, is relatively rare. We also observe that these worst cases are extreme outliers and that in nearly every case, are examples of nested binary temporal operators. As seen in \cite{HLR21}, \cite{KZJZR20}, \cite{AJR22}, and \cite{HCHJR21}, nested binary temporal operators do not appear in any specifications, and thus are likely rare in practical applications.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Correctness of WEST} \label{test}
- The correctness of an abstract algorithm one can describe on pencil and paper differs from the correctness of an actual implementation of the algorithm (the program). 
-On one hand, correctness of an algorithm is assured by mathematical analysis of the algorithm on all possible inputs and showing that it behaves as desired. 
-However, assuring correctness of the program is a difficult task.
-One naive approach is to test every possible input up to a certain size, and verify the output or behavior of the program.
-This often times involves a test suite that is too large to be computationally feasible, and the test suite may be overtly redundant. 
-For instance, there is little sense in testing all MLTL formulas of the form $p_0 \mathcal{U}_{[0,t]} p_1$ for all $t$ such that $0 \leq t \leq 99$; verification of a few should give sufficient confidence of correctness of the program for any reasonable party. 
-We approach this problem more intelligently. In the following section, we test our implementation with a test suite that explores all control paths (up to a certain depth) of the algorithm. A control path can be thought of as a sequence of lines of code that are executed in one calculation of an input formula. Differing structures of formulas will lead to different sequences of lines of code to be executed, and a test suite to explore all such paths provides high confidence in the correctness of the WEST program.
+\section{Correctness of WEST Tool Implementation} \label{test}
+We accompany our proof of algorithmic correctness with a rigourous evaluation of implementation correctness: that our WEST tool correctly implements our WEST algorithm. % The correctness of an abstract algorithm one can describe on pencil and paper differs from the correctness of an actual implementation of the algorithm (the program). 
+%On one hand, correctness of an algorithm is assured by mathematical analysis of the algorithm on all possible inputs and showing that it behaves as desired. 
+%However, assuring correctness of the program is a difficult task.
+Since our proof of algorithmic correctness is manual and our focus is on usability for validation by humans, we utilize more traditional techniques for robust software engineering with testing-based evaluation. An attractive alternative for future work involves encoding our proofs in an interactive theorem prover and utilizing a verified code generator like PVS2C\cite{Sha17} or the Isabelle/HOL code generator \cite{HB21}. 
+Since the primary purpose of the WEST tool is valiation of formulas for humans, we focused on writing a tool with an intutiive human-facing interface then verifying that implementation rather than wrestling with verified code generated by a tool made to optimize for different objectives. 
+
+One naive approach involves testing every possible input up to a certain size to verify the output or behaviors of the program.
+For WEST, this strategy would generate a very large test suite with signficant redundancy. 
+For instance, there is little sense in testing all MLTL formulas of the form $p_0 \mathcal{U}_{[0,t]} p_1$ for all $t$ such that $0 \leq t \leq 99$; verification of a few should give sufficient confidence of correctness of the program. 
+We approach this problem more intelligently: we test our implementation with a test suite that explores all control paths (up to a certain depth) of the algorithm. A control path is a sequence of lines of code that are executed in one calculation of an input formula. Differing structures of formulas will lead to different sequences of lines of code to be executed, and a test suite to explore all such paths provides high confidence in the correctness of the WEST tool.
 
 \subsection{Intelligent Fuzzing}
-Negative testing is the process of checking that a program is able to handle unexpected inputs without crashing; fuzz testing (also know as fuzzing) is a form of negative testing.
-The earliest use of fuzzing by Miller \cite{Miller} was to discover bugs in Unix utilities by randomly generating command line inputs, and monitoring for unexpected crashes or security. This style of black box testing assumes no prior knowledge of the target program, and is centered on generating a large quantity of inputs. Miller describes his approach in \cite{Miller} as follows: \\
- \textit{``If we consider a program to
+Negative testing is the process of checking that a program is able to handle unexpected inputs without crashing; we employ fuzz testing (also know as fuzzing), a form of negative testing.
+%The earliest use of fuzzing by Miller \cite{Miller} was to discover bugs in Unix utilities by randomly generating command line inputs, and monitoring for unexpected crashes or security. This style of black box testing assumes no prior knowledge of the target program, and is centered on generating a large quantity of inputs. Miller describes his approach in \cite{Miller} as follows: \\
+We deviate from traditional black-box fuzzing defined by \cite{Miller} as follows: \\
+\textit{``If we consider a program to
 be a complex finite state machine, then our testing strategy can be thought of as a random walk through the state space, searching for undefined states.''} \\
-Intelligent fuzzing (sometimes referred to as whitebox fuzzing) is an alternate approach to fuzz testing that leverages knowledge about program structure to generate valid inputs and increase coverage. 
+Instead we utilize intelligent fuzzing (sometimes referred to as whitebox fuzzing), which is an alternate approach to fuzz testing that leverages knowledge about program structure to generate valid inputs and increase coverage. 
 Borrowing the words of Miller, our approach to testing the WEST program can be thought of as walking all possible paths up to a certain depth of the state space of our algorithm. 
 We first outline our overall approach to intelligent fuzzing: 
 \begin{enumerate}
@@ -945,7 +955,8 @@ We first outline our overall approach to intelligent fuzzing:
 \end{enumerate}
 \subsubsection{State Diagram Construction}
  We choose to represent the states space of algorithm as a directed graph with the edges representing the control flow and vertices representing blocks of contiguous code without branching statements. 
-The core of the WEST program is executed in the recursive routine, \textit{reg}, which calls the $8$ different subroutines discussed earlier, as shown in \ref{fig:abstracted graph}.
+ The core of the WEST program lies in the recursive routine, \textit{reg}, which calls the $8$ different subroutines %discussed earlier,
+ as shown in \ref{fig:abstracted graph}.
 \begin{figure}[t]
     \centering
     \begin{tikzpicture}[ node/.style={rounded rectangle, draw=black!60, fill=black!5, thick, minimum size=10mm},
