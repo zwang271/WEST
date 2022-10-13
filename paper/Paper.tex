@@ -847,14 +847,14 @@ For the first simulation, we consider 2 iterations, 5 propositional variables, 1
 \begin{minipage}{0.5 \textwidth}
     \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.39]{images/Sim1Length.png}
+    \includegraphics[scale=0.38]{images/Sim1Length_large.png}
     \captionof{figure}{Input length vs output length.\vspace{3mm}}
     \end{figure}
 \end{minipage}
 \begin{minipage}{0.5 \textwidth}
     \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.39]{images/Sim1Time.png}
+    \includegraphics[scale=0.38]{images/Sim1Time_large.png}
     \captionof{figure}{Input length vs run time.\vspace{3mm}}
     \end{figure}
 \end{minipage}\\
@@ -865,14 +865,14 @@ $\mathcal{F}_{[10,17]} p_4$, $\neg p_6$, $p_6 \mathcal{U}_{[6,14]} p_8$. We obta
 \begin{minipage}{0.5 \textwidth}
     \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.39]{images/Sim2Length.png}
+    \includegraphics[scale=0.38]{images/Sim2Length_large.png}
     \captionof{figure}{Input length vs output length\vspace{3mm}}
     \end{figure}
 \end{minipage}
 \begin{minipage}{0.5 \textwidth}
     \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.39]{images/Sim2Time.png}
+    \includegraphics[scale=0.38]{images/Sim2Time_large.png}
     \captionof{figure}{Input length vs run time.\vspace{3mm}}
     \end{figure}
 \end{minipage}\\
@@ -881,14 +881,14 @@ For the third simulation, we consider 2 iterations, 10 propositional variables, 
 \begin{minipage}{0.5 \textwidth}
     \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.39]{images/Sim3Length.png}
+    \includegraphics[scale=0.38]{images/Sim3Length_large.png}
     \captionof{figure}{Input length vs output length\vspace{3mm}}
     \end{figure}
 \end{minipage}
 \begin{minipage}{0.5 \textwidth}
     \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.39]{images/Sim3Time.png}
+    \includegraphics[scale=0.38]{images/Sim3Time_large.png}
     \captionof{figure}{Input length vs run time.\vspace{3mm}}
     \end{figure}
 \end{minipage}\\
@@ -899,14 +899,14 @@ For the fourth simulation, we consider 1 iteration, 5 propositional variables, 1
 \begin{minipage}{0.5 \textwidth}
     \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.39]{images/Sim4Length.png}
+    \includegraphics[scale=0.38]{images/Sim4Length_large.png}
     \captionof{figure}{Input length vs output length\vspace{3mm}}
     \end{figure}
 \end{minipage}%
 \begin{minipage}{0.5 \textwidth}
     \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.39]{images/Sim4Time.png}
+    \includegraphics[scale=0.38]{images/Sim4Time_large.png}
     \captionof{figure}{Input length vs run time.\vspace{3mm}}
     \end{figure}
 \end{minipage}
@@ -1859,7 +1859,7 @@ Below we provide the state diagram graphs of the functions examined in our intel
     \node[node](return)[below=of loop]{return pre + Comp};
     \node[emptynode](loop_text)[right=1.1cm of loop]{for $i \in [1, \text{b}-\text{a}]$};
     \node[emptynode](placeholder)[below=0.5cm of initialize]{};
-    \node[emptynode](empty_text)[rotate=30, left=1.3cm of placeholder]{If a$>$b};
+    \node[emptynode](empty_text)[rotate=36, left=1.3cm of placeholder]{If a$>$b};
     
     %Lines
     \draw[->] (inputs.south) -- (initialize.north);
@@ -1889,7 +1889,7 @@ Below we provide the state diagram graphs of the functions examined in our intel
     \node[node](return)[below=of loop]{return pre + Comp};
     \node[emptynode](loop_text)[right=1.1cm of loop]{for $i \in [1, \text{b}-\text{a}]$};
     \node[emptynode](placeholder)[below=0.5cm of initialize]{};
-    \node[emptynode](empty_text)[rotate=30, left=1.3cm of placeholder]{If a$>$b};
+    \node[emptynode](empty_text)[rotate=36, left=1.3cm of placeholder]{If a$>$b};
     
     %Lines
     \draw[->] (inputs.south) -- (initialize.north);
@@ -1919,7 +1919,7 @@ Below we provide the state diagram graphs of the functions examined in our intel
     \node[node](return)[below=of loop]{return Comp};
     \node[emptynode](loop_text)[right=1.1cm of loop]{for $i \in [\text{a}, \text{b}-1]$};
     \node[emptynode](placeholder)[below=0.5cm of initialize]{};
-    \node[emptynode](empty_text)[rotate=30, left=1.3cm of placeholder]{If a$>$b};
+    \node[emptynode](empty_text)[rotate=36, left=1.3cm of placeholder]{If a$>$b};
     
     %Lines
     \draw[->] (inputs.south) -- (initialize.north);
@@ -1949,7 +1949,7 @@ Below we provide the state diagram graphs of the functions examined in our intel
     \node[node](return)[below=of loop]{return Comp};
     \node[emptynode](loop_text)[right=1.1cm of loop]{for $i \in [\text{a}, \text{b}-1]$};
     \node[emptynode](placeholder)[below=0.5cm of initialize]{};
-    \node[emptynode](empty_text)[rotate=30, left=1.3cm of placeholder]{If a$>$b};
+    \node[emptynode](empty_text)[rotate=36, left=1.3cm of placeholder]{If a$>$b};
     
     %Lines
     \draw[->] (inputs.south) -- (initialize.north);
