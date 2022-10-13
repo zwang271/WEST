@@ -154,7 +154,11 @@
 \vspace{-0.1in}
 \begin{abstract}
         \noindent Mission-time Linear Temporal Logic (MLTL) is an extension of propositional logic that allows temporal quantifiers over finite discrete intervals. A computation is a finite sequence of truth assignments. In this paper, we use regular expressions to describe the structure of the computations that satisfy a given MLTL formula. We prove soundness and completeness of our structure. We also give an implemented algorithm (the WEST program) and analyze its complexity both theoretically and experimentally. Finally, we generate a test suite using control flow diagrams to robustly test the code.
-\vspace{-0.1in}
+
+        %We demonstrate that formula validation examples generated via regular expressions encapsulating the sets of all satisfying/unsatisfying assingments is tractable, both theoreteically and experimentally. We present an efficient algorithm for automatic characterization of an MLTL formula by its satisfying assingments, proove the theoretical correctness, time complexisty, and space complexity of hte algorithm. Then we provide a robust implementattion of the algorithm, demonstrate expreimentally its performance and correctness, and utilize intelligent fuzzing to increaes confidence int eh resulting open-source tool, which we release for public use. The result of our contributions are improvements to existing algorithms for MLTL analsysis applicable to many other tools and a new tool called WEST for provably correct, atomated, efficient MLTL formula validation.%
+%        Our work connects existing tools to enable improvmeents in satisfiabiity tools and automated synthesis of verified code from MLTL behavior descriptions.
+
+        \vspace{-0.1in}
 \keywords{First keyword  \and Second keyword \and Another keyword.}
 \end{abstract}
 
@@ -840,8 +844,8 @@ For time complexity, through a similar analysis, we've found that the time-compl
 If in the worst case no simplification occurs in any call of \textit{set\_intersect}, space complexity remains unchanged, but simplifying a vector of regular expressions is cubic in input size. In practice however, both time and space complexities are much more optimistic than worst-case estimates. 
  
 \subsection{Experimental Benchmarking}
- Along with theoretical space and time complexity, we provide some experimental benchmarking of these complexities using randomly generated MLTL formulas.
-This was done on an Intel(R) Core(TM) i7-4770S CPU at 3.10GHz with 32gb RAM.
+We accompany theoretical space and time complexity with experimental evaluation of these complexities using randomly-generated MLTL formulas.
+We ran these experiments on an Intel(R) Core(TM) i7-4770S CPU at 3.10GHz with 32gb RAM.
 For each simulation, we generated 1000 MLTL formulas using the parameters DELTA, INTERVAL\_MAX, number of propositional variables, and number of iterations. DELTA is the maximum length we allow for any interval. INTERVAL\_MAX is the largest allowed upper bound for any interval. Number of iterations refers to the level of nesting in the generated formulas. For example, $\mathcal{G}_{[0,2]}p_0$ is a formula generated with one iteration, while $\mathcal{G}_{[0,2]}(p_0 \land p_1)$ is a formula generated with two iterations. We measure the number of characters in the output and the amount of time in milliseconds taken to run the program. Note that these simulations run the \textit{reg} function with the subformula boolean set to false and the simplify boolean set to true.\\
 \noindent\textbf{Simulation 1}
 For the first simulation, we consider 2 iterations, 5 propositional variables, 10 for DELTA, and 10 for INTERVAL\_MAX. We obtain the following plots:\\
@@ -850,6 +854,7 @@ For the first simulation, we consider 2 iterations, 5 propositional variables, 1
     \centering
     \includegraphics[scale=0.38]{images/Sim1Length_large.png}
     \captionof{figure}{Input length vs output length.\vspace{3mm}}
+    \label{InputLengthVsOutputLength}
     \end{figure}
 \end{minipage}
 \begin{minipage}{0.5 \textwidth}
@@ -857,9 +862,10 @@ For the first simulation, we consider 2 iterations, 5 propositional variables, 1
     \centering
     \includegraphics[scale=0.38]{images/Sim1Time_large.png}
     \captionof{figure}{Input length vs run time.\vspace{3mm}}
+    \label{InputLengthVsRuntime}
     \end{figure}
 \end{minipage}\\
-\noindent The formula $(p_0 = p_1) \mathcal{U}_{[2,9]} (p_1 \mathcal{U}_{[7,9]} p_3)$ was an outlier for both figures, and the formulas $(p_4 \rightarrow p_2) \mathcal{R}_{[1,8]} (p_3 \mathcal{U}_{[3,4]} p_0)$ and $(p_3 \mathcal{R}_{[2,7]} p_4) \mathcal{R}_{[1,9]} (p_4 \mathcal{R}_{[4,9]} p_3)$ were outliers for figure 2.\\
+\noindent The formula $(p_0 = p_1) \mathcal{U}_{[2,9]} (p_1 \mathcal{U}_{[7,9]} p_3)$ was an outlier for both figures, and the formulas $(p_4 \rightarrow p_2) \mathcal{R}_{[1,8]} (p_3 \mathcal{U}_{[3,4]} p_0)$ and $(p_3 \mathcal{R}_{[2,7]} p_4) \mathcal{R}_{[1,9]} (p_4 \mathcal{R}_{[4,9]} p_3)$ were outliers for Figure \ref{InputLengthVsRuntime}. \\
 \noindent\textbf{Simulation 2}
 For the second simulation, we consider 1 iteration, 10 propositional variables, 20 for DELTA, and 20 for INTERVAL\_MAX. Here are some examples of generated formulas:
 $\mathcal{F}_{[10,17]} p_4$, $\neg p_6$, $p_6 \mathcal{U}_{[6,14]} p_8$. We obtain the following plots:\\
@@ -893,7 +899,7 @@ For the third simulation, we consider 2 iterations, 10 propositional variables, 
     \captionof{figure}{Input length vs run time.\vspace{3mm}}
     \end{figure}
 \end{minipage}\\
-The formulas $(p_7 \mathcal{U}_{[5,7]} p_9) \mathcal{U}_{[3,7]} (\mathcal{F}_{[1,4]} p_4)$ and $\mathcal{G}_{[3,7]} (p_9 \mathcal{U}_{[0,4]} p_0)$ were outliers in both figures, and figure 5 had one more outlier from the formula $(\neg p_9) \mathcal{R}_{[5,9]} (p_5 \mathcal{U}_{[2,4]} p_3)$.
+The formulas $(p_7 \mathcal{U}_{[5,7]} p_9) \mathcal{U}_{[3,7]} (\mathcal{F}_{[1,4]} p_4)$ and $\mathcal{G}_{[3,7]} (p_9 \mathcal{U}_{[0,4]} p_0)$ were outliers in both figures, and Figure 5 had one more outlier from the formula $(\neg p_9) \mathcal{R}_{[5,9]} (p_5 \mathcal{U}_{[2,4]} p_3)$.
 \\
 \noindent\textbf{Simulation 4}
 For the fourth simulation, we consider 1 iteration, 5 propositional variables, 10 for DELTA, and 10 for INTERVAL\_MAX. Some examples of generated formulas are: $\neg p_1$, $p_1 \mathcal{R}_{[6,7]} p_3$, $\mathcal{F}_{[5,5]} p_3$. We obtain the following plots:\\
