@@ -407,7 +407,7 @@ Our minimum computation length for Until and Release are slight optimizations of
 \end{theorem}
 \vspace{-0.2in}
 \begin{proof}
-The formulas for the minimum computation length follow directly from the regular expressions for the satisfying computations for Until and Release and the minimum computation lengths for Finally, Global, And, and Or.\\
+The formulas for the minimum computation length follow directly from the regular expressions for the satisfying computations for \texttt{Until} and \texttt{Release} and the minimum computation lengths for \texttt{Future}, \texttt{Globally}, \texttt{AND}, and \texttt{OR}.\\
  Recall that $\text{reg}(\phi \ \mathcal{U}_{[a,b]} \psi) =  \bigvee_{i=a}^{b} \text{reg}\left(\mathcal{G}_{[a,i-1]}\phi \land \mathcal{G}_{[i, i]} \psi\right)$. Thus
  \begin{align*}
      \text{cplen}(\phi \mathcal{U}_{[a,b]} \psi) &= \max_{a \leq i \leq b} \left( \text{cplen}(\mathcal{G}_{[a, i-1]} \phi \land \mathcal{G}_{[i,i]} \psi) \right)\\
@@ -745,11 +745,12 @@ Output: Vector of REGEX for $\phi \mathcal{U}_{[a, b]} \psi$
 
 \subsection{Theoretical Correctness of the WEST Algorithm}
 Correctness of the WEST algorithm is dependent on the correctness of subroutines \textit{reg\_prop\_cons}, \textit{reg\_prop\_var}, \textit{join}, \textit{set\_intersect}, \textit{reg\_F}, \textit{reg\_G}, \textit{reg\_U}, and \textit{reg\_R}. 
-The routines \textit{reg\_prop\_cons} and \textit{reg\_prop\_var} takes as input a MLTL formula of the appropriate form, and returns the regular expression as previously defined in section \ref{regex}.
+The routines \textit{reg\_prop\_cons} and \textit{reg\_prop\_var} take as input a MLTL formula of the appropriate form, and return the regular expression as %previously
+defined in section \ref{regex}.
 \textit{Join} concatenates two input vectors of computation strings $R$ and $T$, which is equivalent to $\mathscr{L}(R) \cup \mathscr{L}(T)$. 
 \textit{Set\_intersect} takes as input two vectors of computation strings $R$ and $T$, where $R$ represents $r_1 | ... | r_a$ and $T$ represents $t_1 | ... | t_b$ such that each $r_i$ and $t_j$ are regular expressions over $\Sigma = \{`0', `1', `S', `,'\}$.
 Assume that all strings of regular expressions are right padded to equal length. 
-We show that $\mathscr{L}(\textit{set\_intersect}(R, T)) = \mathscr{L}(R) \cap \mathscr{L}(T)$. Since a vector of regular expressions is synonymous to the collective Or of each of them, we have that 
+We show that $\mathscr{L}(\textit{set\_intersect}(R, T)) = \mathscr{L}(R) \cap \mathscr{L}(T)$. Since a vector of regular expressions is synonymous to the collective \texttt{OR} of each of them, we have that 
 \begin{align*}
     \mathscr{L}(R) \cap \mathscr{L}(T) &= \left(\bigcup_{i = 0}^a \mathscr{L}(r_i) \right)\cap \left( \bigcup_{j = 0}^b \mathscr{L}(t_j)\right) = \bigcup_{i = 0}^a \bigcup_{j = 0}^b \left(\mathscr{L}(r_i) \cap \mathscr{L}(t_j)\right).
 \end{align*}
