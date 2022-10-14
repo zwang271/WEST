@@ -184,9 +184,9 @@ We structure the paper around our contributions as follows. In section \ref{prer
 %
 In section \ref{regex}, we recursively define regular expressions encapsulating the satisfying computations of MLTL formulas and prove that our new translation algorithm is both sound and complete. In addition, we provide a calculation for the minimum computation length required to describe all the satisfying computations of a MLTL formula that slightly improves upon existing calculations in the literature. Finally, we show an application of the regular expressions of the satisfying computations by using them to prove an MLTL theorem. In particular, we show that $\phi\mathcal{U}_{[a,b]}(\phi\mathcal{U}_{[0,c]}\psi) = \phi\mathcal{U}_{[a,b+c]}\psi$ and $\phi\mathcal{R}_{[a,b]}(\phi\mathcal{R}_{[0,c]}\psi) = \phi\mathcal{R}_{[a,b+c]}\psi$.
 %
-We introduce a new tool, called WEST (acronym redacted for blind review), that implements automated validation in section \ref{specs} %, we give the WEST code specifications. In particular, we describe the grammar that the program follows and give an overview of the important functions in the program.
+We introduce a new tool, called WEST (acronym redacted for blind review), that implements automated validation in section \ref{WESTalg} %, we give the WEST code specifications. In particular, we describe the grammar that the program follows and give an overview of the important functions in the program.
 %
-and calculate its space and time complexity, both theoretically and experimentally, in section \ref{complex}. We show that the theoretical worst-case complexity for both space and time is doubly exponential, but that the average case fares far better.
+and calculate its space and time complexity, both theoretically and experimentally. We show that the theoretical worst-case complexity for both space and time is doubly exponential, but that the average case fares far better.
 %
 Section \ref{test} proves correctness of the algorithms and provides a test suite to show correctness of implementation with high confidence. Intelligent fuzzing techniques contribute to test suite construction from a state diagram representing the control flow of the algorithm. We also verify the correctness of outputs of the WEST program against a na\"ive brute force implementation.
 %
@@ -200,7 +200,7 @@ Section \ref{simpsection}, provides a combinatorial theorem for simplifying cert
 %\subsection{Mission-time Linear Temporal Logic}
 {\bf Mission-time Linear Temporal Logic (MLTL)} \cite{LVR22} is a finite variation of LTL over bounded, closed, discrete intervals of the form $[a,b]$ where $a,b \in \mathbb{N}$ and $0 \leq a \leq b$. The syntax of an MLTL formula $\phi$ over a set of atomic propositions $\mathcal{AP}$, where $p \in \mathcal{AP}$ is a propositional variable, is given by the following BNF grammar:%
 \vspace{-0.1in}
-$$\phi := \top \ | \ \bot \ | \ p \ | \ \neg \psi \ | \ \psi_1 \land \psi_2 \ | \ \psi_1 \lor \psi_2 \ | \ \mathcal{F}_{[a,b]} \psi \ | \ \mathcal{G}_{[a,b]} \psi \ | \ \psi_1 \mathcal{U}_{[a,b]} \psi_2 \ | \ \psi_1 \mathcal{R}_{[a,b]} \psi_2 \footnote{For simplicity, we do not include parentheses in the grammar, but the WEST program requires parentheses (see Section \ref{specs}). We encode Release directly rather than as the dual of Until \cite{bmc,LVR22}.}$$
+$$\phi := \top \ | \ \bot \ | \ p \ | \ \neg \psi \ | \ \psi_1 \land \psi_2 \ | \ \psi_1 \lor \psi_2 \ | \ \mathcal{F}_{[a,b]} \psi \ | \ \mathcal{G}_{[a,b]} \psi \ | \ \psi_1 \mathcal{U}_{[a,b]} \psi_2 \ | \ \psi_1 \mathcal{R}_{[a,b]} \psi_2 \footnote{For simplicity, we do not include parentheses in the grammar, but the WEST program requires parentheses (see Section \ref{WESTalg}). We encode Release directly rather than as the dual of Until \cite{bmc,LVR22}.}$$
 \vspace{-0.1in}
 %
 \begin{definition}[\emph{Computation}]
@@ -333,67 +333,43 @@ To compute $R \land T$ and $R \lor T$, we use Pad($R$,$T$). Since $T$ is the lon
 \end{itemize}
 \end{example}
 
-To describe the bit string representations of the satisfying computations for a given MLTL formula, we use the alphabet $\Sigma =$ \{`$0$' , `$1$', `$,$'\} and define $S$ as an abbreviation for $(0 \ | \ 1)$.
-Let $p_0, p_2, ..., p_{n-1}$ be propositional variables, $\phi, \psi$ well-formed MLTL formulas in negation normal form. We define the regular expression of satisfying computations for an MLTL formula as follows:\\
-%
-%
-% ZILI: Failed attempt to get formulas side by side
-% \begin{minipage}{0.45 \textwidth}
-%     \begin{align}
-%     &\text{reg}(\top) = S^n\\
-%     &\text{reg}(\bot) = \emptyset \\
-%     &\text{reg}(p_k) = S^{k}1S^{n-k-1} \\
-%     &\text{reg}(\neg p_k) = S^{k}0S^{n-k-1} \\
-%     &\text{reg}(\phi \lor \psi) =  \text{reg}(\phi) \lor \text{reg}(\psi)\\
-%     &\text{reg}(\phi \land \psi) = \text{reg}(\phi) \land \text{reg}(\psi)
-%     \end{align}
-% \end{minipage}
-% \begin{minipage}{0.55 \textwidth}
-%     \begin{align}
-%     &\text{reg}(\mathcal{F}_{[a,b]} \phi) = \bigvee_{i=a}^{b} (S^n,)^i \text{reg}(\phi) \\
-%     &\text{reg}(\mathcal{G}_{[a,b]} \phi) = \bigwedge_{i=a}^{b} (S^n,)^i \text{reg}(\phi)\\
-%     &\text{reg}(\phi \ \mathcal{U}_{[a,b]} \psi) =  \bigvee_{i=a}^{b} \text{reg}\left(\mathcal{G}_{[a,i-1]}\phi \land \mathcal{G}_{[i, i]} \psi\right) \\
-%     &\text{reg}(\phi \mathcal{R}_{[a,b]} \psi) =  \text{reg}\left(\mathcal{G}_{[a,b]}\psi\right) \lor \bigvee_{i=a}^{b-1} \text{reg}\left(\mathcal{G}_{[a,i]}\psi \land \mathcal{G}_{[i, i]} \phi\right) \label{release}
-%     \end{align}
-% \end{minipage}
-%
-%ORIGINAL:
-%% \begin{align}
-%%      &\text{reg}(\top) = S^n\\
-%%      &\text{reg}(\bot) = \emptyset \\
-%%      &\text{reg}(p_k) = S^{k}1S^{n-k-1} \\
-%%      &\text{reg}(\neg p_k) = S^{k}0S^{n-k-1} \\
-%%      &\text{reg}(\phi \lor \psi) =  \text{reg}(\phi) \lor \text{reg}(\psi)\\
-%%      &\text{reg}(\phi \land \psi) = \text{reg}(\phi) \land \text{reg}(\psi) \\
-%%      &\text{reg}(\mathcal{F}_{[a,b]} \phi) = \bigvee_{i=a}^{b} (S^n,)^i \text{reg}(\phi) \\
-%%      &\text{reg}(\mathcal{G}_{[a,b]} \phi) = \bigwedge_{i=a}^{b} (S^n,)^i \text{reg}(\phi)\\
-%%      &\text{reg}(\phi \ \mathcal{U}_{[a,b]} \psi) =  \bigvee_{i=a}^{b} \text{reg}\left(\mathcal{G}_{[a,i-1]}\phi \land \mathcal{G}_{[i, i]} \psi\right) \\
-%%      &\text{reg}(\phi \mathcal{R}_{[a,b]} \psi) =  \text{reg}\left(\mathcal{G}_{[a,b]}\psi\right) \lor \bigvee_{i=a}^{b-1} \text{reg}\left(\mathcal{G}_{[a,i]}\psi \land \mathcal{G}_{[i, i]} \phi\right) \label{release}
-%% \end{align}
-%%
-     $\text{reg}(\top) = S^n$ \hfill 
-     $\text{reg}(\bot) = \emptyset$ \\
-     $\text{reg}(p_k) = S^{k}1S^{n-k-1}$ \hfill
-     $\text{reg}(\neg p_k) = S^{k}0S^{n-k-1}$ \\
-     $\text{reg}(\phi \lor \psi) =  \text{reg}(\phi) \lor \text{reg}(\psi)$\hfill
-     $\text{reg}(\phi \land \psi) = \text{reg}(\phi) \land \text{reg}(\psi)$ \\
-     $\text{reg}(\mathcal{F}_{[a,b]} \phi) = \bigvee_{i=a}^{b} (S^n,)^i \text{reg}(\phi)$ \hfill
-     $\text{reg}(\mathcal{G}_{[a,b]} \phi) = \bigwedge_{i=a}^{b} (S^n,)^i \text{reg}(\phi)$\\
-     $\text{reg}(\phi \ \mathcal{U}_{[a,b]} \psi) =  \bigvee_{i=a}^{b} \text{reg}\left(\mathcal{G}_{[a,i-1]}\phi \land \mathcal{G}_{[i, i]} \psi\right)$ \\
-     $\text{reg}(\phi \mathcal{R}_{[a,b]} \psi) =  \text{reg}\left(\mathcal{G}_{[a,b]}\psi\right) \lor \bigvee_{i=a}^{b-1} \text{reg}\left(\mathcal{G}_{[a,i]}\psi \land \mathcal{G}_{[i, i]} \phi\right)$ %\label{release} %KYR: I notice this label was not used...
-     
-     
-%     \vspace{-0.1in}
-%     \subsection{Minimum Computation Length}
-%          \vspace{-0.1in}
- %These regular expressions describe all the satisfying computations of an MLTL formula of computation length $\text{cplen}(\phi)$, which is defined recursively below:
+To describe the bit string representations of the satisfying computations for a given MLTL formula, we use the alphabet $\Sigma =$ \{``$0$'' , ``$1$'', ``$,$''\} and define $S$ as an abbreviation for $(0 \ | \ 1)$.
+Let $p_0, p_1, ..., p_{n-1}$ be propositional variables, $\phi, \psi$ well-formed MLTL formulas in negation normal form. We define the regular expression of satisfying computations for an MLTL formula as follows:\\
+
+
+% ZILI: Left Aligned Version
+\vspace{-7mm}
+\hspace{-8.5mm}
+\begin{minipage}{0.45 \textwidth}
+    \begin{align}
+    &\text{reg}(\top) = S^n\\
+    &\text{reg}(p_k) = S^{k}1S^{n-k-1} \\
+    &\text{reg}(\phi \lor \psi) =  \text{reg}(\phi) \lor \text{reg}(\psi)\\
+    &\text{reg}(\mathcal{G}_{[a,b]} \phi) = \bigwedge_{i=a}^{b} (S^n,)^i \text{reg}(\phi)
+    \end{align}
+\end{minipage}
+\begin{minipage}{0.55\textwidth}
+    \begin{align}
+    &\text{reg}(\bot) = \emptyset \\
+    &\text{reg}(\neg p_k) = S^{k}0S^{n-k-1} \\
+    &\text{reg}(\phi \land \psi) = \text{reg}(\phi) \land \text{reg}(\psi) \\
+    &\text{reg}(\mathcal{F}_{[a,b]} \phi) = \bigvee_{i=a}^{b} (S^n,)^i \text{reg}(\phi)
+    \end{align}
+\end{minipage}
+\vspace{-5mm}\\
+\begin{minipage}{0.99\textwidth}
+\begin{align}
+&\text{reg}(\phi \ \mathcal{U}_{[a,b]} \psi) =  \bigvee_{i=a}^{b} \text{reg}\left(\mathcal{G}_{[a,i-1]}\phi \land \mathcal{G}_{[i, i]} \psi\right)\\
+\vspace*{-10mm}&\text{reg}(\phi \mathcal{R}_{[a,b]} \psi) =  \text{reg}\left(\mathcal{G}_{[a,b]}\psi\right) \lor \bigvee_{i=a}^{b-1} \text{reg}\left(\mathcal{G}_{[a,i]}\psi \land \mathcal{G}_{[i, i]} \phi\right) \label{release}
+\end{align}
+\end{minipage}
 \begin{definition}[\emph{Computation Length}]
-We define the computation length $\text{cplen}(\phi)$ of an MLTL formula $\phi$ recursively:\\
+We define the computation length $\emph{cplen}(\phi)$ of an MLTL formula $\phi$ recursively:\\
           %\begin{align}
-\indent \qquad   $\text{cplen}(p_k) = \text{cplen}(\neg p_k) = 1$\\
-\indent \qquad   $\text{cplen}(\phi \land \psi) = \text{cplen}(\phi \lor \psi) = \max(\text{cplen}(\phi), \text{cplen}(\psi))$\\
-\indent \qquad   $\text{cplen}(\mathcal{G}_{[a,b]} \phi) = \text{cplen}(\mathcal{F}_{[a,b]} \phi) = b + \text{cplen}(\phi)$\\
-\indent \qquad   $\text{cplen}(\phi \mathcal{U}_{[a,b]} \psi) = \text{cplen}(\phi \mathcal{R}_{[a,b]} \psi) = b + \max(\text{cplen}(\phi)-1, \text{cplen}(\psi))$
+\indent \qquad   $\emph{cplen}(p_k) = \emph{cplen}(\neg p_k) = 1$\\
+\indent \qquad   $\emph{cplen}(\phi \land \psi) = \emph{cplen}(\phi \lor \psi) = \max(\emph{cplen}(\phi), \emph{cplen}(\psi))$\\
+\indent \qquad   $\emph{cplen}(\mathcal{G}_{[a,b]} \phi) = \emph{cplen}(\mathcal{F}_{[a,b]} \phi) = b + \emph{cplen}(\phi)$\\
+\indent \qquad   $\emph{cplen}(\phi \mathcal{U}_{[a,b]} \psi) = \emph{cplen}(\phi \mathcal{R}_{[a,b]} \psi) = b + \max(\emph{cplen}(\phi)-1, \emph{cplen}(\psi))$
 %\end{align}
 \end{definition}
 \vspace{-0.1in}
@@ -408,7 +384,7 @@ Our minimum computation length for Until and Release are slight optimizations of
 %We provide the proof for the minimum computation length of Until and Release below.
 \vspace{-0.1in}
 \begin{theorem}[\emph{Minimum Computation Length of Until and Release}]\label{thm1}
-    Let $0 \leq a\leq b \in \mathbb{N}$ and let $\phi, \psi$ be well-formed MLTL formulas in NNF. The minimum computation length of Until and Release is given by $\text{cplen}(\phi \mathcal{U}_{[a,b]} \psi) = \text{cplen}(\phi \mathcal{R}_{[a,b]} \psi) = b + \max(\text{cplen}(\phi)-1, \text{cplen}(\psi))$.
+    Let $0 \leq a\leq b \in \mathbb{N}$ and let $\phi, \psi$ be well-formed MLTL formulas in NNF. The minimum computation length of Until and Release is given by $\emph{cplen}(\phi \mathcal{U}_{[a,b]} \psi) = \emph{cplen}(\phi \mathcal{R}_{[a,b]} \psi) = b + \max(\emph{cplen}(\phi)-1, \emph{cplen}(\psi))$.
 \end{theorem}
 \vspace{-0.2in}
 \begin{proof}
@@ -439,95 +415,11 @@ The formulas for the minimum computation length follow directly from the regular
      \item At the final time-step for $\phi \mathcal{U}_{[a,b]} \psi$, if $\psi$ has not yet been assigned to be true in the computation, it will be assigned true because $\phi \mathcal{U}_{[a,b]} \psi$ is a strong operator. Semantically, the truth value of $\phi$ at this time interval doesn't matter; whether $\phi$ is true or false, the computation for $\phi \mathcal{U}_{[a,b]} \psi$ is satisfied.
      \item Likewise, in the case for $\phi \mathcal{R}_{[a,b]} \psi$, if $\psi$ is true from the first to the last time-step, the truth value of $\phi$ at the final time-step doesn't matter - the computation satisfies $\phi \mathcal{R}_{[a,b]} \psi$ regardless of whether $\phi$ is true or false.
  \end{itemize} % \vspace{-0.1in} % \subsection{Soundness and Completeness} %  \vspace{-0.1in}
- We write $\mathscr{L}(\text{reg}(\phi))$ to denote the language of reg($\phi$). That is, the set of computations represented by the regular expression $\text{reg}(\phi)$. % The proof of Theorem \ref{SoundComplete} appears in Appendix \ref{Appendix-SoundComplete}.
- 
+ We write $\mathscr{L}(\text{reg}(\phi))$ to denote the language of reg($\phi$). That is, the set of computations represented by the regular expression $\text{reg}(\phi)$.
  \begin{theorem}[\emph{Soundness and Completeness}] \label{SoundComplete}
- For any well formed MLTL formula $\phi$ in negation normal form, a computation $\pi$ with $|\pi| = \text{cplen}(\phi)$ satisfies $\phi$ and  if and only if $\pi \in \mathscr{L}(\emph{reg}(\phi))$.
+ For any well formed MLTL formula $\phi$ in negation normal form, a computation $\pi$ with $|\pi| = \emph{cplen}(\phi)$ satisfies $\phi$ and  if and only if $\pi \in \mathscr{L}(\emph{reg}(\phi))$.
  \end{theorem}
-
-
-
-%KYR: this totally goes here in the journal version but in an appendix/on a website for the conference version
-%%  \begin{proof}
-%%  We proceed by induction on the length of the formula.\\
- 
-%%  \noindent \textbf{Base Cases.}\\
-%%  \noindent\textbf{reg($\top$)}\\
-%%  Any computation $\pi$ satisfies $\top$, and $\mathscr{L}(\text{reg}(\top))$ is the set of all computations of one time step. Padding conventions extends this to the set of all computations of any positive number of time steps, so we are done.\\
- 
-%%  \noindent\textbf{reg($\bot$)}\\
-%%  There are no computations that satisfy $\bot$ and $\mathscr{L}(\text{reg}(\bot))$ is the empty string, so we are done.\\
- 
-%%  \noindent\textbf{reg($p_k$)}\\
-%%  For $0\leq k \leq n-1$, consider the propositional variable $p_k$. If $\pi$ satisfies $p_k$, then $p_k$ evaluates to true at $\pi[0]$. This is equivalent to writing that $\pi[0]$ is of the form 
-%%  $$S^{k} 1 S^{n-k-1}$$
-%%  which is precisely reg($p_k$).\\
- 
-%%  \noindent\textbf{reg($\neg p_k$)}\\
-%%  If $\pi$ satisfies $\neg p_k$, then $\neg p_k$ evaluates to true at $\pi[0]$. This is equivalent to writing that $\pi[0]$ is of the form 
-%%  $$S^{k} 0 S^{n-k-1}$$
-%%  which is precisely reg($\neg p_k$).\\
- 
-%%  \noindent\textbf{Inductive Step.}\\
-%%  Suppose the theorem holds for MLTL formulas $\varphi$ and $\psi$. We now show that it holds for $\varphi \land \psi$, $\varphi \lor \psi$, $\mathcal{F}_{[a,b]} \varphi$, $\mathcal{G}_{[a,b]} \varphi$, $\varphi \ \mathcal{U}_{[a,b]} \psi$, and $\varphi \mathcal{R}_{[a,b]} \psi$.\\
- 
-%%  \noindent \textbf{reg($\varphi \land \psi$)}\\
-%%  We know that $\pi \vDash \varphi \land \psi \text{ iff } \pi \vDash \varphi \text{ and } \pi \vDash \psi$.\\
-%%  By the inductive hypothesis, $\pi \vDash \varphi$ iff $\pi \in \mathscr{L}(\text{reg}(\varphi))$ and 
-%%  \\$\pi \vDash \psi$ iff $\pi \in \mathscr{L}(\text{reg}(\psi))$, so
-%%  $$\pi \vDash \varphi \land \psi \text{ iff } \pi \in (\mathscr{L}(\text{reg}(\varphi)) \land \mathscr{L}(\text{reg}(\psi))) = \mathscr{L}(\text{reg}(\varphi \land \psi)).$$
- 
-%%  \noindent \textbf{reg($\varphi \lor \psi$)}\\
-%%  We know that $\pi \vDash \varphi \lor \psi \text{ iff } \pi \vDash \varphi \text{ or } \pi \vDash \psi$.\\
-%%  By the inductive hypothesis, $\pi \vDash \varphi$ iff $\pi \in \mathscr{L}(\text{reg}(\varphi))$ and 
-%%  \\$\pi \vDash \psi$ iff $\pi \in \mathscr{L}(\text{reg}(\psi))$, so
-%%  $$\pi \vDash \varphi \lor \psi \text{ iff } \pi \in (\mathscr{L}(\text{reg}(\varphi)) \lor \mathscr{L}(\text{reg}(\psi))) = \mathscr{L}(\text{reg}(\varphi \lor \psi)).$$
- 
-%%  \noindent \textbf{reg($\mathcal{F}_{[a,b]} \varphi$)}\\
-%%  We know that $\pi \vDash \mathcal{F}_{[a,b]} \varphi \text{ iff } |\pi| > a \text{ and } \exists i \in [a,b] \text{ such that } \pi_i \vDash \varphi$.\\
-%%  If $|\pi| = \text{cplen}(\mathcal{F}_{[a,b]} \varphi)$, $|\pi| > a$. Likewise, $\pi \in \mathscr{L}\left(\text{reg}\left(\mathcal{F}_{[a,b]} \varphi \right)\right)$ implies $|\pi| = \text{cplen}(\mathcal{F}_{[a,b]} \varphi)$, so the length condition is satisfied.\\
-%%  By the inductive hypothesis, $\pi_i \vDash \varphi$ iff $\pi_i \in \mathscr{L}(\text{reg}(\varphi))$, so $\pi \in \mathscr{L}((S^n,)^i \text{reg}(\varphi))$ for some $i \in [a,b]$. Equivalently, 
-%%  $$\pi \in \mathscr{L}\left(\bigvee_{i=a}^{b} (S^n,)^i \text{reg}(\phi)(,S^n)^{b-i}\right) = \mathscr{L}(\text{reg}(\mathcal{F}_{[a,b]}\varphi)).$$
-
-%%  \noindent \textbf{reg($\mathcal{G}_{[a,b]} \varphi$)}\\
-%%  We know that $\pi \vDash \mathcal{G}_{[a,b]}\varphi \text{ iff } |\pi| \leq a \text{ or } \forall i \in [a,b] \ \pi_i \vDash \varphi$.\\
-%%  Since $|\pi| = \text{cplen}(\mathcal{G}_{[a,b]} \varphi)$ and $\text{cplen}(\mathcal{G}_{[a,b]} \varphi) > a$, the first option for satisfying the formula never occurs.\\
-%%  By the inductive hypothesis, $\pi_i \vDash \varphi$ iff $\pi_i \in \mathscr{L}(\text{reg}(\varphi))$, so $\pi \in \mathscr{L}((S^n,)^i \text{reg}(\varphi))$ for all $i \in [a,b]$. Equivalently, 
-%%  $$\pi \in \mathscr{L}\left(\bigwedge_{i=a}^{b} (S^n,)^i \text{reg}(\phi)(,S^n)^{b-i}\right) = \mathscr{L}(\text{reg}(\mathcal{F}_{[a,b]}\varphi)).$$
- 
-%%  \noindent \textbf{reg($\varphi \ \mathcal{U}_{[a,b]} \psi$)}\\
-%%   We have that 
-%%   $$\pi \vDash \varphi \ \mathcal{U}_{[a,b]} \psi \text{ iff } |\pi| > a \text{ and } \exists i \in [a,b] \text{ such that } (\pi_i \vDash \psi \text{ and } \forall a \leq j < i, \pi_j \vDash \varphi).$$
-%%   As argued in the Finally case, the length condition is satisfied.\\
-%%   By the inductive hypothesis, $\pi_i \vDash \psi$ iff $\pi_i \in \mathscr{L}(\text{reg}(\psi))$, or equivalently, \\
-%%   $\pi \in \mathscr{L}(\text{reg}(\mathcal{G}_{[i,i]} \psi))$. Also, $\pi_j \vDash \varphi$ if and only if $\pi_j \in \mathscr{L}(\text{reg}(\varphi))$.\\
-%%   By the argument used in the Global case, we see that $\forall a \leq j < i, \ \pi_j \vDash \varphi$ is equivalent to $\pi \in \mathscr{L}(\text{reg}(\mathcal{G}_{[a, i-1]} \varphi))$.\\
-%%   Thus $\pi \vDash \varphi \ \mathcal{U}_{[a,b]} \psi$ iff $\pi \in \mathscr{L}((\text{reg}(\mathcal{G}_{[i,i]} \psi) \land \text{reg}( \mathcal{G}_{[a, i-1]} \varphi)))$ for some $i \in [a,b]$, or equivalently, 
-%%   $$\pi \in \mathscr{L}\left(\bigvee_{i=a}^{b} \text{reg}\left(\mathcal{G}_{[a,i-1]}\phi \land \mathcal{G}_{[i, i]} \psi\right)\right) = \mathscr{L}\left(\text{reg}(\varphi \ \mathcal{U}_{[a,b]} \psi)\right).$$
-  
-%%   \noindent \textbf{reg($\varphi \mathcal{R}_{[a,b]} \psi$)}\\
-%%   We have that
-%%   \begin{align*}
-%%     &\pi \vDash \varphi \mathcal{R}_{[a,b]} \psi \text{ iff } |\pi| \leq a \text{ or } \forall i \in [a,b] \ \pi_i \vDash \psi \text{ or } \\ 
-%%     &\exists j\in[a,b] \text{ such that }
-%%     (\pi_j \vDash \varphi \text{ and } \forall a\leq k \leq j, \pi_k \vDash \psi).
-%%   \end{align*}
-%%   As argued in the Global case, the first option for satisfying the formula never occurs.\\
-%%   By the Global case, the statement $\forall i\in[a,b] \ \pi_i \vDash \psi$ is equivalent to $\pi \in \mathscr{L}(\text{reg}(\mathcal{G}_{[a,b]} \psi))$ and, by the Finally case. the statement $\exists j\in[a,b]$ such that ($\pi_j \vDash \varphi$ and $\forall a\leq k \leq j$, $\pi_k \vDash \psi$) is equivalent to $\pi \in \mathscr{L}\left(\bigvee_{i=a}^{b} \text{reg}\left(\mathcal{G}_{[a,i]}\psi \land \mathcal{G}_{[i, i]} \phi\right)\right)$. Hence 
-  
-%%   \begin{align*}
-%%     \pi \vDash \varphi \mathcal{R}_{[a,b]} \psi \text{ iff } \pi &\in \mathscr{L}\left(\text{reg}(\mathcal{G}_{[a,b]} \psi) \lor \bigvee_{i=a}^{b} \text{reg}\left(\mathcal{G}_{[a,i]}\psi \land \mathcal{G}_{[i, i]} \phi\right)\right) \\
-%%     &= \mathscr{L}\left(\text{reg}(\mathcal{G}_{[a,b]} \psi) \lor \bigvee_{i=a}^{b-1} \text{reg}\left(\mathcal{G}_{[a,i]}\psi \land \mathcal{G}_{[i, i]} \phi\right)\right)\\
-%%     &= \mathscr{L}\left(\text{reg}(\varphi \mathcal{R}_{[a,b]} \psi)\right).
-%%   \end{align*}
-  
-%%  \noindent This completes the inductive step, and thus the proof. Since this proof addresses all possible MLTL formulas in negation normal form, it shows completeness along with soundness.
-%%  \end{proof}
-% \newpage
-%\vspace{-0,1in}
-%\subsection{Nested Until and Release Rewriting Theorem}
-%\vspace{-0,1in}
- We prove the correctness of our formula rewriting algorithm using our regular expressions from Definition \ref{TRE}. As detailed in Section \ref{complex}, nested binary temporal operators create the worst-case time and space complexity for the WEST program. Although the WEST program does not implement this theorem by default, we would expect selected applications of rewriting to improve runtime. We use this theorem to simplify MLTL formulas, making them easier to interpret.
+ We prove the correctness of our formula rewriting algorithm using our regular expressions from Definition \ref{TRE}. As detailed in Section \ref{WESTalg}, nested binary temporal operators create the worst-case time and space complexity for the WEST program. Although the WEST program does not implement this theorem by default, we would expect selected applications of rewriting to improve runtime. We use this theorem to simplify MLTL formulas, making them easier to interpret.
 % Theorem \ref{NestedUR}'s proof appears in Appendix \ref{Appendix-NestedUR}.
  
  \begin{theorem}[\emph{Nested Until and Release Rewriting Theorem}] \label{NestedUR}
@@ -619,7 +511,7 @@ The formulas for the minimum computation length follow directly from the regular
 
 \section{WEST Algorithm and Analysis} \label{WESTalg}
 We now present the  full WEST algorithm, which recursively computes all satisfying temporal regular expressions to a given MLTL formula (in NNF). 
-For convenience, we use sets to represent alternation of regular expressions; for $n$ regular expressions $t_0, ..., t_{n-1}$, we'll write $\{t_1, t_2, ..., t_n\} = \bigcup_{i=1}^n t_i$. 
+For convenience, we use sets to represent alternation of regular expressions; for $n$ regular expressions $t_0, ..., t_{n-1}$, we'll write $\{t_0, ..., t_{n-1}\} = \bigcup_{i=0}^{n-1} t_i$. 
 Additionally, we provide details for performing set intersection of temporal regular expressions, and the algorithm for the temporal operator $\mathcal{F}$. 
 Note how reg\_U parallels the regular expression defined for $\mathcal{F}$, and the algorithms for the other three temporal operators follow an identical structure. 
 
@@ -663,11 +555,11 @@ We simplify alternation by using the fact that for regular expressions $w_0$ and
 \hspace{-5mm}
 \begin{minipage}{0.52\textwidth} 
 \begin{algorithm}[H] 
-\caption{WEST Algorithm \\
+\caption{WEST Algorithm}
 Inputs: $\phi$ - MLTL formula in NNF \\
 $\phi_1$ and $\phi_2$ below are subformulas of $\phi$\\
 $n$ - number of propositional variables \\
-Output: set of REGEX satisfying $\phi$}
+Output: set of REGEX satisfying $\phi$
 \begin{algorithmic}[1]
     \Procedure{reg}{string $\phi$, int $n$}
         \If{$\phi$ is $\top$ or $\bot$}
@@ -726,19 +618,19 @@ Output: set of REGEX equal to $R \land T$
 \vspace{-6.5mm}
 \begin{algorithm}[H]
 \caption{reg\_U} 
-Inputs: r\_$\phi$, r\_$\psi$ - sets of REGEX for MLTL formulas $\phi$ and $\psi$ (after calling reg)\\
+Inputs: $r_\phi$, $r_\psi$ - sets of REGEX for MLTL formulas $\phi$ and $\psi$ (after calling reg)\\
 $a, b$ - integers representing interval bound \\
 $n$ - number of propositional variables\\
 Output: set of REGEX for $\phi \mathcal{U}_{[a, b]} \psi$
 \begin{algorithmic}[1]
-\Procedure{reg\_U}{r\_$\phi$, r\_$\psi$, $a$, $b$, $n$} 
+\Procedure{reg\_U}{$r_\phi$, $r_\psi$, $a$, $b$, $n$} 
     \State comp $\leftarrow$ ((`$S$')$^{n}$ + `,')$^{a} + $ r\_$\psi$
     \If{$a > b$} return $\{\}$
     \EndIf
     \For{($a \leq i \leq b-1$) }
-        \State temp\_G1 $\leftarrow$ reg\_G(r\_$\phi$, $a$, $i$, $n$)
-        \State \parbox[t]{.8\linewidth}{temp\_G2 $\leftarrow$ reg\_G(r\_$\psi$, $i+1$, \hspace*{5mm}$i+1$, $n$)}
-        \State \parbox[t]{.8\linewidth}{temp\_comp $\leftarrow$ set\_intersect( \hspace*{5mm}temp\_G1, temp\_G2, n)}
+        \State G1 $\leftarrow$ reg\_G($r_\phi$, $a$, $i$, $n$)
+        \State \parbox[t]{.8\linewidth}{G2 $\leftarrow$ reg\_G($r_\psi$, $i+1$, $i+1$, $n$)}
+        \State \parbox[t]{.8\linewidth}{temp\_comp $\leftarrow$ set\_intersect(G1,  \hspace*{5mm}G2, n)}
         \State \parbox[t]{.8\linewidth}{comp $\leftarrow$ join( comp, temp\_comp)}
         % , \hspace*{5mm}simp)}
     \EndFor
@@ -748,16 +640,22 @@ Output: set of REGEX for $\phi \mathcal{U}_{[a, b]} \psi$
 \end{algorithm}
 \end{minipage}
 
-\subsection{Theoretical Correctness of the WEST Algorithm}
+\subsection{Proof of Correctness of WEST}
+\begin{theorem}[\emph{Theoretical Correctness of WEST}] \label{theocorrect}
+  Given a well-formed MLTL formula, The WEST Algorithm outputs the regular expressions of the satisfying computations as described in section \ref{regex}.
+\end{theorem}
+
 Correctness of the WEST algorithm is dependent on the correctness of subroutines \textit{reg\_prop\_cons}, \textit{reg\_prop\_var}, \textit{join}, \textit{set\_intersect}, \textit{reg\_F}, \textit{reg\_G}, \textit{reg\_U}, and \textit{reg\_R}. 
 The routines \textit{reg\_prop\_cons} and \textit{reg\_prop\_var} take as input a MLTL formula of the appropriate form, and return the regular expression as %previously
 defined in section \ref{regex}.
-\textit{Join} concatenates two sets of regular expressions $R$ and $T$, which is equivalent to $\mathscr{L}(R) \cup \mathscr{L}(T)$. 
-\textit{Set\_intersect} takes as input two sets of regular expressions $R$ and $T$, where $R$ represents $r_1 | ... | r_a$ and $T$ represents $t_1 | ... | t_b$ such that each $r_i$ and $t_j$ are regular expressions over $\Sigma = \{`0', `1', `S', `,'\}$.
+
+
+\textit{Join} concatenates two sets of regular expressions $R$ and $T$, which is equivalent to $\mathscr{L}(R) \cup \mathscr{L}(T)$. \textit{Set\_intersect} takes as input two sets of regular expressions $R = \{r_0, ..., r_{a-1}\}$ and $T = \{t_0, ..., t_{b-1}\}$, such that each $r_i$
+and $t_j$ are regular expressions over $\Sigma =$ \{``$0$'' , ``$1$'', ``$S$'', ``$,$''\}.
 Assume that all strings of regular expressions are right padded to equal length. 
 We show that $\mathscr{L}(\textit{set\_intersect}(R, T)) = \mathscr{L}(R) \cap \mathscr{L}(T)$:
 \begin{align*}
-    \mathscr{L}(R) \cap \mathscr{L}(T) &= \left(\bigcup_{i = 0}^a \mathscr{L}(r_i) \right)\cap \left( \bigcup_{j = 0}^b \mathscr{L}(t_j)\right) = \bigcup_{i = 0}^a \bigcup_{j = 0}^b \left(\mathscr{L}(r_i) \cap \mathscr{L}(t_j)\right).
+    \mathscr{L}(R) \cap \mathscr{L}(T) &= \left(\bigcup_{i = 0}^{a-1} \mathscr{L}(r_i) \right)\cap \left( \bigcup_{j = 0}^{b-1} \mathscr{L}(t_j)\right) = \bigcup_{i = 0}^{a-1} \bigcup_{j = 0}^{b-1} \left(\mathscr{L}(r_i) \cap \mathscr{L}(t_j)\right).
 \end{align*}
 The for loop in line 3 of \textit{set\_intersect} computes the union of \textit{bit\_wise\_and}$(r_i, t_j)$ over all such pairs, and so it suffices to show $\mathscr{L}(\textit{bit\_wise\_and}(r_i, t_j)) = \mathscr{L}(r_i) \cap \mathscr{L}(t_j)$.  
 Given a computation $\pi$, $\pi \in \mathscr{L}(r_i) \cap \mathscr{L}(t_j)$ if and only if $\pi$ matches every character of both $r_i$ and $t_j$. 
@@ -776,9 +674,9 @@ The proof for the four temporal cases are of similar structure, and it suffices 
 
 
 We give the explicit proof for the case $\gamma = \phi \mathcal{U}_{[a,b]} \psi$ as an example.
-\textit{reg\_U} takes as input \textit{r\_phi} $=$ reg($\phi$) and \textit{r\_psi} $ = $ reg($\psi$), which by the induction hypothesis are correctly and recursively computed. 
+\textit{reg\_U} takes as input $r_\phi =$ reg($\phi$) and $r_\psi = $ reg($\psi$), which by the induction hypothesis are correctly and recursively computed. 
 The regular expression for the Until operator may be rewritten as $\text{reg}(\phi \ \mathcal{U}_{[a,b]} \psi) = \text{reg}\left(\mathcal{G}_{[a, a]} \psi \right)\lor \bigvee_{i=a}^{b-1} \text{reg}\left(\mathcal{G}_{[a,i]}\phi \land \mathcal{G}_{[i+1, i+1]} \psi\right)$. 
-In line $2$ of \textit{reg\_U}, the variable \textit{comp} is initialized to $(`1S"^n + ``,")^a$ pre-concatenated to \textit{r\_psi}, and is the regular expression for $\mathcal{G}_[a, a] \psi$. 
+In line $2$ of \textit{reg\_U}, the variable \textit{comp} is initialized to $(`1S"^n + ``,")^a$ pre-concatenated to $r_\psi$, and is the regular expression for $\mathcal{G}_[a, a] \psi$. 
 Next, the $\lor$ from $i = a + 1$ to $b - 1$ is computed by the for loop in line 4; lines 5 through 7 computes $\text{reg}\left(\mathcal{G}_{[a,i]}\phi \land \mathcal{G}_{[i+1, i+1]} \psi\right)$. 
 This shows correctness of \textit{reg\_U} (note that in a complete proof, correctness of \textit{reg\_G} needs to be shown first since lines 5 and 6 calls \textit{reg\_G}).
 Continuing in the same fashion to prove the other three cases, \textit{reg} is correct on all depth $d+1$ inputs, and thus \textit{reg} is correct on all inputs by induction.
@@ -841,21 +739,25 @@ Given a well formed MLTL formula $\phi$, $\text{\emph{reg}}(\phi)$ has worst-cas
     \end{align*}
     Thus we have that $S(\text{\emph{reg}}(\phi)) = \mathcal{C}_U^{\sum_{i = 0}^{\ell - 1} \delta^i} \cdot (\ell + 1)^{\sum_{i = 0}^{\ell} \delta^i} = O(\mathcal{C}_U^{\delta ^ \ell} \cdot (\ell + 1)^{\delta^{\ell + 1}})$.
  \end{proof}
-For time complexity, through a similar analysis, we've found that the time-complexity of all of the above functions is the same as their space complexity. In particular, the time complexities of $\phi = p_k, \scriptstyle{\sim}\textstyle p_k, \top, \bot$, as well as that of set intersection, \textit{join}, and the operator $\mathcal{U}$ match their respective space complexities. Thus the worst case time complexity is $O(\mathcal{C}_U^{\delta ^ \ell} \cdot (\ell + 1)^{\delta^{\ell + 1}})$ as well. 
-If in the worst case no simplification occurs in any call of \textit{set\_intersect}, space complexity remains unchanged, but simplifying a set of regular expressions is cubic in input size. In practice however, both time and space complexities are much more optimistic than worst-case estimates. 
+ 
+For time complexity, through a similar analysis, we've found that the time-complexity of all of the above functions is the same as their space complexity. In particular, the time complexities of $\phi = p_k, \scriptstyle{\sim}\textstyle p_k, \top, \bot$, as well as that of set intersection, \textit{join}, and the operator $\mathcal{U}$ match their respective space complexities.
+\begin{theorem}[\emph{Time Complexity}]
+Given a well formed MLTL formula $\phi$, $\text{\emph{reg}}(\phi)$ has worst-case time complexity that is $O(\mathcal{C}_U^{\delta ^ \ell} \cdot (\ell + 1)^{\delta^{\ell + 1}})$, where $\ell$ is the number of logical connectives ($\land, \lor, \mathcal{F}, \mathcal{G}, \mathcal{R}, \mathcal{U}$) in $\phi$. 
+\end{theorem}
+If in the worst case no simplification occurs in any call of \textit{set\_intersect}, space complexity remains unchanged, but simplifying a vector of regular expressions is cubic in input size. In practice however, both time and space complexities are much more optimistic than worst-case estimates. 
  
 \subsection{Experimental Benchmarking}
 We accompany theoretical space and time complexity with experimental evaluation of these complexities using randomly-generated MLTL formulas.
 We ran these experiments on an Intel(R) Core(TM) i7-4770S CPU at 3.10GHz with 32gb RAM.
 For each simulation, we generated 1000 MLTL formulas using the parameters DELTA, INTERVAL\_MAX, number of propositional variables, and number of iterations. DELTA is the maximum length we allow for any interval. INTERVAL\_MAX is the largest allowed upper bound for any interval. Number of iterations refers to the level of nesting in the generated formulas. For example, $\mathcal{G}_{[0,2]}p_0$ is a formula generated with one iteration, while $\mathcal{G}_{[0,2]}(p_0 \land p_1)$ is a formula generated with two iterations. We measure the number of characters in the output and the amount of time in milliseconds taken to run the program. Note that these simulations run the \textit{reg} function with the subformula boolean set to false and the simplify boolean set to true.\\
 \noindent\textbf{Simulation 1}
-For the first simulation, we consider 2 iterations, 5 propositional variables, 10 for DELTA, and 10 for INTERVAL\_MAX. We obtain the following plots:\\
+For the first simulation, we consider 2 iterations, 5 propositional variables, 10 for DELTA, and 10 for INTERVAL\_MAX. We obtain plots \ref{InVsOutputLen} and \ref{InLenVsRunTime}:\\
 \begin{minipage}{0.5 \textwidth}
     \begin{figure}[H]
     \centering
     \includegraphics[scale=0.38]{images/Sim1Length_large.png}
     \captionof{figure}{Input length vs output length.\vspace{3mm}}
-    \label{InputLengthVsOutputLength}
+    \label{InVsOutputLen}
     \end{figure}
 \end{minipage}
 \begin{minipage}{0.5 \textwidth}
@@ -863,19 +765,19 @@ For the first simulation, we consider 2 iterations, 5 propositional variables, 1
     \centering
     \includegraphics[scale=0.38]{images/Sim1Time_large.png}
     \captionof{figure}{Input length vs run time.\vspace{3mm}}
-    \label{InputLengthVsRuntime}
+    \label{InLenVsRunTime}
     \end{figure}
 \end{minipage}\\
-\noindent The formula $(p_0 = p_1) \mathcal{U}_{[2,9]} (p_1 \mathcal{U}_{[7,9]} p_3)$ was an outlier for both Figures \ref{InputLengthVsOutputLength} and \ref{InputLengthVsRuntime}, and the formulas $(p_4 \rightarrow p_2) \mathcal{R}_{[1,8]} (p_3 \mathcal{U}_{[3,4]} p_0)$ and $(p_3 \mathcal{R}_{[2,7]} p_4) \mathcal{R}_{[1,9]} (p_4 \mathcal{R}_{[4,9]} p_3)$ were outliers for Figure \ref{InputLengthVsRuntime}. \\
+\noindent The formula $(p_0 = p_1) \mathcal{U}_{[2,9]} (p_1 \mathcal{U}_{[7,9]} p_3)$ was an outlier for both Figures \ref{InVsOutputLen} and \ref{InLenVsRunTime}, and the formulas $(p_4 \rightarrow p_2) \mathcal{R}_{[1,8]} (p_3 \mathcal{U}_{[3,4]} p_0)$ and $(p_3 \mathcal{R}_{[2,7]} p_4) \mathcal{R}_{[1,9]} (p_4 \mathcal{R}_{[4,9]} p_3)$ were outliers for Figure \ref{InLenVsRunTime}. \\
 \noindent\textbf{Simulation 2}
 For the second simulation, we consider 1 iteration, 10 propositional variables, 20 for DELTA, and 20 for INTERVAL\_MAX. Here are some examples of generated formulas:
-$\mathcal{F}_{[10,17]} p_4$, $\neg p_6$, $p_6 \mathcal{U}_{[6,14]} p_8$. We obtain the following plots:\\
+$\mathcal{F}_{[10,17]} p_4$, $\neg p_6$, $p_6 \mathcal{U}_{[6,14]} p_8$. We obtain plots \ref{fig:InVsOutLen2} and \ref{fig:InLenVsRunTime2}:\\
 \begin{minipage}{0.5 \textwidth}
     \begin{figure}[H]
     \centering
     \includegraphics[scale=0.38]{images/Sim2Length_large.png}
     \captionof{figure}{Input length vs output length\vspace{3mm}}
-    \label{fig:InVsOutLen}
+    \label{fig:InVsOutLen2}
     \end{figure}
 \end{minipage}
 \begin{minipage}{0.5 \textwidth}
@@ -883,11 +785,11 @@ $\mathcal{F}_{[10,17]} p_4$, $\neg p_6$, $p_6 \mathcal{U}_{[6,14]} p_8$. We obta
     \centering
     \includegraphics[scale=0.38]{images/Sim2Time_large.png}
     \captionof{figure}{Input length vs run time.\vspace{3mm}}
-    \label{fig:InLenVsRunTime}
+    \label{fig:InLenVsRunTime2}
     \end{figure}
 \end{minipage}\\
 \noindent\textbf{Simulation 3}
-For the third simulation, we consider 2 iterations, 10 propositional variables, 5 for DELTA, and 10 for INTERVAL\_MAX. We obtain the following plots:\\
+For the third simulation, we consider 2 iterations, 10 propositional variables, 5 for DELTA, and 10 for INTERVAL\_MAX. We obtain plots \ref{fig:InLenVsOutLen3} and \ref{fig:InLenVsRunTime3}:\\
 \begin{minipage}{0.5 \textwidth}
     \begin{figure}[H]
     \centering
@@ -907,7 +809,7 @@ For the third simulation, we consider 2 iterations, 10 propositional variables, 
 The formulas $(p_7 \mathcal{U}_{[5,7]} p_9) \mathcal{U}_{[3,7]} (\mathcal{F}_{[1,4]} p_4)$ and $\mathcal{G}_{[3,7]} (p_9 \mathcal{U}_{[0,4]} p_0)$ were outliers in both Figures \ref{fig:InLenVsOutLen3} and \ref{fig:InLenVsRunTime3}, and Figure \ref{fig:InLenVsOutLen3} had one more outlier from the formula $(\neg p_9) \mathcal{R}_{[5,9]} (p_5 \mathcal{U}_{[2,4]} p_3)$.
 \\
 \noindent\textbf{Simulation 4}
-For the fourth simulation, we consider 1 iteration, 5 propositional variables, 10 for DELTA, and 10 for INTERVAL\_MAX. Some examples of generated formulas are: $\neg p_1$, $p_1 \mathcal{R}_{[6,7]} p_3$, $\mathcal{F}_{[5,5]} p_3$. We obtain the following plots:\\
+For the fourth simulation, we consider 1 iteration, 5 propositional variables, 10 for DELTA, and 10 for INTERVAL\_MAX. Some examples of generated formulas are: $\neg p_1$, $p_1 \mathcal{R}_{[6,7]} p_3$, $\mathcal{F}_{[5,5]} p_3$. We obtain plots \ref{InLenVsOutLen4} and \ref{InLenVsRunTime4}:\\
 \begin{minipage}{0.5 \textwidth}
     \begin{figure}[H]
     \centering
@@ -960,8 +862,8 @@ We first outline our overall approach to intelligent fuzzing:
  as shown in \ref{fig:abstracted graph}.
 \begin{figure}[t]
     \centering
-    \begin{tikzpicture}[ node/.style={rounded rectangle, draw=black!60, fill=black!5, thick, minimum size=10mm},
-    bignode/.style={rounded rectangle, draw=black!60, fill=black!5, thick, minimum size=12mm},
+    \begin{tikzpicture}[ node/.style={rounded rectangle, draw=black!60, fill=black!5, thick, minimum size=8mm},
+    bignode/.style={rounded rectangle, draw=black!60, fill=black!5, thick, minimum size=10mm},
     star/.style={circle, draw=red!60, fill=red!5, thick, minimum size=1mm} ]
 
     %Nodes
@@ -1131,6 +1033,7 @@ Additional care should be put into allowing for varying levels of abstractions o
 % BibTeX users should specify bibliography style 'splncs04'.
 % References will then be sorted and formatted in the correct style.
 %
+\newpage
 \bibliographystyle{splncs04}
 \bibliography{Citations}
 \newpage
@@ -1637,14 +1540,14 @@ To compute the satisfying computations of an MLTL formula, many of the functions
 % Inputs: set of strings representing the regex for $\phi$, interval bounds, number of propositional variables, simplify boolean\\
 % Output: set of strings that represents the appropriate satisfying computations 
 \begin{algorithmic}
-\Procedure{reg\_F}{set reg\_phi, int $a$, int $b$, int $n$, bool simp} 
+\Procedure{reg\_F}{set $r_\phi$, int $a$, int $b$, int $n$, bool simp} 
     \State pre $\leftarrow$ ((`$S$')$^{n}$ + `,')$^{a}$
-    \State comp $\leftarrow$ reg\_phi
+    \State comp $\leftarrow$ $r_\phi$
     \If{$a > b$} return $\{\}$
     \EndIf
     \For{($1 \leq i \leq b-a$) }
-        \State temp\_phi $\leftarrow$ ((`$S$')$^{n}$ + `,')$^{i}$ + reg\_phi
-        \State comp $\leftarrow$ join(comp, temp\_phi, simp)
+        \State temp$_\phi$ $\leftarrow$ ((`$S$')$^{n}$ + `,')$^{i}$ + $r_\phi$
+        \State comp $\leftarrow$ join(comp, temp$_\phi$, simp)
     \EndFor
     \State return pre + comp
 \EndProcedure
@@ -1655,14 +1558,14 @@ To compute the satisfying computations of an MLTL formula, many of the functions
 %Inputs: set of strings representing the regex for $\phi$, interval bounds, number of propositional variables, simplify boolean\\
 %Output: set of strings that represents the appropriate satisfying computations
 \begin{algorithmic}
-\Procedure{reg\_G}{set reg\_phi, int $a$, int $b$, int $n$, bool simp} 
+\Procedure{reg\_G}{set $r_\phi$, int $a$, int $b$, int $n$, bool simp} 
     \State pre $\leftarrow$ ((`$S$')$^{n}$ + `,')$^{a}$
-    \State comp $\leftarrow$ reg\_phi 
+    \State comp $\leftarrow$ $r_\phi$ 
     \If{$a > b$} return $\{S^n\}$
     \EndIf
     \For{($1 \leq i \leq b-a$)}
-        \State temp\_phi $\leftarrow$ ((`$S$')$^{n}$ + `,')$^{i}$ + reg\_phi
-        \State comp $\leftarrow$ set\_intersect(comp, temp\_phi, simp)
+        \State temp$_\phi$ $\leftarrow$ ((`$S$')$^{n}$ + `,')$^{i}$ + $r_\phi$
+        \State comp $\leftarrow$ set\_intersect(comp, temp$_\phi$, simp)
     \EndFor
     \State return pre + comp
 \EndProcedure
@@ -1673,12 +1576,12 @@ To compute the satisfying computations of an MLTL formula, many of the functions
 %Inputs: sets of strings representing the regexes for $\phi$ and $\psi$, interval bounds, number of propositional variables, simplify boolean\\
 %Output: set of strings that represents the appropriate satisfying computations 
 \begin{algorithmic}
-\Procedure{reg\_R}{set reg\_phi, set reg\_psi, int $a$, int $b$, int $n$, bool simp} 
-    \State comp $\leftarrow$ reg\_G(reg\_psi, $a$, $b$, $n$, simp)
+\Procedure{reg\_R}{set $r_\phi$, set $r_\psi$, int $a$, int $b$, int $n$, bool simp} 
+    \State comp $\leftarrow$ reg\_G($r_\psi$, $a$, $b$, $n$, simp)
     \If{$a > b$} return $\{S^n\}$
     \EndIf
     \For{($a \leq i \leq b-1$) }
-        \State temp\_comp $\leftarrow$ set\_intersect(reg\_G(reg\_psi, $a$, $i$, $n$), reg\_G(reg\_phi, $i$, $i$, $n$), $n$, simp)
+        \State temp\_comp $\leftarrow$ set\_intersect(reg\_G($r_\psi$, $a$, $i$, $n$), reg\_G($r_\phi$, $i$, $i$, $n$), $n$, simp)
         \State comp $\leftarrow$ join(comp, temp\_comp, simp)
     \EndFor
     \State return comp
@@ -1871,7 +1774,7 @@ Below we provide the state diagram graphs of the functions examined in our intel
     \begin{tikzpicture}[node/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=15mm}, bignode/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=20mm}, emptynode/.style={draw=none, fill=none, very thick, minimum size=1mm}]
     
     %Nodes
-    \node[emptynode](inputs){set reg\_phi, integers a, b, n};
+    \node[emptynode](inputs){set $r_\phi$, integers a, b, n};
     \node[node](initialize)[below=of inputs]{Initialize string pre, set Comp};
     \node[node](loop)[below=2cm of initialize]{Update Comp};
     \node[node](empty)[left=of loop]{return \{\}};
@@ -1901,7 +1804,7 @@ Below we provide the state diagram graphs of the functions examined in our intel
     \begin{tikzpicture}[node/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=15mm}, bignode/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=20mm}, emptynode/.style={draw=none, fill=none, very thick, minimum size=1mm}]
     
     %Nodes
-    \node[emptynode](inputs){set reg\_phi, integers a, b, n};
+    \node[emptynode](inputs){set $r_\phi$, integers a, b, n};
     \node[node](initialize)[below=of inputs]{Initialize string pre, set Comp};
     \node[node](loop)[below=2cm of initialize]{Update Comp};
     \node[node](empty)[left=of loop]{return \{$S^n$\}};
@@ -1931,7 +1834,7 @@ Below we provide the state diagram graphs of the functions examined in our intel
     \begin{tikzpicture}[node/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=15mm}, bignode/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=20mm}, emptynode/.style={draw=none, fill=none, very thick, minimum size=1mm}]
     
     %Nodes
-    \node[emptynode](inputs){set reg\_phi, reg\_psi and integers a, b, n};
+    \node[emptynode](inputs){set $r_\phi$, $r_\psi$ and integers a, b, n};
     \node[node](initialize)[below=of inputs]{Initialize set Comp};
     \node[node](loop)[below=2cm of initialize]{Update Comp};
     \node[node](empty)[left=of loop]{return \{\}};
@@ -1961,7 +1864,7 @@ Below we provide the state diagram graphs of the functions examined in our intel
     \begin{tikzpicture}[node/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=15mm}, bignode/.style={rounded rectangle, draw=black!60, fill=black!5, very thick, minimum size=20mm}, emptynode/.style={draw=none, fill=none, very thick, minimum size=1mm}]
     
     %Nodes
-    \node[emptynode](inputs){set reg\_phi, reg\_psi and integers a, b, n};
+    \node[emptynode](inputs){set $r_\phi$, $r_\psi$ and integers a, b, n};
     \node[node](initialize)[below=of inputs]{Initialize set Comp};
     \node[node](loop)[below=2cm of initialize]{Update Comp};
     \node[node](empty)[left=of loop]{return \{$S^n$\}};
@@ -1999,21 +1902,21 @@ Below we provide the state diagram graphs of the functions examined in our intel
     
     \node[node](prop_cons)[left=3cm of start]{return reg\_prop\_cons};
     
-    \node[rednode](parse_unary)[below=1cm of prop_cons]{Parse for unary temp conn, a, b, phi and call reg(phi, n)};
-    \node[node](reg_f)[below=1cm of parse_unary]{return reg\_F(phi)};
-    \node[node](reg_g)[left=0.5cm of reg_f]{return reg\_G(phi)};
+    \node[rednode](parse_unary)[below=1cm of prop_cons]{Parse for unary temp conn, a, b, $\phi$ and call reg($\phi$, n)};
+    \node[node](reg_f)[below=1cm of parse_unary]{return reg\_F($\phi$)};
+    \node[node](reg_g)[left=0.5cm of reg_f]{return reg\_G($\phi$)};
     
-    \node[node](parse_binary_prop)[below=0.5cm of start]{Parse for binary prop conn, phi, psi};
-    \node[rednode](prop_phi)[below=of parse_binary_prop]{reg\_phi $\leftarrow$ reg(phi,n)};
-    \node[rednode](prop_psi)[below=of prop_phi]{reg\_psi $\leftarrow$ reg(psi,n)};
+    \node[node](parse_binary_prop)[below=0.5cm of start]{Parse for binary prop conn, $\phi$, $\psi$};
+    \node[rednode](prop_phi)[below=of parse_binary_prop]{$r_\phi$ $\leftarrow$ reg($\phi$,n)};
+    \node[rednode](prop_psi)[below=of prop_phi]{$r_\psi$ $\leftarrow$ reg($\psi$,n)};
     \node[rednode](equals)[left=0.5cm of prop_psi]{Rewrite as equiv\_formula, return reg(equiv\_formula,n)};
     \node[node](set_intersect)[below=of prop_psi]{return set\_intersect};
     \node[node](join)[left=of set_intersect]{return join};
     \node[rednode](implies)[right=of set_intersect]{Rewrite as equiv\_formula, return reg(equiv\_formula,n)};
     
-    \node[node](parse_binary_temp)[right=3cm of start]{Parse for binary temp conn, a, b, phi, psi};
-    \node[rednode](temp_phi)[below=of parse_binary_temp]{reg\_phi $\leftarrow$ reg(phi,n)};
-    \node[rednode](temp_psi)[below=of temp_phi]{reg\_psi $\leftarrow$ reg(psi,n)};
+    \node[node](parse_binary_temp)[right=3cm of start]{Parse for binary temp conn, a, b, $\phi$, $\psi$};
+    \node[rednode](temp_phi)[below=of parse_binary_temp]{$r_\phi$ $\leftarrow$ reg($\phi$,n)};
+    \node[rednode](temp_psi)[below=of temp_phi]{$r_\psi$ $\leftarrow$ reg($\psi$,n)};
     \node[node](until)[below=of temp_psi]{return reg\_U};
     \node[node](release)[right=of until]{return reg\_R};
     
@@ -2024,18 +1927,18 @@ Below we provide the state diagram graphs of the functions examined in our intel
     \node[emptynode](prop_cons_text)[left=0.01cm of start]{nnf is T or !$$~$$};
     \node[emptynode](prop_var_text)[rotate=-43, above=1.1cm of prop_cons_text]{nnf is p or $\scriptstyle{\sim}\textstyle$p};
     
-    \node[emptynode](unary_text)[rotate=45, below=0.3cm of prop_cons_text]{\small{nnf is X[a,b] phi}};
+    \node[emptynode](unary_text)[rotate=45, below=0.3cm of prop_cons_text]{\small{nnf is X[a,b] $\phi$}};
     \node[emptynode](reg_g_text)[above=0.2cm of reg_g]{X is G};
     \node[emptynode](reg_f_text)[right=1.5cm of reg_g_text]{X is F};
     
-    \node[emptynode](binary_temp_text)[right=0.01cm of start]{\small{nnf is phi X[a,b] psi}$$~$$};
+    \node[emptynode](binary_temp_text)[right=0.01cm of start]{\small{nnf is $\phi$ X[a,b] $\psi$}$$~$$};
     \node[emptynode](release_text)[above=0.2cm of release]{X is R};
     \node[emptynode](until_text)[left=1.75cm of release_text]{X is U};
     
     \node[emptynode](assoc_text)[rotate=45, above=1.1cm of binary_temp_text]{\footnotesize{nnf is X[nnf\_array]}};
-    \node[emptynode](loop_text)[right=1.75cm of parse_assoc]{$$~$$for phi in nnf\_array};
+    \node[emptynode](loop_text)[right=1.75cm of parse_assoc]{$$~$$for $\phi$ in nnf\_array};
     
-    \node[emptynode](binary_prop_text)[right=1.4cm of unary_text]{$$~$$$$~$$$$~$$nnf is phi X psi};
+    \node[emptynode](binary_prop_text)[right=1.4cm of unary_text]{$$~$$$$~$$$$~$$nnf is $\phi$ X $\psi$};
     \node[emptynode](join_text)[above=0.2cm of join]{X is v};
     \node[emptynode](intersect_text)[right=1.75cm of join_text]{X is \&};
     \node[emptynode](implies_text)[right=-0.25cm of prop_psi]{X is $>$};
