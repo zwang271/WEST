@@ -129,6 +129,7 @@
 % If the paper title is too long for the running head, you can set
 % an abbreviated paper title here
 %
+\vspace{-0.1in}
 %\author{First Author\inst{1}\orcidID{0000-1111-2222-3333} \and
 %Second Author\inst{2,3}\orcidID{1111-2222-3333-4444} \and
 %Third Author\inst{3}\orcidID{2222--3333-4444-5555}}
@@ -151,18 +152,26 @@
 
 
 
-\vspace{-0.1in}
+\vspace{-0.3in}
 \begin{abstract}
-        \noindent Mission-time Linear Temporal Logic (MLTL) is an extension of propositional logic that allows temporal quantifiers over finite discrete intervals. A computation is a finite sequence of truth assignments. In this paper, we use regular expressions to describe the structure of the computations that satisfy a given MLTL formula. We prove soundness and completeness of our structure. We also give an implemented algorithm (the WEST program) and analyze its complexity both theoretically and experimentally. Finally, we generate a test suite using control flow diagrams to robustly test the code.
+  \noindent Mission-time Linear Temporal Logic (MLTL) represents the most practical fragment of Metric Temporal Logic; MLTL resembles the popular logic LTL with finite closed-interval integer bounds on the temporal operators. Increasingly many tools reason over MLTL specifications yet these tools are only useful when system designers can validate the input specifications. We design an automated characterization of the structure of the computations that satisfy a given MLTL formula using regular expressions. We prove soundness and completeness of our structure. We also give an algorithm for automated MLTL formula validation and analyze its complexity both theoretically and experimentally. Additionally, we generate a test suite using control flow diagrams to robustly test our implementation and release an open-source tool. The result of our contributions are improvements to existing algorithms for MLTL analysis applicable to many other tools and the WEST tool for automated, efficient MLTL formula validation.
+  %
+%        Our work connects existing tools to enable improvmeents in satisfiabiity tools and automated synthesis of verified code from MLTL behavior descriptions.
+% 
+  %
+%  A computation is a finite sequence of truth assignments. In this paper, we use regular expressions to describe the structure of the computations that satisfy a given MLTL formula. We prove soundness and completeness of our structure. We also give an implemented algorithm (the WEST program) and analyze its complexity both theoretically and experimentally. Finally, we generate a test suite using control flow diagrams to robustly test the code.
 
         %We demonstrate that formula validation examples generated via regular expressions encapsulating the sets of all satisfying/unsatisfying assingments is tractable, both theoreteically and experimentally. We present an efficient algorithm for automatic characterization of an MLTL formula by its satisfying assingments, proove the theoretical correctness, time complexisty, and space complexity of hte algorithm. Then we provide a robust implementattion of the algorithm, demonstrate expreimentally its performance and correctness, and utilize intelligent fuzzing to increaes confidence int eh resulting open-source tool, which we release for public use. The result of our contributions are improvements to existing algorithms for MLTL analsysis applicable to many other tools and a new tool called WEST for provably correct, atomated, efficient MLTL formula validation.%
 %        Our work connects existing tools to enable improvmeents in satisfiabiity tools and automated synthesis of verified code from MLTL behavior descriptions.
-
+%
+% Contributions:
+% 
+        
         \vspace{-0.1in}
-\keywords{First keyword  \and Second keyword \and Another keyword.}
+\keywords{Mission-time Linear Temporal Logic (MLTL)  \and MLTL Satisfiability \and Temporal Logic Validation.}
 \end{abstract}
 
-\vspace{-0.1in}
+\vspace{-0.4in}
 \section{Introduction}
 \vspace{-0.1in}
 System specifications, such as aerospace operational concepts, often utilize timelines to express critical requirements. We can cite examples of this from NASA's Automated Airspace Concept \cite{EH10}, the U.~S.~Navy's Aircraft Carrier Deck Scheduler \cite{RCRBS11}, the JAXA-NASA Global Precipitation Measurement (GPM) Observatory \cite{GPM}, and many others. Formal methods provide continuously-advancing tools and techniques to rigorously analyze timelines expressed in the form of temporal logic requirements, from early design-time model checking and theorem proving to on-board runtime verification. The U.~S.~Federal Aviation Administration (FAA) even advocates the use of formal methods for flight certification of these critical systems \cite{DO-178C,DO-254,DO-333}. Yet, a significant hurdle to the use of formal methods remains: how to convincingly demonstrate to the humans in the loop, from system designers to certifiers, that the analyzed formulas truly represent the system requirements \cite{Roz16}. We creatively address this validation question using regular expressions and truth tables.
@@ -180,11 +189,11 @@ We show that our contributions not only fill a critical gap in temporal logic va
 
 %% In this paper, we offer a remedy to the state explosion problem by using regular expressions to describe the set of all computations satisfying a MLTL formula, which significantly reduces the space needed to express the computations. We implement these regular expressions into the WEST program, which allows the user to input a MLTL formula and obtain the satisfying computations. The WEST program can be found on its \href{https://github.com/zwang271/2022-Iowa-State-REU-Temporal-Logic-.git}{Github} repository.
 
-We structure the paper around our contributions as follows. In section \ref{prereq}, we build on the semantics of MLTL to define a computation, and its bit string representation. % of a computation that is used throughout the paper and the WEST program. Finally, we describe negation normal form (NNF), a standardized way to express MLTL formulas. By writing the MLTL formulas in NNF, the WEST program is able to run much more efficiently.
+We structure the paper around our contributions as follows. In Section \ref{prereq}, we build on the semantics of MLTL to define a computation, and its bit string representation. % of a computation that is used throughout the paper and the WEST program. Finally, we describe negation normal form (NNF), a standardized way to express MLTL formulas. By writing the MLTL formulas in NNF, the WEST program is able to run much more efficiently.
 %
-In section \ref{regex}, we recursively define regular expressions encapsulating the satisfying computations of MLTL formulas and prove that our new translation algorithm is both sound and complete. In addition, we provide a calculation for the minimum computation length required to describe all the satisfying computations of a MLTL formula that slightly improves upon existing calculations in the literature. Finally, we show an application of the regular expressions of the satisfying computations by using them to prove an MLTL theorem. In particular, we show that $\phi\mathcal{U}_{[a,b]}(\phi\mathcal{U}_{[0,c]}\psi) = \phi\mathcal{U}_{[a,b+c]}\psi$ and $\phi\mathcal{R}_{[a,b]}(\phi\mathcal{R}_{[0,c]}\psi) = \phi\mathcal{R}_{[a,b+c]}\psi$.
+In Section \ref{regex}, we recursively define regular expressions encapsulating the satisfying computations of MLTL formulas and prove that our new translation algorithm is both sound and complete. In addition, we provide a calculation for the minimum computation length required to describe all the satisfying computations of a MLTL formula that slightly improves upon existing calculations in the literature. Finally, we show an application of the regular expressions of the satisfying computations by using them to prove an MLTL theorem. In particular, we show that $\phi\mathcal{U}_{[a,b]}(\phi\mathcal{U}_{[0,c]}\psi) = \phi\mathcal{U}_{[a,b+c]}\psi$ and $\phi\mathcal{R}_{[a,b]}(\phi\mathcal{R}_{[0,c]}\psi) = \phi\mathcal{R}_{[a,b+c]}\psi$.
 %
-We introduce a new tool, called WEST (acronym redacted for blind review), that implements automated validation in section \ref{WESTalg} %, we give the WEST code specifications. In particular, we describe the grammar that the program follows and give an overview of the important functions in the program.
+We introduce a new tool, called WEST (acronym redacted for blind review), that implements automated validation in Section \ref{WESTalg} %, we give the WEST code specifications. In particular, we describe the grammar that the program follows and give an overview of the important functions in the program.
 %
 and calculate its space and time complexity, both theoretically and experimentally. We show that the theoretical worst-case complexity for both space and time is doubly exponential, but that the average case fares far better.
 %
@@ -382,7 +391,7 @@ Our minimum computation length for Until and Release are slight optimizations of
 %\vspace{-0.1in}
 \indent $\text{cplen}(\phi \mathcal{U}_{[a,b]} \psi) = \text{cplen}(\phi \mathcal{R}_{[a,b]} \psi) = b + \max(\mathbf{\text{cplen}(\phi)-1}, \text{cplen}(\psi)).$
 %We provide the proof for the minimum computation length of Until and Release below.
-\vspace{-0.1in}
+%\vspace{-0.1in}
 \begin{theorem}[\emph{Minimum Computation Length of Until and Release}]\label{thm1}
     Let $0 \leq a\leq b \in \mathbb{N}$ and let $\phi, \psi$ be well-formed MLTL formulas in NNF. The minimum computation length of Until and Release is given by $\emph{cplen}(\phi \mathcal{U}_{[a,b]} \psi) = \emph{cplen}(\phi \mathcal{R}_{[a,b]} \psi) = b + \max(\emph{cplen}(\phi)-1, \emph{cplen}(\psi))$.
 \end{theorem}
@@ -642,12 +651,12 @@ Output: set of REGEX for $\phi \mathcal{U}_{[a, b]} \psi$
 
 \subsection{Proof of Correctness of WEST}
 \begin{theorem}[\emph{Theoretical Correctness of WEST}] \label{theocorrect}
-  Given a well-formed MLTL formula, The WEST Algorithm outputs the regular expressions of the satisfying computations as described in section \ref{regex}.
+  Given a well-formed MLTL formula, The WEST Algorithm outputs the regular expressions of the satisfying computations as described in Section \ref{regex}.
 \end{theorem}
 
 Correctness of the WEST algorithm is dependent on the correctness of subroutines \textit{reg\_prop\_cons}, \textit{reg\_prop\_var}, \textit{join}, \textit{set\_intersect}, \textit{reg\_F}, \textit{reg\_G}, \textit{reg\_U}, and \textit{reg\_R}. 
 The routines \textit{reg\_prop\_cons} and \textit{reg\_prop\_var} take as input a MLTL formula of the appropriate form, and return the regular expression as %previously
-defined in section \ref{regex}.
+defined in Section \ref{regex}.
 
 
 \textit{Join} concatenates two sets of regular expressions $R$ and $T$, which is equivalent to $\mathscr{L}(R) \cup \mathscr{L}(T)$. \textit{Set\_intersect} takes as input two sets of regular expressions $R = \{r_0, ..., r_{a-1}\}$ and $T = \{t_0, ..., t_{b-1}\}$, such that each $r_i$
@@ -846,7 +855,7 @@ Negative testing is the process of checking that a program is able to handle une
 %The earliest use of fuzzing by Miller \cite{Miller} was to discover bugs in Unix utilities by randomly generating command line inputs, and monitoring for unexpected crashes or security. This style of black box testing assumes no prior knowledge of the target program, and is centered on generating a large quantity of inputs. Miller describes his approach in \cite{Miller} as follows: \\
 We deviate from traditional black-box fuzzing defined by \cite{Miller} as follows: \\
 \textit{``If we consider a program to
-be a complex finite state machine, then our testing strategy can be thought of as a random walk through the state space, searching for undefined states.''} \\
+be a complex finite state machine, then our testing strategy can be thought of as a random walk through the state space, searching for undefined states.''} 
 Instead we utilize intelligent fuzzing (sometimes referred to as whitebox fuzzing), which is an alternate approach to fuzz testing that leverages knowledge about program structure to generate valid inputs and increase coverage. 
 Borrowing the words of Miller, our approach to testing the WEST program can be thought of as walking all possible paths up to a certain depth of the state space of our algorithm. 
 We first outline our overall approach to intelligent fuzzing: 
@@ -923,12 +932,12 @@ The full implementation details are available in the WEST %\href{https://github.
 %As expected for a brute force implementation, extensive run time poses a major limitation; the previously mentioned infeasibility of not abstracting away subroutines and running test suites for deeper depths is primarily caused by this stage of verification. 
 On an Intel(R) Core(TM) i7-4770S CPU at 3.10GHz with 32gb RAM, the brute force program took nearly nine hours to execute the depth two test suite of $1640$ formulas. 
 For this test suite, we fixed the number of propositional variables at $n = 4$ and the largest computation length was $m = 5$, from formulas with doubly-nested temporal operators. 
-In comparison, the WEST program executed the same test suite in under thirty minutes on the same machine. One thing to note is that the brute force program outputs only computations of zeros and ones, and thus comparing the outputs of the WEST program requires expanding out the ``$S$'' characters in the regular expressions. For instance, the regular expression ``$1SS0SS1$'' yields $2^{\text{\# of `$S$'s}} = 2^4 = 16$ computations after expansion.
+In comparison, the WEST program executed the same test suite in under thirty minutes on the same machine. Note that the brute force program outputs only computations of zeros and ones, and thus comparing the outputs of the WEST program requires expanding out the ``$S$'' characters in the regular expressions. For instance, the regular expression ``$1SS0SS1$'' yields $2^{\text{\# of `$S$'s}} = 2^4 = 16$ computations after expansion.
 It's important to state that although the full test suite matches between both implementations, absolute correctness on all inputs is not guaranteed for either program. However, the successful execution of the test suite gives us a much higher confidence in correctness of both the WEST program and the brute force program. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Regular Expression Simplification Theorem} \label{simpsection}
-As a final result, we provide a regular expression simplification theorem. This theorem describes a form of a set of computations that are guaranteed to simplify down to a string of all ``$S$'' characters. Although not implemented in the WEST program, this theorem may help users identify tautologies, as the WEST program does not always output a single string of ``$S$'' characters when a formula holds true for every computation. We first define some vocabulary.\\
+As a final result, we provide a regular expression simplification theorem. This theorem describes a form of a set of computations that are guaranteed to simplify down to a string of all ``$S$'' characters. Although not implemented in the WEST program, this theorem may help users identify tautologies, as the WEST program does not always output a single string of ``$S$'' characters when a formula holds true for every computation. We first define some vocabulary.
  We say a regular expression composed entirely of ``$S$'' characters and commas is an \emph{arbitrary computation}. For the purposes of the following theorem, we remove all commas from computations. We say ``0'' or a ``1'' in a regular expression is a \emph{fixed truth value}. We overload the definition of a matrix and say that a \emph{matrix} is a representation of a union of regular expressions, where each row is a regular expression. This aids significantly in the description and proof of the theorem; note, however, that matrix algebra does not apply in this definition. 
 \begin{theorem}[\emph{Regular Expression Simplification Theorem}] \label{simp}
 Let $M$ be a $n+1$ by $n$ matrix, where each of the $n+1$ rows represents a regular expression of length $n$ with commas stripped. If each column has one ``$1$,'' one ``$0$,'' and $n-1$ ``$S$'' characters, then the union of this set of regular expressions can be simplified to $S^n$, the arbitrary computation of length $n$.
@@ -1003,24 +1012,26 @@ $
 \section{Closing Remarks}
 \label{Conclusion}
  One goal of this research project is to visually represent MLTL formulas as truth tables, similar to classical truth tables in propositional logic. 
-The goal is motivated by the fact that MLTL is widely used in industry by engineers and scientists to write specifications for safe critical systems, and the WEST program can aide in the debugging of such specifications. 
+The goal is motivated by the fact that MLTL is widely used in industry by engineers and scientists to write specifications for safety-critical systems, and the WEST program can aid in the debugging of such specifications. 
 The WEST program accomplishes this: given MLTL formula $\phi$, we compute a way to capture all satisfying formulas $\pi$ in a relatively readable format that additionally captures structural patterns in such regular expressions. 
 The tool itself has demonstratively reasonable run time. 
-Although worst case theoretical complexity is doubly exponential, our benchmarking shows that the most severe case is very sparse in practice. 
+Although worst case theoretical complexity is doubly exponential, our benchmarking shows that the most severe case is very rare in practice. 
 We have also applied techniques in intelligent fuzzing to explore the state space of the algorithm in a structured way. 
 For a reasonably complex program, a complete walk of the input space is infeasible. 
 However, basing testing on a (manually constructed) graph of the algorithm provides a middle ground where some level of coverage is guaranteed. 
 Although this isn't a magic box that generates test cases for arbitrary algorithms, the methods used in algorithmic analysis and test suite construction are easily adaptable to similar recursive algorithms.
-\subsection{Additional Research Directions}
+\subsection{Additional Research Directions} The resease of the WEST algorithm and open-source tool open many promising avenues for future research, including the following.\\
 \textbf{Describe all satisfying computations to LTL formulas using $\omega$-regular expressions.}
-$\omega$-regular expression are defined to match only infinite words, and can be used to describe satisfying computations to LTL formulas (which has infinite time steps). 
-Our original efforts were spent reasoning about the general LTL case before restricting to MLTL. Particular difficulties revolves around the need for the Kleene star operation, which leads to messy arithmetic of infinite unions and intersections of regular expressions. \\
+By definition, $\omega$-regular expressions match only infinite words, and can be used to describe satisfying computations to LTL formulas (which have infinite time steps). 
+Our work on validation for MLTL formulas lays the groundwork for future work on validation of the finite-trace logic LTLf \cite{GV13} as well as LTL formulas. For the infinite-trace semantics of LTL, the particular difficulties revolve around the need for the Kleene star operation, which may lead to blow-up due to arithmetic of infinite unions and intersections of regular expressions. \\
 \noindent \textbf{Simplifying unions of regular expressions to a minimal representation.}
 Theorem \ref{simp} addresses a non-trivial situation in which a set of regular expressions may be simplified. A natural question to ask is what is the minimum number of strings of regular expressions needed to represent a language of computations. However, such a minimal representation is not unique. For instance, $\mathscr{L}(S1|1S) = \mathscr{L}(S1|10) = \{01, 10, 11\}$. There may be other schemes needed to simplify any arbitrary union of regular expressions to their minimal representation.\\
 \noindent \textbf{A more general application of intelligent fuzzing to recursive algorithms.}
 A tool to systematically convert a recursive algorithm (perhaps written in some strictly defined pseudocode syntax) into a directed graph representation of the state space would be a helpful aid for generating test suites. 
 Significant efforts were made to construct the graph of the WEST algorithm by hand, and an automated process would invaluable. 
-Additional care should be put into allowing for varying levels of abstractions of execution due to concerns of the path explosion problem. 
+Additional care should be put into allowing for varying levels of abstractions of execution due to concerns of the path explosion problem. We note that such avenues for code-level verification will still be necessary even upon the completion of potential future work avenues like synthesizing the core implemention of the WEST algorithm from an interactive theorem prover. This is because the goal of explainability to humans will require at least some manual code authorship for the forseeable future.  \\
+\noindent \textbf{Synthesizing verified code from MLTL behavior descriptions.} The truth tables generated by the WEST tool can now serve as input to a recently-published toolchain \cite{dasc-2022}. This newly-enabled workflow would produce encodings of the represented MLTL behavior for the interactive theorem prover ACL2, including automatically generating related properties of general interest such as unambiguousness \cite{DBLP:journals/corr/abs-2205-11707,ACL2-Site,ACL2-Doc}. Next, a proof-generating C code synthesizer \cite{DBLP:journals/corr/abs-2205-11708} based on the Axe tool \cite{DBLP:phd/us/Smith11} generates verified software implementing the behaviors originally described in MLTL. By providing a new front-end for this toolchain, we have now enabled a path to generating provably correct software from validated MLTL formulas describing the desired behaviors of a system. Considering the rising popularity of MLTL for describing such behaviors, we expect this to be a rewarding avenue for future exploration. 
+
 % FUTURE WORK:
 % potentially recursive function implementation of Regular Expression Simplification Theorem
 %% \subsubsection{Acknowledgements}
