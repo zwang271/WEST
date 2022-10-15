@@ -406,7 +406,7 @@ The formulas for the minimum computation length follow directly from the regular
  \end{align*}
  \vspace{-0.1in}
  Now recall that $\text{reg}(\phi \mathcal{R}_{[a,b]} \psi) =  \text{reg}\left(\mathcal{G}_{[a,b]}\psi\right) \lor \bigvee_{i=a}^{b-1} \text{reg}\left(\mathcal{G}_{[a,i]}\psi \land \mathcal{G}_{[i, i]} \phi\right)$. Thus%
-\vspace{-0.1in}
+% \vspace{-0.1in}
  \begin{align*}
      \text{cplen}(\phi \mathcal{R}_{[a,b]} \psi) &= \max \left( \text{cplen}(\mathcal{G}_{[a,b]} \psi), \text{cplen}\left( \bigvee_{i=a}^{b-1} \text{reg}\left(\mathcal{G}_{[a,i]}\psi \land \mathcal{G}_{[i, i]} \phi\right) \right)  \right)\\
      &= \max\left( b + \text{cplen}(\psi), \max_{a \leq i \leq b-1} \left(\mathcal{G}_{[a,i]}\psi \land \mathcal{G}_{[i, i]} \phi\right) \right)\\
