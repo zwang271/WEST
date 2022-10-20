@@ -1,0 +1,3 @@
+pdftk Paper.pdf cat 1-19 output Paper_Main.pdf
+pdftk Paper.pdf cat 20-end output Paper_Appendix.pdf
+
