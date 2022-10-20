@@ -850,7 +850,7 @@ We first outline our overall approach to intelligent fuzzing:
 \end{enumerate}
 \subsubsection{State Diagram Construction}
  We can represent the state space of the WEST algorithm as a directed graph with the edges representing the control flow and vertices representing blocks of contiguous code without branching statements. 
- The core of the WEST program lies in the recursive routine, \texttt{reg}, which calls the $8$ different subroutines as shown in \ref{fig:abstracted graph}.
+ The core of the WEST program lies in the recursive routine, \texttt{reg}, which calls the $8$ different subroutines as shown in \ref{fig:abstracted_graph}.
 \begin{figure}[t]
     \centering
     \begin{tikzpicture}[ node/.style={rounded rectangle, draw=black!60, fill=black!5, thick, minimum size=8mm},
@@ -1269,7 +1269,7 @@ This finishes the proof.
 \end{proof}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Regular Expression Simplification Theorem} \label{simp appendix}
+\section{Regular Expression Simplification Theorem} \label{simp_appendix}
 \begin{proof}[Theorem \ref{simp}]
 Assume no row is the arbitrary computation, because then the union of the set of regular expressions would trivially simplify to the arbitrary computation.\\
 We begin by showing that there must be at least one row in the matrix $M$ that is composed of one fixed truth value and $n-1$ `$S$'s. This will be of use later in the proof. Because there are $n$ columns and $2$ fixed truth values in each column, there are $2n$ fixed truth values. There are $n+1$ rows, so the average number of fixed truth values per row is strictly less than $2$ since $\frac{2n}{n+1} < \ 2$.
@@ -1364,7 +1364,7 @@ Therefore, by induction, the theorem holds.
 \end{proof}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Pseudocode for the WEST Algorithm Functions} \label{pseudocode appendix}
+\section{Pseudocode for the WEST Algorithm Functions} \label{pseudocode_appendix}
 To compute the satisfying computations of an MLTL formula, many of the functions in the WEST program require the regular expressions of the satisfying computations of the subformulas as inputs. We denote these regexes by $R$ and $T$. Additionally, $n$ will always refer to the number of propositional variables, and nnf refers to an input formula in negation normal form.
 \begin{algorithm}[H]
 \caption{Pad a set to elements of all equal length}
@@ -1607,7 +1607,7 @@ Output: set of strings that represents the appropriate satisfying computations
 \end{algorithm}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{State Diagram Graphs} \label{graphs appendix}
+\section{State Diagram Graphs} \label{graphs_appendix}
 Below we provide the state diagram graphs of the functions examined in our intelligent fuzzing. Nodes in the graph represent portions of the code without control flow statements, so a single node can represent large chunks of code. Directed edges represent branching of control flow, such as IF statements and loops. Each graph directly corresponds with the pseudocode of their corresponding function, with nodes and edges being labeled accordingly. Note that the option to run \texttt{simplify} has been omitted for clarity.\\
 
 \begin{minipage}{0.4\textwidth}
@@ -1634,7 +1634,7 @@ Below we provide the state diagram graphs of the functions examined in our intel
     \end{tikzpicture}
     }
     \caption{Pad Function}
-    \label{fig:pad graph}
+    \label{fig:pad_graph}
 \end{figure}
 \end{minipage}
 \begin{minipage}{0.5\textwidth}
@@ -1667,7 +1667,7 @@ Below we provide the state diagram graphs of the functions examined in our intel
     \end{tikzpicture}
     }
     \caption{Bitwise\_And Function}
-    \label{fig:bitwise_and graph}
+    \label{fig:bitwise_and_graph}
 \end{figure}
 \end{minipage}
 
@@ -1697,7 +1697,7 @@ Below we provide the state diagram graphs of the functions examined in our intel
     \end{tikzpicture}
     }
     \caption{Join Function}
-    \label{fig:join graph}
+    \label{fig:join_graph}
 \end{figure}
 \end{minipage}
 \hfill
@@ -1729,7 +1729,7 @@ Below we provide the state diagram graphs of the functions examined in our intel
     \end{tikzpicture}
     }
     \caption{Set\_Intersect Function}
-    \label{fig:set_intersect graph}
+    \label{fig:set_intersect_graph}
 \end{figure}
 \end{minipage}
 
@@ -1759,7 +1759,7 @@ Below we provide the state diagram graphs of the functions examined in our intel
     \end{tikzpicture}
     }
     \caption{Reg\_F Function}
-    \label{fig:reg_f graph}
+    \label{fig:reg_f_graph}
 \end{figure}
 \end{minipage}
 \hfill
@@ -1789,7 +1789,7 @@ Below we provide the state diagram graphs of the functions examined in our intel
     \end{tikzpicture}
     }
     \caption{Reg\_G Function}
-    \label{fig:reg_g graph}
+    \label{fig:reg_g_graph}
 \end{figure}
 \end{minipage}
 \vfill
@@ -1819,7 +1819,7 @@ Below we provide the state diagram graphs of the functions examined in our intel
     \end{tikzpicture}
     }
     \caption{Reg\_U Function}
-    \label{fig:reg_u graph}
+    \label{fig:reg_u_graph}
 \end{figure}
 \end{minipage}
 \hfill
@@ -1849,7 +1849,7 @@ Below we provide the state diagram graphs of the functions examined in our intel
     \end{tikzpicture}
     }
     \caption{Reg\_R Function}
-    \label{fig:reg_r graph}
+    \label{fig:reg_r_graph}
 \end{figure}
 \end{minipage}
 
@@ -1938,7 +1938,7 @@ Below we provide the state diagram graphs of the functions examined in our intel
     }
     $$~$$
     \caption{Control Flow of Reg. Red nodes indicate a recursive call to Reg.}
-    \label{fig:big boy}
+    \label{fig:big_boy}
 \end{figure}
 \end{landscape}
 \end{document}
