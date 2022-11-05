@@ -1,88 +1,52 @@
-ARTIFACT LINK: https://github.com/zwang271/2022-Iowa-State-REU-Temporal-Logic-
+### ARTIFACT LINK:
+[download the .zip file from the GitHub repo.](https://github.com/zwang271/2022-Iowa-State-REU-Temporal-Logic-)
 
-ADDITIONAL REQUIREMENTS:
+### ADDITIONAL REQUIREMENTS:
 - Posix environment (Linux, MacOS, Etc.)
 - Python3 (version 3.6 or greater)
 - C99 std compiler (gcc was the one used, probably others might work as well)
 - Make
 
-CORECTNESS-EXPERIMENT RUNTIME: 
+### EXPERIMENT RUNTIME:
+We ran all of our experiments on a computer with the following hardware specifications: Intel(R) Core(TM) i7-4770S CPU at 3.10GHz with 32gb RAM.
 
-	FULL EXPERIMENT:
-		TEST SUITE: Depth two (at most double-nesting temporal operators) test suite of 1640 formulas;
-			    Number of propositional variables fixed at n = 4; 
-			    Largest computation length fixed at m = 5
-		
-		HARDWARE: Intel(R) Core(TM) i7-4770S CPU at 3.10GHz with 32gb RAM
+1. BENCHMARKING EXPERIMENT RUNTIME: On this experiment we were interested in measuring the time it would take to compute the truth tables of formulas with different complexities.
+  - Subset 1: 2 Iterations (Depth), 5 Prop vars, Delta (Max interval length) = 10, Interval Max = 10
+	- Input:
+	- Output:
+	- Runtime:
 
-		RUNTIME: 30 minutes		  
+  - Subset 2: 1 Iterations (Depth), 10 Prop vars, Delta (Max interval length) = 20, Interval Max = 20
+	- Input:
+	- Output:
+	- Runtime:
 
-	SUBSET OF EXPERIMENT: ???
+  - Subset 3: 2 Iterations (Depth), 10 Prop vars, Delta (Max interval length) = 5, Interval Max = 10
+	- Input:
+	- Output:
+	- Runtime:
 
-SIMULATION_1-EXPERIMENT RUNTIME: 
+  - Subset 4: 1 Iterations (Depth), 5 Prop vars, Delta (Max interval length) = 10, Interval Max = 10
+	- Input:
+	- Output:
+	- Runtime:
 
-	FULL EXPERIMENT:
-		TEST SUITE: 2 Iterations (Depth), 5 Prop vars, Delta (Max interval length) = 10, Interval Max = 10
-		
-		HARDWARE: Intel(R) Core(TM) i7-4770S CPU at 3.10GHz with 32gb RAM
 
-		RUNTIME: ???		  
+2. CORECTNESS-EXPERIMENT RUNTIME: Depth two (at most double-nesting temporal operators) test suite of 1640 formulas; Number of propositional variables fixed at n = 4; Largest computation length fixed at m = 5.
+	-Runtime: 30 minutes
 
-	SUBSET OF EXPERIMENT: ???
 
-SIMULATION_2-EXPERIMENT RUNTIME: 
 
-	FULL EXPERIMENT:
-		TEST SUITE: 1 Iterations (Depth), 10 Prop vars, Delta (Max interval length) = 20, Interval Max = 20
-		
-		HARDWARE: Intel(R) Core(TM) i7-4770S CPU at 3.10GHz with 32gb RAM
+### REPRODUCIBILITY INSTRUCTIONS:
 
-		RUNTIME: ???		  
-
-	SUBSET OF EXPERIMENT: ???
-
-SIMULATION_3-EXPERIMENT RUNTIME: 
-
-	FULL EXPERIMENT:
-		TEST SUITE: 2 Iterations (Depth), 10 Prop vars, Delta (Max interval length) = 5, Interval Max = 10
-		
-		HARDWARE: Intel(R) Core(TM) i7-4770S CPU at 3.10GHz with 32gb RAM
-
-		RUNTIME: ???		  
-
-	SUBSET OF EXPERIMENT: ???
-
-SIMULATION_4-EXPERIMENT RUNTIME: 
-
-	FULL EXPERIMENT:
-		TEST SUITE: 1 Iterations (Depth), 5 Prop vars, Delta (Max interval length) = 10, Interval Max = 10
-		
-		HARDWARE: Intel(R) Core(TM) i7-4770S CPU at 3.10GHz with 32gb RAM
-
-		RUNTIME: ???		  
-
-	SUBSET OF EXPERIMENT: ???
-
-REPRODUCIBILITY INSTRUCTIONS:
-
-	MAKING ARTIFACT:
-		After downloading and cloning this repository, use the commands
-
-		$ cd 2022-Iowa-State-REU-Temporal-Logic-
-		$ cd MLTL_reg
-		$ cd MLTL
-		$ make west
-		$ ./west
-
-		to make the WEST program.
-		For further usage and output, see: https://github.com/zwang271/2022-Iowa-State-REU-Temporal-Logic-
-
-	RUNNING CORRECTNESS-EXPERIMENT: ???
-
-	RUNNING SIMULATION_1: ???
-
-	RUNNING SIMULATION_2: ???
-
-	RUNNING SIMULATION_3: ???
-
-	RUNNING SIMULATION_4: ??? 
+- MAKING ARTIFACT:
+  1. Go to the following [github repo:] (https://github.com/zwang271/2022-Iowa-State-REU-Temporal-Logic-)
+  2. After downloading and cloning this repository, open a terminal session in the ?? directory and run the following commands to make the WEST program.
+  ```
+  $ cd 2022-Iowa-State-REU-Temporal-Logic-
+  $ cd MLTL_reg
+  $ cd MLTL
+  $ make west
+  $ ./west
+  ```
+  3. For further usage and output, see the repo homepage.
