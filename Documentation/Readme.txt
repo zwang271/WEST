@@ -1,6 +1,10 @@
 ARTIFACT LINK: https://github.com/zwang271/2022-Iowa-State-REU-Temporal-Logic-
 
-ADDITIONAL REQUIREMENTS: None.
+ADDITIONAL REQUIREMENTS:
+- Posix environment (Linux, MacOS, Etc.)
+- Python3 (version 3.6 or greater)
+- C99 std compiler (gcc was the one used, probably others might work as well)
+- Make
 
 CORECTNESS-EXPERIMENT RUNTIME: 
 
