@@ -12,17 +12,17 @@ x_font = 16
 y_font = 16
 title_font = 16
 
-data = pd.read_csv("./complexities"+str(experiment)+".txt", sep=" ", header=None, names=["Input Length", "Time(ms)", "Output Length"])
+data = pd.read_csv("./complexities"+str(experiment)+".txt", sep=" ", header=None, names=["Input Length", "Time(us)", "Output Length"])
 # print(data)
-#print(data.nlargest(2, "Time(ms)"))
+#print(data.nlargest(2, "Time(us)"))
 #print(data.nlargest(3, "Output Length"))
 
 if plot_length:
     data.plot.scatter(x="Input Length", y="Output Length", color="Blue", marker="x")
     plt.ylabel("Output Length", fontsize = y_font)
 else: # plot time
-    data.plot.scatter(x="Input Length", y="Time(ms)", color="Red", marker="x")
-    plt.ylabel("Time(ms)", fontsize=y_font)
+    data.plot.scatter(x="Input Length", y="Time(us)", color="Red", marker="x")
+    plt.ylabel("Time(us)", fontsize=y_font)
 
 plt.xlabel('Input Length', fontsize=x_font)
 
