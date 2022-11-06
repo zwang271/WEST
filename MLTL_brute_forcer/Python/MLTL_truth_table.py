@@ -1,5 +1,6 @@
 from MLTL_semantics import *
 import pathlib
+import sys
 
 '''
 Given input: wff, num_states, current_state, end_state
@@ -171,15 +172,18 @@ if __name__ == "__main__":
     # for line in comparison_output(wff, output_file, n):
     #     print(line)
 
+    formulas_file = sys.argv[1] #"formulas_d{depth}.txt"
+    output_folder = sys.argv[2] #"/brute_force_outputs_d{depth}"
+    n = int(sys.argv[3])
+
     path = str(pathlib.Path(__file__).parent.resolve())
     verify_path = path[:-25] + "/MLTL_reg/MLTL/verify/"
-    n = 1
     i = 0
     start = 0
-    with open(verify_path + "formulas_d0.txt") as f:
+    with open(verify_path + formulas_file) as f:
         for wff in f:
             if i >= start:
-                output_file = verify_path + "/brute_force_outputs_d0" + "/" + str(i) + ".txt"
+                output_file = verify_path + output_folder + "/" + str(i) + ".txt"
                 comparison_output(wff, output_file, n)
                 print("Wrote to", output_file, "for", wff)
                 i += 1

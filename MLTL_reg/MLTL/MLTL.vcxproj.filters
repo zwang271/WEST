@@ -27,7 +27,7 @@
     <ClCompile Include="reg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="verify_main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
