@@ -11,21 +11,14 @@
 #include <fstream>
 #include <vector>
 #include <chrono>
-#define MAX_ITER 3
-// Maximum distance of any interval
-// in MLTL formula
-#define DELTA 5
-// Maximum upperbound of any interval
-// in MLTL formula
-#define INTERVAL_MAX 10
-// Number of random MLTL formulas
-// to be generated
 #define FUNC_NUM 1000
 #define NUM_PROP_VAR 5
+int MAX_ITER;
+int DELTA;
+int INTERVAL_MAX;
 
 using namespace std;
 using namespace std::chrono;
-
 
 /*
 * Generate a random MLTL formula with a iteration depth
@@ -147,7 +140,7 @@ void simulate(string formulas, string out) {
         outfile << line.size();
         outfile << " ";
         auto start = high_resolution_clock::now();
-        output = reg(Wff_to_Nnf(line), NUM_PROP_VAR);
+        output = reg(Wff_to_Nnf(line), NUM_PROP_VAR, false, true);
         output = simplify(output, NUM_PROP_VAR);
         auto stop = high_resolution_clock::now();
         auto duration = duration_cast<microseconds>(stop - start);
@@ -159,7 +152,7 @@ void simulate(string formulas, string out) {
         // into 'out' file
         outfile << sum_of_characters(output);
         outfile << "\n";
-        cout << formula_num << " Wrote a line to complexities.txt\n";
+        cout << formula_num << " Wrote a line to output file\n";
         ++formula_num;
     }
     infile.close();
@@ -171,15 +164,38 @@ void simulate(string formulas, string out) {
 * Driver function for simulation_main.cpp file
 */
 int main() {
-    string formulas = "random_mltl.txt";
-    string out = "complexities.txt";
-    srand(time(NULL));
-    // Write FUNC_NUM number of random MLTL formulas
-    // to "random_mltl.txt"
-    run_rand_function(formulas);
-    cout << "Wrote to random_mltl.txt\n";
-    // Write simulation results to "complexities.txt"
+    cout << "Generate formulas? (y/n) \n";
+    char gen;
+    cin >> gen;
+    string formulas;
+
+    if (gen == 'y') {
+        cout << "MAX_ITER: ";
+        cin >> MAX_ITER;
+
+        // Maximum distance of any interval
+        cout << "DELTA: ";
+        cin >> DELTA;
+
+        // Maximum upperbound of any interval
+        cout << "INTERVAL_MAX: ";
+        cin >> INTERVAL_MAX;
+
+        cout << "Enter name of formula output file \n";
+        cin >> formulas;
+        srand(time(NULL));
+        // Write FUNC_NUM number of random MLTL formulas
+        run_rand_function(formulas);
+        cout << "Wrote to formula output file\n";
+    } else {
+        cout << "Enter pathname of formula file \n";
+        cin >> formulas;
+    }
+    cout << "Enter name of output file \n";
+    string out;
+    cin >> out;
+    // Write simulation results to out
     simulate(formulas, out);
-    cout << "Wrote to complexities.txt\n";
+    cout << "Wrote to output file\n";
     return 0;
 }
