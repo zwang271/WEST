@@ -116,84 +116,85 @@ vector<string> generate_test(int depth, int n, int a = 0, int b = 2, bool large 
 
 
 int main() {
-	//string f1 = "C:/Users/Jonathanandzili/summer_2022_REU/2022-Iowa-State-REU-Temporal-Logic-/MLTL_brute_forcer/Python/0.txt";
-	//string f2 = "./test.txt";
-	//string wff = "(G[0:2]~p2U[0:2]G[0:2]p2)";
-	//int n = 3;
-	//vector<string> reg_wff = reg(wff, n);
-	//// Pad output to comp length
-	//int cp = Comp_len(wff);
-	//reg_wff = pad(reg_wff, n, cp * (n + 1) - 1);
-	//reg_wff = expand(reg_wff);
-	//write_to_file(reg_wff, f2);
-	//compare_files(f1, f2);
+	string formulas_file; 
 
+	int n;
+	//cout << "Enter number of propositional variables" << endl;
+	//cin >> n;
 
-	string formulas_file = "./verify/formulas_d1.txt";
-	string verify_reg = "./verify/reg_outputs_d1/";
-	string verify_brute_force = "./verify/brute_force_outputs_d1/";
+	char gen_formulas;
+	cout << "Generate new formulas? (y/n)" << endl; 
+	cin >> gen_formulas;
+	if (gen_formulas == 'y') {
+		int a = 0;
+		int b = 2;
+		int depth;
+		bool large = false;
 
+		cout << "Enter depth of formula to be generated" << endl; 
+		cin >> depth;
+		n = pow(2, depth);
 
-	int n = 4;
-	/*int depth = 2;
-	int a = 0; 
-	int b = 2;
-	bool large = false;
+		cout << "Enter name of file to write formulas to" << endl; 
+		cin >> formulas_file;
 
-	srand(time(NULL));
-	vector<string> test = generate_test(depth, n, a, b, large);
-	for (string wff : test) {
-		if (!Wff_check(wff)) {
-			cout << wff << " failed wff check" << endl; 
+		srand(time(NULL));
+		vector<string> test = generate_test(depth, n, a, b, large);
+		for (string wff : test) {
+			if (!Wff_check(wff)) {
+				cout << wff << " failed wff check" << endl;
+			}
+		}
+		write_to_file(test, formulas_file, false);
+		cout << "Formulas written to " + formulas_file << endl;
+	}
+	else {
+		cout << "Enter number of propositional variables" << endl;
+		cout << "This should be equal to 2^(depth of formulas to test)" << endl;
+		cin >> n;
+
+		string verify_reg = "./verify/reg_outputs_d1/";
+		string verify_brute_force = "./verify/brute_force_outputs_d1/";
+
+		cout << "Enter folder to write reg expanded ouputs to" << endl;
+		cin >> verify_reg;
+		cout << "Enter folder containing brute force outputs" << endl;
+		cin >> verify_brute_force;
+
+		ifstream formulas;
+		formulas.open(formulas_file);
+		int formula_count = 0;
+		while (!formulas.eof()) {
+			string wff;
+			getline(formulas, wff);
+
+			if (wff == "") {
+				break;
+			}
+
+			vector<string> reg_wff = reg(wff, n, false, true);
+			cout << "formula: " << wff << endl;
+			print(reg_wff);
+			int cp = Comp_len(wff);
+			reg_wff = pad(reg_wff, n, cp * (n + 1) - 1);
+
+			reg_wff = expand(reg_wff);
+			cout << "wrote to" << verify_reg + to_string(formula_count) + ".txt" << endl;
+			cout << "comp length: " << cp << endl;
+			write_to_file(reg_wff, verify_reg + to_string(formula_count) + ".txt");
+			formula_count++;
+		}
+
+		cout << endl << endl << "checking output files" << endl;
+		cout << "======================================" << endl;
+
+		//int formula_count = 2;
+		for (int i = 0; i < formula_count; i++) {
+			string f1 = verify_brute_force + to_string(i) + ".txt";
+			string f2 = verify_reg + to_string(i) + ".txt";
+			compare_files(f1, f2);
 		}
 	}
-	write_to_file(test, formulas_file, false);
-	cout << "Formulas written to " + formulas_file << endl; */
-	
-
-	ifstream formulas;
-	formulas.open(formulas_file);
-	int formula_count = 0;
-	while (!formulas.eof()) {
-		string wff;
-		getline(formulas, wff); 
-
-		if (wff == "") {
-			break;
-		}
-
-		vector<string> reg_wff = reg(wff, n);
-		cout << "formula: " << wff << endl; 
-		print(reg_wff);
-		int cp = Comp_len(wff);
-		reg_wff = pad(reg_wff, n, cp * (n + 1) - 1);
-
-		reg_wff = expand(reg_wff);
-		cout << "wrote to" << verify_reg + to_string(formula_count) + ".txt" << endl;
-		cout << "comp length: " << cp << endl; 
-		write_to_file(reg_wff, verify_reg + to_string(formula_count) + ".txt");
-		formula_count++;
-	}
-
-
-	cout << endl << endl << "checking output files" << endl;
-	cout << "======================================" << endl; 
-
-	//int formula_count = 2;
-	for (int i = 0; i < formula_count; i++) {
-		string f1 = verify_brute_force + to_string(i) + ".txt";
-		string f2 = verify_reg + to_string(i) + ".txt";
-		compare_files(f1, f2);
-	}
-
-
-	/*string wff = "(p0U[0:3]p1)";
-	int i = 0;
-	vector<string> reg_wff = reg(wff, n);
-	reg_wff = expand(reg_wff);
-	cout << verify_reg + to_string(i) + ".txt" << endl;
-	write_to_file(reg_wff, verify_reg + to_string(i) + ".txt");*/
-
 
 	return 0;
 }
