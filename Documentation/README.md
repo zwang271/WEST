@@ -79,10 +79,9 @@ We ran all of our experiments on a computer with the following hardware specific
 ### REPRODUCIBILITY INSTRUCTIONS:
 
 MAKING ARTIFACT:
-  1. Go to the following [github repo:] (https://github.com/zwang271/2022-Iowa-State-REU-Temporal-
-  Logic-)
-  2. After downloading and cloning this repository, open a terminal session and run the following
-  commands to make the WEST program.
+  1. Download the .zip file containing the source code (https://github.com/zwang271/2022-Iowa-State-REU-Temporal-Logic-).
+  2. Open a terminal session at the directory where the folder containing the source code files 
+  and run the following commands to make the WEST program.
   ```
   $ cd 2022-Iowa-State-REU-Temporal-Logic-
   $ cd MLTL_reg
@@ -90,5 +89,4 @@ MAKING ARTIFACT:
   $ make west
   $ ./west
   ```
-  For further usage and output, see the repo homepage or WESTREADME.md in the Documentation
-  folder.
+  For further usage and output, see the repo homepage or WESTREADME.md in the Documentation folder.
