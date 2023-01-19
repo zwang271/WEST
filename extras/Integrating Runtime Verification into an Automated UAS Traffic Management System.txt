@@ -1,0 +1,334 @@
+1. ¬G[0,3]¬(p0 ∧ p1):
+NNF Formula: F[0:3](p0&p1)
+
+Subformula: p0
+1s
+
+Subformula: p1
+s1
+
+Subformula: (p0&p1)
+11
+
+F[0:3](p0&p1)
+11,ss,ss,ss
+ss,11,ss,ss
+ss,ss,11,ss
+ss,ss,ss,11
+
+
+2. G[0,3](p0 ∧ p1):
+NNF Formula: G[0:3](p0&p1)
+
+Subformula: p0
+1s
+
+Subformula: p1
+s1
+
+Subformula: (p0&p1)
+11
+
+G[0:3](p0&p1)
+11,11,11,11
+
+
+3. (p0 ∧ p1 ∧ p2) → ¬G[0,3]¬(p3 ∧ p4):
+NNF Formula: ((&[p0,p1,p2])>F[0:3](p3&p4))
+
+Subformula: p0
+1ssss
+
+Subformula: p1
+s1sss
+
+Subformula: p2
+ss1ss
+
+Subformula: (&[p0,p1,p2])
+111ss
+
+Subformula: p3
+sss1s
+
+Subformula: p4
+ssss1
+
+Subformula: (p3&p4)
+sss11
+
+Subformula: F[0:3](p3&p4)
+sss11,sssss,sssss,sssss
+sssss,sss11,sssss,sssss
+sssss,sssss,sss11,sssss
+sssss,sssss,sssss,sss11
+
+((&[p0,p1,p2])>F[0:3](p3&p4))
+0ssss,sssss,sssss,sssss
+s0sss,sssss,sssss,sssss
+ss0ss,sssss,sssss,sssss
+sss11,sssss,sssss,sssss
+sssss,sss11,sssss,sssss
+sssss,sssss,sss11,sssss
+sssss,sssss,sssss,sss11
+
+
+4. G[0,3]¬(p0 ∧ p1):
+NNF Formula: G[0:3](~p0v~p1)
+
+Subformula: ~p0
+0s
+
+Subformula: ~p1
+s0
+
+Subformula: (~p0v~p1)
+0s
+s0
+
+G[0:3](~p0v~p1)
+0s,0s,0s,0s
+0s,0s,0s,s0
+0s,0s,s0,0s
+0s,0s,s0,s0
+0s,s0,0s,0s
+0s,s0,0s,s0
+0s,s0,s0,0s
+0s,s0,s0,s0
+s0,0s,0s,0s
+s0,0s,0s,s0
+s0,0s,s0,0s
+s0,0s,s0,s0
+s0,s0,0s,0s
+s0,s0,0s,s0
+s0,s0,s0,0s
+s0,s0,s0,s0
+
+
+5. G[0,M ](p0 ∨ p1 ∨ p2 ∨ p3 ∨ p4 ∨ p5 ∨ p6 ∨ p7 ∨ p8):
+Shortened to: G[0:2](v[p0,p1,p2])
+NNF Formula: G[0:2](v[p0,p1,p2])
+
+Subformula: p0
+1ss
+
+Subformula: p1
+s1s
+
+Subformula: p2
+ss1
+
+Subformula: (v[p0,p1,p2])
+1ss
+s1s
+ss1
+
+G[0:2](v[p0,p1,p2])
+1ss,1ss,1ss
+1ss,1ss,s1s
+1ss,1ss,ss1
+1ss,s1s,1ss
+1ss,s1s,s1s
+1ss,s1s,ss1
+1ss,ss1,1ss
+1ss,ss1,s1s
+1ss,ss1,ss1
+s1s,1ss,1ss
+s1s,1ss,s1s
+s1s,1ss,ss1
+s1s,s1s,1ss
+s1s,s1s,s1s
+s1s,s1s,ss1
+s1s,ss1,1ss
+s1s,ss1,s1s
+s1s,ss1,ss1
+ss1,1ss,1ss
+ss1,1ss,s1s
+ss1,1ss,ss1
+ss1,s1s,1ss
+ss1,s1s,s1s
+ss1,s1s,ss1
+ss1,ss1,1ss
+ss1,ss1,s1s
+ss1,ss1,ss1
+
+
+6. G[0,M ](p0 → (p1 ∧ p2)):
+Shortened to: G[0:3](p0>(p1&p2))
+NNF Formula: G[0:3](p0>(p1&p2))
+
+Subformula: p0
+1ss
+
+Subformula: p1
+s1s
+
+Subformula: p2
+ss1
+
+Subformula: (p1&p2)
+s11
+
+Subformula: (p0>(p1&p2))
+0ss
+s11
+
+G[0:3](p0>(p1&p2))
+0ss,0ss,0ss,0ss
+0ss,0ss,0ss,s11
+0ss,0ss,s11,0ss
+0ss,0ss,s11,s11
+0ss,s11,0ss,0ss
+0ss,s11,0ss,s11
+0ss,s11,s11,0ss
+0ss,s11,s11,s11
+s11,0ss,0ss,0ss
+s11,0ss,0ss,s11
+s11,0ss,s11,0ss
+s11,0ss,s11,s11
+s11,s11,0ss,0ss
+s11,s11,0ss,s11
+s11,s11,s11,0ss
+s11,s11,s11,s11
+
+
+7. G[0,M ]((p0 ∨ p1) → (p2 ∧ p3 ∧ p4 ∧ p5 ∧ p6)):
+NNF Formula: G[0:3]((p0vp1)>(&[p2,p3,p4,p5,p6]))
+
+Subformula: p0
+1ssssss
+
+Subformula: p1
+s1sssss
+
+Subformula: (p0vp1)
+1ssssss
+s1sssss
+
+Subformula: p2
+ss1ssss
+
+Subformula: p3
+sss1sss
+
+Subformula: p4
+ssss1ss
+
+Subformula: p5
+sssss1s
+
+Subformula: p6
+ssssss1
+
+Subformula: (&[p2,p3,p4,p5,p6])
+ss11111
+
+Subformula: ((p0vp1)>(&[p2,p3,p4,p5,p6]))
+00sssss
+ss11111
+
+G[0:3]((p0vp1)>(&[p2,p3,p4,p5,p6]))
+00sssss,00sssss,00sssss,00sssss
+00sssss,00sssss,00sssss,ss11111
+00sssss,00sssss,ss11111,00sssss
+00sssss,00sssss,ss11111,ss11111
+00sssss,ss11111,00sssss,00sssss
+00sssss,ss11111,00sssss,ss11111
+00sssss,ss11111,ss11111,00sssss
+00sssss,ss11111,ss11111,ss11111
+ss11111,00sssss,00sssss,00sssss
+ss11111,00sssss,00sssss,ss11111
+ss11111,00sssss,ss11111,00sssss
+ss11111,00sssss,ss11111,ss11111
+ss11111,ss11111,00sssss,00sssss
+ss11111,ss11111,00sssss,ss11111
+ss11111,ss11111,ss11111,00sssss
+ss11111,ss11111,ss11111,ss11111
+
+
+8. p0 → F[0,M ]p1:
+NNF Formula: (p0>F[0:5]p1)
+
+Subformula: p0
+1s
+
+Subformula: p1
+s1
+
+Subformula: F[0:5]p1
+s1,ss,ss,ss,ss,ss
+ss,s1,ss,ss,ss,ss
+ss,ss,s1,ss,ss,ss
+ss,ss,ss,s1,ss,ss
+ss,ss,ss,ss,s1,ss
+ss,ss,ss,ss,ss,s1
+
+(p0>F[0:5]p1)
+0s,ss,ss,ss,ss,ss
+s1,ss,ss,ss,ss,ss
+ss,s1,ss,ss,ss,ss
+ss,ss,s1,ss,ss,ss
+ss,ss,ss,s1,ss,ss
+ss,ss,ss,ss,s1,ss
+ss,ss,ss,ss,ss,s1
+
+
+9. p0 → F[0,M ](p1 ∧ p2 ∧ p3):
+NNF Formula: (p0>F[0:4](&[p1,p2,p3]))
+
+Subformula: p0
+1sss
+
+Subformula: p1
+s1ss
+
+Subformula: p2
+ss1s
+
+Subformula: p3
+sss1
+
+Subformula: (&[p1,p2,p3])
+s111
+
+Subformula: F[0:4](&[p1,p2,p3])
+s111,ssss,ssss,ssss,ssss
+ssss,s111,ssss,ssss,ssss
+ssss,ssss,s111,ssss,ssss
+ssss,ssss,ssss,s111,ssss
+ssss,ssss,ssss,ssss,s111
+
+(p0>F[0:4](&[p1,p2,p3]))
+0sss,ssss,ssss,ssss,ssss
+s111,ssss,ssss,ssss,ssss
+ssss,s111,ssss,ssss,ssss
+ssss,ssss,s111,ssss,ssss
+ssss,ssss,ssss,s111,ssss
+ssss,ssss,ssss,ssss,s111
+
+
+
+10. F[0,M ](p1 ∧ p2):
+NNF Formula: F[0:8](p1&p2)
+
+Subformula: p1
+s1s
+
+Subformula: p2
+ss1
+
+Subformula: (p1&p2)
+s11
+
+F[0:8](p1&p2)
+s11,sss,sss,sss,sss,sss,sss,sss,sss
+sss,s11,sss,sss,sss,sss,sss,sss,sss
+sss,sss,s11,sss,sss,sss,sss,sss,sss
+sss,sss,sss,s11,sss,sss,sss,sss,sss
+sss,sss,sss,sss,s11,sss,sss,sss,sss
+sss,sss,sss,sss,sss,s11,sss,sss,sss
+sss,sss,sss,sss,sss,sss,s11,sss,sss
+sss,sss,sss,sss,sss,sss,sss,s11,sss
+sss,sss,sss,sss,sss,sss,sss,sss,s11
+
+

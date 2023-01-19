@@ -1,0 +1,36 @@
+1. G[0,3]p0:
+NNF Formula: G[0:3]p0
+
+Subformula: p0
+1
+
+G[0:3]p0
+1,1,1,1
+
+
+2. (p0 ∧ G[0,3]p1) → p2:
+NNF Formula: ((p0&G[0:3]p1)>p2)
+
+Subformula: p0
+1ss
+
+Subformula: p1
+s1s
+
+Subformula: G[0:3]p1
+s1s,s1s,s1s,s1s
+
+Subformula: (p0&G[0:3]p1)
+11s,s1s,s1s,s1s
+
+Subformula: p2
+ss1
+
+((p0&G[0:3]p1)>p2)
+0ss,sss,sss,sss
+s0s,sss,sss,sss
+sss,s0s,sss,sss
+sss,sss,s0s,sss
+sss,sss,sss,s0s
+ss1,sss,sss,sss
+

@@ -1,0 +1,248 @@
+1. ¬G[0,2]¬p0:
+NNF Formula: F[0:2]p0
+
+Subformula: p0
+1
+
+F[0:2]p0
+1,s,s
+s,1,s
+s,s,1
+
+
+2. p0 → F[0,140]p1:
+Shortened to: p0 → F[0,23]p1:
+
+NNF Formula: (p0>F[0:23]p1)
+
+Subformula: p0
+1s
+
+Subformula: p1
+s1
+
+Subformula: F[0:23]p1
+s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1
+
+(p0>F[0:23]p1)
+0s,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1
+
+
+3. p0 → F[0,800]p1:
+Shortened to: p0 → F[0,23]p1:
+
+NNF Formula: (p0>F[0:23]p1)
+
+Subformula: p0
+1s
+
+Subformula: p1
+s1
+
+Subformula: F[0:23]p1
+s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1
+
+(p0>F[0:23]p1)
+0s,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1,ss
+ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,s1
+
+
+4. (p0 ∧ p1) → F[0,10]p2:
+NNF Formula: ((p0&p1)>F[0:10]p2)
+
+Subformula: p0
+1ss
+
+Subformula: p1
+s1s
+
+Subformula: (p0&p1)
+11s
+
+Subformula: p2
+ss1
+
+Subformula: F[0:10]p2
+ss1,sss,sss,sss,sss,sss,sss,sss,sss,sss,sss
+sss,ss1,sss,sss,sss,sss,sss,sss,sss,sss,sss
+sss,sss,ss1,sss,sss,sss,sss,sss,sss,sss,sss
+sss,sss,sss,ss1,sss,sss,sss,sss,sss,sss,sss
+sss,sss,sss,sss,ss1,sss,sss,sss,sss,sss,sss
+sss,sss,sss,sss,sss,ss1,sss,sss,sss,sss,sss
+sss,sss,sss,sss,sss,sss,ss1,sss,sss,sss,sss
+sss,sss,sss,sss,sss,sss,sss,ss1,sss,sss,sss
+sss,sss,sss,sss,sss,sss,sss,sss,ss1,sss,sss
+sss,sss,sss,sss,sss,sss,sss,sss,sss,ss1,sss
+sss,sss,sss,sss,sss,sss,sss,sss,sss,sss,ss1
+
+((p0&p1)>F[0:10]p2)
+0ss,sss,sss,sss,sss,sss,sss,sss,sss,sss,sss
+s0s,sss,sss,sss,sss,sss,sss,sss,sss,sss,sss
+ss1,sss,sss,sss,sss,sss,sss,sss,sss,sss,sss
+sss,ss1,sss,sss,sss,sss,sss,sss,sss,sss,sss
+sss,sss,ss1,sss,sss,sss,sss,sss,sss,sss,sss
+sss,sss,sss,ss1,sss,sss,sss,sss,sss,sss,sss
+sss,sss,sss,sss,ss1,sss,sss,sss,sss,sss,sss
+sss,sss,sss,sss,sss,ss1,sss,sss,sss,sss,sss
+sss,sss,sss,sss,sss,sss,ss1,sss,sss,sss,sss
+sss,sss,sss,sss,sss,sss,sss,ss1,sss,sss,sss
+sss,sss,sss,sss,sss,sss,sss,sss,ss1,sss,sss
+sss,sss,sss,sss,sss,sss,sss,sss,sss,ss1,sss
+sss,sss,sss,sss,sss,sss,sss,sss,sss,sss,ss1
+
+
+5. p0 → (p0U[0,130]p1):
+Shortened to: p0 → (p0U[0,23]p1):
+NNF Formula: (p0>(p0U[0:23]p1))
+
+Subformula: p0
+1s
+
+Subformula: p1
+s1
+
+Subformula: (p0U[0:23]p1)
+s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+1s,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+1s,1s,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+1s,1s,1s,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+1s,1s,1s,1s,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+1s,1s,1s,1s,1s,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+1s,1s,1s,1s,1s,1s,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+1s,1s,1s,1s,1s,1s,1s,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+1s,1s,1s,1s,1s,1s,1s,1s,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+1s,1s,1s,1s,1s,1s,1s,1s,1s,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss
+1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,s1,ss,ss,ss,ss,ss,ss,ss,ss
+1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,s1,ss,ss,ss,ss,ss,ss,ss
+1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,s1,ss,ss,ss,ss,ss,ss
+1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,s1,ss,ss,ss,ss,ss
+1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,s1,ss,ss,ss,ss
+1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,s1,ss,ss,ss
+1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,s1,ss,ss
+1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,s1,ss
+1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,s1
+
+(p0>(p0U[0:23]p1))
+0s,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+1s,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+1s,1s,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+1s,1s,1s,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+1s,1s,1s,1s,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+1s,1s,1s,1s,1s,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+1s,1s,1s,1s,1s,1s,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+1s,1s,1s,1s,1s,1s,1s,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+1s,1s,1s,1s,1s,1s,1s,1s,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+1s,1s,1s,1s,1s,1s,1s,1s,1s,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss,ss
+1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,s1,ss,ss,ss,ss,ss,ss,ss,ss,ss
+1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,s1,ss,ss,ss,ss,ss,ss,ss,ss
+1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,s1,ss,ss,ss,ss,ss,ss,ss
+1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,s1,ss,ss,ss,ss,ss,ss
+1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,s1,ss,ss,ss,ss,ss
+1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,s1,ss,ss,ss,ss
+1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,s1,ss,ss,ss
+1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,s1,ss,ss
+1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,s1,ss
+1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,1s,s1
