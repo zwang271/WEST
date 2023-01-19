@@ -183,6 +183,9 @@ Many specifications from case studies, in logics such as MTL \cite{AH90} and STL
 Variations on Metric Temporal Logic (MTL) such as MLTL have grown increasingly popular, in part due to their comparatively tractable complexity-to-expressibility trade-offs \cite{OW08}.
 The model checker {\sf nuXmv} encodes a popular subset of MLTL for use in symbolic model checking \cite{nuXmv-v1.1.0}.%, where the $\Box$ and $\Diamond$ operators of an \texttt{LTLSPEC} can have integer bounds \cite{nuXmv-v1.1.0}, though bounds cannot be placed on the $\U$ or $\V$ (the Release operator of \nuxmv) operators.
 
+There are a number of SAT solvers for MLTL \textcolor{red}{CITE SAT SOLVERS IDK THEM}, but there are currently no tools to check for MLTL formula validation, i.e. there are no tools available that allow people to \emph{validate} that a proposed MLTL formula is indeed capturing a specification for a system they want to verify. %It is necessary to perform validation before even being able to utilize SAT solvers in any meaningful way. This is precisely the role of the WEST tool, which is introduced in this paper.
+In this paper we introduce the WEST tool, which takes an MLTL formula and produces a description of the set of all finite time lines (of a fixed length) that satisfy the given formula, similar to filling out a truth table for propositional formulas and looking at the rows on which the formula holds. As a consequence, MLTL validation can be done by verifying that the output of the WEST program on a given input indeed matches the behaviour of the specification in question.
+
 We show that our contributions not only fill a critical gap in temporal logic validation but also directly connect to parallel developments to enable better temporal logic formula analysis, benchmark generation, proof generation (e.g., in ACL2), and synthesis of verified C code from temporal logic behavior descriptions. 
 
 %% Mission-time Linear Temporal Logic (MLTL) extends propositional logic by including temporal operators over finite discrete intervals. It is useful for writing specifications for spacecraft, rovers, aircraft, and other robotic missions \cite{LVR22}. In standard propositional logic, a convenient way to check that a formula captures a specification correctly is to write out its truth table and check that the formula behaves in the desired manner. The same strategy can be employed for MLTL, but the truth tables increase in size at a much faster rate, making them too large to be useful. For instance, an MLTL formula with just two propositional variables and 10 time steps would require $\left(2^{10}\right)^2 = 2^{20}$ rows. This is often called the ``State Explosion Problem" \cite{stateexp}.
@@ -206,13 +209,14 @@ Section \ref{simpsection}, provides a combinatorial theorem for simplifying cert
 \section{Preliminaries: Mission-time LTL and Bit String Computations} \label{prereq}
 \vspace{-0.1in}
 %\subsection{Mission-time Linear Temporal Logic}
-{\bf Mission-time Linear Temporal Logic (MLTL)} \cite{LVR22} is a finite variation of LTL over bounded, closed, discrete intervals of the form $[a,b]$ where $a,b \in \mathbb{N}$ and $0 \leq a \leq b$. The syntax of a MLTL formula $\phi$ over a set of atomic propositions $\mathcal{AP}$, where $p \in \mathcal{AP}$ is a propositional variable, is given by the following BNF grammar:%
+\emph{Mission-time Linear Temporal Logic (MLTL)} \cite{LVR22} is a finite variation of LTL over bounded, closed, discrete intervals of the form $[a,b]$ where $a,b \in \mathbb{N}$ and $0 \leq a \leq b$. The syntax of MLTL formulas, $\phi$ and $\psi$, over a set of atomic propositions $\mathcal{AP}$, where $p \in \mathcal{AP}$ is a propositional variable, is given by the following BNF grammar:%
 \vspace{-0.1in}
-$$\phi := \top \ | \ \bot \ | \ p \ | \ \neg \psi \ | \ \psi_1 \land \psi_2 \ | \ \psi_1 \lor \psi_2 \ | \ \mathcal{F}_{[a,b]} \psi \ | \ \mathcal{G}_{[a,b]} \psi \ | \ \psi_1 \mathcal{U}_{[a,b]} \psi_2 \ | \ \psi_1 \mathcal{R}_{[a,b]} \psi_2 \footnote{For simplicity, we do not include parentheses in the grammar, but the WEST program requires parentheses (see Section \ref{WESTalg}). We encode Release directly rather than as the dual of Until \cite{bmc,LVR22}.}$$
-\vspace{-0.1in}
+$$\phi, \psi := \top \ | \ \bot \ | \ p \ | \ \neg \phi \ | \ \phi \land \psi \ | \ \phi \lor \psi \ | \ \mathcal{F}_{[a,b]} \phi \ | \ \mathcal{G}_{[a,b]} \phi \ | \ \phi \mathcal{U}_{[a,b]} \psi \ | \ \phi \mathcal{R}_{[a,b]} \psi \footnote{For simplicity, we do not include parentheses in the grammar, but the WEST program requires parentheses (see Section \ref{WESTalg}). We encode Release directly rather than as the dual of Until \cite{bmc,LVR22}.}$$
+MLTL formulas can be interpreted using both finite and infinite ``time lines'' that are called \emph{computations}, which represent a discrete sequence of time instances and the truth values for the propositional variables on each one of these. For the purpose of this paper, we are only going to deal with \emph{finite} computations, that is, computations that represent only finitely many time steps. 
+% \vspace{-0.1in}
 %
-\begin{definition}[\emph{Computation}]
-A computation $\pi$ of length $m$ is a sequence $\{\pi[i]\}_{i = 0}^{m-1}$ of sets of propositional variables, $\pi[i] \subseteq \mathcal{AP}$, where the $i^{th}$ set holds the propositional variables that are satisfied at the $i^{th}$ time step. That is, a propositional variable $p$ is true at time step $i$ if and only if $p \in \pi[i]$. We denote the suffix of $\pi$ starting at $i$ (including $i$) by $\pi_i$. Note that $\pi_0 = \pi$.
+\begin{definition}[\emph{Finite computations}]
+A \emph{computation} $\pi$ of length $m$ is a sequence $\{\pi[i]\}_{i = 0}^{m-1}$ of sets of propositional variables, $\pi[i] \subseteq \mathcal{AP}$, where the $i^{th}$ set holds the propositional variables that are satisfied at the $i^{th}$ time step. That is, a propositional variable $p$ is true at time step $i$ if and only if $p \in \pi[i]$. {\color{blue} What is the semantics for the other logical and temporal operators? Where can we find a formal definition for this? This is never explicitly said before \texttt{reg} is introduced and it can lead to misinterpretations from the reviewers.} We denote the suffix of $\pi$ starting at $i$ (including $i$) by $\pi_i$. Note that $\pi_0 = \pi$.
 \end{definition}
 
 %We use a bit string representation for our computations. This representation is easy to describe using regular expressions and is convenient to code.
@@ -318,30 +322,41 @@ Suppose $n=2$. The bit string representation $\pi = 10, 01$ means that $p_0$ is 
 \vspace{-0.1in}
 \section{MLTL Regular Expressions} \label{regex}
 \vspace{-0.1in}
-We extend the standard definition of Regular Expressions (Regex) \cite{sipser} to introduce notation that describes the satisfying computations of an MLTL formula.
+We modify the standard definition of Regular Expressions (Regex) to introduce notation that describes the satisfying computations of an MLTL formula. We begin by quoting the parts of the standard definition of a regex from \cite{sipser} that we use to describe our computations:
+
+\begin{definition}[\emph{Regular Expression}] \label{sipser regex} 
+    Let $\Sigma$ denote an alphabet, and let $a\in \Sigma$. We say that $R$ is a \emph{regular expression} if one of the following holds:
+    \begin{itemize}
+        \item $R = a$
+        \item $R = \epsilon$, where $\epsilon$ is the language containing the empty string
+        \item $R = \emptyset$
+        \item $R = (R_1 \lor R_2)$, where $R_1, R_2$ are regexes and $\lor$ denotes \emph{alternation}; the set union of all the strings described by $R_1$ and $R_2$
+        \item $R = R_1R_2$, which denotes \emph{concatenation}, i.e., the set of strings obtained by concatenating any string generated by $R_1$ with any string generated by $R_2$, in that order
+    \end{itemize}
+\end{definition}
+Now we introduce the additions to the definition of a regex that we utilize to describe the computations. These additions allow us to write regexes of a known, finite, fixed length, which is required when describing the computations in MLTL. 
+
 \begin{definition}[\emph{Temporal Regular Expression}] \label{TRE} 
-Let $R$ and $T$ denote regular expressions, and let $S$ be an abbreviation for $(0 \ | \ 1)$.\\
+Let $R$ and $T$ denote regular expressions, and let $S$ be an abbreviation for $(0 \ \lor \ 1)$.\\
 Let fixed $n \in \mathbb{N}$ denote the number of propositional variables in a MLTL formula. We use the following operations to describe the form of satisfying computations of the formula in the bit string representation:
 \begin{itemize}
-  \item \emph{(Concatenation)} $RT$ describes the set of strings obtained by concatenating any string generated by $R$ and any string generated by $T$ in that order.
- \item \emph{(Alternation)} $R \lor T$ describes the set union of the strings generated by $R$ and $T$.
 \item Pad($R$, $T$) determines which regular expression is longer and concatenates $(,S^n)$ repeatedly to the end of the shorter regular expression until the two regular expressions are the same length. Note that in the bit string representation, $(,S^n)$ denotes a time step in which the truth value of all $n$ propositional variables does not matter.
-\item For $R \land T$, we first use Pad($R$, $T$), and then take the set intersection of the sets of strings described by the two regular expressions.
+\item $R \land T$ is the intersection of the sets of strings described by $R$ and $T$. To perform this operation, we first use Pad($R$, $T$), and then take the set intersection of the sets of strings described by the two regular expressions.
 \item $R^i$ denotes regular expression consisting of $R$ repeated $i$ times for $i \geq 0$. $R^0 = \epsilon$. %KYR: is this one relevant or should we take it out?
-\item We do not use the Kleene star since our computations are a fixed finite length.
 \end{itemize}
 \end{definition}
+Note that our regular expressions do not use the Kleene star. This is because are computations are of a fixed, finite length.
 %An example of these operations follows.
 \begin{example} %KYR: NICE example!
-Let $n = 2$, and let $R = S1$ and $T = 1S,1S | S1,S1$.
-To compute $R \land T$ and $R \lor T$, we use Pad($R$,$T$). Since $T$ is the longer regex by one time step, we concatenate $(,S^2)$ to the right of $R$. Thus $T =1S,1S | S1,S1$ and $R = S1,SS$. Now the regexes are the same length, so we can perform set intersection and alternation:
+Let $n = 2$, and let $R = S1$ and $T = 1S,1S \lor S1,S1$.
+To compute $R \land T$ and $R \lor T$, we use Pad($R$,$T$). Since $T$ is the longer regex by one time step, we concatenate $(,S^2)$ to the right of $R$. Thus $T =1S,1S \lor S1,S1$ and $R = S1,SS$. Now the regexes are the same length, so we can perform set intersection and alternation:
 \begin{itemize}
     \item $R \land T = 11,1S \lor S1, S1$.
     \item $R \lor T = S1,SS \lor 1S,1S \lor S1,S1 = S1,SS \lor 1S,1S$.
 \end{itemize}
 \end{example}
 
-To describe the bit string representations of the satisfying computations for a given MLTL formula, we use the alphabet $\Sigma =$ \{``$0$'' , ``$1$'', ``$,$''\} and define $S$ as an abbreviation for $(0 \ | \ 1)$.
+To describe the bit string representations of the satisfying computations for a given MLTL formula, we use the alphabet $\Sigma =$ \{``$0$'' , ``$1$'', ``$,$''\} and define $S$ as an abbreviation for $(0 \ \lor \ 1)$.
 Let $p_0, p_1, ..., p_{n-1}$ be propositional variables and $\phi, \psi$ well-formed MLTL formulas in negation normal form. We define the regular expression of satisfying computations for a MLTL formula as follows:\\
 
 
@@ -745,7 +760,8 @@ Given a well formed MLTL formula $\phi$, $\emph{\texttt{reg}}(\phi)$ has worst-c
 If in the worst case no simplification occurs in any call of \texttt{set\_intersect}, space complexity remains unchanged, but simplifying a set of regular expressions is cubic in input size. In practice however, both time and space complexities are much more optimistic than worst-case estimates. 
  
 \subsection{Experimental Benchmarking}
-We accompany theoretical space and time complexity with experimental evaluation of these complexities using randomly-generated MLTL formulas.
+We accompany theoretical space and time complexity with experimental evaluation of these complexities using randomly-generated MLTL formulas. What we observed from the simulations is that the worst case complexity, both for space and time, is relatively rare. We also observe that these worst cases are extreme outliers and that in nearly every case, are examples of nested binary temporal operators. As seen in \cite{HLR21}, \cite{KZJZR20}, \cite{AJR22}, and \cite{HCHJR21}, nested binary temporal operators do not appear in any specifications, and thus are likely rare in the literature and in practical applications.
+
 We ran these experiments on an Intel(R) Core(TM) i7-4770S CPU at 3.10GHz with 32gb RAM.
 For each simulation, we generated 1000 MLTL formulas using the parameters \texttt{delta}, \texttt{interval\_max}, number of propositional variables, and number of iterations. \texttt{delta} is the maximum length we allow for any interval. \texttt{interval\_max} is the largest allowed upper bound for any interval. Number of iterations refers to the level of nesting in the generated formulas. For example, $\mathcal{G}_{[0,2]}p_0$ is a formula generated with one iteration, while $\mathcal{G}_{[0,2]}(p_0 \land p_1)$ is a formula generated with two iterations. We measure the number of characters in the output and the amount of time in microseconds taken to run the program. Note that these simulations run the \texttt{reg} function with the subformula boolean set to false and the simplify boolean set to true.\\
 \noindent\textbf{Simulation 1}
@@ -824,7 +840,7 @@ For the fourth simulation, we consider 1 iteration, 5 propositional variables, 1
     \label{InLenVsRunTime4}
     \end{figure}
 \end{minipage}
-\noindent What we observe from the simulations is that the worst case complexity, both for space and time, is relatively rare. We also observe that these worst cases are extreme outliers and that in nearly every case, are examples of nested binary temporal operators. As seen in \cite{HLR21}, \cite{KZJZR20}, \cite{AJR22}, and \cite{HCHJR21}, nested binary temporal operators do not appear in any specifications, and thus are likely rare in practical applications.
+What we conclude from the simulations is that for most practical purposes, the WEST algorithm demonstrates good space and time complexity.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Correctness of WEST Tool Implementation} \label{test}
