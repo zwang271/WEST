@@ -72,6 +72,10 @@ vector<string> REST(vector<string> regexp) {
 }
 
 
+/*
+* Input: integers n and r
+* Output: vector of all r combinations from the set [0, ..., n-1]
+*/
 vector<vector<int>> combinations(int n, int r) {
 	vector<bool> v(n);
 	fill(v.end() - r, v.end(), true);
@@ -101,6 +105,52 @@ vector<vector<int>> combinations(int n, int r) {
 	cout << "number of combinations is " << size << endl; */
 
 	return all_comb;
+}
+
+
+/*
+* Input: vector of regular expression strings
+* Output: returns the simplified input after checking for subsets
+* 
+* Example: simplify_subsets({ss1, 1s1}) = {ss1}
+*/
+vector<string> simplify_subsets(vector<string> regexp) {
+	if (regexp.size() <= 1) {
+		return regexp;
+	}
+
+	start: 
+	int m = regexp.size();
+	int n = regexp[0].length();
+	for (int i = 0; i < m; i++) {
+		for (int j = 0; j < m; j++) {
+			if (i == j) {
+				continue; 
+			}
+
+			// Check if regexp[i] is a subset of regexp[j]
+			bool is_subset = true; 
+			for (int col = 0; col < n; col++) {
+				if (regexp[i][col] != 's') { // regexp[i][col] is '0' or '1'
+					if (regexp[i][col] != regexp[j][col] and regexp[j][col] != 's') {
+						is_subset = false; 
+						break; 
+					}
+				}
+				else if (regexp[j][col] != 's') { // regexp[i][col] is 's'
+					is_subset = false; 
+					break;
+				}
+			}
+
+			if (is_subset) {
+				regexp.erase(regexp.begin() + i);
+				goto start; 
+			}
+		}
+	}
+
+	return regexp;
 }
 
 
@@ -176,16 +226,13 @@ vector<string> REST_simplify(vector<string> regexp) {
 						int index = comb[comb_index];
 						regexp.erase(regexp.begin() + index);
 					}
-
-					// simplify for subsets
-					// regexp = simplify_subsets(regexp);
-
 					goto start; 
 				}
 			}
 		}
 	}
 
+	regexp = simplify_subsets(regexp);
 	return regexp;
 }   
 
@@ -200,16 +247,25 @@ int main() {
 
 
 	// vector<string> regexp = { "1,0,1", "s,1,s", "1,s,0", "0,s,s" };
+
 	// vector<string> regexp = { "1,1,1", "0,s,s", "s,0,s", "s,s,0" };
-	vector<string> regexp = {
+
+	/*vector<string> regexp = {
 		"0,1,s,1,s,0,s,s,1",
 		"0,s,1,1,s,0,s,s,1",
 		"0,s,s,1,s,0,1,s,1",
 		"0,s,s,1,s,0,s,1,1",
 		"0,0,0,1,s,0,0,0,1"
-	};
+	};*/
 
-	//vector<string> regexp = { "0,s,s,s", "0,1,1,s" }; // will add subset checking functionality later
+	vector<string> regexp = { 
+		"0,s,s,1",
+		"0,1,1,s",
+		"0,s,1,s",
+		"0,1,s,s",
+		"0,0,0,0",
+		"1,0,1,s"
+	};
 
 	cout << endl; 
 
