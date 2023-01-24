@@ -22,8 +22,8 @@
     <ClCompile Include="grammar.cpp" />
     <ClCompile Include="nnf_grammar.cpp" />
     <ClCompile Include="reg.cpp" />
+    <ClCompile Include="REST_main.cpp" />
     <ClCompile Include="utils.cpp" />
-    <ClCompile Include="verify_main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="grammar.h" />

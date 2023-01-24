@@ -1,4 +1,6 @@
-﻿  verify_main.cpp
-C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_reg\MLTL\verify_main.cpp(136,10): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_reg\MLTL\verify_main.cpp(141,13): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+﻿  REST_main.cpp
+C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_reg\MLTL\REST_main.cpp(25,27): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_reg\MLTL\REST_main.cpp(117,23): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_reg\MLTL\REST_main.cpp(118,28): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_reg\MLTL\REST_main.cpp(175,6): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
   MLTL.vcxproj -> C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_reg\x64\Debug\MLTL.exe
