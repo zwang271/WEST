@@ -1,0 +1,387 @@
+RNG:
+
+1) G[0,M] (a2 & (a0 -> (a1))):
+NNF Formula: G[0:2](p2&(p0>p1))
+
+Subformula: p2
+ss1
+
+Subformula: p0
+1ss
+
+Subformula: p1
+s1s
+
+Subformula: (p0>p1)
+0ss
+s1s
+
+Subformula: (p2&(p0>p1))
+0s1
+s11
+
+G[0:2](p2&(p0>p1))
+0s1,0s1,0s1
+0s1,0s1,s11
+0s1,s11,0s1
+0s1,s11,s11
+s11,0s1,0s1
+s11,0s1,s11
+s11,s11,0s1
+s11,s11,s11
+
+
+2)  G [0, M] (a2 -> (a0 & a1)):
+NNF Formula: G[0:2](p2>(p0&p1))
+
+Subformula: p2
+ss1
+
+Subformula: p0
+1ss
+
+Subformula: p1
+s1s
+
+Subformula: (p0&p1)
+11s
+
+Subformula: (p2>(p0&p1))
+ss0
+11s
+
+G[0:2](p2>(p0&p1))
+ss0,ss0,ss0
+ss0,ss0,11s
+ss0,11s,ss0
+ss0,11s,11s
+11s,ss0,ss0
+11s,ss0,11s
+11s,11s,ss0
+11s,11s,11s
+
+
+3) G[0,M] ((a0 || a1) -> a2):
+NNF Formula: G[0:3]((p0vp1)>p2)
+
+Subformula: p0
+1ss
+
+Subformula: p1
+s1s
+
+Subformula: (p0vp1)
+1ss
+s1s
+
+Subformula: p2
+ss1
+
+Subformula: ((p0vp1)>p2)
+00s
+ss1
+
+G[0:3]((p0vp1)>p2)
+00s,00s,00s,00s
+00s,00s,00s,ss1
+00s,00s,ss1,00s
+00s,00s,ss1,ss1
+00s,ss1,00s,00s
+00s,ss1,00s,ss1
+00s,ss1,ss1,00s
+00s,ss1,ss1,ss1
+ss1,00s,00s,00s
+ss1,00s,00s,ss1
+ss1,00s,ss1,00s
+ss1,00s,ss1,ss1
+ss1,ss1,00s,00s
+ss1,ss1,00s,ss1
+ss1,ss1,ss1,00s
+ss1,ss1,ss1,ss1
+
+
+4) G[0,M] (a0 -> a1):
+NNF Formula: G[0:3](p0>p1)
+
+Subformula: p0
+1s
+
+Subformula: p1
+s1
+
+Subformula: (p0>p1)
+0s
+s1
+
+G[0:3](p0>p1)
+0s,0s,0s,0s
+0s,0s,0s,s1
+0s,0s,s1,0s
+0s,0s,s1,s1
+0s,s1,0s,0s
+0s,s1,0s,s1
+0s,s1,s1,0s
+0s,s1,s1,s1
+s1,0s,0s,0s
+s1,0s,0s,s1
+s1,0s,s1,0s
+s1,0s,s1,s1
+s1,s1,0s,0s
+s1,s1,0s,s1
+s1,s1,s1,0s
+s1,s1,s1,s1
+
+
+
+
+CTRL:
+1) G[0,M] (a0 -> F [0,(5/0.01437)] (a1)):
+NNF Formula: G[0:3](p0>F[0:5]p1)
+
+Subformula: p0
+1s
+
+Subformula: p1
+s1
+
+Subformula: F[0:5]p1
+s1,ss,ss,ss,ss,ss
+ss,s1,ss,ss,ss,ss
+ss,ss,s1,ss,ss,ss
+ss,ss,ss,s1,ss,ss
+ss,ss,ss,ss,s1,ss
+ss,ss,ss,ss,ss,s1
+
+Subformula: (p0>F[0:5]p1)
+0s,ss,ss,ss,ss,ss
+s1,ss,ss,ss,ss,ss
+ss,s1,ss,ss,ss,ss
+ss,ss,s1,ss,ss,ss
+ss,ss,ss,s1,ss,ss
+ss,ss,ss,ss,s1,ss
+ss,ss,ss,ss,ss,s1
+
+G[0:3](p0>F[0:5]p1)
+0s,0s,0s,0s,ss,ss,ss,ss,ss
+0s,0s,ss,s1,ss,ss,ss,ss,ss
+0s,0s,ss,ss,s1,ss,ss,ss,ss
+0s,0s,ss,ss,ss,s1,ss,ss,ss
+0s,0s,0s,ss,ss,ss,s1,ss,ss
+0s,0s,ss,ss,ss,ss,ss,s1,ss
+0s,0s,0s,ss,ss,ss,ss,ss,s1
+0s,0s,s1,0s,ss,ss,ss,ss,ss
+0s,0s,s1,ss,ss,ss,s1,ss,ss
+0s,0s,s1,ss,ss,ss,ss,ss,s1
+0s,ss,ss,ss,ss,ss,s1,ss,ss
+ss,s1,0s,0s,ss,ss,ss,ss,ss
+ss,s1,0s,s1,ss,ss,ss,ss,ss
+ss,s1,0s,ss,s1,ss,ss,ss,ss
+ss,s1,0s,ss,ss,s1,ss,ss,ss
+ss,s1,ss,ss,ss,ss,s1,ss,ss
+ss,s1,ss,ss,ss,ss,ss,s1,ss
+ss,s1,0s,ss,ss,ss,ss,ss,s1
+ss,ss,s1,0s,ss,ss,ss,ss,ss
+ss,ss,ss,s1,ss,ss,ss,ss,ss
+ss,ss,ss,ss,s1,ss,ss,ss,ss
+ss,ss,ss,ss,ss,s1,ss,ss,ss
+ss,ss,s1,ss,ss,ss,s1,ss,ss
+ss,ss,s1,ss,ss,ss,ss,s1,ss
+ss,ss,s1,ss,ss,ss,ss,ss,s1
+s1,0s,0s,0s,ss,ss,ss,ss,ss
+s1,0s,ss,s1,ss,ss,ss,ss,ss
+s1,0s,ss,ss,s1,ss,ss,ss,ss
+s1,0s,ss,ss,ss,s1,ss,ss,ss
+s1,0s,0s,ss,ss,ss,s1,ss,ss
+s1,0s,ss,ss,ss,ss,ss,s1,ss
+s1,0s,0s,ss,ss,ss,ss,ss,s1
+s1,0s,s1,0s,ss,ss,ss,ss,ss
+s1,0s,s1,ss,ss,ss,s1,ss,ss
+s1,0s,s1,ss,ss,ss,ss,ss,s1
+s1,ss,ss,ss,ss,ss,s1,ss,ss
+
+
+2) G [0,M] ((a0 & a1)->F[0,(0.5/0.01437)](a2)):
+NNF Formula: G[0:3]((p0&p1)>F[0:5]p2)
+
+Subformula: p0
+1ss
+
+Subformula: p1
+s1s
+
+Subformula: (p0&p1)
+11s
+
+Subformula: p2
+ss1
+
+Subformula: F[0:5]p2
+ss1,sss,sss,sss,sss,sss
+sss,ss1,sss,sss,sss,sss
+sss,sss,ss1,sss,sss,sss
+sss,sss,sss,ss1,sss,sss
+sss,sss,sss,sss,ss1,sss
+sss,sss,sss,sss,sss,ss1
+
+Subformula: ((p0&p1)>F[0:5]p2)
+0ss,sss,sss,sss,sss,sss
+s0s,sss,sss,sss,sss,sss
+ss1,sss,sss,sss,sss,sss
+sss,ss1,sss,sss,sss,sss
+sss,sss,ss1,sss,sss,sss
+sss,sss,sss,ss1,sss,sss
+sss,sss,sss,sss,ss1,sss
+sss,sss,sss,sss,sss,ss1
+
+G[0:3]((p0&p1)>F[0:5]p2)
+0ss,0ss,0ss,0ss,sss,sss,sss,sss,sss
+0ss,0ss,0ss,s0s,sss,sss,sss,sss,sss
+0ss,0ss,sss,ss1,sss,sss,sss,sss,sss
+0ss,0ss,sss,sss,ss1,sss,sss,sss,sss
+0ss,0ss,sss,sss,sss,ss1,sss,sss,sss
+0ss,0ss,0ss,sss,sss,sss,ss1,sss,sss
+0ss,0ss,sss,sss,sss,sss,sss,ss1,sss
+0ss,0ss,0ss,sss,sss,sss,sss,sss,ss1
+0ss,0ss,s0s,0ss,sss,sss,sss,sss,sss
+0ss,0ss,s0s,s0s,sss,sss,sss,sss,sss
+0ss,0ss,s0s,sss,sss,sss,ss1,sss,sss
+0ss,0ss,s0s,sss,sss,sss,sss,sss,ss1
+0ss,0ss,ss1,0ss,sss,sss,sss,sss,sss
+0ss,0ss,ss1,s0s,sss,sss,sss,sss,sss
+0ss,0ss,ss1,sss,sss,sss,ss1,sss,sss
+0ss,0ss,ss1,sss,sss,sss,sss,sss,ss1
+0ss,sss,sss,sss,sss,sss,ss1,sss,sss
+0ss,s0s,0ss,0ss,sss,sss,sss,sss,sss
+0ss,s0s,0ss,s0s,sss,sss,sss,sss,sss
+0ss,s0s,sss,ss1,sss,sss,sss,sss,sss
+0ss,s0s,sss,sss,ss1,sss,sss,sss,sss
+0ss,s0s,sss,sss,sss,ss1,sss,sss,sss
+0ss,s0s,0ss,sss,sss,sss,ss1,sss,sss
+0ss,s0s,sss,sss,sss,sss,sss,ss1,sss
+0ss,s0s,0ss,sss,sss,sss,sss,sss,ss1
+0ss,s0s,s0s,0ss,sss,sss,sss,sss,sss
+0ss,s0s,s0s,s0s,sss,sss,sss,sss,sss
+0ss,s0s,s0s,sss,sss,sss,ss1,sss,sss
+0ss,s0s,s0s,sss,sss,sss,sss,sss,ss1
+0ss,s0s,ss1,0ss,sss,sss,sss,sss,sss
+0ss,s0s,ss1,s0s,sss,sss,sss,sss,sss
+0ss,s0s,ss1,sss,sss,sss,ss1,sss,sss
+0ss,s0s,ss1,sss,sss,sss,sss,sss,ss1
+sss,ss1,0ss,0ss,sss,sss,sss,sss,sss
+sss,ss1,0ss,s0s,sss,sss,sss,sss,sss
+sss,ss1,0ss,ss1,sss,sss,sss,sss,sss
+sss,ss1,0ss,sss,ss1,sss,sss,sss,sss
+sss,ss1,0ss,sss,sss,ss1,sss,sss,sss
+sss,ss1,sss,sss,sss,sss,ss1,sss,sss
+sss,ss1,sss,sss,sss,sss,sss,ss1,sss
+sss,ss1,0ss,sss,sss,sss,sss,sss,ss1
+sss,ss1,s0s,0ss,sss,sss,sss,sss,sss
+sss,ss1,s0s,s0s,sss,sss,sss,sss,sss
+sss,ss1,s0s,ss1,sss,sss,sss,sss,sss
+sss,ss1,s0s,sss,ss1,sss,sss,sss,sss
+sss,ss1,s0s,sss,sss,ss1,sss,sss,sss
+sss,ss1,s0s,sss,sss,sss,sss,sss,ss1
+sss,sss,ss1,0ss,sss,sss,sss,sss,sss
+sss,sss,ss1,s0s,sss,sss,sss,sss,sss
+sss,sss,sss,ss1,sss,sss,sss,sss,sss
+sss,sss,sss,sss,ss1,sss,sss,sss,sss
+sss,sss,sss,sss,sss,ss1,sss,sss,sss
+sss,sss,ss1,sss,sss,sss,ss1,sss,sss
+sss,sss,ss1,sss,sss,sss,sss,ss1,sss
+sss,sss,ss1,sss,sss,sss,sss,sss,ss1
+s0s,0ss,0ss,0ss,sss,sss,sss,sss,sss
+s0s,0ss,0ss,s0s,sss,sss,sss,sss,sss
+s0s,0ss,sss,ss1,sss,sss,sss,sss,sss
+s0s,0ss,sss,sss,ss1,sss,sss,sss,sss
+s0s,0ss,sss,sss,sss,ss1,sss,sss,sss
+s0s,0ss,0ss,sss,sss,sss,ss1,sss,sss
+s0s,0ss,sss,sss,sss,sss,sss,ss1,sss
+s0s,0ss,0ss,sss,sss,sss,sss,sss,ss1
+s0s,0ss,s0s,0ss,sss,sss,sss,sss,sss
+s0s,0ss,s0s,s0s,sss,sss,sss,sss,sss
+s0s,0ss,s0s,sss,sss,sss,ss1,sss,sss
+s0s,0ss,s0s,sss,sss,sss,sss,sss,ss1
+s0s,0ss,ss1,0ss,sss,sss,sss,sss,sss
+s0s,0ss,ss1,s0s,sss,sss,sss,sss,sss
+s0s,0ss,ss1,sss,sss,sss,ss1,sss,sss
+s0s,0ss,ss1,sss,sss,sss,sss,sss,ss1
+s0s,sss,sss,sss,sss,sss,ss1,sss,sss
+s0s,s0s,0ss,0ss,sss,sss,sss,sss,sss
+s0s,s0s,0ss,s0s,sss,sss,sss,sss,sss
+s0s,s0s,sss,ss1,sss,sss,sss,sss,sss
+s0s,s0s,sss,sss,ss1,sss,sss,sss,sss
+s0s,s0s,sss,sss,sss,ss1,sss,sss,sss
+s0s,s0s,0ss,sss,sss,sss,ss1,sss,sss
+s0s,s0s,sss,sss,sss,sss,sss,ss1,sss
+s0s,s0s,0ss,sss,sss,sss,sss,sss,ss1
+s0s,s0s,s0s,0ss,sss,sss,sss,sss,sss
+s0s,s0s,s0s,s0s,sss,sss,sss,sss,sss
+s0s,s0s,s0s,sss,sss,sss,ss1,sss,sss
+s0s,s0s,s0s,sss,sss,sss,sss,sss,ss1
+s0s,s0s,ss1,0ss,sss,sss,sss,sss,sss
+s0s,s0s,ss1,s0s,sss,sss,sss,sss,sss
+s0s,s0s,ss1,sss,sss,sss,ss1,sss,sss
+s0s,s0s,ss1,sss,sss,sss,sss,sss,ss1
+ss1,0ss,0ss,0ss,sss,sss,sss,sss,sss
+ss1,0ss,0ss,s0s,sss,sss,sss,sss,sss
+ss1,0ss,sss,ss1,sss,sss,sss,sss,sss
+ss1,0ss,sss,sss,ss1,sss,sss,sss,sss
+ss1,0ss,sss,sss,sss,ss1,sss,sss,sss
+ss1,0ss,0ss,sss,sss,sss,ss1,sss,sss
+ss1,0ss,sss,sss,sss,sss,sss,ss1,sss
+ss1,0ss,0ss,sss,sss,sss,sss,sss,ss1
+ss1,0ss,s0s,0ss,sss,sss,sss,sss,sss
+ss1,0ss,s0s,s0s,sss,sss,sss,sss,sss
+ss1,0ss,s0s,sss,sss,sss,ss1,sss,sss
+ss1,0ss,s0s,sss,sss,sss,sss,sss,ss1
+ss1,0ss,ss1,0ss,sss,sss,sss,sss,sss
+ss1,0ss,ss1,s0s,sss,sss,sss,sss,sss
+ss1,0ss,ss1,sss,sss,sss,ss1,sss,sss
+ss1,0ss,ss1,sss,sss,sss,sss,sss,ss1
+ss1,sss,sss,sss,sss,sss,ss1,sss,sss
+ss1,s0s,0ss,0ss,sss,sss,sss,sss,sss
+ss1,s0s,0ss,s0s,sss,sss,sss,sss,sss
+ss1,s0s,sss,ss1,sss,sss,sss,sss,sss
+ss1,s0s,sss,sss,ss1,sss,sss,sss,sss
+ss1,s0s,sss,sss,sss,ss1,sss,sss,sss
+ss1,s0s,0ss,sss,sss,sss,ss1,sss,sss
+ss1,s0s,sss,sss,sss,sss,sss,ss1,sss
+ss1,s0s,0ss,sss,sss,sss,sss,sss,ss1
+ss1,s0s,s0s,0ss,sss,sss,sss,sss,sss
+ss1,s0s,s0s,s0s,sss,sss,sss,sss,sss
+ss1,s0s,s0s,sss,sss,sss,ss1,sss,sss
+ss1,s0s,s0s,sss,sss,sss,sss,sss,ss1
+ss1,s0s,ss1,0ss,sss,sss,sss,sss,sss
+ss1,s0s,ss1,s0s,sss,sss,sss,sss,sss
+ss1,s0s,ss1,sss,sss,sss,ss1,sss,sss
+ss1,s0s,ss1,sss,sss,sss,sss,sss,ss1
+
+3) G[0,M] (a0->(a0U[0,M]a1)):
+NNF Formula: G[0:1](p0>(p0U[0:1]p1))
+
+Subformula: p0
+1s
+
+Subformula: p1
+s1
+
+Subformula: (p0U[0:1]p1)
+s1,ss
+1s,s1
+
+Subformula: (p0>(p0U[0:1]p1))
+0s,ss
+s1,ss
+1s,s1
+
+G[0:1](p0>(p0U[0:1]p1))
+0s,0s,ss
+ss,s1,ss
+0s,1s,s1
+s1,0s,ss
+s1,1s,s1
+1s,11,s1
+
+
+
+
