@@ -6,6 +6,7 @@
 #include "grammar.h"
 #include "nnf_grammar.h"
 #include "reg.h"
+#include "rest.h"
 
 using namespace std;
 
@@ -42,6 +43,9 @@ int main() {
 
 		char truth_table_reply = 'q';
         bool truth_table_flag;
+
+        char rest_reply = 'q';
+        bool rest_flag;
         
 
 		// Ask user if they want to simplify output of reg
@@ -89,6 +93,27 @@ int main() {
 			}
         }
 
+        while (rest_reply != 'y' and rest_reply != 'n') {
+            cout << "Would you like to use rest? (y / n)" << endl;
+            // Read in user input
+            cin >> rest_reply;
+            // Flush the input buffer
+            cin.ignore(numeric_limits<streamsize>::max(),'\n');
+
+            // Turn on rest_flag
+            if (rest_reply == 'y'){
+                rest_flag = true;
+            }
+                // Turn off rest_flag
+            else if (rest_reply == 'n'){
+                rest_flag = false;
+            }
+                // User did not enter in 'y' or 'n'
+            else{
+                cout << "enter 'y' or 'n'" << endl;
+            }
+        }
+
 		// Convert input to Nnf form
 		string nnf = Wff_to_Nnf(wff);
 		cout << "NNF Formula: " << nnf << endl;
@@ -112,6 +137,12 @@ int main() {
 		cout << "Finished computing." << endl;
 		cout << "Size of vector: " << answer.size() << endl;
 		cout << "Number of characters: " << sum_of_characters(answer) << endl;
+
+        if (rest_flag) {
+            cout << "With REST:" << endl;
+            vector<string> rest_answer = REST(answer);
+            print(rest_answer);
+        }
 	}
 
     return 0;
