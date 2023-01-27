@@ -1,5 +1,10 @@
-west: main.o utils.o reg.o nnf_grammar.o grammar.o
-	g++  main.o utils.o reg.o nnf_grammar.o grammar.o -o west -std=c++17
+all: west clean
+
+west: main.o utils.o reg.o nnf_grammar.o grammar.o rest.o
+	g++  main.o utils.o reg.o nnf_grammar.o grammar.o rest.o -o west -std=c++17
+
+rest.o: rest.cpp
+	g++ -c rest.cpp -std=c++17
   
 main.o: main.cpp
 	g++ -c main.cpp -std=c++17

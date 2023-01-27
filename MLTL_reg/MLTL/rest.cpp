@@ -24,7 +24,7 @@ vector<string> REST(vector<string> regexp) {
 	
 	int n = regexp.size() - 1;
 	if (regexp[0].length() != n) {
-		cout << "invalid input to REST" << endl; 
+		cout << "cannot use REST" << endl;
 		return {};
 	}
 
@@ -239,7 +239,7 @@ vector<string> REST_simplify(vector<string> regexp) {
 
 // *****************************
 
-int main() {
+/*int main() {
 	bool running = true;
 	vector<string> answer;
 	vector<string> display;
@@ -250,21 +250,16 @@ int main() {
 
 	// vector<string> regexp = { "1,1,1", "0,s,s", "s,0,s", "s,s,0" };
 
-	/*vector<string> regexp = {
+	*//*vector<string> regexp = {
 		"0,1,s,1,s,0,s,s,1",
 		"0,s,1,1,s,0,s,s,1",
 		"0,s,s,1,s,0,1,s,1",
 		"0,s,s,1,s,0,s,1,1",
 		"0,0,0,1,s,0,0,0,1"
-	};*/
+	};*//*
 
-	vector<string> regexp = { 
-		"0,s,s,1",
-		"0,1,1,s",
-		"0,s,1,s",
-		"0,1,s,s",
-		"0,0,0,0",
-		"1,0,1,s"
+	vector<string> regexp = {
+
 	};
 
 	cout << endl; 
@@ -274,7 +269,7 @@ int main() {
 
 	regexp = strip_commas(regexp);
 	regexp = REST_simplify(regexp);
-	regexp = add_commas(regexp, 1);
+	regexp = add_commas(regexp, 2);
 	cout << endl; 
 
 
@@ -283,4 +278,4 @@ int main() {
 	cout << endl;
 
 	return 0; 
-}
+}*/
