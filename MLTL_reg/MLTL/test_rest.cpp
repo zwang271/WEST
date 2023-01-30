@@ -25,11 +25,14 @@ vector<string> rest_regex(int size, int array_one[], int array_zero[]) {
     vector<string> output = vector<string>();
     string temp;
 
+
     // Turning char array into vector of strings
     for (int i = 0; i < size + 1; ++i) {
-        temp = regex[i];
+        temp = "";
+        for (int j = 0; j < size; ++j) {
+            temp += regex[i][j];
+        }
         temp += "\0";
-        cout << temp << endl;
         output.push_back(temp);
     }
 
@@ -61,9 +64,8 @@ int main() {
 
 
     vector<string> regex = rest_regex(size, array_one, array_zero);
-    //print(regex);
-    //cout << endl;
-    print(REST(regex));
+    vector<string> simp = REST_simplify(regex);
+    print(simp);
     cout << endl;
     return 0;
 }
