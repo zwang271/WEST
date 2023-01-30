@@ -32,7 +32,6 @@ vector<string> rest_regex(int size, int array_one[], int array_zero[]) {
         for (int j = 0; j < size; ++j) {
             temp += regex[i][j];
         }
-        temp += "\0";
         output.push_back(temp);
     }
 
