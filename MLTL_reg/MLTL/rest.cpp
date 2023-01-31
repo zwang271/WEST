@@ -163,7 +163,15 @@ vector<string> REST_simplify(vector<string> regexp) {
 		return regexp;
 	}
 
-	start: 
+    if (regexp.size() == 2) {
+        if ((regexp[0] == "1" && regexp[1] == "0") || (regexp[0] == "0" && regexp[1] == "1")) {
+            return {"s"};
+        }
+    }
+
+
+
+start:
 	int m = regexp.size(); // number of strings in regexp
 	int n = regexp[0].length(); // length of each string in regexp
 
