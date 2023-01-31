@@ -1,7 +1,7 @@
 all: west test_rest clean
 
-test_rest: test_rest.o rest.o
-	g++ test_rest.o rest.o -o test_rest -std=c++17
+test_rest: test_rest.o utils.o grammar.o nnf_grammar.o reg.o rest.o
+	g++ test_rest.o utils.o rest.o grammar.o nnf_grammar.o reg.o -o test_rest -std=c++17
 
 west: main.o utils.o reg.o nnf_grammar.o grammar.o rest.o
 	g++  main.o utils.o reg.o nnf_grammar.o grammar.o rest.o -o west -std=c++17

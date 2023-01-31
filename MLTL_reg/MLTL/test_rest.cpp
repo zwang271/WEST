@@ -26,7 +26,7 @@ vector<string> rest_regex(int size, vector<int> array_one, vector<int> array_zer
     //string temp;
 
 
-    //// Turning char array into vector of strings
+    // Turning char array into vector of strings
     //for (int i = 0; i < size + 1; ++i) {
     //    temp = "";
     //    for (int j = 0; j < size; ++j) {
@@ -54,46 +54,66 @@ vector<string> rest_regex(int size, vector<int> array_one, vector<int> array_zer
     return output;
 }
 
-//void print(vector<string> v) {
-//    for (int i = 0; i < v.size(); ++i) {
-//        cout << v[i] << endl;
-//    }
-//}
+/*void print(vector<string> v) {
+   for (int i = 0; i < v.size(); ++i) {
+        cout << v[i] << endl;
+    }
+}*/
 
 int main() {
-    int size = 0;
-    cout << "Please enter size of REST block." << endl;
-    cin >> size;
-    /*int array_one[size];
-    int array_zero[size];*/
-    vector<int> array_one = {};
-    vector<int> array_zero = {};
-
-
+    bool run = true;
+    int success_counter = 0;
     srand(time(0));
-    for(int i = 0; i < size; ++i){
-        /*array_one[i] =  rand()%(size+1);
-        array_zero[i] = rand()%(size+1);*/
-        array_one.push_back(rand() % (size + 1));
-        array_zero.push_back(rand() % (size + 1)); 
+    while (run) {
+        int size = 15 + (rand() % 5);
+        cout << "Size of block: " << size << endl;
+        //cout << "Please enter size of REST block." << endl;
+        //cin >> size;
+        /*int array_one[size];
+        int array_zero[size];*/
+        vector<int> array_one = {};
+        vector<int> array_zero = {};
 
-        while (array_one[i] == array_zero[i]) {
-            array_one[i] =  rand()%(size+1);
-            array_zero[i] = rand()%(size+1);
+        for (int i = 0; i < size; ++i) {
+            /*array_one[i] =  rand()%(size+1);
+            array_zero[i] = rand()%(size+1);*/
+            array_one.push_back(rand() % (size + 1));
+            array_zero.push_back(rand() % (size + 1));
+
+            while (array_one[i] == array_zero[i]) {
+                array_one[i] = rand() % (size + 1);
+                array_zero[i] = rand() % (size + 1);
+            }
         }
+
+
+        vector<string> regex = rest_regex(size, array_one, array_zero);
+        //cout << "Randomly generated input: " << endl;
+        //print(regex);
+
+        //vector<string> regex_expanded = expand(regex);
+        //cout << "Size of expanded input = " << regex_expanded.size() << endl;
+
+        vector<string> simp = REST_simplify(regex);
+        //cout << "\n After simplifying with REST: " << endl;
+        //print(simp);
+        //cout << endl;
+
+        if (simp.size() != 1 || simp.at(0).find('1') != string::npos ||
+            simp.at(0).find('0') != string::npos) {
+            cout << "REST Failed!" << endl;
+            run = false;
+        }
+
+        success_counter++;
+        cout << "Number of successful REST runs: " << success_counter << endl;
+
+        //char run_char;
+        //cout << "Run again? (y/n)" << endl;
+        //cin >> run_char;
+        //if (run_char == 'n') {
+            //run = false;
+        //}
     }
-
-
-    vector<string> regex = rest_regex(size, array_one, array_zero);
-    cout << "Randomly generated input: " << endl; 
-    print(regex); 
-
-    vector<string> regex_expanded = expand(regex); 
-    cout << "Size of expanded input = " << regex_expanded.size() << endl; 
-
-    vector<string> simp = REST_simplify(regex);
-    cout << "\n After simplifying with REST: " << endl; 
-    print(simp);
-    cout << endl;
     return 0;
 }
