@@ -6,55 +6,77 @@
 #include "rest.h"
 
 // Creates regex that satisfies REST of size SIZE with ones decided by array_one, zeros by array_zero
-vector<string> rest_regex(int size, int array_one[], int array_zero[]) {
-    char regex [size+1][size]; // numRows, numCols
-    for(int i=0; i<size; ++i){ // i IS COLUMN
-        for (int j=0; j < size+1; ++j) { // j IS ROW
+vector<string> rest_regex(int size, vector<int> array_one, vector<int> array_zero) {
+    //char regex [size+1][size]; // numRows, numCols
+    //for(int i=0; i<size; ++i){ // i IS COLUMN
+    //    for (int j=0; j < size+1; ++j) { // j IS ROW
+    //        if (array_one[i] == j) {
+    //            regex[j][i] = '1';
+    //        }
+    //        else if (array_zero[i] == j) {
+    //            regex[j][i] = '0';
+    //        }
+    //        else {
+    //            regex[j][i] = 'S';
+    //        }
+    //    }
+    //}
+
+    //vector<string> output = vector<string>();
+    //string temp;
+
+
+    //// Turning char array into vector of strings
+    //for (int i = 0; i < size + 1; ++i) {
+    //    temp = "";
+    //    for (int j = 0; j < size; ++j) {
+    //        temp += regex[i][j];
+    //    }
+    //    output.push_back(temp);
+    //}
+
+    vector<string> output; // numRows, numCols
+    for(int j=0; j<size+1; ++j){ // j IS ROW 
+        output.push_back(""); 
+        for (int i=0; i < size; ++i) { // i IS COLUMN
             if (array_one[i] == j) {
-                regex[j][i] = '1';
+                output[j] += "1"; 
             }
             else if (array_zero[i] == j) {
-                regex[j][i] = '0';
+                output[j] += "0";
             }
             else {
-                regex[j][i] = 'S';
+                output[j] += "s"; 
             }
         }
-    }
-
-    vector<string> output = vector<string>();
-    string temp;
-
-
-    // Turning char array into vector of strings
-    for (int i = 0; i < size + 1; ++i) {
-        temp = "";
-        for (int j = 0; j < size; ++j) {
-            temp += regex[i][j];
-        }
-        output.push_back(temp);
     }
 
     return output;
 }
 
-void print(vector<string> v) {
-    for (int i = 0; i < v.size(); ++i) {
-        cout << v[i] << endl;
-    }
-}
+//void print(vector<string> v) {
+//    for (int i = 0; i < v.size(); ++i) {
+//        cout << v[i] << endl;
+//    }
+//}
 
 int main() {
     int size = 0;
     cout << "Please enter size of REST block." << endl;
     cin >> size;
-    int array_one[size];
-    int array_zero[size];
+    /*int array_one[size];
+    int array_zero[size];*/
+    vector<int> array_one = {};
+    vector<int> array_zero = {};
+
 
     srand(time(0));
     for(int i = 0; i < size; ++i){
-        array_one[i] =  rand()%(size+1);
-        array_zero[i] = rand()%(size+1);
+        /*array_one[i] =  rand()%(size+1);
+        array_zero[i] = rand()%(size+1);*/
+        array_one.push_back(rand() % (size + 1));
+        array_zero.push_back(rand() % (size + 1)); 
+
         while (array_one[i] == array_zero[i]) {
             array_one[i] =  rand()%(size+1);
             array_zero[i] = rand()%(size+1);
@@ -63,7 +85,14 @@ int main() {
 
 
     vector<string> regex = rest_regex(size, array_one, array_zero);
+    cout << "Randomly generated input: " << endl; 
+    print(regex); 
+
+    vector<string> regex_expanded = expand(regex); 
+    cout << "Size of expanded input = " << regex_expanded.size() << endl; 
+
     vector<string> simp = REST_simplify(regex);
+    cout << "\n After simplifying with REST: " << endl; 
     print(simp);
     cout << endl;
     return 0;
