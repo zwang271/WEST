@@ -139,8 +139,8 @@ int main() {
 		cout << "Number of characters: " << sum_of_characters(answer) << endl;
 
         if (rest_flag) {
-            cout << "With REST:" << endl;
-            vector<string> rest_answer = REST(answer);
+            cout << "\nWith REST:" << endl;
+            vector<string> rest_answer = REST_simplify(answer);
             print(rest_answer);
         }
 	}

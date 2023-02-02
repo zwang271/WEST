@@ -27,7 +27,10 @@
     <ClCompile Include="reg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="REST_main.cpp">
+    <ClCompile Include="rest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gui_main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -44,5 +47,13 @@
     <ClInclude Include="reg.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="rest.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="gui.py">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
