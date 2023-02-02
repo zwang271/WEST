@@ -1,8 +1,3 @@
-﻿  REST_main.cpp
-C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_reg\MLTL\REST_main.cpp(25,27): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_reg\MLTL\REST_main.cpp(123,23): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_reg\MLTL\REST_main.cpp(124,28): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_reg\MLTL\REST_main.cpp(167,23): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_reg\MLTL\REST_main.cpp(168,28): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_reg\MLTL\REST_main.cpp(225,6): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+﻿  gui_main.cpp
+C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_reg\MLTL\gui_main.cpp(110,57): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
   MLTL.vcxproj -> C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_reg\x64\Debug\MLTL.exe
