@@ -15,3 +15,5 @@ vector<vector<int>> combinations(int n, int r);
 vector<string> simplify_subsets(vector<string> regexp);
 
 vector<string> REST_simplify(vector<string> regexp);
+
+vector<string> REST_simplify_v2(vector<string> regexp); 

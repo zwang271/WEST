@@ -55,7 +55,7 @@ int main() {
 			"Warning: computationally expensive."<< endl;
 		do {
 			getline(cin, input);
-			if (input != "y" and input != "no") {
+			if (input != "y" and input != "n") {
 				cout << "Please enter 'y' or 'n'" << endl;
 			}
 		} while (input != "y" and input != "n");

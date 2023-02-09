@@ -1,3 +1,9 @@
-s1,ss,ss
-1s,s1,ss
-1s,1s,s1
+0ss,sss,sss,sss,sss
+sss,0ss,sss,sss,sss
+sss,sss,0ss,sss,sss
+sss,sss,sss,0ss,sss
+sss,sss,sss,sss,0ss
+s11,sss,sss,sss,sss
+sss,s11,sss,sss,sss
+sss,sss,s11,sss,sss
+sss,sss,sss,s11,sss
