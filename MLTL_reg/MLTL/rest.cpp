@@ -7,10 +7,15 @@
 #include "nnf_grammar.h"
 #include "reg.h"
 
-using namespace std;
+#include <chrono>
 
-// REST functions
-// ***************************** 
+using namespace std;
+using namespace std::chrono; 
+
+
+// TIMING EACH FUNCTION
+duration<long long, std::nano> time_REST, time_combinations, 
+time_simplify_subsets, time_REST_simplify, time_REST_simplify_v2;
 
 
 /*
@@ -18,13 +23,15 @@ using namespace std;
 * Output: returns the arbitrary computation if regexp satisfies REST, otherwise returns regexp
 */
 vector<string> REST(vector<string> regexp) {
+	auto start = high_resolution_clock::now();
+
 	if (regexp.size() == 0) {
 		return {};
 	}
 	
 	int n = regexp.size() - 1;
 	if (regexp[0].length() != n) {
-		cout << "cannot use REST" << endl;
+		std::cout << "cannot use REST" << endl;
 		return {};
 	}
 
@@ -68,6 +75,9 @@ vector<string> REST(vector<string> regexp) {
 		}
 	}
 
+	auto stop = high_resolution_clock::now();
+	time_REST += stop - start; 
+
 	return { string(n, 's')};
 }
 
@@ -77,6 +87,8 @@ vector<string> REST(vector<string> regexp) {
 * Output: vector of all r combinations from the set [0, ..., n-1]
 */
 vector<vector<int>> combinations(int n, int r) {
+	auto start = high_resolution_clock::now();
+
 	vector<bool> v(n);
 	fill(v.end() - r, v.end(), true);
 
@@ -104,6 +116,9 @@ vector<vector<int>> combinations(int n, int r) {
 	}
 	cout << "number of combinations is " << size << endl; */
 
+	auto end = high_resolution_clock::now();
+	time_combinations += end - start; 
+
 	return all_comb;
 }
 
@@ -115,6 +130,8 @@ vector<vector<int>> combinations(int n, int r) {
 * Example: simplify_subsets({ss1, 1s1}) = {ss1}
 */
 vector<string> simplify_subsets(vector<string> regexp) {
+	auto start = high_resolution_clock::now();
+
 	if (regexp.size() <= 1) {
 		return regexp;
 	}
@@ -150,11 +167,16 @@ vector<string> simplify_subsets(vector<string> regexp) {
 		}
 	}
 
+	auto end = high_resolution_clock::now();
+	time_simplify_subsets += end - start; 
+
 	return regexp;
 }
 
 
 vector<string> REST_simplify(vector<string> regexp) {
+	auto start = high_resolution_clock::now();
+
 	if (regexp.size() == 0) {
 		return {};
 	}
@@ -168,7 +190,6 @@ vector<string> REST_simplify(vector<string> regexp) {
             return {"s"};
         }
     }
-
 
 
 start:
@@ -241,11 +262,131 @@ start:
 	}
 
 	regexp = simplify_subsets(regexp);
+
+	auto end = high_resolution_clock::now();
+	time_REST_simplify += end - start; 
+
+	std::cout << "REST: " << time_REST.count() / 1e9 << " seconds" << endl;
+	std::cout << "combinations: " << time_combinations.count() / 1e9 << " seconds" << endl;
+	std::cout << "simplify_subsets: " << time_simplify_subsets.count() / 1e9 << " seconds" << endl;
+	std::cout << "REST_simplify total time: " << time_REST_simplify.count() / 1e9 << " seconds" << endl;
+	
+	time_REST = nanoseconds(0);
+	time_combinations = nanoseconds(0);
+	time_simplify_subsets = nanoseconds(0);
+	time_REST_simplify = nanoseconds(0);
+
 	return regexp;
 }   
 
 
-// *****************************
+vector<string> REST_simplify_v2(vector<string> regexp) {
+	auto start = high_resolution_clock::now();
+
+	if (regexp.size() == 0) {
+		return {};
+	}
+
+	if (regexp.size() == 1) {
+		return regexp;
+	}
+
+	if (regexp.size() == 2) {
+		if ((regexp[0] == "1" && regexp[1] == "0") || (regexp[0] == "0" && regexp[1] == "1")) {
+			return { "s" };
+		}
+	}
+
+	duration<long long, std::nano> time_check_combination;
+
+start:
+	int m = regexp.size(); // number of strings in regexp
+	int n = regexp[0].length(); // length of each string in regexp
+
+	// cout << "m=" << m << " n=" << n << endl;
+
+	for (int r = 3; r <= min(m, n + 1); r++) {
+		vector<vector<int>> all_combs = combinations(m, r);
+		for (vector<int>comb : all_combs) {
+
+			vector<string> v = {}; // v is an r-subset of regular expression strings of regexp
+			for (int index : comb) {
+				v.push_back(regexp[index]);
+			}
+
+			auto t0 = high_resolution_clock::now();
+			vector<int> diff_col_v = {}; // indices of the columns of v that aren't equal
+			for (int col = 0; col < n; col++) {
+				string first_string = v[0];
+				for (int i = 1; i < r; i++) {
+					if (v[i][col] != first_string[col]) {
+						diff_col_v.push_back(col);
+						break;
+					}
+				}
+				if (diff_col_v.size() > r - 1) {
+					break;
+				}
+			}
+			time_check_combination += high_resolution_clock::now() - t0; 
+
+			/*for (int col : diff_col_v) {
+				cout << col << " ";
+			}
+			cout << endl; */
+
+			if (diff_col_v.size() == r - 1) {
+				// Now extract the r-1 different columns from the r rows and check REST
+				vector<string> rest_regexp = {};
+				for (int i = 0; i < r; i++) {
+					string temp = "";
+					for (int col : diff_col_v) {
+						temp += v[i][col];
+					}
+					rest_regexp.push_back(temp);
+				}
+				rest_regexp = REST(rest_regexp);
+
+				/*print(rest_regexp);
+				cout << endl; */
+
+				if (rest_regexp.size() == 1) {
+					// Simplify first occurence
+					for (int col : diff_col_v) {
+						regexp[comb[0]][col] = 's';
+					}
+
+					// Delete all the rest from 
+					for (int comb_index = comb.size() - 1; comb_index > 0; comb_index--) {
+						int index = comb[comb_index];
+						regexp.erase(regexp.begin() + index);
+					}
+					goto start;
+				}
+			}
+		}
+	}
+
+	regexp = simplify_subsets(regexp);
+
+	auto end = high_resolution_clock::now();
+	time_REST_simplify_v2 += end - start;
+
+	std::cout << "REST: " << time_REST.count() / 1e9 << " seconds" << endl;
+	std::cout << "combinations: " << time_combinations.count() / 1e9 << " seconds" << endl;
+	std::cout << "simplify_subsets: " << time_simplify_subsets.count() / 1e9 << " seconds" << endl;
+	std::cout << "check_combinations: " << time_check_combination.count() / 1e9 << " seconds" << endl;
+	std::cout << "REST_simplify total time: " << time_REST_simplify_v2.count() / 1e9 << " seconds" << endl;
+
+	time_REST = nanoseconds(0); 
+	time_combinations = nanoseconds(0); 
+	time_simplify_subsets = nanoseconds(0); 
+	time_REST_simplify_v2 = nanoseconds(0);
+	time_check_combination = nanoseconds(0); 
+
+	return regexp;
+}
+
 
 /*int main() {
 	bool running = true;
@@ -266,9 +407,7 @@ start:
 		"0,0,0,1,s,0,0,0,1"
 	};*//*
 
-	vector<string> regexp = {
-
-	};
+	vector<string> regexp = {};
 
 	cout << endl; 
 
