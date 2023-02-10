@@ -5,6 +5,11 @@
 #include "utils.h"
 #include "rest.h"
 
+
+#include "grammar.h"
+#include "nnf_grammar.h"
+#include "reg.h"
+
 // Creates regex that satisfies REST of size SIZE with ones decided by array_one, zeros by array_zero
 vector<string> rest_regex(int size, vector<int> array_one, vector<int> array_zero) {
     //char regex [size+1][size]; // numRows, numCols
