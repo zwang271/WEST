@@ -263,7 +263,7 @@ start:
 
 	regexp = simplify_subsets(regexp);
 
-	auto end = high_resolution_clock::now();
+	/*auto end = high_resolution_clock::now();
 	time_REST_simplify += end - start; 
 
 	std::cout << "REST: " << time_REST.count() / 1e9 << " seconds" << endl;
@@ -274,7 +274,7 @@ start:
 	time_REST = nanoseconds(0);
 	time_combinations = nanoseconds(0);
 	time_simplify_subsets = nanoseconds(0);
-	time_REST_simplify = nanoseconds(0);
+	time_REST_simplify = nanoseconds(0);*/
 
 	return regexp;
 }   
