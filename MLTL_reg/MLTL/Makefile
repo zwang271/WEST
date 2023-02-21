@@ -1,4 +1,4 @@
-all: west test_rest clean
+all: west test_rest benchmark_rest clean
 
 test_rest: test_rest.o utils.o grammar.o nnf_grammar.o reg.o rest.o
 	g++ test_rest.o utils.o rest.o grammar.o nnf_grammar.o reg.o -o test_rest -std=c++17
@@ -6,13 +6,17 @@ test_rest: test_rest.o utils.o grammar.o nnf_grammar.o reg.o rest.o
 west: main.o utils.o reg.o nnf_grammar.o grammar.o rest.o
 	g++  main.o utils.o reg.o nnf_grammar.o grammar.o rest.o -o west -std=c++17
 
-
 west_lib: west_lib.o utils.o reg.o nnf_grammar.o grammar.o rest.o
 	g++ west_lib.o utils.o reg.o nnf_grammar.o grammar.o rest.o -o ./gui/west_lib -std=c++17
 
-
 west_lib.o: west_lib.cpp
 	g++ -c west_lib.cpp -std=c++17
+
+benchmark_rest: rest_experiments.o utils.o grammar.o nnf_grammar.o reg.o rest.o
+	g++ rest_experiments.o utils.o rest.o grammar.o nnf_grammar.o reg.o -o benchmark_rest -std=c++17
+
+rest_experiments.o: rest_experiments.cpp
+	g++ -c rest_experiments.cpp -std=c++17
 
 test_rest.o: test_rest.cpp
 	g++ -c test_rest.cpp -std=c++17
