@@ -6,6 +6,14 @@ test_rest: test_rest.o utils.o grammar.o nnf_grammar.o reg.o rest.o
 west: main.o utils.o reg.o nnf_grammar.o grammar.o rest.o
 	g++  main.o utils.o reg.o nnf_grammar.o grammar.o rest.o -o west -std=c++17
 
+
+west_lib: west_lib.o utils.o reg.o nnf_grammar.o grammar.o rest.o
+	g++ west_lib.o utils.o reg.o nnf_grammar.o grammar.o rest.o -o ./gui/west_lib -std=c++17
+
+
+west_lib.o: west_lib.cpp
+	g++ -c west_lib.cpp -std=c++17
+
 test_rest.o: test_rest.cpp
 	g++ -c test_rest.cpp -std=c++17
 
