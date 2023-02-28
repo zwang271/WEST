@@ -1,6 +1,6 @@
-# WEST mLTL Truth Table Generator
+# WEST GUI Instructions
 
-This README describes how to use the WEST program directly from the terminal. For instructions on using the WEST GUI, see the file GUIREADME.md.
+This README describes how to use the WEST GUI. For instructions on using WEST directly from the terminal, see the file WESTREADME.md.
 The WEST mLTL Truth Table Generator is a program that parses well-formed mLTL formulas and outputs the regular expression
 for the computations that satisfy the formula.
 Our recursive algorithm is based on the regular expressions of mLTL operators and runs with approximately doubly exponential space and time complexity in the worst case.
@@ -13,8 +13,8 @@ After downloading and cloning this repository, use the commands
 $ cd 2022-Iowa-State-REU-Temporal-Logic-
 $ cd MLTL_reg
 $ cd MLTL
-$ make west
-$ ./west
+$ make west_lib
+$ python gui.py
 ```
 
 Then, the user will be prompted:
@@ -26,194 +26,20 @@ Please enter a MLTL formula.
 See the Grammar section below for how to properly format inputted mLTL formulas.
 
 If the user enters a something other than a properly written mLTL formula,
-the WEST program will prompt the user to enter in another string:
+the WEST program will prompt the user to enter in another string.
 
-```
-Please enter a MLTL formula.
-asdasd
-Not a well formed formula!
-Please enter a MLTL formula.
-```
-
-If the input is a properly written mLTL formula, the WEST program will prompt the user whether they wish to
-simplify the output:
-
-```
-Please enter a MLTL formula.
-((G [1:1] p0 v G [1:1] ~p0) v (G [2:2] p0 v G [2:2] ~p0))
-Would you like to simplify output of reg? (y / n)
-```
-
-Answering yes will apply a simplifying function on the output of the WEST program. <br />
-This will lead to a nicer regular expression output, but at the expense of longer computation time. <br />
-
-After prompting the user whether they wish to simplify the output, the WEST will prompt the user
-whether they wish to generate the truth table.  Answering yes will print out the regular expressions for every subformula of the input formula,
-while no will simply output the regular expression for the input formula. <br />
-Note that if simplify is turned on, the WEST program will simply the output for every subformula,
+Along with entering the formula, the user can toggle checkmarks that run simplify or REST. The simplify function leads to a nicer regular expression out, at the expense of longer computation. Note that if simplify is turned on, the WEST program will simply the output for every subformula,
 as well as the output for the input formula. <br />
+Toggling REST will run the REST algorithm REST simplifies a particular form of regular expressions to the trivial computation, but is very computationally expensive. It is generally not recommended to use REST. <br />
 
-After this prompt, the user will be asked whether they wish to use REST. REST simplifies a particular form of regular expressions to the trivial computation, but is very computationally expensive. It is generally not recommended to use REST. <br />
+Once the user has entered a well-formed formula, toggled the simplifications of their choice, and hit the enter key, they will be prompted:
 
-The simplify and truth table options are shown for the output of the following input formula: "((G [1:1] p0 v G [1:1] ~p0) v (G [2:2] p0 v G [2:2] ~p0))".<br />
-<br />
-No to simplify, No to truth table, No to REST: <br />
+``
+Please select a subformula to explore below.
+``
+Below this will be each subformula of the inputted formula, including the full formula. The user may click on one or multiple of these subformulas; each one will open in their own tab. <br />
 
-```
-Please enter a MLTL formula.
-((G [1:1] p0 v G [1:1] ~p0) v (G [2:2] p0 v G [2:2] ~p0))
-Would you like to simplify output of reg? (y / n)
-n
-Would you like to generate the truth table? (y / n)
-n
-Would you like to use rest? (y / n)
-n
-NNF Formula: ((G[1:1]p0vG[1:1]~p0)v(G[2:2]p0vG[2:2]~p0))
-
-s,1
-s,0
-s,s,1
-s,s,0
-
-Finished computing.
-Size of vector: 4
-Number of characters: 16
-Please enter a MLTL formula.
-
-```
-
-<br />
-
-<br />
-Yes to simplify, No to truth table, No to REST: <br />
-
-```
-Please enter a MLTL formula.
-((G [1:1] p0 v G [1:1] ~p0) v (G [2:2] p0 v G [2:2] ~p0))
-Would you like to simplify output of reg? (y / n)
-y
-Would you like to generate the truth table? (y / n)
-n
-Would you like to use rest? (y / n)
-n
-NNF Formula: ((G[1:1]p0vG[1:1]~p0)v(G[2:2]p0vG[2:2]~p0))
-
-s,s,s
-
-Finished computing.
-Size of vector: 1
-Number of characters: 5
-Please enter a MLTL formula.
-
-```
-
-<br />
-
-<br />
-No to simplify, Yes to truth table, No to REST: <br />
-
-```
-Please enter a MLTL formula.
-((G [1:1] p0 v G [1:1] ~p0) v (G [2:2] p0 v G [2:2] ~p0))
-Would you like to simplify output of reg? (y / n)
-n
-Would you like to generate the truth table? (y / n)
-y
-Would you like to use rest? (y / n)
-n
-NNF Formula: ((G[1:1]p0vG[1:1]~p0)v(G[2:2]p0vG[2:2]~p0))
-
-Subformula: p0
-1
-
-Subformula: G[1:1]p0
-s,1
-
-Subformula: ~p0
-0
-
-Subformula: G[1:1]~p0
-s,0
-
-Subformula: (G[1:1]p0vG[1:1]~p0)
-s,1
-s,0
-
-Subformula: G[2:2]p0
-s,s,1
-
-Subformula: G[2:2]~p0
-s,s,0
-
-Subformula: (G[2:2]p0vG[2:2]~p0)
-s,s,1
-s,s,0
-
-((G[1:1]p0vG[1:1]~p0)v(G[2:2]p0vG[2:2]~p0))
-s,1
-s,0
-s,s,1
-s,s,0
-
-Finished computing.
-Size of vector: 4
-Number of characters: 16
-Please enter a MLTL formula.
-
-```
-
-<br />
-
-<br />
-Yes to simplify, Yes to truth table, No to REST: <br />
-
-```
-Please enter a MLTL formula.
-((G [1:1] p0 v G [1:1] ~p0) v (G [2:2] p0 v G [2:2] ~p0))
-Would you like to simplify output of reg? (y / n)
-y
-Would you like to generate the truth table? (y / n)
-y
-Would you like to use rest? (y / n)
-n
-NNF Formula: ((G[1:1]p0vG[1:1]~p0)v(G[2:2]p0vG[2:2]~p0))
-
-Subformula: p0
-1
-
-Subformula: G[1:1]p0
-s,1
-
-Subformula: ~p0
-0
-
-Subformula: G[1:1]~p0
-s,0
-
-Subformula: (G[1:1]p0vG[1:1]~p0)
-s,s
-
-Subformula: G[2:2]p0
-s,s,1
-
-Subformula: G[2:2]~p0
-s,s,0
-
-Subformula: (G[2:2]p0vG[2:2]~p0)
-s,s,s
-
-((G[1:1]p0vG[1:1]~p0)v(G[2:2]p0vG[2:2]~p0))
-s,s,s
-
-Finished computing.
-Size of vector: 1
-Number of characters: 5
-Please enter a MLTL formula.
-
-```
-
-<br />
-
+Within each tab, the user will see a table of checkboxes, one for each variable at each time step, and a list of regular expressions that represent satisfying computations for the subformula. The user can toggle the truth value of each variable at every time step or choose a random satisfying computation. Clicking any of the regular expressions will generate a random computation of that form, while clicking the button Rand Comp gives a random satisfying computation of any form. When the computation demonstrated by the check boxes satisfies the formula, the formula turns green. If not, it turns red. Additionally, any regular expressions that describe the computation turn green as well.
 
 
 ## Grammar
@@ -367,54 +193,6 @@ ss,11,ss
 ss,ss,11
 ```
 Where in each string separated by commas, the first digit represents the truth value of p0, and the second digit represents the truth value of p1.
-
-
-## Example
-An interesting mLTL formula to consider is that of the oscillation of the truth value of a propositional variable for each time step.
-Here is how a user may generate the truth table for this formula:
-```
-Please enter a MLTL formula.
-$ G[0:2] (&[(p0 > G[1:1]~p0), (~p0 > G[1:1]p0)])
-Would you like to simplify output of reg? (y / n)
-$ y
-Would you like to generate the truth table? (y / n)
-$ y
-Would you like to use rest? (y / n)
-$ n
-NNF Formula: G[0:2](&[(p0>G[1:1]~p0),(~p0>G[1:1]p0)])
-
-Subformula: p0
-1
-
-Subformula: ~p0
-0
-
-Subformula: G[1:1]~p0
-s,0
-
-Subformula: (p0>G[1:1]~p0)
-0,s
-s,0
-
-Subformula: G[1:1]p0
-s,1
-
-Subformula: (~p0>G[1:1]p0)
-1,s
-s,1
-
-Subformula: (&[(p0>G[1:1]~p0),(~p0>G[1:1]p0)])
-0,1
-1,0
-
-G[0:2](&[(p0>G[1:1]~p0),(~p0>G[1:1]p0)])
-0,1,0,1
-1,0,1,0
-
-Finished computing.
-Size of vector: 2
-Number of characters: 14
-```
 
 
 ## Troubleshooting Guide
