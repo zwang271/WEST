@@ -1,3 +1,0 @@
-﻿  gui_main.cpp
-C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_reg\MLTL\gui_main.cpp(110,57): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-  MLTL.vcxproj -> C:\Users\Jonathanandzili\summer_2022_REU\2022-Iowa-State-REU-Temporal-Logic-\MLTL_reg\x64\Debug\MLTL.exe
