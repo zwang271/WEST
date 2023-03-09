@@ -24,7 +24,7 @@ def rewrite(formula):
         ":": ", ",
         ">": " -> ",
         "v": " v ",
-        "&": " && ",
+        "&": " & ",
         "=": " = "
     }
     f = ""
@@ -71,19 +71,24 @@ def process_file():
 def run(func, argList):
     execute = ".\gui\west_lib.exe " + func + " "
     for arg in argList:
-        execute += '\"' + arg + '\" '
+        execute += '"' + arg + '" '
     os.system(execute)
+
+    # print(execute)
 
     try:
         return open(f'.\gui\{func}.txt', 'r')
     except FileNotFoundError:
         return []
 
-if __name__ == '__main__':
-    outfile = run("Wff_check", ["~G[0:2](p0 v p1)"])
-    outfile = run("Wff_to_Nnf", ["~G[0:2](p0 v p1)"])
-    outfile = run("get_n", ["F[0:2](~p0v~p1)"])
-    outfile = run("reg", ["F[0:2](~p0v~p1)", "y"])
 
-    for line in outfile: 
-        print(line)
+if __name__ == '__main__':
+    outfile1 = run("Wff_check", ["~G[0:2](p0 v p1)"])
+    outfile2 = run("Wff_to_Nnf", ["~G[0:2](p0 v p1)"])
+    outfile3 = run("get_n", ["F[0:2](~p0v~p1)"])
+    outfile4 = run("reg", ["F[0:2](~p0v~p1)", "y", "n"])
+
+    files = [outfile1, outfile2, outfile3, outfile4]
+    for outfile in files:
+        for line in outfile: 
+            print(line)

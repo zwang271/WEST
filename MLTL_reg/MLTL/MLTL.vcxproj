@@ -20,7 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="grammar.cpp" />
-    <ClCompile Include="gui_main.cpp" />
+    <ClCompile Include="west_lib.cpp" />
     <ClCompile Include="nnf_grammar.cpp" />
     <ClCompile Include="reg.cpp" />
     <ClCompile Include="rest.cpp" />
