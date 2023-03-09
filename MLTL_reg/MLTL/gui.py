@@ -3,10 +3,10 @@ import os
 from PyQt5.QtWidgets import * 
 from PyQt5.QtGui import * 
 import re
-from random import choice
+from random import choice, randint
 from time import sleep
 from gui_utils import * 
-
+from dd import autoref as _bdd
 
 
 class FormulaWindow(QWidget):
@@ -19,6 +19,7 @@ class FormulaWindow(QWidget):
         self.t = 0
         self.n = n
         self.regexp, self.west_regexp = regexp, west_regexp
+        self.complement_list = None
         if len(regexp) > 0:
             self.t = max(regexp[i].count(",") + 1 for i in range(len(regexp)))
         self.var = list(set(re.findall("p[0-9]*", self.formula)))
@@ -45,11 +46,28 @@ class FormulaWindow(QWidget):
         computation_layout = QHBoxLayout()
         self.computation_label = QLabel()
         self.computation_label.setFont(FONT)
+        self.computation_label.setToolTip("Computation")
         computation_layout.addWidget(self.computation_label)
-        self.rand_computation_button = QPushButton("Rand Comp")
-        self.rand_computation_button.clicked.connect(lambda state, x=None: self.rand_comp(x))
-        computation_layout.addWidget(self.rand_computation_button)
+        self.computation_help_button = QPushButton("Help")
+        self.computation_help_button.setToolTip("Click for explanation about string representation of computations.")
+        self.computation_help_button.clicked.connect(self.show_computation_help)
+        computation_layout.addWidget(self.computation_help_button)
         main_layout.addLayout(computation_layout)
+
+
+        # Button to generate random sat and unsat comp
+        rand_button_layout = QHBoxLayout()
+        self.rand_computation_button = QPushButton("Rand SAT")
+        self.rand_computation_button.setToolTip("Randomly generates a satisfying computaton to the MLTL formula.")
+        self.rand_computation_button.setFont(FONT)
+        self.rand_computation_button.clicked.connect(lambda state, x=None: self.rand_comp(x))
+        self.rand_unsat_button = QPushButton("Rand UNSAT")
+        self.rand_unsat_button.setToolTip("Randomly generates a computation that does NOT satisfy the MLTL formula.")
+        self.rand_unsat_button.clicked.connect(self.rand_unsat)
+        self.rand_unsat_button.setFont(FONT)
+        rand_button_layout.addWidget(self.rand_computation_button)
+        rand_button_layout.addWidget(self.rand_unsat_button)
+        main_layout.addLayout(rand_button_layout)
 
 
         # Configure variable toggling layout
@@ -93,15 +111,9 @@ class FormulaWindow(QWidget):
 
         self.reg_labels = []
         for i, reg in enumerate(self.west_regexp):
-            # label = QLabel(reg)
-            # label.setFont(FONT)
-            # self.reg_labels.append(label)
-            # button = QPushButton("Rand Comp")
-            # button.clicked.connect(lambda state, x=reg: self.rand_comp(x))
-            # layout4.addWidget(label, i, 0)
-            # layout4.addWidget(button, i, 1)
             label = QPushButton(reg)
             label.setFont(FONT)
+            label.setToolTip("Click to generate satisfying computation that matches this particular regular expression.")
             self.reg_labels.append(label)
             label.clicked.connect(lambda state, x=reg: self.rand_comp(x))
             scroll_layout.addWidget(label, i, 0)
@@ -133,9 +145,11 @@ class FormulaWindow(QWidget):
             if re.match(reg, comp):
                 found = True
                 self.formula_label.setStyleSheet("background-color: lightgreen")
+                self.formula_label.setToolTip("SATISFIED")
                 self.reg_labels[i].setStyleSheet("background-color: lightgreen")
             else:
                 self.reg_labels[i].setStyleSheet("background-color: none")
+                self.formula_label.setToolTip("NOT SATISFIED")
         if not found:
             self.formula_label.setStyleSheet("background-color: red")
     
@@ -158,12 +172,74 @@ class FormulaWindow(QWidget):
                 var = 0
                 continue
             var += 1
-
     
+
+    def compute_complement(self):
+        # Create a BDD manager
+        bdd = _bdd.BDD()
+
+        # Create constants true and false
+        const = {"1": "True", "0": "False"}
+
+        # Create boolean vars x_{i} for i in range(self.t * self.n)
+        x_names = [f"x{i}" for i in range(self.t * self.n)]
+        [bdd.declare(x_i) for x_i in x_names]
+        x = [bdd.var(x_i) for x_i in x_names]
+
+        complement = None
+        for w in self.west_regexp:
+            expr = "("
+            w = w.replace(",","")
+            for i, char in enumerate(w):
+                if char != "s":
+                    expr += f"( x{i} <-> ~ {const[char]} ) | "
+            expr = expr[:-3] + ")"
+            clause = bdd.add_expr(expr)
+
+            complement = clause if complement is None else (complement) & clause
+
+        self.complement_list = list(bdd.pick_iter(complement))
+
+
+    def show_computation_help(self):
+        title = "String Representation of Computations"
+        path = './gui/computation.png'
+        self.popup = Popup(title, path)
+        self.popup.show()
+
+
+    #G[0:2](p0 v p1)
+    def rand_unsat(self):
+        if self.complement_list is None:
+            self.compute_complement()
+        complement = choice(self.complement_list)
+
+        for i in range(self.t * self.n):
+            var, time = i % self.n, i // self.n
+            if f"x{i}" in complement.keys():
+                b = complement[f"x{i}"]
+            else:
+                b = True if randint(0, 1) == 1 else False
+            self.variable_toggle[var][time].setChecked(b)
+
+
     def reset_toggles(self):
         for time in range(self.t):
             for var in range(self.n):
                 self.variable_toggle[var][time].setChecked(False)
+
+
+class Popup(QWidget):
+    def __init__(self, title = "", path = None):
+        super().__init__()
+        self.setWindowTitle(title)
+        layout = QHBoxLayout()
+        lb = QLabel()
+        pixmap = QPixmap(path)
+        lb.resize(pixmap.width(), pixmap.height())
+        lb.setPixmap(pixmap)
+        layout.addWidget(lb)
+        self.setLayout(layout)
 
 
 class MainWindow(QMainWindow):
@@ -173,12 +249,18 @@ class MainWindow(QMainWindow):
         self.resize(800, 400)
 
         # Create field for user input
+        input_layout = QHBoxLayout()
         self.input_line = QLineEdit()
         self.input_line.setMaxLength(100)
         self.input_line.setPlaceholderText("Type in a MLTL formula")
         self.input_line.setFont(FONT)
         self.input_line.returnPressed.connect(self.validate_formula)
-        main_layout.addWidget(self.input_line)
+        input_layout.addWidget(self.input_line)
+        self.cfg_button = QPushButton("Grammar")
+        self.cfg_button.setToolTip("Click to view full context free grammar of input.")
+        self.cfg_button.clicked.connect(self.show_cfg)
+        input_layout.addWidget(self.cfg_button)
+        main_layout.addLayout(input_layout)
 
         # Create checkboxes for toggling simp and rest
         toggle_layout = QHBoxLayout()
@@ -270,9 +352,9 @@ class MainWindow(QMainWindow):
             # only display subformulas that are substrings of the main formula
             if f not in self.formula[-1]:
                 continue
-
-
-            formula_button = QPushButton(f)
+                
+            formula_button = QPushButton(f.replace("&", "&&"))
+            formula_button.setToolTip("Explore formula in a separate window")
             formula_button.setFont(FONT)
             formula_button.clicked.connect(
                 lambda state, 
@@ -288,6 +370,17 @@ class MainWindow(QMainWindow):
     def show_subformula(self, formula, regexp, west_regexp, n):
         w = FormulaWindow(formula, regexp, west_regexp, n)
         w.show()
+
+
+    def show_cfg(self):
+        path = "./gui/cfg.png"
+        title = "Context Free Grammar for WEST"
+        self.popup = Popup(title, path)
+        self.popup.show()
+
+
+
+
 
 
 app = QApplication(sys.argv)
@@ -307,6 +400,9 @@ app.exec()
 # grouping by time variables
 # refrain from display outputs that are too large
 # error handling
+# formula rewriting, checking trivial intersections/unions, temporal logic vacuity
 
 # Problematic examples:
 # (G[0:2] (p0 v p1) v F[0:2] (p1 > p2))
+
+

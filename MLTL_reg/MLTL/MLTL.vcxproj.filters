@@ -30,7 +30,7 @@
     <ClCompile Include="rest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gui_main.cpp">
+    <ClCompile Include="west_lib.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
