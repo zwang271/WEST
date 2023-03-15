@@ -2,15 +2,16 @@ import sys
 import os
 from PyQt5.QtWidgets import * 
 from PyQt5.QtGui import * 
+from PyQt5.QtCore import Qt
 import re
 from random import choice, randint
 from time import sleep
+import math
 from gui_utils import * 
 from dd import autoref as _bdd
 
 
 class FormulaWindow(QWidget):
-
     def __init__(self, formula, regexp, west_regexp, n):
         super().__init__()
         
@@ -32,7 +33,7 @@ class FormulaWindow(QWidget):
 
 
         # Define main layout
-        self.setWindowTitle("My App")
+        self.setWindowTitle("WEST")
         main_layout = QVBoxLayout() # overall interface
 
 
@@ -49,6 +50,7 @@ class FormulaWindow(QWidget):
         self.computation_label.setToolTip("Computation")
         computation_layout.addWidget(self.computation_label)
         self.computation_help_button = QPushButton("Help")
+        self.computation_help_button.setFont(FONT)
         self.computation_help_button.setToolTip("Click for explanation about string representation of computations.")
         self.computation_help_button.clicked.connect(self.show_computation_help)
         computation_layout.addWidget(self.computation_help_button)
@@ -73,6 +75,7 @@ class FormulaWindow(QWidget):
         # Configure variable toggling layout
         var_layout = QGridLayout()
         reset_button = QPushButton("reset")
+        reset_button.setFont(FONT)
         reset_button.clicked.connect(self.reset_toggles)
         var_layout.addWidget(reset_button)
         # Display variable names
@@ -101,14 +104,23 @@ class FormulaWindow(QWidget):
         main_layout.addLayout(var_layout)
 
 
-        # building scrollable layout to display regexps
+
+        # Creating tabs for multiple display options
+        self.tabs = QTabWidget()
+        self.tab1 = QWidget()
+        self.tab2 = QWidget()
+        self.tabs.addTab(self.tab1, "Regexp List")
+        self.tabs.addTab(self.tab2, "Backbone Analysis")
+        self.tabs.setStyleSheet('QTabBar { font-size: 15pt; font-family: Times; }')
+        main_layout.addWidget(self.tabs)  
+
+        # Building scrollable layout to display regexps
         regexp_layout = QGridLayout()
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
         regexp_layout.addWidget(scroll_area)
         scroll_content = QWidget()
         scroll_layout = QGridLayout(scroll_content)
-
         self.reg_labels = []
         for i, reg in enumerate(self.west_regexp):
             label = QPushButton(reg)
@@ -118,13 +130,42 @@ class FormulaWindow(QWidget):
             label.clicked.connect(lambda state, x=reg: self.rand_comp(x))
             scroll_layout.addWidget(label, i, 0)
         scroll_area.setWidget(scroll_content)
-        main_layout.addLayout(regexp_layout)     
-        
+        self.tab1.setLayout(regexp_layout)
+
+
+        # Building area for looking at backbone analysis
+        self.compute_bdd()
+        bb_layout = QVBoxLayout()
+        # Creating display messages for sat and unsat backbones
+        self.compute_backbones()
+        sat_backbone, unsat_backbone = "Backbone for SAT Assignments:\n", "Backbone for UNSAT Assignments:\n"
+        for time in range(self.t):
+            sat_msg = f"t = {time}: "
+            unsat_msg = f"t = {time}: "
+            for var in range(self.n):
+                i = time * self.n + var
+                # check if sat backbone
+                if self.var_status[i].value in ["0", "1"]:
+                    lit = f"p{var}" if self.var_status[i].value == "1" else f"~p{var}"
+                    sat_msg += lit + ", "
+                # check if unsat backbone
+                if self.complement_var_status[i].value in ["0", "1"]:
+                    lit = f"p{var}" if self.complement_var_status[i].value == "1" else f"~p{var}"
+                    unsat_msg += lit + ", "
+            sat_backbone += sat_msg + "\n" if sat_msg[-2]!="," else sat_msg[:-2] + "\n"
+            unsat_backbone += unsat_msg + "\n" if unsat_msg[-2]!="," else unsat_msg[:-2] + "\n"
+        # Create QLabels to display unsat and sat backbones 
+        self.bb_sat_label = QLabel(sat_backbone)
+        self.bb_sat_label.setFont(FONT)
+        bb_layout.addWidget(self.bb_sat_label)
+        self.bb_unsat_label = QLabel(unsat_backbone)
+        self.bb_unsat_label.setFont(FONT)
+        bb_layout.addWidget(self.bb_unsat_label)
+        self.tab2.setLayout(bb_layout)   
+
 
         # Update initial computation of all zeros
         self.update_computation()
-        
-
         # Define main widget of the gui
         self.setLayout(main_layout)
     
@@ -151,7 +192,7 @@ class FormulaWindow(QWidget):
                 self.reg_labels[i].setStyleSheet("background-color: none")
                 self.formula_label.setToolTip("NOT SATISFIED")
         if not found:
-            self.formula_label.setStyleSheet("background-color: red")
+            self.formula_label.setStyleSheet("background-color: pink")
     
 
     def rand_comp(self, regexp = None):
@@ -174,7 +215,7 @@ class FormulaWindow(QWidget):
             var += 1
     
 
-    def compute_complement(self):
+    def compute_bdd(self):
         # Create a BDD manager
         bdd = _bdd.BDD()
 
@@ -199,6 +240,45 @@ class FormulaWindow(QWidget):
             complement = clause if complement is None else (complement) & clause
 
         self.complement_list = list(bdd.pick_iter(complement))
+        self.model_list = list(bdd.pick_iter(~complement))
+
+
+    def compute_backbones(self):
+        # dataclass to compute status of each variable when iterating over all models
+        class Status():
+            def __init__(self):
+                self.seen = False
+                self.value = None # 0, 1, or c (contradiction)
+            # Return false if value updated to contradiction, else return True
+            def update(self, value):
+                v = "1" if value else "0"
+                if not self.seen:
+                    self.seen = True
+                    self.value = v
+                else:
+                    if self.value != v: 
+                        self.value = "c"
+                        return False
+                return True
+
+        self.var_status = [Status() for i in range(self.t * self.n)]
+        for i in range(self.t * self.n):
+            for model in self.model_list:
+                if f"x{i}" in model.keys():
+                    self.var_status[i].update(model[f"x{i}"])
+                    if self.var_status[i].value == "c":
+                        break
+
+        self.complement_var_status = [Status() for i in range(self.t * self.n)]
+        for i in range(self.t * self.n):
+            for model in self.complement_list:
+                if f"x{i}" in model.keys():
+                    self.complement_var_status[i].update(model[f"x{i}"])
+                    if self.complement_var_status[i].value == "c":
+                        break
+        
+        # [(print(i, s.value)) for i, s in enumerate(self.var_status)]
+        # [(print(i, s.value)) for i, s in enumerate(self.complement_var_status)]
 
 
     def show_computation_help(self):
@@ -210,8 +290,6 @@ class FormulaWindow(QWidget):
 
     #G[0:2](p0 v p1)
     def rand_unsat(self):
-        if self.complement_list is None:
-            self.compute_complement()
         complement = choice(self.complement_list)
 
         for i in range(self.t * self.n):
@@ -229,22 +307,10 @@ class FormulaWindow(QWidget):
                 self.variable_toggle[var][time].setChecked(False)
 
 
-class Popup(QWidget):
-    def __init__(self, title = "", path = None):
-        super().__init__()
-        self.setWindowTitle(title)
-        layout = QHBoxLayout()
-        lb = QLabel()
-        pixmap = QPixmap(path)
-        lb.resize(pixmap.width(), pixmap.height())
-        lb.setPixmap(pixmap)
-        layout.addWidget(lb)
-        self.setLayout(layout)
-
-
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.setWindowTitle("WEST MLTL Formula Validation Tool")
         main_layout = QVBoxLayout()
         self.resize(800, 400)
 
@@ -252,11 +318,20 @@ class MainWindow(QMainWindow):
         input_layout = QHBoxLayout()
         self.input_line = QLineEdit()
         self.input_line.setMaxLength(100)
-        self.input_line.setPlaceholderText("Type in a MLTL formula")
+        self.input_line.setPlaceholderText("Type in a MLTL formula and press enter.")
         self.input_line.setFont(FONT)
         self.input_line.returnPressed.connect(self.validate_formula)
+        if len(sys.argv) == 2:
+            self.input_line.setText(sys.argv[1])
         input_layout.addWidget(self.input_line)
+        # Button to run input
+        self.run_button = QPushButton("Run")
+        self.run_button.setFont(FONT)
+        self.run_button.pressed.connect(self.validate_formula)
+        input_layout.addWidget(self.run_button)
+        # Help button to view full grammar
         self.cfg_button = QPushButton("Grammar")
+        self.cfg_button.setFont(FONT)
         self.cfg_button.setToolTip("Click to view full context free grammar of input.")
         self.cfg_button.clicked.connect(self.show_cfg)
         input_layout.addWidget(self.cfg_button)
@@ -297,7 +372,7 @@ class MainWindow(QMainWindow):
         if (not valid):
             self.out_text.setText(f"\"{formula}\" is not a valid formula!")
             return
-        
+    
 
         # convert to nnf form
         nnf = run("Wff_to_Nnf", [formula]).readline()
@@ -320,12 +395,24 @@ class MainWindow(QMainWindow):
         rest_message = rest_warning if self.rest_box.isChecked() else ""
         
 
+        # Compute complexity of formula
+        self.complexity = self.compute_complexity(nnf)
+        print(self.complexity)
+
+
         # Display appropriate messages to user
         self.out_text.setText(simp_message + 
                               rest_message +
                               nnf_message + 
                               "\nPlease select a subformula to explore below:")
         self.show()
+
+
+        # If complexity is above a certain bound, do NOT run reg
+        bound = math.inf
+        if self.complexity > bound:
+            return
+
 
         # call reg on input formula 
         run("reg", [nnf, simp, rest])
@@ -367,6 +454,23 @@ class MainWindow(QMainWindow):
             self.subformula_layout.addWidget(formula_button)
 
 
+    def compute_complexity(self, formula):
+        print(formula)
+
+        n = self.n
+        d, delta, l = 0, 0, 0
+        for interval in re.findall("[0-9]*:[0-9]*", formula):
+            sep = interval.index(":")
+            a, b = int(interval[:sep]), int(interval[sep+1:])
+            d = max(d, b)
+            delta = max(delta, b-a)
+        c_u = delta * ((n+1)*(d-1)+1)**delta * (n+1) * d
+
+
+
+        return 0
+    
+
     def show_subformula(self, formula, regexp, west_regexp, n):
         w = FormulaWindow(formula, regexp, west_regexp, n)
         w.show()
@@ -379,10 +483,6 @@ class MainWindow(QMainWindow):
         self.popup.show()
 
 
-
-
-
-
 app = QApplication(sys.argv)
 
 window = MainWindow()
@@ -393,16 +493,13 @@ app.exec()
 
 
 # TODO: 
-# DONE input within gui 
-# DONE scrolling
-# DONE subformula support
 # timeline
 # grouping by time variables
-# refrain from display outputs that are too large
-# error handling
+# refrain from display outputs that are too large: compute complexity and find a nice bound
 # formula rewriting, checking trivial intersections/unions, temporal logic vacuity
 
-# Problematic examples:
-# (G[0:2] (p0 v p1) v F[0:2] (p1 > p2))
-
+# TO DISCUSS
+# Alternate input grammar 
+#   have to parse input anyways to compute complexity so might as well have a nicer grammar
+# Backbone display 
 

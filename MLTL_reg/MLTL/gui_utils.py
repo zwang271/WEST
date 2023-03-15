@@ -8,6 +8,19 @@ CWD = os.getcwd()
 FONT = QFont('Times', 15)
 
 
+class Popup(QWidget):
+    def __init__(self, title = "", path = None):
+        super().__init__()
+        self.setWindowTitle(title)
+        layout = QHBoxLayout()
+        lb = QLabel()
+        pixmap = QPixmap(path)
+        lb.resize(pixmap.width(), pixmap.height())
+        lb.setPixmap(pixmap)
+        layout.addWidget(lb)
+        self.setLayout(layout)
+
+
 def gen_reg(w_reg):
     output = ""
     for c in w_reg:
