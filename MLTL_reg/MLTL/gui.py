@@ -7,8 +7,11 @@ import re
 from random import choice, randint
 from time import sleep
 import math
+from math import log
 from gui_utils import * 
 from dd import autoref as _bdd
+import parser
+from lark import Lark, tree
 
 
 class FormulaWindow(QWidget):
@@ -361,16 +364,32 @@ class MainWindow(QMainWindow):
         widget = QWidget()
         widget.setLayout(main_layout)
         self.setCentralWidget(widget)
+        self.resize(self.sizeHint()) # resize window
 
 
     def validate_formula(self):
+        self.input_line.adjustSize()
+        self.out_text.adjustSize()
+        self.resize(self.sizeHint()) # resize window
+
         formula = self.input_line.text()
+        is_wff, self.tree, e = parser.check_wff(formula)
+        if (not is_wff):
+            self.out_text.setText(f"\"{formula}\" is not a valid formula!\n{e}")
+            self.input_line.adjustSize()
+            self.out_text.adjustSize()
+            self.resize(self.sizeHint()) # resize window
+            return
+
+        formula = parser.to_west(formula, self.tree)
+
         outfile = run("Wff_check", [formula])
         valid = bool(int(outfile.readline()))
-    
-
-        if (not valid):
-            self.out_text.setText(f"\"{formula}\" is not a valid formula!")
+        if (not valid): # should never get here if grammar conversion is done correctly
+            self.out_text.setText(f"\"{formula}\" is not a valid formula! (uh oh something went wrong)")
+            self.out_text.adjustSize()
+            self.resize(self.sizeHint()) # resize window
+            self.show()
             return
     
 
@@ -397,16 +416,13 @@ class MainWindow(QMainWindow):
 
         # Compute complexity of formula
         self.complexity = self.compute_complexity(nnf)
-        print(self.complexity)
-
 
         # Display appropriate messages to user
         self.out_text.setText(simp_message + 
                               rest_message +
                               nnf_message + 
                               "\nPlease select a subformula to explore below:")
-        self.show()
-
+        
 
         # If complexity is above a certain bound, do NOT run reg
         bound = math.inf
@@ -430,6 +446,7 @@ class MainWindow(QMainWindow):
 
 
         # display buttons for subformulas
+        self.formula = [parser.from_west(f) for f in self.formula]
         for i,f in enumerate(self.formula): 
 
             # skip all atomic propositions and their negations
@@ -437,7 +454,9 @@ class MainWindow(QMainWindow):
                 continue
 
             # only display subformulas that are substrings of the main formula
-            if f not in self.formula[-1]:
+            if (f.replace(" ", "") not in self.formula[-1].replace(" ", "")) and\
+                (f.replace(" ", "")[1:-1] not in self.formula[-1].replace(" ", "")):
+                print(f.replace(" ", ""))
                 continue
                 
             formula_button = QPushButton(f.replace("&", "&&"))
@@ -452,23 +471,36 @@ class MainWindow(QMainWindow):
                 self.show_subformula(formula, regexp, west_regexp, n))
             self.subformula_button.append(formula_button)
             self.subformula_layout.addWidget(formula_button)
+        return 
+
 
 
     def compute_complexity(self, formula):
-        print(formula)
+        def dfs(node, depth=0):
+            # print("  " * depth, "Node:", node.data)
+            children_connectives = [dfs(child, depth + 1) for child in node.children]
+            if node.data in ["unary_temp_conn", "binary_temp_conn"]:
+                return 1 + sum(children_connectives)
+            else:
+                return sum(children_connectives)
 
         n = self.n
-        d, delta, l = 0, 0, 0
+        d, delta, l = 0, 0, dfs(self.tree)
+
+        a, b, d, delta = 0, 0, 0, 0
         for interval in re.findall("[0-9]*:[0-9]*", formula):
             sep = interval.index(":")
             a, b = int(interval[:sep]), int(interval[sep+1:])
             d = max(d, b)
             delta = max(delta, b-a)
         c_u = delta * ((n+1)*(d-1)+1)**delta * (n+1) * d
+        if c_u == 0:
+            c_u = 1
 
+        # print("a:", a, "b:", b, "delta:", delta, "d:", d)
 
-
-        return 0
+        log_complexity = (delta**l) * log(c_u) + (delta**(l+1)) * log(l+1)
+        return log_complexity
     
 
     def show_subformula(self, formula, regexp, west_regexp, n):
