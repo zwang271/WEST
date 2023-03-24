@@ -9,6 +9,7 @@ from time import sleep
 import math
 from gui_utils import * 
 from dd import autoref as _bdd
+import parser
 
 
 class FormulaWindow(QWidget):
@@ -361,16 +362,28 @@ class MainWindow(QMainWindow):
         widget = QWidget()
         widget.setLayout(main_layout)
         self.setCentralWidget(widget)
+        self.resize(self.sizeHint()) # resize window
 
 
     def validate_formula(self):
+        self.input_line.adjustSize()
+        self.out_text.adjustSize()
+        self.resize(self.sizeHint()) # resize window
+
         formula = self.input_line.text()
+        is_wff, self.tree, e = parser.check_wff(formula)
+        if (not is_wff):
+            self.out_text.setText(f"\"{formula}\" is not a valid formula!\n{e}")
+            return
+
+        formula = parser.to_west(formula, self.tree)
         outfile = run("Wff_check", [formula])
         valid = bool(int(outfile.readline()))
-    
-
-        if (not valid):
-            self.out_text.setText(f"\"{formula}\" is not a valid formula!")
+        if (not valid): # should never get here if grammar conversion is done correctly
+            self.out_text.setText(f"\"{formula}\" is not a valid formula! (uh oh something went wrong)")
+            self.out_text.adjustSize()
+            self.resize(self.sizeHint()) # resize window
+            self.show()
             return
     
 
@@ -405,7 +418,6 @@ class MainWindow(QMainWindow):
                               rest_message +
                               nnf_message + 
                               "\nPlease select a subformula to explore below:")
-        self.show()
 
 
         # If complexity is above a certain bound, do NOT run reg
@@ -452,6 +464,8 @@ class MainWindow(QMainWindow):
                 self.show_subformula(formula, regexp, west_regexp, n))
             self.subformula_button.append(formula_button)
             self.subformula_layout.addWidget(formula_button)
+        return 
+
 
 
     def compute_complexity(self, formula):
