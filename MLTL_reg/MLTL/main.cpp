@@ -2,6 +2,7 @@
 #include <vector>
 #include <algorithm>
 #include <string>
+#include <fstream>
 #include "utils.h"
 #include "grammar.h"
 #include "nnf_grammar.h"
@@ -24,6 +25,18 @@ int main() {
 			// Write user input to wff variable
 			// Since using getline, don't need to flush input buffer
 			getline(cin, wff);
+
+			// Convert input to west grammar and read from file
+			string python_parser = "python ./parser.py \"" + wff + "\"";
+			system(python_parser.c_str());
+			ifstream wff_file("./gui/west_wff.txt");
+			if (wff_file.is_open()) {
+				while (wff_file) {
+					getline(wff_file, wff);
+				}
+			}
+			wff_file.close();
+
 			// Strip whitespace from input
 			wff = strip_char(wff, ' ');
 			if (Wff_check(wff)) {

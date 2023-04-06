@@ -167,8 +167,7 @@ if __name__ == '__main__':
     is_wff, tree, e = check_wff(wff)
     if is_wff:
         wff = to_west(wff, tree)
-        print("west syntax:", wff)
-        print("new syntax", from_west(wff))
-        # write west style wff to file for commandline tool
+        with open("./gui/west_wff.txt", "w") as f:
+            f.write(wff)
     else:
         print(e)
