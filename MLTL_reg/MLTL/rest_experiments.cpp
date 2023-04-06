@@ -21,7 +21,7 @@ double run_experiment(vector<string> rest_comp) {
     auto start = high_resolution_clock::now();
     vector<string> output = REST_simplify(rest_comp);
     auto stop = high_resolution_clock::now();
-    auto duration = duration_cast<microseconds>(stop - start);
+    auto duration = duration_cast<seconds>(stop - start);
     // Write the amount of time to calculate 'output'
     // into 'out' file
     return duration.count();

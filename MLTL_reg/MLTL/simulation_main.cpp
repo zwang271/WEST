@@ -143,7 +143,7 @@ void simulate(string formulas, string out) {
         output = reg(Wff_to_Nnf(line), NUM_PROP_VAR, false, true);
         output = simplify(output, NUM_PROP_VAR);
         auto stop = high_resolution_clock::now();
-        auto duration = duration_cast<microseconds>(stop - start);
+        auto duration = duration_cast<seconds>(stop - start);
         // Write the amount of time to calculate 'output'
         // into 'out' file
         outfile << duration.count();
