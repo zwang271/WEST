@@ -365,9 +365,14 @@ class MainWindow(QMainWindow):
         widget.setLayout(main_layout)
         self.setCentralWidget(widget)
         self.resize(self.sizeHint()) # resize window
+        self.resize(self.sizeHint()) # resize window
 
 
     def validate_formula(self):
+        self.input_line.adjustSize()
+        self.out_text.adjustSize()
+        self.resize(self.sizeHint()) # resize window
+
         self.input_line.adjustSize()
         self.out_text.adjustSize()
         self.resize(self.sizeHint()) # resize window
@@ -385,6 +390,11 @@ class MainWindow(QMainWindow):
 
         outfile = run("Wff_check", [formula])
         valid = bool(int(outfile.readline()))
+        if (not valid): # should never get here if grammar conversion is done correctly
+            self.out_text.setText(f"\"{formula}\" is not a valid formula! (uh oh something went wrong)")
+            self.out_text.adjustSize()
+            self.resize(self.sizeHint()) # resize window
+            self.show()
         if (not valid): # should never get here if grammar conversion is done correctly
             self.out_text.setText(f"\"{formula}\" is not a valid formula! (uh oh something went wrong)")
             self.out_text.adjustSize()
@@ -471,6 +481,8 @@ class MainWindow(QMainWindow):
                 self.show_subformula(formula, regexp, west_regexp, n))
             self.subformula_button.append(formula_button)
             self.subformula_layout.addWidget(formula_button)
+        return 
+
         return 
 
 
