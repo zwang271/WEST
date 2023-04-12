@@ -2,6 +2,7 @@ import os
 from PyQt5.QtWidgets import * 
 from PyQt5.QtGui import * 
 from random import choice
+import os
 
 
 CWD = os.getcwd()
@@ -82,15 +83,16 @@ def process_file():
 
 
 def run(func, argList):
-    execute = ".\gui\west_lib.exe " + func + " "
+    # use os.path.join to define execute = ".\gui\west_lib.exe " + func + " "
+    execute = os.path.join(".", "gui", "west_lib.exe") + " " + func + " "
     for arg in argList:
-        execute += '"' + arg + '" '
+        execute += '\"' + arg + '\" '
     os.system(execute)
-
     # print(execute)
 
     try:
-        return open(f'.\gui\{func}.txt', 'r')
+        f = os.path.join(".", "gui", f"{func}.txt")
+        return open(f, 'r')
     except FileNotFoundError:
         return []
 
