@@ -114,7 +114,7 @@ class FormulaWindow(QWidget):
         self.tab2 = QWidget()
         self.tabs.addTab(self.tab1, "Regexp List")
         self.tabs.addTab(self.tab2, "Backbone Analysis")
-        self.tabs.setStyleSheet('''QTabBar::tab:selected { font-size: 15pt; font-family: Times;}''')
+        self.tabs.setStyleSheet("QTabBar::tab{ color: black; font-size: 15pt; font-family: Times;}")
         main_layout.addWidget(self.tabs)  
 
         # Building scrollable layout to display regexps
