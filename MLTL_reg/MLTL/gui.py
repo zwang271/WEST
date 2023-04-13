@@ -382,11 +382,10 @@ class MainWindow(QMainWindow):
         self.out_text.adjustSize()
         self.resize(self.sizeHint()) # resize window
 
-        self.input_line.adjustSize()
-        self.out_text.adjustSize()
-        self.resize(self.sizeHint()) # resize window
-
         formula = self.input_line.text()
+        if formula == "":
+            return
+
         is_wff, self.tree, e = parser.check_wff(formula)
         if (not is_wff):
             self.out_text.setText(f"\"{formula}\" is not a valid formula!\n{e}")
