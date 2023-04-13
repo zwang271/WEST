@@ -25,6 +25,7 @@ class FormulaWindow(QWidget):
         # Process inputs
         self.formula = formula
         self.t = 1
+        self.t = 1
         self.n = n
         self.regexp, self.west_regexp = regexp, west_regexp
         self.complement_list = None
@@ -107,7 +108,6 @@ class FormulaWindow(QWidget):
                 if f'p{var}' not in self.var:
                     widget.setEnabled(False)
                 self.variable_toggle[var][time] = widget
-                print(f"created widget at {var}, {time}")
                 var_layout.addWidget(self.variable_toggle[var][time], var+1, time+1)
         main_layout.addLayout(var_layout)
 
@@ -119,15 +119,7 @@ class FormulaWindow(QWidget):
         self.tab2 = QWidget()
         self.tabs.addTab(self.tab1, "Regexp List")
         self.tabs.addTab(self.tab2, "Backbone Analysis")
-        self.tabs.setStyleSheet('''
-            QTabBar {
-                font-size: 15pt;
-                font-family: Times;
-            }
-            QTabWidget::pane {
-                background: yellow;
-            }
-        ''')
+        self.tabs.setStyleSheet('QTabBar { font-size: 15pt; font-family: Times; }')
         main_layout.addWidget(self.tabs)  
 
         # Building scrollable layout to display regexps
@@ -248,7 +240,7 @@ class FormulaWindow(QWidget):
         complement = bdd.add_expr("True")
         for w in self.west_regexp:
             expr = "("
-            w = w.replace(",","")
+            w = w.replace(",", "")
             for i, char in enumerate(w):
                 if char != "s":
                     expr += f"( x{i} <-> ~ {const[char]} ) | "
@@ -478,7 +470,7 @@ class MainWindow(QMainWindow):
             # only display subformulas that are substrings of the main formula
             if (f.replace(" ", "") not in self.formula[-1].replace(" ", "")) and\
                 (f.replace(" ", "")[1:-1] not in self.formula[-1].replace(" ", "")):
-                print(f.replace(" ", ""))
+                # print(f.replace(" ", ""))
                 continue
                 
             formula_button = QPushButton(f.replace("&", "&&"))
