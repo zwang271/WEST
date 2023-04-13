@@ -20,7 +20,7 @@ class FormulaWindow(QWidget):
         
         # Process inputs
         self.formula = formula
-        self.t = 0
+        self.t = 1
         self.n = n
         self.regexp, self.west_regexp = regexp, west_regexp
         self.complement_list = None
@@ -114,7 +114,7 @@ class FormulaWindow(QWidget):
         self.tab2 = QWidget()
         self.tabs.addTab(self.tab1, "Regexp List")
         self.tabs.addTab(self.tab2, "Backbone Analysis")
-        self.tabs.setStyleSheet('QTabBar { font-size: 15pt; font-family: Times; }')
+        self.tabs.setStyleSheet('''QTabBar::tab:selected { font-size: 15pt; font-family: Times;}''')
         main_layout.addWidget(self.tabs)  
 
         # Building scrollable layout to display regexps
@@ -230,14 +230,14 @@ class FormulaWindow(QWidget):
         [bdd.declare(x_i) for x_i in x_names]
         x = [bdd.var(x_i) for x_i in x_names]
 
-        complement = None
+        complement = bdd.add_expr("True")
         for w in self.west_regexp:
             expr = "("
-            w = w.replace(",","")
+            w = w.replace(",", "")
             for i, char in enumerate(w):
                 if char != "s":
                     expr += f"( x{i} <-> ~ {const[char]} ) | "
-            expr = expr[:-3] + ")"
+            expr = expr[:-3] + ")" if expr != "(" else "False"
             clause = bdd.add_expr(expr)
 
             complement = clause if complement is None else (complement) & clause
@@ -293,6 +293,8 @@ class FormulaWindow(QWidget):
 
     #G[0:2](p0 v p1)
     def rand_unsat(self):
+        if self.complement_list == []:
+            return
         complement = choice(self.complement_list)
 
         for i in range(self.t * self.n):
