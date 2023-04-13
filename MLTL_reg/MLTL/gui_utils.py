@@ -2,9 +2,10 @@ import os
 from PyQt5.QtWidgets import * 
 from PyQt5.QtGui import * 
 from random import choice
-import os
+import platform
 
-
+# Detect the operating system
+os_name = platform.system()
 CWD = os.getcwd()
 FONT = QFont('Times', 15)
 
@@ -87,7 +88,14 @@ def run(func, argList):
     execute = os.path.join(".", "gui", "west_lib.exe") + " " + func + " "
     for arg in argList:
         execute += '\"' + arg + '\" '
-    os.system(execute)
+
+    # run appropriate command based on system
+    if os_name == "Windows":
+        os.system(execute)
+    elif os_name == "Darwin":
+        execute.replace("(", "\(").replace(")", "\)")
+        os.system(execute)
+
     # print(execute)
 
     try:
