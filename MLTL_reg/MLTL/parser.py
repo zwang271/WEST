@@ -73,6 +73,19 @@ def translate_syntax(formula):
     return formula
 
 def translate_inorder(formula:str):
+    # parse for location of R[num, num] or U[num, num]
+    for match in re.finditer("\s*(R|U)\s*\[\s*[0-9]+\s*,\s*[0-9]+\s*\]\s*", formula):
+        start, end = match.span()
+        binary_temp_con = formula[start:end]
+        wff1, wff2 = formula[:start][1:], formula[end:][:-1]
+        # check wff1 and wff2 are both valid wff
+        if not check_wff(wff1.replace(" ", ""), verbose=False)[0] or not check_wff(wff2.replace(" ", ""), verbose=False)[0]:
+            continue
+        # print(wff1, "---", wff2)
+        # recurse on wff1 and wff2
+        wff1, wff2 = translate_inorder(wff1), translate_inorder(wff2)
+        return f"({wff1} {binary_temp_con} {wff2})"
+
     assoc_ops = ["&", "|", "=", "->"]
     start, end = formula.find("("), formula.rfind(")")
     if start < 0 or end < 0:
@@ -125,6 +138,19 @@ def to_west(wff : str, tree = None):
 
 
 def translate_preorder(wff:str):
+    # parse for location of R[num, num] or U[num, num]
+    for match in re.finditer("\s*(R|U)\s*\[\s*[0-9]+\s*,\s*[0-9]+\s*\]\s*", wff):
+        start, end = match.span()
+        binary_temp_con = wff[start:end]
+        wff1, wff2 = wff[:start][1:], wff[end:][:-1]
+        # check wff1 and wff2 are both valid wff
+        if not check_wff(wff1.replace(" ", ""), verbose=False)[0] or not check_wff(wff2.replace(" ", ""), verbose=False)[0]:
+            continue
+        print(wff1, "---", wff2)
+        # recurse on wff1 and wff2
+        wff1, wff2 = translate_preorder(wff1), translate_preorder(wff2)
+        return f"({wff1} {binary_temp_con} {wff2})"
+
     for preorder in re.findall("\(\s*[|&=]\s*\[.*\]\s*\)", wff):
         arg_list = []
         op = re.match("\(\s*([|&=])\s*\[.*\]\s*\)", preorder).group(1)

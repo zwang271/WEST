@@ -26,6 +26,8 @@ class Popup(QWidget):
 def gen_reg(w_reg):
     if w_reg is None:
         return ""
+    if w_reg is None:
+        return ""
     output = ""
     for c in w_reg:
         if c == "s":
@@ -87,15 +89,17 @@ def process_file():
 
 def run(func, argList):
     # use os.path.join to define execute = ".\gui\west_lib.exe " + func + " "
-    execute = os.path.join(".", "gui", "west_lib.exe") + " " + func + " "
-    for arg in argList:
-        execute += '\"' + arg + '\" '
 
     # run appropriate command based on system
     if os_name == "Windows":
+        execute = os.path.join(".", "gui", "west_lib.exe") + " " + func + " "
+        for arg in argList:
+            execute += '\"' + arg + '\" '
         os.system(execute)
     elif os_name == "Darwin":
-        execute.replace("(", "\(").replace(")", "\)").replace(".exe", "")
+        execute = os.path.join(".", "gui", "west_lib") + " " + func + " "
+        for arg in argList:
+            execute += '\"' + arg + '\" '
         os.system(execute)
 
     # print(execute)
