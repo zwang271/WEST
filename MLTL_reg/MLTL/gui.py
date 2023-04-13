@@ -1,3 +1,7 @@
+# Author: Zili Wang
+# Last updated: 4/12/23
+# A user interface for the WEST program written in PyQT5
+
 import sys
 import os
 from PyQt5.QtWidgets import * 
@@ -20,7 +24,7 @@ class FormulaWindow(QWidget):
         
         # Process inputs
         self.formula = formula
-        self.t = 0
+        self.t = 1
         self.n = n
         self.regexp, self.west_regexp = regexp, west_regexp
         self.complement_list = None
@@ -103,6 +107,7 @@ class FormulaWindow(QWidget):
                 if f'p{var}' not in self.var:
                     widget.setEnabled(False)
                 self.variable_toggle[var][time] = widget
+                print(f"created widget at {var}, {time}")
                 var_layout.addWidget(self.variable_toggle[var][time], var+1, time+1)
         main_layout.addLayout(var_layout)
 
@@ -114,7 +119,15 @@ class FormulaWindow(QWidget):
         self.tab2 = QWidget()
         self.tabs.addTab(self.tab1, "Regexp List")
         self.tabs.addTab(self.tab2, "Backbone Analysis")
-        self.tabs.setStyleSheet('QTabBar { font-size: 15pt; font-family: Times; }')
+        self.tabs.setStyleSheet('''
+            QTabBar {
+                font-size: 15pt;
+                font-family: Times;
+            }
+            QTabWidget::pane {
+                background: yellow;
+            }
+        ''')
         main_layout.addWidget(self.tabs)  
 
         # Building scrollable layout to display regexps
@@ -200,6 +213,8 @@ class FormulaWindow(QWidget):
 
     def rand_comp(self, regexp = None):
         if regexp is None and len(self.west_regexp) > 0: 
+            if self.west_regexp == []:
+                return
             comp = gen_reg(choice(self.west_regexp))
         else:
             comp = gen_reg(regexp)
@@ -230,21 +245,21 @@ class FormulaWindow(QWidget):
         [bdd.declare(x_i) for x_i in x_names]
         x = [bdd.var(x_i) for x_i in x_names]
 
-        complement = None
+        complement = bdd.add_expr("True")
         for w in self.west_regexp:
             expr = "("
             w = w.replace(",","")
             for i, char in enumerate(w):
                 if char != "s":
                     expr += f"( x{i} <-> ~ {const[char]} ) | "
-            expr = expr[:-3] + ")"
+            expr = expr[:-3] + ")" if expr != "(" else "False"
             clause = bdd.add_expr(expr)
 
             complement = clause if complement is None else (complement) & clause
 
         self.complement_list = list(bdd.pick_iter(complement))
         self.model_list = list(bdd.pick_iter(~complement))
-
+    
 
     def compute_backbones(self):
         # dataclass to compute status of each variable when iterating over all models
@@ -293,6 +308,8 @@ class FormulaWindow(QWidget):
 
     #G[0:2](p0 v p1)
     def rand_unsat(self):
+        if self.complement_list == []:
+            return
         complement = choice(self.complement_list)
 
         for i in range(self.t * self.n):
@@ -395,11 +412,6 @@ class MainWindow(QMainWindow):
             self.out_text.adjustSize()
             self.resize(self.sizeHint()) # resize window
             self.show()
-        if (not valid): # should never get here if grammar conversion is done correctly
-            self.out_text.setText(f"\"{formula}\" is not a valid formula! (uh oh something went wrong)")
-            self.out_text.adjustSize()
-            self.resize(self.sizeHint()) # resize window
-            self.show()
             return
     
 
@@ -407,7 +419,7 @@ class MainWindow(QMainWindow):
         nnf = run("Wff_to_Nnf", [formula]).readline()
         nnf_message = ""
         if nnf != formula.replace(" ", ""):
-            nnf_message = f"Converted to Negation Normal Form: {nnf}\n"
+            nnf_message = f"Converted to Negation Normal Form: {parser.from_west(nnf)}\n"
 
 
         # get number of propositional variables

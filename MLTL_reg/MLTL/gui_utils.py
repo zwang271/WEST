@@ -24,6 +24,8 @@ class Popup(QWidget):
 
 
 def gen_reg(w_reg):
+    if w_reg is None:
+        return ""
     output = ""
     for c in w_reg:
         if c == "s":
@@ -93,7 +95,7 @@ def run(func, argList):
     if os_name == "Windows":
         os.system(execute)
     elif os_name == "Darwin":
-        execute.replace("(", "\(").replace(")", "\)")
+        execute.replace("(", "\(").replace(")", "\)").replace(".exe", "")
         os.system(execute)
 
     # print(execute)
