@@ -96,7 +96,7 @@ def run(func, argList):
         for arg in argList:
             execute += '\"' + arg + '\" '
         os.system(execute)
-    elif os_name == "Darwin":
+    else:
         execute = os.path.join(".", "gui", "west_lib") + " " + func + " "
         for arg in argList:
             execute += '\"' + arg + '\" '
