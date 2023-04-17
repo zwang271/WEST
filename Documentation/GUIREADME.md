@@ -47,8 +47,8 @@ The WEST program strips whitespaces from input.
 Non-empty intervals are recommended for meaningful truth table generation.
 
 ### **Propositional Variables and Constants**
-**True:** T <br />
-**False:** ! <br />
+**True:** true <br />
+**False:** false <br />
 **First Variable:** p0 <br />
 **Second Variable:** p1 <br />
 And so on, where each consecutive variable is followed with the appropriate natural number. <br />
@@ -66,11 +66,11 @@ Let K be a well-formed formula, propositional variable, or propositional constan
 ### **Unary Temporal Connectives**
 All temporal operators must be followed by an interval. All intervals must be followed by a well-formed formula, propositional variable, or propositional constant. <br />
 Unary temporal operators do NOT use parentheses. <br />
-Let a be the inclusive lower bound of an interval, and let b be inclusive upper bound of an interval. Let ":" separate a and b, and "[" and "]" indicate the beginning and end of an interval, respectively.  <br />
+Let a be the inclusive lower bound of an interval, and let b be inclusive upper bound of an interval. Let "," separate a and b, and "[" and "]" indicate the beginning and end of an interval, respectively.  <br />
 Let K be a well-formed formula, propositional variable, or propositional constant. <br />
 
-**Finally:** F[a:b] K <br />
-**Globally:** G[a:b] K <br />
+**Finally:** F[a,b] K <br />
+**Globally:** G[a,b] K <br />
 
 
 ### **Binary Propositional Connectives**
@@ -78,19 +78,19 @@ All binary connectives must be enclosed with parentheses. <br />
 Let K, L be well-formed formulas, propositional variables, or propositional constants. <br />
 
 **And:** (K & L) <br />
-**Or:** (K v L)  <br />
+**Or:** (K | L)  <br />
 **Equivalence:** (K = L)  <br />
-**Implies:** (K > L)  <br />
+**Implies:** (K -> L)  <br />
 
 
 ### **Binary Temporal Connectives**
 All binary connectives must be enclosed with parentheses. <br />
 All temporal operators must be followed by an interval. All intervals must be followed by a well-formed formula, propositional variable, or propositional constant. <br />
-Let a be the inclusive lower bound of an interval, and let b be inclusive upper bound of an interval. Let ":" separate a and b, and "[" and "]" indicate the beginning and end of an interval, respectively.
+Let a be the inclusive lower bound of an interval, and let b be inclusive upper bound of an interval. Let "," separate a and b, and "[" and "]" indicate the beginning and end of an interval, respectively.
 Let K, L be well-formed formulas, propositional variables, or propositional constants. <br />
 
-**Until:** (K U[a:b] L) <br />
-**Release** (K R[a:b] L) <br />
+**Until:** (K U[a,b] L) <br />
+**Release** (K R[a,b] L) <br />
 
 
 
@@ -103,9 +103,9 @@ Let "," separate each element in the list, and let "[" and "]" indicate the begi
 Let K, L, ..., M be an arbitrarily-sized list of well-formed formulas, propositional variables, or propositional constants. <br />
 
 **And:** (&[K, L, ..., M]) <br />
-**Or:** (v[K, L, ..., M])  <br />
+**Or:** (|[K, L, ..., M])  <br />
 **Equivalence:** (=[K, L, ..., M])  <br />
-**Implies:** (>[K, L, ..., M])  <br />
+**Implies:** (->[K, L, ..., M])  <br />
 
 **A note on the associative equivalence operator:** for lists with 2 elements, the equivalence operator functions identically to the binary propositional connective equivalence operator. For formulas with 3 or more elements, the associative equivalence operator does not mean "each element in the list is equivalent". Instead, it means that the equivalence of the first two elements in the list is equivalent to the next element in the list, and the truth value for this expression is equivalent to the next element, and so on. For example:
 ```
@@ -127,28 +127,28 @@ Below is the context-free grammar that a well-formed mLTL formula must follow. T
 Context-Free Grammar for a MLTL well-formed formula (wff).
 
 'True', 'False', 'Negation', 'Or', 'And', 'If and only if', and 'Implies' are represented by the symbols:
-    'T', '!', '~', 'v', '&', '=', and '>' respectively.
+    'true', 'false', '~', '|', '&', '=', and '->' respectively.
     
-‘Eventually’, ‘Always’, ‘Until’, and ‘Weak Until’ are represented by the symbols:
-    ‘F’, ‘G’, ‘U’, and ‘W’ respectively.
+‘Eventually’, ‘Always’, ‘Until’, and ‘Release’ are represented by the symbols:
+    ‘F’, ‘G’, ‘U’, and ‘R’ respectively.
 
 
-Alphabet = { ‘0’, ‘1’, …, ‘9’, ‘p’, ‘(‘, ‘)’, ‘[’, ‘]’, ‘:’, ‘,’ ,
-                       ‘T’, ‘!’,                
-                       ‘~’, ‘v’, ‘&’, ‘=’, ‘>’, 
+Alphabet = { ‘0’, ‘1’, …, ‘9’, ‘p’, ‘(‘, ‘)’, ‘[’, ‘]’, ‘,’ ,
+                       ‘true’, ‘false’,                
+                       ‘~’, ‘|’, ‘&’, ‘=’, ‘->’, 
                        ‘F’, ‘G’, ‘U’, ‘R’ }
 
 
 Digit         ->  ‘0’ | ‘1’ | … |’9’
 Num           ->  Digit Num |  Digit
-Interval      ->  ‘[’  Num ‘:’ Num ‘]’  
+Interval      ->  ‘[’  Num ‘,’ Num ‘]’  
 Prop_var      ->  ‘p’ Num
 
-Prop_cons         ->  ‘T’ | ‘!’
+Prop_cons         ->  ‘true’ | ‘false’
 Unary_Prop_conn   ->  ‘~’
-Binary_Prop_conn  ->  ‘v’ | ‘&’ | ‘=’ | ‘>’
+Binary_Prop_conn  ->  ‘|’ | ‘&’ | ‘=’ | ‘->’
 
-Assoc_Prop_conn   -> ‘v’ | ‘&’ | ‘=’
+Assoc_Prop_conn   -> ‘|’ | ‘&’ | ‘=’
 Array_entry       -> Wff ‘,’ Array_entry  |  Wff 
 
 Unary_Temp_conn   ->  ‘F’ | ‘G’
@@ -157,14 +157,13 @@ Binary_Temp_conn  ->  ‘U’ | ‘R’
 
 Wff   ->      Prop_var | Prop_cons
                        | Unary_Prop_conn Wff
-	                     | Unary_Temp_conn  Interval  Wff
+	               | Unary_Temp_conn  Interval  Wff
 	            
                        | ‘(‘ Assoc_Prop_conn ‘[‘  Array_entry  ‘]’ ‘)’
                        | ‘(‘ Wff Binary_Prop_conn Wff ‘)’
                        | ‘(‘ Wff Binary_Temp_conn  Interval Wff ‘)    
 
 ```
-
 
 
 ## Computations
@@ -174,19 +173,19 @@ Time steps in a computation are separated by commas. The bit-strings at each tim
 **Examples:** <br />
 The computation of a formula with one propositional variable and 5 time steps is represented as:
 ```
-NNF Formula: G[0:4]p0
+NNF Formula: G[0,4]p0
 
 1,1,1,1,1
 ```
 The computation of a formula with 5 propositional variables and one time step is represented as:
 ```
-NNF Formula: G[0:0](&[p0,p1,p2,p3,p4])
+NNF Formula: G[0,0](&[p0,p1,p2,p3,p4])
 
 11111
 ````
 The computations of a formula with two propositional variables that are both eventually true at a third time step are represented as:
 ```
-NNF Formula: F[0:2](p0&p1)
+NNF Formula: F[0,2](p0&p1)
 
 11,ss,ss
 ss,11,ss
@@ -198,7 +197,7 @@ Where in each string separated by commas, the first digit represents the truth v
 ## Troubleshooting Guide
 
 ### The Formula is not Well-Formed
-Ensure that all time intervals use ':' to separate the bounds and not a comma.  <br />
+Ensure that all time intervals use ',' to separate the bounds.  <br />
 Ensure that all binary and associative connectives have parentheses surrounding them.  <br />
 Ensure that for each propositional variable, its corresponding natural number immediately follows the 'p', and that there isn't a '_' or space in between.  <br />
 Ensure that all unary connectives do NOT have parentheses surrounding them.

@@ -292,10 +292,50 @@ class FormulaWindow(QWidget):
 
 
     def show_computation_help(self):
-        title = "String Representation of Computations"
-        path = './gui/computation.png'
-        self.popup = Popup(title, path)
-        self.popup.show()
+        self.comp_help = QWidget()
+        self.comp_help.setWindowTitle("String Representation of Computations")
+        label = QTextEdit(self.comp_help)
+        label.setReadOnly(True)
+        label.setHtml('''<html> <body>
+<p><b>Computations</b></p>
+<p>In a computation, "1" represents a true truth value, and "0" represents a false truth value.<br>
+"S" represents an arbitrary truth value, i.e. true or false.<br>
+Time steps in a computation are separated by commas. <br>
+The bit-strings at each time step represent the truth values of each propositional variable, in ascending order.</p>
+
+<p><b>Examples</b></p>
+The computation of this formula with one propositional variable and 5 time steps is represented as:</p>
+<p><tt>NNF Formula: G[0,4]p0<br>
+
+1,1,1,1,1</tt></p>
+
+<p>The computation of a formula with 5 propositional variables and one time step is represented as:</p>
+<p><tt>NNF Formula: G[0,0](&[p0,p1,p2,p3,p4])<br>
+
+11111</tt></p>
+<p>The computations of a formula with two propositional variables that are both eventually true <br>
+at a third time step are represented as:</p>
+<p><tt>NNF Formula: F[0,2](p0&p1)<br>
+
+11,ss,ss<br>
+ss,11,ss<br>
+ss,ss,11</tt></p>
+<p>Where in each string separated by commas, the first digit represents the truth value of p0, <br>
+and the second digit represents the truth value of p1.</p>
+<br>
+</html></body>
+''')
+
+        font = label.document().defaultFont()  # or another font if you change it
+        fontMetrics = QFontMetrics(font)  # a QFontMetrics based on our font
+        textSize = fontMetrics.size(0, label.toPlainText())
+
+        textWidth = textSize.width() + 20  # constant may need to be tweaked
+        textHeight = textSize.height() + 30  # constant may need to be tweaked
+
+        label.resize(textWidth, textHeight)
+        self.comp_help.setMaximumSize(textWidth, textHeight)
+        self.comp_help.show()
 
 
     #G[0:2](p0 v p1)
@@ -524,10 +564,105 @@ class MainWindow(QMainWindow):
 
 
     def show_cfg(self):
-        path = "./gui/cfg.png"
-        title = "Context Free Grammar for WEST"
-        self.popup = Popup(title, path)
-        self.popup.show()
+        self.cfg_window = QWidget()
+        self.cfg_window.setWindowTitle("Context Free Grammar for WEST")
+        label = QTextEdit(self.cfg_window)
+        label.setReadOnly(True)
+        label.setHtml('''
+        <html>
+        <body>
+        <p>The WEST program strips whitespaces from input.<br>
+        Non-empty intervals are recommended for meaningful truth table generation. </p>
+
+<p><b>Propositional Variables and Constants</b></p>
+<p>True: <tt>true</tt><br>
+False: <tt>false</tt><br>
+First Variable: <tt>p0</tt><br>
+Second Variable: <tt>p1</tt></p>
+<p>And so on, where each consecutive variable is followed with the appropriate natural number.</p>
+
+<p>Let K be a well-formed formula, propositional variable, or propositional constant. <br>
+Formulas do not necessarily need to be in negation normal form, as the WEST program converts formulas into this form <br>
+and generates the truth table for the formula's translated syntax. <br>
+The user does not necessarily need to start their propositional variables at p0. <br>
+That is, a user can input a formula that, for example, includes only the propositional variables p3, p4, and p7. <br>
+For faster runtime and less memory usage, however, it is not recommended to skip natural numbers like this.</p>
+
+<p><b>Unary Propositional Connectives</b><br>
+The only unary propositional connective is negation.<br>
+Negation does NOT use parentheses.<br>
+Let K be a well-formed formula, propositional variable, or propositional constant.</p>
+<p>Negation: <tt>~K</tt> </p>
+
+<p><b>Unary Temporal Connectives</b><br>
+All temporal operators must be followed by an interval.<br>
+All intervals must be followed by a well-formed formula, propositional variable, or propositional constant. <br>
+Unary temporal operators do NOT use parentheses.<br>
+Let a be the inclusive lower bound of an interval, and let b be inclusive upper bound of an interval. <br>
+Let "," separate a and b, and "[" and "]" indicate the beginning and end of an interval, respectively.<br>
+Let K be a well-formed formula, propositional variable, or propositional constant.</p>
+<p>Finally: <tt>F[a,b] K</tt><br>
+Globally: <tt>G[a,b] K</tt></p>
+
+
+<p><b>Binary Propositional Connectives</b><br>
+All binary connectives must be enclosed with parentheses.<br>
+Let K, L be well-formed formulas, propositional variables, or propositional constants.</p>
+<p>And: <tt>(K & L)</tt><br>
+Or: <tt>(K | L)</tt><br>
+Equivalence: <tt>(K = L)</tt><br>
+Implies: <tt>(K -> L)</tt></p>
+
+
+<p><b>Binary Temporal Connectives</b><br>
+All binary connectives must be enclosed with parentheses.<br>
+All temporal operators must be followed by an interval. <br>
+All intervals must be followed by a well-formed formula, propositional variable, or propositional constant.<br>
+Let a be the inclusive lower bound of an interval, and let b be inclusive upper bound of an interval. <br>
+Let "," separate a and b, and "[" and "]" indicate the beginning and end of an interval, respectively.<br>
+Let K, L be well-formed formulas, propositional variables, or propositional constants.</p>
+<p>Until: <tt>(K U[a,b] L)</tt><br>
+Release: <tt>(K R[a,b] L)</tt></p>
+
+
+<p><b>Associative Propositional Connectives</b><br>
+The entirety of the associative propositional connective formula string must be enclosed in parentheses.<br>
+The list of elements must be preceded by the associative propositional connective.<br>
+Let "," separate each element in the list, and let "[" and "]" indicate the beginning and end of the list, respectively.<br>
+Let K, L, ..., M be an arbitrarily-sized list of well-formed formulas, propositional variables, or propositional constants.</p>
+<p>And: <tt>(&[K, L, ..., M])</tt><br>
+Or: <tt>(|[K, L, ..., M])</tt><br>
+Equivalence: <tt>(=[K, L, ..., M])</tt><br>
+Implies: <tt>(->[K, L, ..., M])</tt></p>
+
+<p><b>A note on the associative equivalence operator:</b> for lists with 2 elements, the equivalence operator functions <br>
+identically to the binary propositional connective equivalence operator. <br>
+For formulas with 3 or more elements, the associative equivalence operator does not mean "each element in the list is equivalent".<br> 
+Instead, it means that the equivalence of the first two elements in the list is equivalent to the next element in the list, <br>
+and the truth value for this expression is equivalent to the next element, and so on. <br>
+For example:</p>
+<p><tt>(=[p0,p1,p2])</tt> is equivalent to <tt>((p0=p1)=p2)</tt><br>
+<tt>(=[p0,p1,p2,p3...])</tt> is equivalent to <tt>(...(((p0=p1)=p2)=p3)...)</tt></p>
+<p>But,</p>
+<p><tt>(=[p0,p1,p2])</tt> is not equivalent to <tt>(p0=p1=p2)</tt></p>
+<p>Note that <tt>(p0=p1=p2)</tt> is not a valid input. Therefore, if one wishes to generate the truth table for a formula<br>
+that means "each element in the list is equivalent", then one could employ the transitivity of the equivalence operator<br>
+with the <tt>and</tt> operator. <br>
+For example:</p>
+<p><tt>(p0=p1=p2=p3)</tt> can be inputted as <tt>(&[(p0=p1), (p1=p2), (p2=p3])</tt></p>
+<br>
+        </html>
+        </body>''')
+        font = label.document().defaultFont()  # or another font if you change it
+        fontMetrics = QFontMetrics(font)  # a QFontMetrics based on our font
+        textSize = fontMetrics.size(0, label.toPlainText())
+
+        textWidth = textSize.width() + 20  # constant may need to be tweaked
+        textHeight = textSize.height()/3 + 30  # constant may need to be tweaked
+
+        label.resize(textWidth, textHeight)
+        self.cfg_window.setMaximumSize(textWidth, textHeight)
+        self.cfg_window.show()
 
 
 app = QApplication(sys.argv)
