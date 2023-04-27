@@ -85,7 +85,7 @@ def translate_inorder(formula:str):
             # check wff1 and wff2 are both valid wff
             if not check_wff(wff1.replace(" ", ""), verbose=False)[0] or not check_wff(wff2.replace(" ", ""), verbose=False)[0]:
                 continue
-            print(wff1, "---", wff2)
+            # print(wff1, "---", wff2)
             # recurse on wff1 and wff2
             wff1, wff2 = translate_inorder(wff1), translate_inorder(wff2)
             return f"{prefix}({wff1} {binary_temp_con} {wff2})"
