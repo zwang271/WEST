@@ -8,46 +8,63 @@
 - Make
 
 ### SPECIFICATIONS:
-We ran all of our experiments on a computer with the following hardware specifications: Intel(R) Core(TM) i7-4770S CPU at 3.10GHz with 32gb RAM.
+We ran all of our experiments on a computer with the following hardware specifications: Intel(R) Xeon(R) Gold 6140 CPU @ 2.30GHz with ???? RAM.
 
-1. BENCHMARKING EXPERIMENTS: In these experiments we measure the time it takes to compute the truth tables of formulas with different complexities (input formula length) and their output lengths.
-  The generated random MLTL formulas and their measured complexities are provided in the input/
-  output files for each experiment below. Please take care to not overwrite the provided output files.
+1. WEST BENCHMARKING EXPERIMENTS: 
+In these experiments we measure the time it takes to compute the truth tables of formulas with different complexities (input formula length) and their output lengths. The generated random MLTL formulas and their measured complexities are provided in the input/output files for each experiment below. Please take care to not overwrite the provided output files.
   - cd to .MLTL_reg/MLTL/
-  - Terminal Command to build: g++ -std=c++17 utils.cpp reg.cpp grammar.cpp nnf_grammar.cpp
-  simulation_main.cpp -o simulations
-  - To run: ./simulations
+  - Terminal Command to build: make benchmark_west
+  - To run: ./benchmark_west
   
   - Subset 1: 2 Iterations (Depth), 5 Prop vars, Delta (Max interval length) = 10, Interval Max = 10
-	- Input: random_mltl1.txt in .MLTL_reg/MLTL/complexity_graph; 'n' to generate formulas
+	- Input: random_mltl1.txt in .MLTL_reg/MLTL/complexity_graph; 'n' to generate formulas;
+	NUM_PROP_VARS = 5
 	- Output: complexities1.txt in .MLTL_reg/MLTL/complexity_graph
-	- Runtime: approximately 30 minutes
+	- Runtime: approximately 3 minutes
 
   - Subset 2: 1 Iterations (Depth), 10 Prop vars, Delta (Max interval length) = 20, Interval Max = 20
-	- Input: random_mltl2.txt in .MLTL_reg/MLTL/complexity_graph; 'n' to generate formulas
+	- Input: random_mltl2.txt in .MLTL_reg/MLTL/complexity_graph; 'n' to generate formulas;
+	NUM_PROP_VARS = 10
 	- Output: complexities2.txt in .MLTL_reg/MLTL/complexity_graph
-	- Runtime: approximately 45 seconds
+	- Runtime: less than a second
 
   - Subset 3: 2 Iterations (Depth), 10 Prop vars, Delta (Max interval length) = 5, Interval Max = 10
-	- Input: random_mltl3.txt in .MLTL_reg/MLTL/complexity_graph; 'n' to generate formulas
+	- Input: random_mltl3.txt in .MLTL_reg/MLTL/complexity_graph; 'n' to generate formulas;
+	NUM_PROP_VARS = 10
 	- Output: complexities3.txt in .MLTL_reg/MLTL/complexity_graph
-	- Runtime: approximately 15 minutes
+	- Runtime: Approximately 1 minute
 
   - Subset 4: 1 Iterations (Depth), 5 Prop vars, Delta (Max interval length) = 10, Interval Max = 10
-	- Input: random_mltl4.txt in .MLTL_reg/MLTL/complexity_graph; 'n' to generate formulas
+	- Input: random_mltl4.txt in .MLTL_reg/MLTL/complexity_graph; 'n' to generate formulas;
+	NUM_PROP_VARS = 5
 	- Output: complexities4.txt in .MLTL_reg/MLTL/complexity_graph
-	- Runtime: approximately 1-2 seconds
+	- Runtime: less than a second
 
   We generated the random MLTL formulas in the random_mltl files using by inputting 'y' to generate
   formulas and entering the respective parameters for each experiment. To generate the graphs seen in
   section 4.3 of the paper, 
   - cd to .MLTL_reg/MLTL/complexity graph/
-  - Run python3 complexity_graph.py <experiment number> <plot_length>
+  - Run python3 complexity_graphWEST.py <experiment number> <plot_length>
   Experiment number should be one of {1, 2, 3, 4}
   Set plot_length = 1 to plot length vs length
   Set plot_length = 0 to plot length vs time
+ 
+2. REST BENCHMARKING EXPERIMENT:
+ In these experiments we measure the time it takes to run REST for sets of randomly generated regular expressions satisfying the conditions of REST. Please take care to not overwrite the provided output file.
+  - cd to .MLTL_reg/MLTL/
+  - Terminal Command to build: make benchmark_rest
+  - To run: ./benchmark_rest
+  
+  -Subset 1: min_size = 10, variation = 15
+ 	- Input: min_size = 10; variation = 15
+	- Output: RESTcomplexities.txt in .MLTL_reg/MLTL/complexity_graph
+	- Runtime: Approximately an hour
+	
+ To generate the graphs seen in section 6.1 of the paper, 
+  - cd to .MLTL_reg/MLTL/complexity graph/
+  - Run python3 complexity_graphREST.py
 
-2. CORRECTNESS EXPERIMENT: 
+3. WEST CORRECTNESS EXPERIMENT: 
   The generated random MLTL formulas and their measured complexities are provided in the input
   output files for each experiment below. Please take care not to overwrite the provided output files.
 
@@ -86,7 +103,7 @@ MAKING ARTIFACT:
   $ cd 2022-Iowa-State-REU-Temporal-Logic-
   $ cd MLTL_reg
   $ cd MLTL
-  $ make west
-  $ ./west
+  $ make west_lib
+  $ python gui.py
   ```
-  For further usage and output, see the repo homepage or WESTREADME.md in the Documentation folder.
+  For further usage and output, see the repo homepage or GUIREADME.md in the Documentation folder.
