@@ -1,6 +1,6 @@
 # WEST GUI Instructions
 
-This README describes how to use the WEST GUI. For instructions on using WEST directly from the terminal, see the file WESTREADME.md.
+This README describes how to use the WEST GUI. For instructions on using WEST directly from the terminal, see the file WESTREADME.md. For a video tutorial, click this [link](https://youtu.be/HoBJwdCq42c).
 The WEST mLTL Truth Table Generator is a program that parses well-formed mLTL formulas and outputs the regular expression
 for the computations that satisfy the formula.
 Our recursive algorithm is based on the regular expressions of mLTL operators and runs with approximately doubly exponential space and time complexity in the worst case.
@@ -28,9 +28,9 @@ See the Grammar section below for how to properly format inputted mLTL formulas.
 If the user enters a something other than a properly written mLTL formula,
 the WEST program will prompt the user to enter in another string.
 
-Along with entering the formula, the user can toggle checkmarks that run simplify or REST. The simplify function leads to a nicer regular expression out, at the expense of longer computation. Note that if simplify is turned on, the WEST program will simply the output for every subformula,
+Along with entering the formula, the user can toggle checkmarks that run simplify or REST. The simplify function leads to a shorter list of outputted regular expressions, at the expense of longer computation. Note that if simplify is turned on, the WEST program will simply the output for every subformula,
 as well as the output for the input formula. <br />
-Toggling REST will run the REST algorithm REST simplifies a particular form of regular expressions to the trivial computation, but is very computationally expensive. It is generally not recommended to use REST. <br />
+Toggling REST will run the REST algorithm. REST simplifies a particular form of regular expressions to the trivial computation, but is very computationally expensive. It is generally not recommended to use REST. <br />
 
 Once the user has entered a well-formed formula, toggled the simplifications of their choice, and hit the enter key, they will be prompted:
 
