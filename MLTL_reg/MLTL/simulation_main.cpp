@@ -12,7 +12,7 @@
 #include <vector>
 #include <chrono>
 #define FUNC_NUM 1000
-#define NUM_PROP_VAR 5
+int NUM_PROP_VAR;
 int MAX_ITER;
 int DELTA;
 int INTERVAL_MAX;
@@ -170,6 +170,9 @@ int main() {
     string formulas;
 
     if (gen == 'y') {
+        cout << "NUM_PROP_VAR: ";
+        cin >> NUM_PROP_VAR;
+
         cout << "MAX_ITER: ";
         cin >> MAX_ITER;
 
@@ -190,6 +193,9 @@ int main() {
     } else {
         cout << "Enter pathname of formula file \n";
         cin >> formulas;
+
+        cout << "NUM_PROP_VAR: ";
+        cin >> NUM_PROP_VAR;
     }
     cout << "Enter name of output file \n";
     string out;
