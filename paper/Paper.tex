@@ -30,6 +30,15 @@
 \usepackage{subcaption}
 \usepackage{mwe}
 
+%% Save the class definition of \subparagraph
+\let\llncssubparagraph\subparagraph
+%% Provide a definition to \subparagraph to keep titlesec happy
+\let\subparagraph\paragraph
+%% Load titlesec
+\usepackage[compact]{titlesec}
+%% Revert \subparagraph to the llncs definition
+\let\subparagraph\llncssubparagraph
+
 % Spacing: left, before, after
 \usepackage{titlesec}
 \titlespacing*{\section}{0pt}{10pt}{2pt}
