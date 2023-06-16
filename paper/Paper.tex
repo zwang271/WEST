@@ -453,11 +453,11 @@ The formulas for the minimum computation length follow directly from the regular
      Straightforward proof by induction on the length of a formula. See Appendix \ref{Appendix-SoundComplete} for details.
  \end{proof}
  
- We prove the correctness of our formula rewriting algorithm using our regular expressions from Definition \ref{TRE}. As detailed in Section \ref{WESTalg}, nested binary temporal operators create the worst-case time and space complexity for the WEST program. Although the WEST program does not implement this theorem by default, we would expect selected applications of rewriting to improve runtime. We use this theorem to simplify MLTL formulas, making them easier to interpret.
+ We prove the correctness of our formula rewriting algorithm using our regular expressions from Definition \ref{TRE}. As detailed in Section \ref{WESTalg}, nested binary temporal operators create the worst-case time and space complexity for the WEST program. Although the WEST program does not implement this theorem by default, we would expect selected applications of rewriting to improve runtime.
 % Theorem \ref{NestedUR}'s proof appears in Appendix \ref{Appendix-NestedUR}.
  
  \begin{theorem}[\emph{Nested Until and Release Rewriting Theorem}] \label{NestedUR}
-   Any MLTL formula using the Until or Release operator can be rewritten with right-nested subformulas. Let $\mathcal{B} = \mathcal{R} \text{ or } \mathcal{U}$. Let $a,b,c \in \mathbb{Z}_{\geq 0} , a \leq b,$ \text{and} $ \phi,   \psi$ \text{be well-formed MLTL formulas in NNF. Then,} $ \phi \ \mathcal{B}_{[a,b+c]} \psi \equiv \phi \ \mathcal{B}_{[a,b]}(\phi \ \mathcal{B}_{[0,c]} \psi)$. That is, $ \phi \ \mathcal{U}_{[a,b+c]} \psi \equiv \phi \ \mathcal{U}_{[a,b]}(\phi \ \mathcal{U}_{[0,c]} \psi)$ and $ \phi \ \mathcal{R}_{[a,b+c]} \psi \equiv \phi \ \mathcal{R}_{[a,b]}(\phi \ \mathcal{R}_{[0,c]} \psi)$.
+   Any MLTL formula using the Until or Release operator can be rewritten with right-nested subformulas. Let $a,b,c \in \mathbb{Z}_{\geq 0} , a \leq b,$ \text{and} $ \phi,   \psi$ \text{be well-formed MLTL formulas in NNF. Then } $ \phi \ \mathcal{U}_{[a,b+c]} \psi \equiv \phi \ \mathcal{U}_{[a,b]}(\phi \ \mathcal{U}_{[0,c]} \psi)$ and $ \phi \ \mathcal{R}_{[a,b+c]} \psi \equiv \phi \ \mathcal{R}_{[a,b]}(\phi \ \mathcal{R}_{[0,c]} \psi)$.
 \end{theorem}
 \begin{proof}
     Follows directly from the regular expressions for MLTL. See \ref{Appendix-NestedUR} for details.
@@ -465,7 +465,7 @@ The formulas for the minimum computation length follow directly from the regular
 
 % ZILI: Presenting algorithm vertically instead
 \hspace{-5mm}
-\begin{minipage}[t]{0.52\textwidth} 
+\begin{minipage}[h]{0.52\textwidth} 
 \begin{algorithm}[H] 
 \caption{WEST Algorithm}
 Inputs: $\phi$ - MLTL formula in NNF \\
@@ -474,44 +474,37 @@ $n$ - number of propositional variables \\
 Output: set of REGEX satisfying $\phi$
 \begin{algorithmic}[1]
     \Procedure{reg}{string $\phi$, int $n$}
-        \If{$\phi$ is $\top$ or $\bot$}
+        \If{$\phi$ is $\top$ or $\bot$} 
             \State return reg\_prop\_const($\phi$, n)
         \EndIf
-        
         \If{$\phi$ is $p_k$ or $\neg p_k$}
             \State return reg\_prop\_var($\phi$, n)
         \EndIf
-
         \If{$\phi  = \phi_1 \land \phi_2$}
             \State \parbox[t]{.82\linewidth}{return set\_intersect(reg($\phi_1$), reg($\phi_2$), \hspace*{5mm}n)}
         \EndIf
-
         \If{$\phi  = \phi_1 \lor \phi_2$}
             \State return join(reg($\phi_1$), reg($\phi_2$), n)
         \EndIf
-
         \If{$\phi = \mathcal{F}_{[a, b]}\phi_1$}
             \State return reg\_F(reg($\phi_1$), a, b, n)
         \EndIf
-
         \If{$\phi = \mathcal{G}_{[a, b]}\phi_1$}
             \State return reg\_G(reg($\phi_1$), a, b, n)
         \EndIf
-
         \If{$\phi = \phi_1 \mathcal{U}_{[a, b]} \phi_2$}
             \State return reg\_U(reg($\phi_1$), reg($\phi_2$), a, b, n)
         \EndIf
-
         \If{$\phi = \phi_1 \mathcal{R}_{[a, b]} \phi_2$}
             \State return reg\_R(reg($\phi_1$), reg($\phi_2$), a, b, n)
         \EndIf
     \EndProcedure
 \end{algorithmic}
 \end{algorithm}
-\vspace{5.9mm}
+%\vspace{5.9mm}
 \end{minipage}
 \hfill
-\begin{minipage}[t]{0.48\textwidth}
+\begin{minipage}[h]{0.48\textwidth}
 \begin{algorithm}[H]
 \caption{set\_intersect}
 Inputs: $R, T$ - two sets of REGEX\\
@@ -527,7 +520,7 @@ Output: set of REGEX equal to $R \land T$
 \EndProcedure
 \end{algorithmic}
 \end{algorithm}
-\vspace{-6.5mm}
+%\vspace{-6.5mm}
 \begin{algorithm}[H]
 \caption{reg\_U} 
 Inputs: $r_\phi$, $r_\psi$ - sets of REGEX for MLTL formulas $\phi$ and $\psi$ (after calling reg)\\
@@ -894,7 +887,7 @@ For the first simulation, we consider 2 iterations, 5 propositional variables, 1
 
 \noindent\textbf{Simulation 2}
 For the second simulation, we consider 1 iteration, 10 propositional variables, 20 for \texttt{delta}, and 20 for \texttt{interval\_max}. We obtain plots \ref{fig:InVsOutLen2} and \ref{fig:InLenVsRunTime2}.
-\begin{figure}[h]
+\begin{figure}[H]
 \captionsetup[subfigure]{aboveskip=-1pt,belowskip=-1pt}
     \centering
     \begin{subfigure}[h]{0.49\textwidth}
