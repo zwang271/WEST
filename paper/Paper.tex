@@ -145,7 +145,7 @@
 \begin{document}
 %
 %\title{Contribution Title\thanks{Supported by organization x.}}
-\title{Mission-time LTL (MLTL) Formula Validation Via Regular Expressions\thanks{Work supported in part by NSF grant DMS-1950583}}
+\title{Mission-time LTL (MLTL) Formula Validation Via Regular Expressions\thanks{Work supported in part by NSF grant DMS-1950583 and NSF CAREER Award CNS-1552934.}}
 %
 \titlerunning{MLTL Formula Validation Via Regular Expressions}
 % If the paper title is too long for the running head, you can set
@@ -186,7 +186,7 @@ Iowa State University \and University of Amsterdam \and University of Wisconsin,
 % \vspace{-0.1in}
 System specifications, such as aerospace operational concepts, often utilize timelines to express critical requirements. We can cite examples of this from NASA's Automated Airspace Concept \cite{EH10}, the U.~S.~Navy's Aircraft Carrier Deck Scheduler \cite{RCRBS11}, the JAXA-NASA Global Precipitation Measurement (GPM) Observatory \cite{GPM}, and many others. Formal methods provide continuously advancing tools and techniques to rigorously analyze timelines expressed in the form of temporal logic requirements, from early design-time model checking and theorem proving to on-board runtime verification. The U.~S.~Federal Aviation Administration (FAA) even advocates the use of formal methods for flight certification of these critical systems \cite{DO-178C,DO-254,DO-333}. Yet, a significant hurdle to the use of formal methods remains: how to convincingly demonstrate to the humans in the loop, from system designers to certifiers, that the analyzed formulas truly represent the system requirements \cite{Roz16}. We creatively address this validation question using regular expressions and truth tables.
 
-NASA, for example, has developed several tools that operate over temporal logic requirements, such as FRET\cite{GMRPSS20}, R2U2\cite{RS17}, and a PVS library \cite{CTGPD22} for the logic MLTL (Mission-time Linear Temporal Logic) \cite{RRS14,LVR22}. MLTL was the logic used recently in NASA's Robonaut2 verification project \cite{KZJZR20} and is being used currently for both design-time and runtime verification of the NASA Lunar Gateway Vehicle System Manager \cite{DBR21}. Other recent verification %verification-for-certification
+NASA, for example, has developed several tools that operate over temporal logic requirements, such as FRET\cite{GMRPSS20}, R2U2\cite{RS17}, and a PVS library \cite{CTGPD22} for the logic MLTL (Mission-time Linear Temporal Logic) \cite{RRS14,LVR22}. MLTL was the specification logic for NASA's Robonaut2 verification project \cite{KZJZR20} and is currently the specification logic for both design-time and runtime verification of the NASA Lunar Gateway Vehicle System Manager \cite{DBR21}. Other recent verification %verification-for-certification
 efforts involving MLTL include a JAXA autonomous satellite \cite{JAXA}, a UAS Traffic Management (UTM) system involving Collins and Mosaic Aerospace \cite{HCHJR21}, a sounding rocket \cite{HLR21}, and multiple small satellites \cite{LLR21,LJBHCLR22,AJR22}. However, all of these successful verification efforts were carried out by groups specializing in formal methods research. To enable broader application of formal verification, and adoption across larger projects, we critically need better validation, e.g., so that analysis over MLTL-specified requirements can transparently contribute to flight certification. 
 
 Many specifications from case studies, in logics such as MTL \cite{AH90} and STL \cite{MN04}, fall within the MLTL fragments of these logics. 
@@ -358,7 +358,7 @@ Suppose $n=2$. The bit string representation $\pi = 10, 01$ means that $p_0$ is 
 % \vspace{-0.1in}
 \section{MLTL Regular Expressions} \label{regex}
 % \vspace{-0.1in}
-We modify the standard definition of Regular Expressions (Regex) to introduce notation that describes the satisfying computations of an MLTL formula. We begin by quoting the parts of the standard definition of a regex from \cite{sipser} that we use to describe our computations:
+We modify the standard definition of Regular Expressions (regex) to introduce notation that describes the satisfying computations of an MLTL formula. We begin by quoting the parts of the standard definition of a regex from \cite{sipser} that we use to describe our computations:
 
 \begin{definition}[\emph{Regular Expression}] \label{sipser regex} 
     Let $\Sigma$ denote an alphabet, and let $a\in \Sigma$. We say that $R$ is a \emph{regular expression} if one of the following holds:
@@ -642,7 +642,7 @@ We use sets to represent alternation of regular expressions; for $n$ regular exp
 Additionally, we provide details for performing set intersection of temporal regular expressions, and the algorithm for the temporal operator $\mathcal{U}$.
 Note how \texttt{reg\_U} parallels the regular expression defined for $\mathcal{U}$, and the algorithms (see appendix \ref{pseudocode_appendix}) for the other three temporal operators follow an identical structure. 
 
-For for regular expressions $w_0$ and $w_1$, a useful reduction is that $\{w_0 1 w_1, w_0 0 w_1\} = \{w_0 s w_1\}$. Each time set intersection is performed, we greedily apply this reduction to all appropriate pairs of regular expressions in the set. This prevents repeated set intersection operations from blowing up exponentially most of the time, and drastically improves running time.
+For for regular expressions $w_0$ and $w_1$, a useful reduction is that $\{w_0 1 w_1, w_0 0 w_1\} = \{w_0 s w_1\}$. Each time we perform set intersection, we greedily apply this reduction to all appropriate pairs of regular expressions in the set. This prevents repeated set intersection operations from blowing up exponentially most of the time, and drastically improves running time.
 
 
 % Applying a simplifying function to the output of set intersection drastically improves running time. 
@@ -1300,11 +1300,11 @@ By providing a new front-end for this tool chain, we have now enabled a path to 
  There are no computations that satisfy $\bot$ and $\mathscr{L}(\text{reg}(\bot))$ is the empty string, so we are done.\\
  \noindent\textbf{reg($p_k$)}\\
  For $0\leq k \leq n-1$, consider the propositional variable $p_k$. If $\pi$ satisfies $p_k$, then $p_k$ evaluates to true at $\pi[0]$. This is equivalent to writing that $\pi[0]$ is of the form 
- $$S^{k} 1 S^{n-k-1}$$
+ $$S^{k} 1 S^{n-k-1}$$,
  which is precisely reg($p_k$).\\
  \noindent\textbf{reg($\neg p_k$)}\\
  If $\pi$ satisfies $\neg p_k$, then $\neg p_k$ evaluates to true at $\pi[0]$. This is equivalent to writing that $\pi[0]$ is of the form 
- $$S^{k} 0 S^{n-k-1}$$
+ $$S^{k} 0 S^{n-k-1}$$,
  which is precisely reg($\neg p_k$).\\
  \noindent\textbf{Inductive Step.}\\
  Suppose the theorem holds for MLTL formulas $\varphi$ and $\psi$. We now show that it holds for $\varphi \land \psi$, $\varphi \lor \psi$, $\mathcal{F}_{[a,b]} \varphi$, $\mathcal{G}_{[a,b]} \varphi$, $\varphi \ \mathcal{U}_{[a,b]} \psi$, and $\varphi \mathcal{R}_{[a,b]} \psi$.\\
