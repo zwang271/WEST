@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Wang"
+  given-names: "Zili"
+- family-names: "Elwing"
+  given-names: "Jenna"
+- family-names: "Sorking"
+  given-names: "Jeremy"
+- family-names: "Travesset"
+  given-names: "Chiara"
+- family-names: "Gamboa Guzman"
+  given-names: "Laura Paola"
+  orcid: "https://orcid.org/0000-0003-3133-5148"
+title: "2022-Iowa-State-REU-Temporal-Logic-"
+url: "https://github.com/zwang271/2022-Iowa-State-REU-Temporal-Logic-"
