@@ -16,15 +16,22 @@ The latest version of WEST can be found on GitHub: https://github.com/zwang271/2
 ---------------
 **!!! TO-DO !!!**
 - [x] Include a brief description of the artifact goal, authors, reference to the paper, and indication on how to cite the artifact. Include the mLTL syntax used for input/output.
-- [ ] Link instructions to configure and build. It may start as `From the <insert directory name> directory configure and build as follows:`
-- [ ] Hardware requirements.
+- [x] Link instructions to configure and build. It may start as `From the <insert directory name> directory configure and build as follows:`
+- [x] Hardware requirements.
 - [ ] How to run the benchmarking scripts and interpret/visualize the results. Include how to do this with limited resources!
-- [ ] List of software dependencies (any python libraries used to produce the graphs?)
+- [x] List of software dependencies (any python libraries used to produce the graphs?)
 - [ ] Make sure everything runs smoothly in the VM, more details on that [here](https://liacs.leidenuniv.nl/~bonsanguemm/ifm23/artifacts.html).
 
 ----------------
 
-## Usage
+## Build and Usage guides
+
++ To run the WEST tool from the terminal line, please refer to the document [`./Documentation/WESTREADME.md`](https://github.com/zwang271/2022-Iowa-State-REU-Temporal-Logic-/blob/master/Documentation/WESTREADME.md).
++ To run it from the GUI, please refer to the document [`./Documentation/GUIREADME.md`](https://github.com/zwang271/2022-Iowa-State-REU-Temporal-Logic-/blob/master/Documentation/GUIREADME.md). A video tutorial is also available on [YouTube](https://youtu.be/HoBJwdCq42c).
++ To reproduce the results on the paper, please refer to the document [`./Documentation/BENCHMARKREADME.md`](https://github.com/zwang271/2022-Iowa-State-REU-Temporal-Logic-/blob/master/Documentation/BENCHMARKREADME.md). This file also includes the specifications on the computer used to run the tests.
+
+
+### The WEST mLTL syntax
 
 Below is the context-free grammar that a well-formed mLTL formula must follow. This is optional reading, and only included for the interested reader.
 ```
@@ -69,8 +76,11 @@ Wff   ->      Prop_var | Prop_cons
 
 ```
 
-### Reproducing the benchmark results
+## Troubleshooting Guide
 
-
-## The WEST mLTL syntax
+### The Formula is not Well-Formed
+Ensure that all time intervals use ',' to separate the bounds.  <br />
+Ensure that all binary and associative connectives have parentheses surrounding them.  <br />
+Ensure that for each propositional variable, its corresponding natural number immediately follows the 'p', and that there isn't a '_' or space in between.  <br />
+Ensure that all unary connectives do NOT have parentheses surrounding them.
 
