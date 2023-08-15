@@ -1,9 +1,9 @@
 # WEST GUI Instructions
 
 This README describes how to use the WEST GUI. For instructions on using WEST directly from the terminal, see the file WESTREADME.md. For a video tutorial, click this [link](https://youtu.be/HoBJwdCq42c).
-The WEST mLTL Truth Table Generator is a program that parses well-formed mLTL formulas and outputs the regular expression
+The WEST MLTL Truth Table Generator is a program that parses well-formed MLTL formulas and outputs the regular expression
 for the computations that satisfy the formula.
-Our recursive algorithm is based on the regular expressions of mLTL operators and runs with approximately doubly exponential space and time complexity in the worst case.
+Our recursive algorithm is based on the regular expressions of MLTL operators and runs with approximately doubly exponential space and time complexity in the worst case.
 
 ## Usage
 
@@ -23,9 +23,9 @@ Then, the user will be prompted:
 Please enter a MLTL formula.
 ```
 
-See the Grammar section below for how to properly format inputted mLTL formulas.
+See the Grammar section below for how to properly format inputted MLTL formulas.
 
-If the user enters a something other than a properly written mLTL formula,
+If the user enters a something other than a properly written MLTL formula,
 the WEST program will prompt the user to enter in another string.
 
 Along with entering the formula, the user can toggle checkmarks that run simplify or REST. The simplify function leads to a shorter list of outputted regular expressions, at the expense of longer computation. Note that if simplify is turned on, the WEST program will simply the output for every subformula,
@@ -122,7 +122,7 @@ Note that (p0=p1=p2) is not a valid input; therefore, if one wishes to generate 
 ```
 
 
-Below is the context-free grammar that a well-formed mLTL formula must follow. This is optional reading, and only included for the interested reader.
+Below is the context-free grammar that a well-formed MLTL formula must follow. This is optional reading, and only included for the interested reader.
 ```
 Context-Free Grammar for a MLTL well-formed formula (wff).
 
