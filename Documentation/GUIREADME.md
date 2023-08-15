@@ -167,7 +167,7 @@ Wff   ->      Prop_var | Prop_cons
 
 
 ## Computations
-In a computation, "1" represents a true truth value, and "0" represents a false truth value; "S" represents an arbitrary truth value, i.e. true or false.
+In a computation, "1" represents a true truth value, and "0" represents a false truth value; "s" represents an arbitrary truth value, i.e. either true or false.
 Time steps in a computation are separated by commas. The bit-strings at each time step represent the truth values of each propositional variable, in ascending order. <br />
 
 **Examples:** <br />
