@@ -14,15 +14,7 @@ WEST is an acronym for the last names of the undergraduate mathematicians who co
 The latest version of WEST can be found on GitHub: https://github.com/zwang271/2022-Iowa-State-REU-Temporal-Logic-
 
 ---------------
-**!!! TO-DO !!!**
-- [x] Include a brief description of the artifact goal, authors, reference to the paper, and indication on how to cite the artifact. Include the MLTL syntax used for input/output.
-- [x] Link instructions to configure and build. It may start as `From the <insert directory name> directory configure and build as follows:`
-- [x] Hardware requirements.
-- [ ] How to run the benchmarking scripts and interpret/visualize the results. Include how to do this with limited resources!
-- [x] List of software dependencies (any python libraries used to produce the graphs?)
-- [ ] Make sure everything runs smoothly in the VM, more details on that [here](https://liacs.leidenuniv.nl/~bonsanguemm/ifm23/artifacts.html).
 
-----------------
 
 ## Build and Usage guides
 
