@@ -1,9 +1,9 @@
-# WEST mLTL Truth Table Generator
+# WEST MLTL Truth Table Generator
 
 This README describes how to use the WEST program directly from the terminal. For instructions on using the WEST GUI, see the file GUIREADME.md.
-The WEST mLTL Truth Table Generator is a program that parses well-formed mLTL formulas and outputs the regular expression
+The WEST MLTL Truth Table Generator is a program that parses well-formed MLTL formulas and outputs the regular expression
 for the computations that satisfy the formula.
-Our recursive algorithm is based on the regular expressions of mLTL operators and runs with approximately doubly exponential space and time complexity in the worst case.
+Our recursive algorithm is based on the regular expressions of MLTL operators and runs with approximately doubly exponential space and time complexity in the worst case.
 
 ## Usage
 
@@ -23,9 +23,9 @@ Then, the user will be prompted:
 Please enter a MLTL formula.
 ```
 
-See the Grammar section below for how to properly format inputted mLTL formulas.
+See the Grammar section below for how to properly format inputted MLTL formulas.
 
-If the user enters a something other than a properly written mLTL formula,
+If the user enters a something other than a properly written MLTL formula,
 the WEST program will prompt the user to enter in another string:
 
 ```
@@ -35,7 +35,7 @@ Not a well formed formula!
 Please enter a MLTL formula.
 ```
 
-If the input is a properly written mLTL formula, the WEST program will prompt the user whether they wish to
+If the input is a properly written MLTL formula, the WEST program will prompt the user whether they wish to
 simplify the output:
 
 ```
@@ -296,7 +296,7 @@ Note that (p0=p1=p2) is not a valid input; therefore, if one wishes to generate 
 ```
 
 
-Below is the context-free grammar that a well-formed mLTL formula must follow. This is optional reading, and only included for the interested reader.
+Below is the context-free grammar that a well-formed MLTL formula must follow. This is optional reading, and only included for the interested reader.
 ```
 Context-Free Grammar for a MLTL well-formed formula (wff).
 
@@ -370,7 +370,7 @@ Where in each string separated by commas, the first digit represents the truth v
 
 
 ## Example
-An interesting mLTL formula to consider is that of the oscillation of the truth value of a propositional variable for each time step.
+An interesting MLTL formula to consider is that of the oscillation of the truth value of a propositional variable for each time step.
 Here is how a user may generate the truth table for this formula:
 ```
 Please enter a MLTL formula.
