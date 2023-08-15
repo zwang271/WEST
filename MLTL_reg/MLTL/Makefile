@@ -46,4 +46,4 @@ grammar.o: grammar.cpp grammar.h
 	g++ -c grammar.cpp -std=c++17
   
 clean: 
-	rm -f main.o utils.o reg.o nnf_grammar.o grammar.o -std=c++17
+	rm -f main.o utils.o reg.o nnf_grammar.o grammar.o 
