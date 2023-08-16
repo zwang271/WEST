@@ -5,6 +5,12 @@ The WEST MLTL Truth Table Generator is a program that parses well-formed MLTL fo
 for the computations that satisfy the formula.
 Our recursive algorithm is based on the regular expressions of MLTL operators and runs with approximately doubly exponential space and time complexity in the worst case.
 
+## Additional Requirements
+- Posix environment (Linux, MacOS, Etc.)
+- Python3 (version 3.6 or greater)
+- C99 std compiler (gcc was the one used, others will likely work as well)
+- Make
+
 ## Usage
 
 After downloading and cloning this repository, use the commands

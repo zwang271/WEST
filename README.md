@@ -6,7 +6,7 @@ This project is part of the [2022 Iowa State Math REU](https://reu.math.iastate.
 
 WEST is an acronym for the last names of the undergraduate mathematicians who collaborated on this project: Zili Wang, Jenna Elwing, Jeremy Sorkin, and Chiara Travesset.
 
-[^1]: We use this term in a rather liberal way, since we only deal with regular languages containining strings of a fixed lenght and we use the character `s` as a shorthand for `0 or 1`, although it is technically not an element of the formal alphabet. 
+[^1]: We use this term in a rather liberal way, since we only deal with regular languages containing strings of a fixed length and we use the character `s` as a shorthand for `0 or 1`, although it is technically not an element of the formal alphabet. 
 
 
 ## Download

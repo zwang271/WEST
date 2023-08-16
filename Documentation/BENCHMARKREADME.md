@@ -9,6 +9,7 @@
 
 ### SPECIFICATIONS:
 We ran all of our experiments on a computer with the following hardware specifications: Intel(R) Xeon(R) Gold 6140 CPU @ 2.30GHz with 376 GB RAM.
+All of these experiments could be run on a standard laptop in a reasonable time frame. Please allow additional runtime.
 
 1. WEST BENCHMARKING EXPERIMENTS: 
 In these experiments we measure the time it takes to compute the truth tables of formulas with different complexities (input formula length) and their output lengths. The generated random MLTL formulas and their measured complexities are provided in the input/output files for each experiment below. Please take care to not overwrite the provided output files.
