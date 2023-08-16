@@ -30,7 +30,7 @@ To examine this formula on the WEST-GUI tool, we need to input it as `((p0 & G[0
 
 ![Input Example GUI](https://github.com/zwang271/2022-Iowa-State-REU-Temporal-Logic-/blob/master/paper/images/initial.png)
 
-This is what the WEST tool outputs when we select this same formula from the subformulae options.
+This is what the WEST tool outputs when we select this same formula from the subformulae options, without selecting the **Apply REST** functionality, which tries to look for a reduction of the number of disjunctions of regular expressions (but it may take long to produce a result!)
 
 ![Example `(p_0 & G_{[0,2]} p_1) \to p_2` GUI](https://github.com/zwang271/2022-Iowa-State-REU-Temporal-Logic-/blob/master/paper/images/subformula.png)
 
