@@ -58,11 +58,11 @@ In these experiments we measure the time it takes to compute the truth tables of
   
   -Subset 1: min_size = 10, variation = 15
  	- Input: `min_size = 10`; `variation = 15`
-	- Output: `RESTcomplexities.txt` in `.MLTL_reg/MLTL/complexity_graph`
+	- Output: `RESTcomplexities.txt` in `./MLTL_reg/MLTL/complexity_graph`
 	- Runtime: Approximately an hour
 	
  To generate the graphs seen in section 6.1 of the paper, 
-  - From the WEST tool root directory, `cd .MLTL_reg/MLTL/complexity graph/`
+  - From the WEST tool root directory, `cd ./MLTL_reg/MLTL/complexity graph/`
   - Run `python3 complexity_graphREST.py`
 
 3. WEST CORRECTNESS EXPERIMENT: 
@@ -70,22 +70,22 @@ In these experiments we measure the time it takes to compute the truth tables of
   output files for each experiment below. Please take care not to overwrite the provided output files.
 
   - Brute force solution outputs
-  	- From the WEST tool root directory, `cd .MLTL_brute_forcer/Python/`
+  	- From the WEST tool root directory, `cd ./MLTL_brute_forcer/Python/`
 	- Terminal Command: `python3 <formulas file> <file to write outputs to> <number of propositional
 	variables = 2^depth>`
-	- Depth 0: `python3 .\MLTL_truth_table.py formulas_d0.txt /brute_force_outputs_d0 1`
-	- Depth 1: `python3 .\MLTL_truth_table.py formulas_d1.txt /brute_force_outputs_d1 2`
-	- Depth 2: `python3 .\MLTL_truth_table.py formulas_d2.txt /brute_force_outputs_d2 4`
+	- Depth 0: `python3 ./MLTL_truth_table.py formulas_d0.txt /brute_force_outputs_d0 1`
+	- Depth 1: `python3 ./MLTL_truth_table.py formulas_d1.txt /brute_force_outputs_d1 2`
+	- Depth 2: `python3 ./MLTL_truth_table.py formulas_d2.txt /brute_force_outputs_d2 4`
 	- Runtime: ~9 hours for all depths
 
   - Verifying reg with brute force outputs
-	- From the WEST tool root directory `cd .MLTL_reg/MLTL/`
+	- From the WEST tool root directory `cd ./MLTL_reg/MLTL/`
 	- Terminal Command to build: `g++ -std=c++17 utils.cpp reg.cpp grammar.cpp nnf_grammar.cpp
 	verify_main.cpp -o verify`
 	- To run: `./verify`
 	- Enter `n` to generate new formulas (all formulas are provided, don't overwrite!)
 	- Depth 0: depth is 0, write expanded outputs to `./verify/reg_outputs_d0/`, brute force outputs is
-	`.verify/brute_force_outputs_d0/`
+	`./verify/brute_force_outputs_d0/`
 	- Depth 1: depth is 1, write expanded outputs to `./verify/reg_outputs_d1/`, brute force outputs is 
 	`./verify/brute_force_outputs_d1/`
 	- Depth 2: depth is 2, write expanded outputs to `./verify/reg_outputs_d2/`, brute force outputs is 
