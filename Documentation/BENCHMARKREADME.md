@@ -1,5 +1,5 @@
 ### ARTIFACT LINK:
-[download the .zip file from the GitHub repo.](https://github.com/zwang271/2022-Iowa-State-REU-Temporal-Logic-)
+[download the .zip file from the GitHub repo.](https://github.com/zwang271/WEST)
 
 ### ADDITIONAL REQUIREMENTS:
 - Posix environment (Linux, MacOS, Etc.)
@@ -97,11 +97,11 @@ In these experiments we measure the time it takes to compute the truth tables of
 ### REPRODUCIBILITY INSTRUCTIONS:
 
 MAKING ARTIFACT:
-  1. Download the .zip file containing the source code (https://github.com/zwang271/2022-Iowa-State-REU-Temporal-Logic-).
+  1. Download the .zip file containing the source code (https://github.com/zwang271/WEST).
   2. Open a terminal session at the directory where the folder containing the source code files 
   and run the following commands to make the WEST program.
   ```
-  $ cd 2022-Iowa-State-REU-Temporal-Logic-
+  $ cd WEST
   $ cd MLTL_reg
   $ cd MLTL
   $ make west_lib
