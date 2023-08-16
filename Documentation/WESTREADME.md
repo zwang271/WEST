@@ -16,7 +16,7 @@ Our recursive algorithm is based on the regular expressions of MLTL operators an
 After downloading and cloning this repository, use the commands
 
 ``` 
-$ cd 2022-Iowa-State-REU-Temporal-Logic-
+$ cd WEST
 $ cd MLTL_reg
 $ cd MLTL
 $ make west
