@@ -1,9 +1,0 @@
-The WEST mLTL Truth Table Generator is a program that parses well-formed mLTL formulas and outputs
-the regular expression for the computations that satisfy the formula.
-Our recursive algorithm is based on the regular expressions of mLTL operators and runs with approximately doubly exponential space and time complexity.
-
-In our paper, "Mission-time LTL (MLTL) Formula Validation Via Regular Expressions", we: 
-Formally prove the algorithm's correctness; 
-Formally derive its space/time complextiy (doubly-exponential); 
-Experimentally analyze its space/time complexity; 
-Experimentally validate WEST's correctness through State-flow Digraphs and Test Suites.  
