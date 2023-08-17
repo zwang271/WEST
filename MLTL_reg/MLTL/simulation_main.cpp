@@ -143,10 +143,12 @@ void simulate(string formulas, string out) {
         output = reg(Wff_to_Nnf(line), NUM_PROP_VAR, false, true);
         output = simplify(output, NUM_PROP_VAR);
         auto stop = high_resolution_clock::now();
-        auto duration = duration_cast<seconds>(stop - start);
+        // cast to milliseconds
+        duration<double, std::micro> ms = stop - start;
+
         // Write the amount of time to calculate 'output'
         // into 'out' file
-        outfile << duration.count();
+        outfile << ms.count() / 1000000; 
         outfile << " ";
         // Write the amount of characters in 'output'
         // into 'out' file
@@ -205,3 +207,5 @@ int main() {
     cout << "Wrote to output file\n";
     return 0;
 }
+
+// ./complexity_graph/random_mltl2.txt
