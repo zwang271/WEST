@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import sys
+import math
 
 # Run python3 ./complexity_graph.py {experiment number} {plot_length}
 # Set plot_length = 1 to plot length vs length
@@ -14,10 +15,14 @@ title_font = 10
 
 data = pd.read_csv("./complexities"+str(experiment)+".txt", sep=" ", header=None, names=["Input Length", "Time(s)", "Output Length"])
 
-if plot_length:
+if plot_length == 1:
     data.plot.scatter(x="Input Length", y="Output Length", color="Blue", marker="x")
     plt.ylabel("Output Length(# of chars)", fontsize = y_font)
-else: # plot time
+else: # plot time in a log plot
+    # change y values to log
+    print(data["Time(s)"])
+    data["Time(s)"] = data["Time(s)"].apply(lambda x: math.log(x, 10) if x > 0 else 0)
+    print(data["Time(s)"])
     data.plot.scatter(x="Input Length", y="Time(s)", color="Red", marker="x")
     plt.ylabel("Time(s)", fontsize=y_font)
 
