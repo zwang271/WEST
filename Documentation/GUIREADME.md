@@ -7,9 +7,10 @@ Our recursive algorithm is based on the regular expressions of MLTL operators an
 
 ## Additional Requirements
 - Posix environment (Linux, MacOS, Etc.)
-- Python3 (version 3.6 or greater)
-- C99 std compiler (gcc was the one used, others will likely work as well)
+- Python3 (version 3.6 or greater) with modules `dd`, `lark`, and `PtQt5`, which are all available through `pip`.
+- C99 std compiler (gcc was the one used, others will likely work as well.)
 - Make
+When running it on Linux, it may also require to install `qt5dxcb-plugin`, which is available from the `apt` library.
 
 ## Usage
 
