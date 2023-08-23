@@ -21,8 +21,6 @@ if plot_length == 1:
 else: # plot time in a log plot
     # change y values to log
     print(data["Time(s)"])
-    data["Time(s)"] = data["Time(s)"].apply(lambda x: math.log(x, 10) if x > 0 else 0)
-    print(data["Time(s)"])
     data.plot.scatter(x="Input Length", y="Time(s)", color="Red", marker="x")
     plt.ylabel("Time(s)", fontsize=y_font)
 

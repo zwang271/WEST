@@ -143,7 +143,7 @@ void simulate(string formulas, string out) {
         output = reg(Wff_to_Nnf(line), NUM_PROP_VAR, false, true);
         output = simplify(output, NUM_PROP_VAR);
         auto stop = high_resolution_clock::now();
-        // cast to milliseconds
+        // cast to microseconds
         duration<double, std::micro> ms = stop - start;
 
         // Write the amount of time to calculate 'output'
