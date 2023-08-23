@@ -1,4 +1,4 @@
-all: west test_rest benchmark_rest benchmark_west clean
+all: west test_rest benchmark_rest benchmark_west west_lib clean
 
 test_rest: test_rest.o utils.o grammar.o nnf_grammar.o reg.o rest.o
 	g++ test_rest.o utils.o rest.o grammar.o nnf_grammar.o reg.o -o test_rest -std=c++17
