@@ -1,38 +1,5 @@
-1ss
+1
 
-s1s
+0
 
-ss1
-
-ss1,sss,sss,sss,sss
-s1s,ss1,sss,sss,sss
-s1s,s1s,ss1,sss,sss
-s1s,s1s,s1s,ss1,sss
-s1s,s1s,s1s,s1s,ss1
-
-ss1,sss,sss,sss,sss,sss,sss,sss,sss
-s1s,ss1,sss,sss,sss,sss,sss,sss,sss
-s1s,s1s,ss1,sss,sss,sss,sss,sss,sss
-s1s,s1s,s1s,ss1,sss,sss,sss,sss,sss
-s1s,s1s,s1s,s1s,ss1,sss,sss,sss,sss
-1ss,ss1,sss,sss,sss,sss,sss,sss,sss
-1ss,s1s,ss1,sss,sss,sss,sss,sss,sss
-1ss,s1s,s1s,ss1,sss,sss,sss,sss,sss
-1ss,s1s,s1s,s1s,ss1,sss,sss,sss,sss
-1ss,s1s,s1s,s1s,s1s,ss1,sss,sss,sss
-1ss,1ss,ss1,sss,sss,sss,sss,sss,sss
-1ss,1ss,s1s,ss1,sss,sss,sss,sss,sss
-1ss,1ss,s1s,s1s,ss1,sss,sss,sss,sss
-1ss,1ss,s1s,s1s,s1s,ss1,sss,sss,sss
-1ss,1ss,s1s,s1s,s1s,s1s,ss1,sss,sss
-1ss,1ss,1ss,ss1,sss,sss,sss,sss,sss
-1ss,1ss,1ss,s1s,ss1,sss,sss,sss,sss
-1ss,1ss,1ss,s1s,s1s,ss1,sss,sss,sss
-1ss,1ss,1ss,s1s,s1s,s1s,ss1,sss,sss
-1ss,1ss,1ss,s1s,s1s,s1s,s1s,ss1,sss
-1ss,1ss,1ss,1ss,ss1,sss,sss,sss,sss
-1ss,1ss,1ss,1ss,s1s,ss1,sss,sss,sss
-1ss,1ss,1ss,1ss,s1s,s1s,ss1,sss,sss
-1ss,1ss,1ss,1ss,s1s,s1s,s1s,ss1,sss
-1ss,1ss,1ss,1ss,s1s,s1s,s1s,s1s,ss1
 
