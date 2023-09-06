@@ -183,6 +183,9 @@ if __name__ == "__main__":
     with open(verify_path + formulas_file) as f:
         for wff in f:
             if i >= start:
+                # create output folder if it doesn't exist
+                pathlib.Path(verify_path + output_folder).mkdir(parents=True, exist_ok=True)
+
                 output_file = verify_path + output_folder + "/" + str(i) + ".txt"
                 comparison_output(wff, output_file, n)
                 print("Wrote to", output_file, "for", wff)

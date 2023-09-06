@@ -13,36 +13,46 @@ All of these experiments could be run on a standard laptop in a reasonable time 
 
 1. WEST BENCHMARKING EXPERIMENTS: 
 In these experiments we measure the time it takes to compute the truth tables of formulas with different complexities (input formula length) and their output lengths. The generated random MLTL formulas and their measured complexities are provided in the input/output files for each experiment below. Please take care to not overwrite the provided input/output files.
-  - From the WEST tool root directory, `cd ./MLTL_reg/MLTL/`
-  - Run the script `make benchmark_west`
-  - Then run `./benchmark_west`
+  - From root directory, `cd ./MLTL_reg/MLTL/`
+  - Run `make benchmark_west`
   
   - Subset 1: 2 Iterations (Depth), 5 Prop vars, Delta (Max interval length) = 10, Interval Max = 10
-	- Input: `n` to formula generation; `./complexity_graph/random_mltl1.txt` for formula file;
-	`NUM_PROP_VARS = 5`
-	- Output: `./complexity_graph/complexities1.txt`
+	- Run `./benchmark_west`
+	- Inputs
+		- `n` to "Generate formulas? (y/n)"
+		- `./complexity_graph/random_mltl1.txt` to "Enter pathname of formula file"
+		- `5` to "NUM_PROP_VARS:"
+	- Output location: `./complexity_graph/complexities1.txt`
 	- Runtime: approximately 3 minutes
 
   - Subset 2: 1 Iterations (Depth), 10 Prop vars, Delta (Max interval length) = 20, Interval Max = 20
-	- Input: `n` to formula generation; `./complexity_graph/random_mltl2.txt` for formula file;
-	`NUM_PROP_VARS = 10`
-	- Output: `./complexity_graph/complexities2.txt`
-	- Runtime: less than a second
+	- Run `./benchmark_west`
+	- Inputs
+		- `n` to "Generate formulas? (y/n)"
+		- `./complexity_graph/random_mltl2.txt` to "Enter pathname of formula file"
+		- `10` to "NUM_PROP_VARS:"
+	- Output location: `./complexity_graph/complexities2.txt`
+	- Runtime: several seconds
 
   - Subset 3: 2 Iterations (Depth), 10 Prop vars, Delta (Max interval length) = 5, Interval Max = 10
-	- Input: `n` to formula generation; `./complexity_graph/random_mltl3.txt` for formula file;
-	`NUM_PROP_VARS = 10`
-	- Output: `./complexity_graph/complexities3.txt`
+	- Run `./benchmark_west`
+	- Inputs
+		- `n` to "Generate formulas? (y/n)"
+		- `./complexity_graph/random_mltl3.txt` to "Enter pathname of formula file"
+		- `10` to "NUM_PROP_VARS:"
+	- Output location: `./complexity_graph/complexities3.txt`
 	- Runtime: Approximately 1 minute
 
   - Subset 4: 1 Iterations (Depth), 5 Prop vars, Delta (Max interval length) = 10, Interval Max = 10
-	- Input: `n` to formula generation; `./complexity_graph/random_mltl4.txt` for formula file;
-	`NUM_PROP_VARS = 5`
-	- Output: `./complexity_graph/complexities4.txt`
+	- Run `./benchmark_west`
+	- Inputs
+		- `n` to "Generate formulas? (y/n)"
+		- `./complexity_graph/random_mltl4.txt` to "Enter pathname of formula file"
+		- `10` to "NUM_PROP_VARS:"
+	- Output location: `./complexity_graph/complexities4.txt`
 	- Runtime: less than a second
 
-  We generated the random MLTL formulas in the random_mltl files using by inputting `y` to generate
-  formulas and entering the respective parameters for each experiment. To generate the graphs seen in
+  To generate the graphs seen in
   section 4.3 of the paper, 
   - From the WEST tool root directory, `cd ./MLTL_reg/MLTL/complexity graph/`
   - Run `python3 complexity_graphWEST.py <experiment number> <plot_length>`
