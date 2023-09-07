@@ -91,8 +91,8 @@ In these experiments we measure the time it takes to compute the truth tables of
   - Verifying reg with brute force outputs
 	- From the WEST tool root directory `cd ./MLTL_reg/MLTL/`
 	- Terminal Command to build: `g++ -std=c++17 utils.cpp reg.cpp grammar.cpp nnf_grammar.cpp
-	verify_main.cpp -o verify`
-	- To run: `./verify`
+	verify_main.cpp -o verifier`
+	- To run: `./verifier`
 	- Enter `n` to generate new formulas (all formulas are provided, don't overwrite!)
 	- Depth 0: depth is 0, write expanded outputs to `./verify/reg_outputs_d0/`, brute force outputs is
 	`./verify/brute_force_outputs_d0/`
