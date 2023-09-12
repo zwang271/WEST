@@ -77,15 +77,15 @@ In these experiments we measure the time it takes to compute the truth tables of
   - Runtime: Approximately an hour
   - Note: it can take a minute or two for progress update to be printed to terminal
 	
- To generate the graphs seen in section 6.1 of the paper, 
+ **To generate the graphs seen in section 6.1 of the paper,**
   - From the WEST tool root directory, `cd ./MLTL_reg/MLTL/complexity_graph/`
   - Run `python3 complexity_graphREST.py`
 
 ### 3. WEST CORRECTNESS EXPERIMENT: 
   This experiment verifies the correctness of the WEST tool by comparing the outputs of a bruteforce Python program and the outputs of WEST on an indentical set of formulas. 
   - Run `sh benchmark3.sh`
-	- Bruteforcing portion of the script will take ~9 hours
-	- Verifying using WEST should take ~30 minutes for depths 0, 1, and 2
+  - Bruteforcing portion of the script will take ~9 hours
+  - Verifying using WEST should take ~30 minutes for depths 0, 1, and 2
 
 
 ### Running the User Interface:
