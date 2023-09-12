@@ -11,15 +11,15 @@
 We ran all of our experiments on a computer with the following hardware specifications: Intel(R) Xeon(R) Gold 6140 CPU @ 2.30GHz with 376 GB RAM.
 All of these experiments could be run on a standard laptop in a reasonable time frame. Please allow additional runtime.
 
-1. WEST BENCHMARKING EXPERIMENTS: 
+### 1. WEST BENCHMARKING EXPERIMENTS: 
 In these experiments we measure the time it takes to compute the truth tables of formulas with different complexities (input formula length) and their output lengths. The generated random MLTL formulas and their measured complexities are provided in the input/output files for each experiment below. Please take care to not overwrite the provided input/output files.
   - From root directory, `cd ./MLTL_reg/MLTL/`
   - Run `make benchmark_west`
   
-  - Option A (Recommended): Run bash script
+  - **Option A (Recommended): Run bash script**
   	- run `sh benchmark1.sh`
-
-  - Option B: Run each experiment individually
+	
+  - Option B (Alternative): Run each experiment individually
 	- Subset 1: 2 Iterations (Depth), 5 Prop vars, Delta (Max interval length) = 10, Interval Max = 10
 		- Run `./benchmark_west`
 		- Inputs
@@ -56,8 +56,7 @@ In these experiments we measure the time it takes to compute the truth tables of
 			- `./complexity_graph/complexities4.txt` to "Enter name of output file"
 		- Runtime: less than a second
 
-  To generate the graphs seen in
-  section 4.3 of the paper, 
+  **Generating the graphs seen in section 4.3 of the paper**
   - From the WEST tool root directory, `cd ./MLTL_reg/MLTL/complexity graph/`
   - Run each of the following commands
 	- NOTE: if any errors arise involving Qt or PyQt5, please run `sudo apt install qt5dxcb-plugin`
@@ -70,21 +69,19 @@ In these experiments we measure the time it takes to compute the truth tables of
 	- `python3 complexity_graphWEST.py 4 0`
 	- `python3 complexity_graphWEST.py 4 1`
  
-2. REST BENCHMARKING EXPERIMENT:
+### 2. REST BENCHMARKING EXPERIMENT:
  In these experiments we measure the time it takes to run REST for sets of randomly generated regular expressions satisfying the conditions of REST.
   - From the WEST tool root directory, `cd ./MLTL_reg/MLTL/`
   - Build using `make benchmark_rest`
-  
-  -Subset 1: min_size = 10, variation = 15
- 	- run `sh benchmark2.sh`
-	- Runtime: Approximately an hour
-		- Note: it can take a minute or two for progress update to be printed to terminal
+  - run `sh benchmark2.sh`
+  - Runtime: Approximately an hour
+  - Note: it can take a minute or two for progress update to be printed to terminal
 	
  To generate the graphs seen in section 6.1 of the paper, 
   - From the WEST tool root directory, `cd ./MLTL_reg/MLTL/complexity_graph/`
   - Run `python3 complexity_graphREST.py`
 
-3. WEST CORRECTNESS EXPERIMENT: 
+### 3. WEST CORRECTNESS EXPERIMENT: 
   This experiment verifies the correctness of the WEST tool by comparing the outputs of a bruteforce Python program and the outputs of WEST on an indentical set of formulas. 
   - Run `sh benchmark3.sh`
 	- Bruteforcing portion of the script will take ~9 hours
