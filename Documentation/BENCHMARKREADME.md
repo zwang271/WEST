@@ -16,105 +16,92 @@ In these experiments we measure the time it takes to compute the truth tables of
   - From root directory, `cd ./MLTL_reg/MLTL/`
   - Run `make benchmark_west`
   
-  - Subset 1: 2 Iterations (Depth), 5 Prop vars, Delta (Max interval length) = 10, Interval Max = 10
-	- Run `./benchmark_west`
-	- Inputs
-		- `n` to "Generate formulas? (y/n)"
-		- `./complexity_graph/random_mltl1.txt` to "Enter pathname of formula file"
-		- `5` to "NUM_PROP_VARS:"
-	- Output location: `./complexity_graph/complexities1.txt`
-	- Runtime: approximately 3 minutes
+  - Option A (Recommended): Run bash script
+  	- run `sh benchmark1.sh`
 
-  - Subset 2: 1 Iterations (Depth), 10 Prop vars, Delta (Max interval length) = 20, Interval Max = 20
-	- Run `./benchmark_west`
-	- Inputs
-		- `n` to "Generate formulas? (y/n)"
-		- `./complexity_graph/random_mltl2.txt` to "Enter pathname of formula file"
-		- `10` to "NUM_PROP_VARS:"
-	- Output location: `./complexity_graph/complexities2.txt`
-	- Runtime: several seconds
+  - Option B: Run each experiment individually
+	- Subset 1: 2 Iterations (Depth), 5 Prop vars, Delta (Max interval length) = 10, Interval Max = 10
+		- Run `./benchmark_west`
+		- Inputs
+			- `n` to "Generate formulas? (y/n)"
+			- `./complexity_graph/random_mltl1.txt` to "Enter pathname of formula file"
+			- `5` to "NUM_PROP_VARS:"
+			- `./complexity_graph/complexities1.txt` to "Enter name of output file"
+		- Runtime: approximately 3 minutes
 
-  - Subset 3: 2 Iterations (Depth), 10 Prop vars, Delta (Max interval length) = 5, Interval Max = 10
-	- Run `./benchmark_west`
-	- Inputs
-		- `n` to "Generate formulas? (y/n)"
-		- `./complexity_graph/random_mltl3.txt` to "Enter pathname of formula file"
-		- `10` to "NUM_PROP_VARS:"
-	- Output location: `./complexity_graph/complexities3.txt`
-	- Runtime: Approximately 1 minute
+	- Subset 2: 1 Iterations (Depth), 10 Prop vars, Delta (Max interval length) = 20, Interval Max = 20
+		- Run `./benchmark_west`
+		- Inputs
+			- `n` to "Generate formulas? (y/n)"
+			- `./complexity_graph/random_mltl2.txt` to "Enter pathname of formula file"
+			- `10` to "NUM_PROP_VARS:"
+			- `./complexity_graph/complexities2.txt` to "Enter name of output file"
+		- Runtime: several seconds
 
-  - Subset 4: 1 Iterations (Depth), 5 Prop vars, Delta (Max interval length) = 10, Interval Max = 10
-	- Run `./benchmark_west`
-	- Inputs
-		- `n` to "Generate formulas? (y/n)"
-		- `./complexity_graph/random_mltl4.txt` to "Enter pathname of formula file"
-		- `10` to "NUM_PROP_VARS:"
-	- Output location: `./complexity_graph/complexities4.txt`
-	- Runtime: less than a second
+	- Subset 3: 2 Iterations (Depth), 10 Prop vars, Delta (Max interval length) = 5, Interval Max = 10
+		- Run `./benchmark_west`
+		- Inputs
+			- `n` to "Generate formulas? (y/n)"
+			- `./complexity_graph/random_mltl3.txt` to "Enter pathname of formula file"
+			- `10` to "NUM_PROP_VARS:"
+			- `./complexity_graph/complexities3.txt` to "Enter name of output file"
+		- Runtime: Approximately 1 minute
+
+	- Subset 4: 1 Iterations (Depth), 5 Prop vars, Delta (Max interval length) = 10, Interval Max = 10
+		- Run `./benchmark_west`
+		- Inputs
+			- `n` to "Generate formulas? (y/n)"
+			- `./complexity_graph/random_mltl4.txt` to "Enter pathname of formula file"
+			- `10` to "NUM_PROP_VARS:"
+			- `./complexity_graph/complexities4.txt` to "Enter name of output file"
+		- Runtime: less than a second
 
   To generate the graphs seen in
   section 4.3 of the paper, 
   - From the WEST tool root directory, `cd ./MLTL_reg/MLTL/complexity graph/`
-  - Run `python3 complexity_graphWEST.py <experiment number> <plot_length>`
-  Experiment number should be one of {1, 2, 3, 4}
-  Set `plot_length = 1` to plot length vs length
-  Set `plot_length = 0` to plot length vs time
+  - Run each of the following commands
+	- NOTE: if any errors arise involving Qt or PyQt5, please run `sudo apt install qt5dxcb-plugin`
+  	- `python3 complexity_graphWEST.py 1 0`
+	- `python3 complexity_graphWEST.py 1 1`
+	- `python3 complexity_graphWEST.py 2 0`
+	- `python3 complexity_graphWEST.py 2 1`
+	- `python3 complexity_graphWEST.py 3 0`
+	- `python3 complexity_graphWEST.py 3 1`
+	- `python3 complexity_graphWEST.py 4 0`
+	- `python3 complexity_graphWEST.py 4 1`
  
 2. REST BENCHMARKING EXPERIMENT:
- In these experiments we measure the time it takes to run REST for sets of randomly generated regular expressions satisfying the conditions of REST. Please take care to not overwrite the provided output file.
+ In these experiments we measure the time it takes to run REST for sets of randomly generated regular expressions satisfying the conditions of REST.
   - From the WEST tool root directory, `cd ./MLTL_reg/MLTL/`
   - Build using `make benchmark_rest`
-  - Then run it with `./benchmark_rest`
   
   -Subset 1: min_size = 10, variation = 15
- 	- Input: `min_size = 10`; `variation = 15`
-	- Output: `RESTcomplexities.txt` in `./MLTL_reg/MLTL/complexity_graph`
+ 	- run `sh benchmark2.sh`
 	- Runtime: Approximately an hour
+		- Note: it can take a minute or two for progress update to be printed to terminal
 	
  To generate the graphs seen in section 6.1 of the paper, 
-  - From the WEST tool root directory, `cd ./MLTL_reg/MLTL/complexity graph/`
+  - From the WEST tool root directory, `cd ./MLTL_reg/MLTL/complexity_graph/`
   - Run `python3 complexity_graphREST.py`
 
 3. WEST CORRECTNESS EXPERIMENT: 
-  The generated random MLTL formulas and their measured complexities are provided in the input
-  output files for each experiment below. Please take care not to overwrite the provided output files.
-
-  - Brute force solution outputs
-  	- From the WEST tool root directory, `cd ./MLTL_brute_forcer/Python/`
-	- Terminal Command: `python3 <formulas file> <file to write outputs to> <number of propositional
-	variables = 2^depth>`
-	- Depth 0: `python3 ./MLTL_truth_table.py formulas_d0.txt /brute_force_outputs_d0 1`
-	- Depth 1: `python3 ./MLTL_truth_table.py formulas_d1.txt /brute_force_outputs_d1 2`
-	- Depth 2: `python3 ./MLTL_truth_table.py formulas_d2.txt /brute_force_outputs_d2 4`
-	- Runtime: ~9 hours for all depths
-
-  - Verifying reg with brute force outputs
-	- From the WEST tool root directory `cd ./MLTL_reg/MLTL/`
-	- Terminal Command to build: `g++ -std=c++17 utils.cpp reg.cpp grammar.cpp nnf_grammar.cpp
-	verify_main.cpp -o verifier`
-	- To run: `./verifier`
-	- Enter `n` to generate new formulas (all formulas are provided, don't overwrite!)
-	- Depth 0: depth is 0, write expanded outputs to `./verify/reg_outputs_d0/`, brute force outputs is
-	`./verify/brute_force_outputs_d0/`
-	- Depth 1: depth is 1, write expanded outputs to `./verify/reg_outputs_d1/`, brute force outputs is 
-	`./verify/brute_force_outputs_d1/`
-	- Depth 2: depth is 2, write expanded outputs to `./verify/reg_outputs_d2/`, brute force outputs is 
-	`./verify/brute_force_outputs_d2/`
-	- Runtime: ~30 minutes for all depths
-	
+  This experiment verifies the correctness of the WEST tool by comparing the outputs of a bruteforce Python program and the outputs of WEST on an indentical set of formulas. 
+  - Run `sh benchmark3.sh`
+	- Bruteforcing portion of the script will take ~9 hours
+	- Verifying using WEST should take ~30 minutes for depths 0, 1, and 2
 
 
-### REPRODUCIBILITY INSTRUCTIONS:
+### Running the User Interface:
 
-MAKING ARTIFACT:
-  1. Download the .zip file containing the source code (https://github.com/zwang271/WEST).
-  2. Open a terminal session at the directory where the folder containing the source code files 
-  and run the following commands to make the WEST program.
+Run the following commands to make the WEST program.
   ```
-  $ cd WEST
-  $ cd MLTL_reg
-  $ cd MLTL
+  $ cd WEST/MLTL_reg/MLTL
   $ make west_lib
   $ python gui.py
   ```
-  For further usage and output, see the repo homepage or GUIREADME.md in the Documentation folder.
+- Note that various Python packages may need to be installed (through pip), such as Lark, dd, PyQt5, etc.
+- Enter the formula `((p0 & G[0,3] p1) -> p2)` in the textbox to visualize the example mentioned in section 7
+- Press the `Run` button
+- Now clicking on each subformula button will show a pop-up window to visualize it
+- See https://youtu.be/HoBJwdCq42c for more detailed explanation
+
