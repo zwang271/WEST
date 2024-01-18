@@ -1,18 +1,29 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <fstream>
 #include "utils.h"
 #include "evaluate_mltl.h"
 
 using namespace std;
 
 int main(int argc, char** argv) {
-    // should be 2 arguments: formula file and trace file
-    if (argc != 3) {
+    // should be 4 arguments: formula file, trace file, output file, and optional flag for printing
+    if (argc != 4 && argc != 5) {
         throw invalid_argument("Incorrect number of arguments.");
     }
     string formula_file = argv[1];
     string trace_file = argv[2];
+    string output_file = argv[3];
+    bool print = false;
+    if (argc == 5) {
+        string print_flag = argv[4];
+        if (print_flag == "-p") {
+            print = true;
+        } else {
+            throw invalid_argument("Incorrect flag.");
+        }
+    }
 
     // read in formula from file
     vector<string> formula_vec = read_from_file(formula_file);
@@ -36,16 +47,24 @@ int main(int argc, char** argv) {
 
     // evaluate formula on trace
     bool eval = evaluate_mltl(formula, trace, false);
+    // write to output file
+    ofstream out(output_file);
+    out << eval;
+    out.close();
 
 
     // print results
-    cout << "Formula: " << formula << endl;
-    cout << "Trace: " << endl;
-    print(trace);
-    if (eval) {
-        cout << "evaluation: true" << endl;
-    } else {
-        cout << "evaluation: false" << endl;
+    if (print) {
+        cout << "Formula: " << formula << endl;
+        cout << "Trace: " << endl;
+        for (int i = 0; i < trace.size(); ++i) {
+            cout << i << ": " << trace[i] << endl;
+        }
+        if (eval) {
+            cout << "evaluation: true" << endl;
+        } else {
+            cout << "evaluation: false" << endl;
+        }
     }
 
     return 0;
