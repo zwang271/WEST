@@ -98,6 +98,37 @@ vector<string> read_from_file(string in) {
     return v;
 }
 
+/*
+Read a batch of traces form a file and return a vector of vectors of strings
+Each line contains a trace in the format: "a,b,c,d,e,f,g"
+Each trace should be a vector of strings: ["a", "b", "c", "d", "e", "f", "g"]
+Final output should be a vector of vectors of strings: [["a", "b", "c", "d", "e", "f", "g"], ["a", "b", "c", "d", "e", "f", "g"]]
+*/
+vector<vector<string>> read_batch_from_file(string in) {
+	string line;
+	ifstream infile;
+	infile.open(in);
+	vector<vector<string>> v;
+	while (getline(infile, line)) {
+		vector<string> trace;
+		string word = "";
+		for (int i = 0; i < line.length(); ++i) {
+			if (line[i] == ',') {
+				trace.push_back(word);
+				word = "";
+			} else {
+				word += line[i];
+			}
+		}
+		trace.push_back(word);
+		v.push_back(trace);
+	}
+	infile.close();
+	return v;
+}
+
+
+
 
 
 /*

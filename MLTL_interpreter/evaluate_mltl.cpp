@@ -12,11 +12,10 @@ using namespace std;
 checks if inputted string is a number
 */
 bool digit_check(string s) {
-    if (s.length() != 1) {
-        return false;
-    }
-    if (s[0] < '0' || s[0] > '9') {
-        return false;
+    for (int i = 0; i < s.length(); ++i) {
+        if (s[i] < '0' || s[i] > '9') {
+            return false;
+        }
     }
     return true;
 }
@@ -25,7 +24,7 @@ bool digit_check(string s) {
 checks if the inputted string is "p" followed by a digit
 */
 bool prop_var_check(string s) {
-    if (s.length() != 2) {
+    if (s.length() < 2) {
         return false;
     }
     if (s[0] != 'p') {
@@ -74,9 +73,6 @@ int find_binary_conn(string F) {
             }
         }
     }
-    if (binary_conn_index == -1) {
-        throw invalid_argument("Formula " + F + " is not a valid MLTL formula.");
-    }
     return binary_conn_index;
 }
 
@@ -109,8 +105,8 @@ bool evaluate_mltl(string F, vector<string> T, bool verbose=false){
         return true;
     }
 
-    // Unary_Prop_conn -> '~'
-    else if (F[0] == '~') {
+    // Unary_Prop_conn -> '~' | '!'
+    else if (F[0] == '~' || F[0] == '!') {
         return !evaluate_mltl(F.substr(1, F.length()-1), T);
     }
 
@@ -167,6 +163,9 @@ bool evaluate_mltl(string F, vector<string> T, bool verbose=false){
     // find first occurence of binary connective by counting parentheses
     else if (F[0] == '(') {
         int binary_conn_index = find_binary_conn(F);
+        if (binary_conn_index == -1) {
+            return evaluate_mltl(F.substr(1, F.length()-2), T);
+        }
         string subF1 = F.substr(1, binary_conn_index-1);
         if (verbose) {
             cout << "binary conn index: " << binary_conn_index << endl;
@@ -242,15 +241,15 @@ bool evaluate_mltl(string F, vector<string> T, bool verbose=false){
                 if (i == -1) {
                     return false;
                 }
-                cout << "i: " << i << endl;
+                // cout << "i: " << i << endl;
                 // check that for all j in [a, i-1], T[j:] |- F1
                 for (int j = lb; j < i; ++j) {
                     vector<string> subT = slice(T, j, T.size());
                     if (!evaluate_mltl(subF1, subT)) {
                         return false;
                     }
-                    cout << "passed at j = " << j << endl;
-                    print(subT);
+                    // cout << "passed at j = " << j << endl;
+                    // print(subT);
                 } // for all j in [a, i-1], T[a:j] |- F1
                 return true;
             }
