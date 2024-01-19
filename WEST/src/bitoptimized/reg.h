@@ -2,11 +2,7 @@
 #include <vector>
 #include <tuple>
 #include <bitset>
-#include <string>
-#include <iostream>
-#include <fstream>
-#include <chrono>
-#define MAXBITS 128
+#define MAXBITS 12
 
 #include "utils.h"
 
@@ -48,9 +44,3 @@ Input: MLTL formula in NNF (string)
 Output: Vector of computation strings satisfying the formula
 */
 vector<bitset<MAXBITS>> reg(string nnf, int n);
-
-
-/*
-Recompiles bit optimized binary and runs the executable
-*/
-void recompile(string wff);
