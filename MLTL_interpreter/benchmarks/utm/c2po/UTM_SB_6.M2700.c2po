@@ -1,5 +1,0 @@
-INPUT
-	fpLon_leq_MaxLonUB,fpLon_geq_MinLonLB: bool;
-
-FTSPEC
-	!G[0,M] !(fpLon_leq_MaxLonUB && fpLon_geq_MinLonLB);

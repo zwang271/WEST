@@ -1,5 +1,0 @@
-INPUT
-	Temp_leq_MAX,Temp_geq_MIN: bool;
-
-FTSPEC
-	G[0,M] (Temp_leq_MAX && Temp_geq_MIN);

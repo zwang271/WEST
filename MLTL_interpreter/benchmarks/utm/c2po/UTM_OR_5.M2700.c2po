@@ -1,5 +1,0 @@
-INPUT
-	fpLon_geq_LonLB,fpLon_leq_LonUB: bool;
-
-FTSPEC
-	fpLon_leq_LonUB && fpLon_geq_LonLB;
