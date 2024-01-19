@@ -15,17 +15,18 @@ int main(int argc, char** argv) {
     string formula_file = argv[1];
     string trace_file = argv[2];
     string output_file = argv[3];
-    bool print = false;
+    bool printing = false;
     if (argc == 5) {
         string print_flag = argv[4];
         if (print_flag == "-p") {
-            print = true;
+            printing = true;
         } else {
             throw invalid_argument("Incorrect flag.");
         }
     }
 
     // read in formula from file
+    // cout << "Reading formula from file..." << endl;
     vector<string> formula_vec = read_from_file(formula_file);
     if (formula_vec.size() == 0) {
         throw invalid_argument("Formula file is empty.");
@@ -37,12 +38,15 @@ int main(int argc, char** argv) {
         }
     }
     formula = strip_char(formula, ' ');
+    // cout << "Finished reading formula from file." << endl << endl;
 
     // read in batch of traces from file
+    // cout << "Reading batch of traces from file..." << endl;
     vector<vector<string>> batch = read_batch_from_file(trace_file);
     if (batch.size() == 0) {
         throw invalid_argument("Trace file is empty.");
     }
+    // cout << "Finished reading batch of traces from file." << endl << endl;
 
     // for each trace in batch, evaluate formula on trace
     ofstream out;
@@ -53,13 +57,20 @@ int main(int argc, char** argv) {
             trace[j] = strip_char(trace[j], ' ');
             trace[j] = strip_char(trace[j], ',');
         }
+        // print trace in one line
+        // for (int j = 0; j < trace.size(); ++j) {
+        //     out << trace[j] << " ";
+        // }
+    
         // evaluate formula on trace
+        // cout << "Evaluating formula on trace " << i << "..." << endl;
         bool eval = evaluate_mltl(formula, trace, false);
+        // cout << "Finished evaluating formula on trace " << i << "." << endl << endl;
         // write to output file
         out << eval << endl;
 
         // print results
-        if (print) {
+        if (printing) {
             cout << "Formula: " << formula << endl;
             cout << "Trace: " << endl;
             for (int i = 0; i < trace.size(); ++i) {

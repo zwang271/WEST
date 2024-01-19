@@ -1,7 +1,7 @@
- all: interpret interpret_batch
+all: interpret interpret_batch
 
- interpret: 
+interpret: 
 	g++ .\interpret.cpp .\evaluate_mltl.cpp .\utils.cpp -o interpret
 
- interpret_batch:
+interpret_batch:
 	g++ .\interpret_batch.cpp .\evaluate_mltl.cpp .\utils.cpp -o interpret_batch

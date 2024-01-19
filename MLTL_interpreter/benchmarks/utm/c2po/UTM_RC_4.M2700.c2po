@@ -1,5 +1,0 @@
-INPUT
-	fpID_leq_PrevfpID: bool;
-
-FTSPEC
-	G[0,M] (fpID_leq_PrevfpID);

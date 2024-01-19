@@ -1,5 +1,0 @@
-INPUT
-	Ang_geq_0,Ang_leq_360: bool;
-
-FTSPEC
-	G[0,3] (Ang_leq_360 && Ang_geq_0);
