@@ -82,6 +82,8 @@ int find_binary_conn(string F) {
  Output: true if and only if F evaluates to true on F
  */
 bool evaluate_mltl(string F, vector<string> T, bool verbose=false){
+    // cout << F << endl;
+
     // Prop_cons -> true | false
     if (F == "true") {
         return true;
@@ -268,7 +270,7 @@ bool evaluate_mltl(string F, vector<string> T, bool verbose=false){
                     if (!evaluate_mltl(subF2, subT)) {
                         break;
                     }
-                    if (i == ub) {
+                    if (i == ub || i == T.size()-1) {
                         return true;
                     }
                 } // not all i in [a, b] T[i:] |- F2
@@ -277,7 +279,7 @@ bool evaluate_mltl(string F, vector<string> T, bool verbose=false){
                 int j = -1;
                 for (int k = lb; k < ub; ++k) {
                     vector<string> subT = slice(T, k, T.size());
-                    if (evaluate_mltl(subF1, subT)) {
+                    if (evaluate_mltl(subF1, subT) || k == T.size()-1) {
                         j = k;
                         break;
                     }
@@ -291,6 +293,9 @@ bool evaluate_mltl(string F, vector<string> T, bool verbose=false){
                     if (!evaluate_mltl(subF2, subT)) {
                         return false;
                     }
+                    if (k == T.size()-1) {
+                        break;
+                    }
                 } // for all k in [a, j], T[k:] |- F2
                 return true;
             }
@@ -301,4 +306,5 @@ bool evaluate_mltl(string F, vector<string> T, bool verbose=false){
     else {
         throw invalid_argument("Formula " + F + " is not a valid MLTL formula.");
     }
+    return false;
 }

@@ -1,5 +1,0 @@
-INPUT
-	Phase_eq_Valid: bool;
-
-FTSPEC
-	Phase_eq_Valid;

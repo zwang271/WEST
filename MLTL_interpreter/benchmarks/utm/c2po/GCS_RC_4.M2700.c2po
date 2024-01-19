@@ -1,5 +1,0 @@
-INPUT
-	TimeDif_leq_MaxTime: bool;
-
-FTSPEC
-	!G[0,3] (!TimeDif_leq_MaxTime);

@@ -1,5 +1,0 @@
-INPUT
-	Yaw_leq_180,Yaw_gr_180: bool;
-
-FTSPEC
-	G[0,M] (Yaw_gr_180 && Yaw_leq_180);
