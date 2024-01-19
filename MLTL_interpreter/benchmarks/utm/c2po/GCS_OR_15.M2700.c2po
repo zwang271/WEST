@@ -1,5 +1,0 @@
-INPUT
-	Vel_leq_VelUB,Vel_geq_0: bool;
-
-FTSPEC
-	Vel_leq_VelUB && Vel_geq_0;

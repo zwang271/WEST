@@ -1,5 +1,0 @@
-INPUT
-	Status_eq_Approved,Status_eq_Rejected: bool;
-
-FTSPEC
-	Status_eq_Rejected -> G[0,M](!Status_eq_Approved);
