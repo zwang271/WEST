@@ -202,7 +202,7 @@ if __name__ == '__main__':
     is_wff, tree, e = check_wff(wff)
     if is_wff:
         wff = to_west(wff, tree)
-        with open("./string_gui/west_wff.txt", "w") as f:
+        with open("./string_output/west_wff.txt", "w") as f:
             f.write(wff)
     else:
         print(e)

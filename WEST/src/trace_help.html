@@ -1,0 +1,28 @@
+<html> <body>
+    <p><b>traces</b></p>
+    <p>In a trace, "1" represents a true truth value, and "0" represents a false truth value.<br>
+    "S" represents an arbitrary truth value, i.e. true or false.<br>
+    Time steps in a trace are separated by commas. <br>
+    The bit-strings at each time step represent the truth values of each propositional variable, in ascending order.</p>
+    
+    <p><b>Examples</b></p>
+    The trace of this formula with one propositional variable and 5 time steps is represented as:</p>
+    <p><tt>NNF Formula: G[0,4]p0<br>
+    
+    1,1,1,1,1</tt></p>
+    
+    <p>The trace of a formula with 5 propositional variables and one time step is represented as:</p>
+    <p><tt>NNF Formula: G[0,0](&[p0,p1,p2,p3,p4])<br>
+    
+    11111</tt></p>
+    <p>The traces of a formula with two propositional variables that are both eventually true <br>
+    at a third time step are represented as:</p>
+    <p><tt>NNF Formula: F[0,2](p0&p1)<br>
+    
+    11,ss,ss<br>
+    ss,11,ss<br>
+    ss,ss,11</tt></p>
+    <p>Where in each string separated by commas, the first digit represents the truth value of p0, <br>
+    and the second digit represents the truth value of p1.</p>
+    <br>
+</html></body>
