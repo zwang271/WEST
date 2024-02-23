@@ -2,7 +2,7 @@
 #include <vector>
 #include <tuple>
 #include <bitset>
-#define MAXBITS 12
+#define MAXBITS 168
 
 #include "utils.h"
 

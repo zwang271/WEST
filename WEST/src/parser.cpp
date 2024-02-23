@@ -1,3 +1,7 @@
+// Author: Zili Wang
+// Last updated: 01/19/2024
+// Parser for MLTL formulas
+
 #include "parser.h"
 
 /*
@@ -91,7 +95,8 @@ int find_binary_conn(string F) {
             --pcounter;
         }
         if (pcounter == 0) {
-            if (F[i] == '|' || F[i] == '&' || F[i] == '-' || F[i] == 'U' || F[i] == 'R') {
+            if (F[i] == '|' || F[i] == '&' || F[i] == '-' || F[i] == '='
+                            || F[i] == 'U' || F[i] == 'R') {
                 binary_conn_index = i; 
                 break;
             }
@@ -158,7 +163,9 @@ SyntaxTree::SyntaxTree(string wff, int level){
             wff1 = make_unique<SyntaxTree>(wff1_string, level+1);
         }
 
-        else if (wff[binary_conn_index] == '|' || wff[binary_conn_index] == '&') {
+        else if (wff[binary_conn_index] == '|' 
+                || wff[binary_conn_index] == '&'
+                || wff[binary_conn_index] == '=') {
             type = BINARY_PROP_CONN;
             op = wff[binary_conn_index];
             wff1_string = wff.substr(1, binary_conn_index-1);

@@ -1,3 +1,7 @@
+// Author: Zili Wang
+// Last updated: 01/19/2024
+// Utility functions for WEST
+
 #pragma once
 #include <vector>
 #include <tuple>

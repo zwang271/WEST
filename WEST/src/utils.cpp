@@ -1,3 +1,7 @@
+// Author: Zili Wang
+// Last updated: 01/19/2024
+// Utility functions for WEST
+
 #include "utils.h"
 
 /*
@@ -112,6 +116,10 @@ string wff_to_nnf(string wff) {
                 }
                 if (T2.op == "->") {
                     return "(" + wff_to_nnf(T2.wff1_string) + "&" + wff_to_nnf("!"+T2.wff2_string) + ")";
+                }
+                if (T2.op == "=") {
+                    return "((" + wff_to_nnf(T2.wff1_string) + "&" + wff_to_nnf("!"+T2.wff2_string) + ")" +
+                    "|" + "(" + wff_to_nnf("!"+T2.wff1_string) + "&" + wff_to_nnf(T2.wff2_string) + "))";
                 }
             }
             if (T2.type == UNARY_CONN) {
