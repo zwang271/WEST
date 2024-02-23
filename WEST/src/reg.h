@@ -1,3 +1,7 @@
+// Author: Zili Wang
+// Last updated: 01/19/2024
+// Core WEST functions
+
 # pragma once
 #include <vector>
 #include <tuple>
@@ -54,3 +58,9 @@ vector<bitset<MAXBITS>> reg(string nnf, int n);
 Recompiles bit optimized binary and runs the executable
 */
 void recompile(string wff);
+
+
+/*
+Returns a vector of tuples of formulas and their corresponding regular expressions
+*/
+vector<tuple<string, vector<bitset<MAXBITS>>>> get_formulas();

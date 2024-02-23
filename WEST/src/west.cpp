@@ -1,3 +1,7 @@
+// Author: Zili Wang
+// Last updated: 01/19/2024
+// WEST command line tool 
+
 #include <iostream>
 #include <vector>
 #include <string>
@@ -74,8 +78,8 @@ int main(int argc, char** argv) {
     auto start = chrono::high_resolution_clock::now();
     vector<bitset<MAXBITS>> bitset_computations = reg(nnf, n);
     auto stop = chrono::high_resolution_clock::now();
-    vector<string> computations = bitset_to_reg(bitset_computations, bits_needed);
     int time = chrono::duration_cast<chrono::milliseconds>(stop - start).count();
+    auto computations = bitset_to_reg(bitset_computations, bits_needed);
     computations = add_commas(computations, n);
     cout << "=======================================================" << endl; 
     for (int i = 0; i < min(int(computations.size()), 10); i++) {
@@ -96,7 +100,23 @@ int main(int argc, char** argv) {
         }
     }
     output_file.close();
-    cout << "Output written to ./output/output.txt" << endl << endl;
+    cout << "Output written to ./output/output.txt" << endl;
+
+    auto FORMULAS = get_formulas();
+    ofstream formulas_file("./output/subformulas.txt");
+    if (formulas_file.is_open()) {
+        for (int i = 0; i < FORMULAS.size(); i++) {
+            formulas_file << get<0>(FORMULAS[i]) << endl;
+            auto regexes = bitset_to_reg(get<1>(FORMULAS[i]), bits_needed);
+            regexes = add_commas(regexes, n);
+            for (auto regex : regexes) {
+                formulas_file << regex << endl;
+            }
+            formulas_file << endl; 
+        }
+    }
+    formulas_file.close();
+    cout << "Subformulas written to ./output/subformulas.txt" << endl << endl;
 
     return 0; 
 }
