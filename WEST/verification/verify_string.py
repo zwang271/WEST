@@ -1,6 +1,13 @@
+# Author: Zili Wang
+# Last updated: 02/08/2024
+# Verify that WEST and string_west produce the same output
+# Usage: python verify.py [formula] [-skip]
+# If no formula is given, verify all formulas in ./verify_formulas
+
 import subprocess
 import time
 import os
+import sys
 from string_src.parser import *
 
 # Replaces all s in the string with all permutations of 0 and 1
@@ -70,30 +77,37 @@ def compare_files(f1, f2):
             print(f"Line {i+2} of {f2_name} is not in {f1_name}")
     return False
 
-def verify(formula):
+def verify(formula, skip=False):
     start = time.time()
     formula1 = formula.replace("~", "!")
-    subprocess.run(f".\\west.exe \"{formula1}\"", 
-                   stdout=subprocess.DEVNULL, 
-                   stderr=subprocess.DEVNULL, 
-                   shell=True)
+    west_exec = ".\\west.exe" if sys.platform == "win32" else "./west"
+    string_west_exec = ".\\west_string.exe" if sys.platform == "win32" else "./west_string"
+    subprocess.run(f"cd .. && {west_exec} \"{formula1}\" cd ./verification", 
+                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
     end = time.time()
     west_time = end - start
 
     formula2 = formula.replace("!", "~")
     start = time.time()
-    subprocess.run(f".\\string_west.exe \"{formula2}\"", 
+    subprocess.run(f"{string_west_exec} \"{formula2}\"", 
                    stdout=subprocess.DEVNULL, 
                    stderr=subprocess.DEVNULL, 
                    shell=True)
     end = time.time()
     string_west_time = end - start
 
+    if skip:
+        print(f"Skipped verification for formula \"{formula}\"")
+        print(f"Time elapsed to run west: {west_time:.5f}")
+        print(f"Time elapsed to run string_west: {string_west_time:.5f}")
+        print(f"Speedup: {string_west_time / west_time:.5f}\n")
+        return True
+
     # verify that the two programs produce the same output, but ignore the first line
-    # west outputs to ./output/output.txt
-    # string_west outputs to ./output/string_output.txt
+    # west outputs to ../output/output.txt
+    # string_west outputs to ./string_output/string_output.txt
     start = time.time()
-    with open("./output/output.txt", "r") as f1, open("./output/string_output.txt", "r") as f2:
+    with open("../output/output.txt", "r") as f1, open("./string_output/string_output.txt", "r") as f2:
         if not compare_files(f1, f2):
             print(f"Output files are different on formula \"{formula}\"\n")
             return False
@@ -110,8 +124,10 @@ if __name__ == '__main__':
     # if given a formula as an argument, verify that formula instead
     if len(sys.argv) > 1:
         formula = sys.argv[1]
-        if not verify(formula):
-            exit(1)
+        skip = False
+        if len(sys.argv) > 2:
+            skip = sys.argv[2] == "-skip"
+        verify(formula, skip)
         exit(0)
 
     # iterate through all files in ./verify_formulas

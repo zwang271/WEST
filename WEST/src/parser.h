@@ -1,3 +1,7 @@
+// Author: Zili Wang
+// Last updated: 01/19/2024
+// Parser for MLTL formulas
+
 #pragma once
 #include <string>
 #include <vector>

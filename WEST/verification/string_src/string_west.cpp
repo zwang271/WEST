@@ -48,9 +48,10 @@ int main(int argc, char** argv) {
 	}
 
     // Strip whitespace from input, check wff
-    string python_parser = "python ./string_src/parser.py \"" + wff + "\"";
+    // string python_parser = "python ./string_src/parser.py \"" + wff + "\"";
+    string python_parser = "python3 ./string_src/parser.py \"" + wff + "\"";
     system(python_parser.c_str());
-    ifstream wff_file("./string_gui/west_wff.txt");
+    ifstream wff_file("./string_output/west_wff.txt");
     if (wff_file.is_open()) {
         while (wff_file) {
             getline(wff_file, wff);
@@ -88,7 +89,7 @@ int main(int argc, char** argv) {
     // Create two files: subformulas.txt and output.txt
     // subformulas.txt contains all subformulas of the input formula
     // output.txt contains the output of the formula
-    ofstream subformulas_file("./output/string_subformulas.txt");
+    ofstream subformulas_file("./string_output/string_subformulas.txt");
     for (int i = 0; i < formulas.size(); ++i) {
         //if the substring is present in the nnf, print it out
         if (nnf.find(get<0>(formulas[i])) != -1) {
@@ -102,9 +103,9 @@ int main(int argc, char** argv) {
         }
     }
     subformulas_file.close();
-    cout << "Output for subformulas written to ./output/string_subformulas.txt" << endl;
+    cout << "Output for subformulas written to ./string_output/string_subformulas.txt" << endl;
 
-    ofstream output_file("./output/string_output.txt");
+    ofstream output_file("./string_output/string_output.txt");
     if (output_file.is_open()) {
         output_file << nnf << endl;
         for (int i = 0; i < answer.size(); ++i) {
@@ -112,7 +113,7 @@ int main(int argc, char** argv) {
         }
     }
     output_file.close();
-    cout << "Output for formula written to ./output/string_output.txt" << endl << endl; 
+    cout << "Output for formula written to ./string_output/string_output.txt" << endl << endl; 
 
     return 0;
 }
