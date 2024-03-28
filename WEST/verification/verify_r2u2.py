@@ -15,34 +15,32 @@ def run_west(formula):
     subprocess.run(f"cd .. && {west_exec} \"{formula}\" cd ./verification", 
                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
 
-def run_r2u2(formula, trace: list[str], verbose=False):
-    # formula = formula.replace("|", "||").replace("&", "&&")
+def run_c2po(formula):
     formula = formula.replace("p", "a")
-    m = len(trace)
-    n = len(trace[0]) if m > 0 else 0
-
     # define file paths
     c2po = "../../compiler/c2po.py"
     spec_mltl = "./r2u2_output/spec.mltl"
+
+    with open(spec_mltl, "w") as f:
+        f.write(formula+"\n")
+    cmd = f"python3 {c2po} --booleanizer {spec_mltl}"
+    subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
+    
+def run_r2u2(formula, trace: list[str]):
+    formula = formula.replace("p", "a")
+    # define file paths
     trace_csv = "./r2u2_output/trace.csv"
     r2u2_spec_bin = "./spec.bin"
     r2u2 = "../../monitors/static/build/r2u2"
 
-    VARS = ", ".join([f"a{i}" for i in range(n)])
-    with open(spec_mltl, "w") as f:
-        f.write(formula+"\n")
+    # write trace to file
     with open(trace_csv, "w") as f:
-        VARS = VARS.replace(" ", "")
-        f.write(f"# {VARS}\n")
         for t in trace:
             f.write(",".join(list(t)) + "\n")
-    cmd1 = f"python3 {c2po} --booleanizer {spec_mltl}"
-    subprocess.run(cmd1, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
-    cmd2 = f"{r2u2} {r2u2_spec_bin} {trace_csv}"
-    if verbose:
-        subprocess.run(cmd2, shell=True)
-        return
-    output = subprocess.run(cmd2, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+
+    # run r2u2 and parse output
+    cmd = f"{r2u2} {r2u2_spec_bin} {trace_csv}"
+    output = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     output = output.stdout.decode("utf-8")
     output = output.split("\n")
     output = output[0][-1]
@@ -87,20 +85,30 @@ def compare_files(f1, f2):
     for line in f2:
         for w in expand_string(line):
             expanded2.add(w)
-
+    print(f"{f1_name}: {len(expanded1)}, {f2_name}: {len(expanded2)}")
     # turn each sets into a list sorted by lex order
     expanded1 = sorted(list(expanded1))
     expanded2 = sorted(list(expanded2))
     if expanded1 == expanded2:
         return True
     
-    # print out the differences 
-    for i, line in enumerate(f1):
-        if line not in f2:
-            print(f"Line {i+2} of {f1_name} is not in {f2_name}")
-    for i, line in enumerate(f2):
-        if line not in f1:
-            print(f"Line {i+2} of {f2_name} is not in {f1_name}")
+    # print out the different traces
+    max_examples = 10
+    print(f"Traces in {f1_name} but not in {f2_name}:")
+    for trace in expanded1:
+        if trace not in expanded2:
+            print(trace)
+            max_examples -= 1
+            if max_examples == 0:
+                break
+    max_examples = 10
+    print(f"Traces in {f2_name} but not in {f1_name}:")
+    for trace in expanded2:
+        if trace not in expanded1:
+            print(trace)
+            max_examples -= 1
+            if max_examples == 0:
+                break
     return False
 
 # iterate through all traces of n variables and m time steps
@@ -111,9 +119,7 @@ def iterate_traces(m, n):
         t = [t[i*n:(i+1)*n] for i in range(m)]
         yield t
 
-def verify(formula):
-    start = time.perf_counter()
-    run_west(formula)
+def get_mn(formula):
     with open("../output/output.txt", "r") as f:
         regex = f.readlines()
         regex = regex[1] if len(regex) > 1 else None
@@ -124,11 +130,21 @@ def verify(formula):
         else:
             # in formula, find all instances of p0, p1, p2, etc. and find the max
             n = get_n(formula)
-            m = min(5, 18//n)
+            if n > 0:
+                m = 5
+            elif n == 0:
+                m, n = 5, 1
+    return m, n
+
+def verify(formula):
+    start = time.perf_counter()
+    run_west(formula)
+    m, n = get_mn(formula)
         
     print(f"Verifying formula \"{formula}\" with {m} time steps and {n} variables")
     with open("./r2u2_output/output.txt", "w") as f:
         f.write(formula + "\n")
+        run_c2po(formula)
         for trace in iterate_traces(m, n):
             if run_r2u2(formula, trace):
                 trace = ",".join(trace)

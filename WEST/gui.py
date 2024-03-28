@@ -151,11 +151,9 @@ class MainWindow(QMainWindow):
         # check if windows
         if sys.platform == "win32":
             subprocess.run(f".\\west.exe \"{self.formula}\"", 
-                           stdout=subprocess.DEVNULL, 
-                           stderr=subprocess.DEVNULL,
                            shell=True)
         else: # linux or mac
-            subprocess.run(f"./west.exe \'{self.formula}\'",
+            subprocess.run(f"./west \'{self.formula}\'",
                             stdout=subprocess.DEVNULL, 
                             stderr=subprocess.DEVNULL, 
                             shell=True)
