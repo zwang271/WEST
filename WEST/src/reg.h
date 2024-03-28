@@ -10,7 +10,7 @@
 #include <iostream>
 #include <fstream>
 #include <chrono>
-#define MAXBITS 128
+#define MAXBITS 512
 
 #include "utils.h"
 
