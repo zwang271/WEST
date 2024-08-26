@@ -33,7 +33,7 @@ As a more complex example, consider the formula $(p_0 \wedge G_{[0,2]}\ p_1) \to
 
 To examine this formula on the WEST-GUI tool, we need to input it as `((p0 & G[0,2]p1)->p2)`.
 
-![Input Example GUI](https://github.com/zwang271/WEST/blob/master/paper/images/initial.png)
+![Input Example GUI](https://github.com/zwang271/WEST/blob/master/Documentation/west_gui.png)
 
 This is what the WEST tool outputs when we select this same formula from the subformulae options, without selecting the **Apply REST** functionality, which tries to look for a reduction of the number of disjunctions of regular expressions (but it may take long to produce a result!)
 
