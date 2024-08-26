@@ -21,6 +21,24 @@ void record_formula(string nnf, vector<bitset<MAXBITS>> regex) {
 }
 
 
+int find_first(bitset<MAXBITS> b) {
+    for (int i = 0; i < MAXBITS; ++i) {
+        if (b[i]) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+int find_next(bitset<MAXBITS> b, int i) {
+    for (int j = i+1; j < MAXBITS; ++j) {
+        if (b[j]) {
+            return j;
+        }
+    }
+    return -1;
+}
+
 /*
 Checks if b1 and b2 can be simplified by bitwise or
 */
@@ -33,8 +51,10 @@ bool check_simp(bitset<MAXBITS> b1, bitset<MAXBITS> b2) {
     }
     // if count == 2, make sure the two set bits are adjacent and aligned
     if (count == 2) {
-        int first_set_bit = b._Find_first();
-        int second_set_bit = b._Find_next(first_set_bit);
+        // int first_set_bit = b._Find_first();
+        // int second_set_bit = b._Find_next(first_set_bit);
+        int first_set_bit = find_first(b);
+        int second_set_bit = find_next(b, first_set_bit);
         if (first_set_bit % 2 == 0 && second_set_bit == first_set_bit + 1) {
             return true;
         }
