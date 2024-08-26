@@ -35,14 +35,26 @@ To examine this formula on the WEST-GUI tool, we need to input it as `((p0 & G[0
 
 ![Input Example GUI](https://github.com/zwang271/WEST/blob/master/Documentation/west_gui.png)
 
-This is what the WEST tool outputs when we select this same formula from the subformulae options, without selecting the **Apply REST** functionality, which tries to look for a reduction of the number of disjunctions of regular expressions (but it may take long to produce a result!)
-
-![Example `(p_0 & G_{[0,2]} p_1) \to p_2` GUI](https://github.com/zwang271/WEST/blob/master/paper/images/subformula.png)
-
-The check-boxes shows us the truth assignment of the three propositional variables in question (`p0, p1, p2`) on each one of the first three time steps of a time-line, representing the computation described above (`111,100,110`) that satisfies the formula. In the box below, we can find the regular expressions that capture all the computations of length 3 (since we only care about the first three steps of the time-line for this specific formula) that can satisfy this formula. By clicking on each one of them, you will be able to see a random computation that matches such expression. In addition, the buttons **Rand SAT** and **Rand UNSAT** can be used to produce a random computation of the same length that satisfies or unsatisfies the given formula, respectively, whereas the **Backbone Analysis** button allows one to see the analysis of necessary conditions for a computation to Satisfy or Unsatisfy the formula.
-
-![Backbone Example](https://github.com/zwang271/WEST/blob/master/paper/images/backbone.png)
-
+This is what the WEST tool outputs when we select this same formula from the subformulae options.
+A brief explanation for each labeled part of the user interface is detailed below: 
+1. Input a new MLTL formula.
+2. Option to optimize bits (not needed in most cases).
+3. Apply REST, the regular expression simplification theorem (not needed in most cases).
+4. Negation Normal Form of the formula.
+5. A list of subformulas the user can visualize.
+6. Set of trace regular expressions for the selected formula.
+7. Toggle truth values of atomic propositions at different time steps.
+8. String representation of the trace.
+9. The formula is highlighted in green if the trace satisfies the formula.
+10. The formula is highlighted in red if the trace does not satisfy the formula.
+11. Import trace from file or by manually typing in a string.
+12. Export trace to a csv file.
+13. Reset all variables to false.
+14. Randomly generate a satisfying trace.
+15. Randomly generate a randomly unsatisfying trace.
+16. Click a specific regular expression to randomly generate a satisfying trace that matches the regular expression.
+17. Backbone analysis gives the assignment of atomic propositions that must hold in every satisfying
+trace of the formula. 
 
 ### Contributors
 This project began as part of the [2022 Iowa State Math REU](https://reu.math.iastate.edu/projects.html#ROZIER) with mentors [Kristin Yvonne Rozier](https://www.aere.iastate.edu/kyrozier/) and [Laura Gamboa Guzmán](https://sites.google.com/view/lpgamboa/home).
