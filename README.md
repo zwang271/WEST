@@ -29,9 +29,9 @@ Simple examples involving each of the operators are as follows:
 + Until: `p0 U[0,3] p1`
 + Release: `p0 R[0,3] p1`
 
-As a more complex example, consider the formula $(p_0 \wedge G_{[0,2]}\ p_1) \to p_2$. This is saying that, *if* $p_0$ *is true at the beginning and* $p_1$ *is true during the first three time-steps, then* $p_2$ *has to be true at the beginning as well.* 
+As a more complex example, consider the formula $(p_0 \wedge G_{[0,3]}\ p_1) \to p_2$. This is saying that, *if* $p_0$ *is true at the beginning and* $p_1$ *is true during the first four time-steps, then* $p_2$ *has to be true at the beginning as well.* 
 
-To examine this formula on the WEST-GUI tool, we need to input it as `((p0 & G[0,2]p1)->p2)`.
+To examine this formula on the WEST-GUI tool, we need to input it as `((p0 & G[0,3]p1)->p2)`.
 
 ![Input Example GUI](https://github.com/zwang271/WEST/blob/master/Documentation/west_gui.png)
 
