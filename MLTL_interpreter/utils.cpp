@@ -6,6 +6,8 @@
 #include <cmath>
 #include <cctype>
 #include <fstream>
+#include <tuple>
+#include <filesystem>
 
 
 using namespace std;
@@ -99,32 +101,24 @@ vector<string> read_from_file(string in) {
 }
 
 /*
-Read a batch of traces form a file and return a vector of vectors of strings
-Each line contains a trace in the format: "a,b,c,d,e,f,g"
-Each trace should be a vector of strings: ["a", "b", "c", "d", "e", "f", "g"]
-Final output should be a vector of vectors of strings: [["a", "b", "c", "d", "e", "f", "g"], ["a", "b", "c", "d", "e", "f", "g"]]
+Read a batch of traces from a directory and return a vector of vectors of strings
+Run read_from_file on each file in the directory
+Output: vector of NamedTrace
 */
-vector<vector<string>> read_batch_from_file(string in) {
-	string line;
-	ifstream infile;
-	infile.open(in);
-	vector<vector<string>> v;
-	while (getline(infile, line)) {
-		vector<string> trace;
-		string word = "";
-		for (int i = 0; i < line.length(); ++i) {
-			if (line[i] == ',') {
-				trace.push_back(word);
-				word = "";
-			} else {
-				word += line[i];
-			}
-		}
-		trace.push_back(word);
-		v.push_back(trace);
+vector<NamedTrace> read_batch_from_file(string in) {
+	vector<NamedTrace> batch;
+	// iterate over files in directory
+	for (const auto & entry : filesystem::directory_iterator(in)) {
+		// read from file
+		vector<string> trace = read_from_file(entry.path());
+		// create NamedTrace
+		NamedTrace nt;
+		nt.name = entry.path();
+		nt.trace = trace;
+		// add to batch
+		batch.push_back(nt);
 	}
-	infile.close();
-	return v;
+	return batch;
 }
 
 

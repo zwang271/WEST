@@ -48,10 +48,15 @@ void write_to_file(vector<string> v, string out, bool size = true);
 */
 vector<string> read_from_file(string in);
 
+
+struct NamedTrace {
+	string name;
+	vector<string> trace;
+};
 /*
 Read a batch of traces form a file and return a vector of vectors of strings
 */
-vector<vector<string>> read_batch_from_file(string in);
+vector<NamedTrace> read_batch_from_file(string in);
 
 
 /*

@@ -23,6 +23,8 @@ def run_interpreter(formula, traces, verbose=False):
     with open(spec_mltl, "w") as f:
         f.write(formula+"\n")
     # empty the traces directory
+    if not os.path.exists(traces_dir):
+        os.makedirs(traces_dir)
     for file in os.listdir(traces_dir):
         os.remove(traces_dir + file)
     # write each trace to a file in the traces directory
@@ -34,6 +36,7 @@ def run_interpreter(formula, traces, verbose=False):
                 f.write(",".join(list(t)) + "\n")
     # run the interpreter
     cmd = f"{interpreter} {spec_mltl} {traces_dir} {verdicts}"
+    print(cmd)
     subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
 
 def get_mn():
