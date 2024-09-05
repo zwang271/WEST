@@ -43,18 +43,21 @@ for dir in ["m", "n", "d"]:
     # plot y_times and y_output_lengths vs x 
     fig = plt.figure()
     ax = fig.add_subplot(111)
+    # plot dots as well as lines
     ax.plot(x, y_times, 'b--', label='Time (s)')
+    ax.scatter(x, y_times, color='blue')
     ax2 = ax.twinx()
     ax2.plot(x, y_output_lengths, 'r-', label='Output Length')
+    ax2.scatter(x, y_output_lengths, color='red')
     # combine the two legends
     lines, labels = ax.get_legend_handles_labels()
     lines2, labels2 = ax2.get_legend_handles_labels()
     ax2.legend(lines + lines2, labels + labels2, loc='upper left', fontsize=14)
 
     ax.grid()
-    ax.set_xlim([min(x), max(x)])
-    ax.set_ylim([0, 5])
-    ax2.set_ylim([0, 90])
+    ax.set_xlim([min(x)-0.1, max(x)])
+    ax.set_ylim([-0.1, 5])
+    ax2.set_ylim([-(0.1/5)*90, 90])
     ax.set_xlabel(description[parameter], fontsize=FONTSIZE)
     ax.set_ylabel('Time (s)', color='b', fontsize=FONTSIZE)
     ax2.set_ylabel('Number of Regular Expressions', color='r', fontsize=FONTSIZE)
@@ -62,3 +65,4 @@ for dir in ["m", "n", "d"]:
     ax2.tick_params(axis='both', which='major', labelsize=FONTSIZE)
     plt.title(f"Average Time and Output Length vs {parameter}", fontsize=TITLE_FONTSIZE)
     plt.savefig(f"{parameter}.png")
+    print("Plot saved as", f"{parameter}.png")
