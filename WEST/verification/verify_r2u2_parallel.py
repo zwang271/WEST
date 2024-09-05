@@ -1,5 +1,5 @@
 # Author: Zili Wang
-# Last updated: 02/08/2024
+# Last updated: 04/03/2024
 # Verify that WEST and r2u2 produce the same output
 # This can only be ran on a Posix environment (Linux, MacOS, Etc.)
 
@@ -9,6 +9,11 @@ import os
 import sys
 from string_src.parser import from_west
 import re
+import argparse
+import multiprocessing
+import tempfile 
+
+NUM_CORES = multiprocessing.cpu_count()
 
 def run_west(formula):
     west_exec = "./west"
@@ -34,9 +39,13 @@ def run_r2u2(formula, trace: list[str]):
     r2u2 = "./r2u2/monitors/static/build/r2u2"
 
     # write trace to file
-    with open(trace_csv, "w") as f:
+    # with open(trace_csv, "w") as f:
+    #     for t in trace:
+    #         f.write(",".join(list(t)) + "\n")
+    with tempfile.NamedTemporaryFile(mode="w", delete=False) as f:
         for t in trace:
             f.write(",".join(list(t)) + "\n")
+        trace_csv = f.name
 
     # run r2u2 and parse output
     cmd = f"{r2u2} {r2u2_spec_bin} {trace_csv}"
@@ -145,10 +154,19 @@ def verify(formula):
     with open("./r2u2_output/output.txt", "w") as f:
         f.write(formula + "\n")
         run_c2po(formula)
-        for trace in iterate_traces(m, n):
-            if run_r2u2(formula, trace):
+        # parallelize this loop
+        # for trace in iterate_traces(m, n):
+        #     if run_r2u2(formula, trace):
+        #         trace = ",".join(trace)
+        #         f.write(trace + "\n")
+        traces = list(iterate_traces(m, n))
+        with multiprocessing.Pool(NUM_CORES) as pool:
+            results = pool.starmap(run_r2u2, [(formula, trace) for trace in traces])
+        for i, trace in enumerate(traces):
+            if results[i]:
                 trace = ",".join(trace)
                 f.write(trace + "\n")
+
     with open("../output/output.txt", "r") as f1:
         with open("./r2u2_output/output.txt", "r") as f2:
             if compare_files(f1, f2):
@@ -166,16 +184,24 @@ def get_n(formula):
     return n+1
 
 if __name__ == '__main__':
+    argparser = argparse.ArgumentParser(description="Verify that WEST and r2u2 produce the same output")
+    argparser.add_argument("-checkpoint", type=str, default = None,
+                           help="Checkpoint formula to start verification from")
+    argparser.add_argument("-fast", action="store_true", default=False,
+                            help="Fast verification mode, runs on suite of formulas filtering out for m=5 and n=4 cases")
+    args = argparser.parse_args()
+
     # if given a formula as an argument, use that as checkpoint
-    checkpoint = None
-    if len(sys.argv) > 1:
-        formula = sys.argv[1].strip()
-        checkpoint = formula
+    checkpoint = args.checkpoint
+    fast = args.fast
 
     # verify all formulas in verify_formulas, skip up to checkpoint if checkpoint is given
     # checkpoint = "F[0:2]G[0:2]p3"
     skip = False if checkpoint is None else True
-    with open(f"./verify_formulas/formulas.txt", "r") as f:
+    formulas = "./verify_formulas/formulas.txt" if not fast else "./verify_formulas/formulas_fast.txt"
+    print(f"Running verification on formulas in {formulas}")
+    print(f"Number of cores: {NUM_CORES}\n")
+    with open(formulas, "r") as f:
         for line in f:
             formula = line.strip()
             if skip:

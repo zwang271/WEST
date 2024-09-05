@@ -2,18 +2,19 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <tuple>
 #include "utils.h"
 #include "evaluate_mltl.h"
 
 using namespace std;
 
 int main(int argc, char** argv) {
-    // should be 4 arguments: formula file, trace file, output file, and optional flag for printing
+    // should be 4 arguments: formula file, trace directory, output file, and optional flag for printing
     if (argc != 4 && argc != 5) {
         throw invalid_argument("Incorrect number of arguments.");
     }
     string formula_file = argv[1];
-    string trace_file = argv[2];
+    string trace_dir = argv[2];
     string output_file = argv[3];
     bool printing = false;
     if (argc == 5) {
@@ -42,7 +43,7 @@ int main(int argc, char** argv) {
 
     // read in batch of traces from file
     // cout << "Reading batch of traces from file..." << endl;
-    vector<vector<string>> batch = read_batch_from_file(trace_file);
+    vector<NamedTrace> batch = read_batch_from_file(trace_dir);
     if (batch.size() == 0) {
         throw invalid_argument("Trace file is empty.");
     }
@@ -52,7 +53,7 @@ int main(int argc, char** argv) {
     ofstream out;
     out.open(output_file);
     for (int i = 0; i < batch.size(); ++i) {
-        vector<string> trace = batch[i];
+        vector<string> trace = batch[i].trace;
         for (int j = 0; j < trace.size(); ++j) {
             trace[j] = strip_char(trace[j], ' ');
             trace[j] = strip_char(trace[j], ',');
@@ -67,7 +68,7 @@ int main(int argc, char** argv) {
         bool eval = evaluate_mltl(formula, trace, false);
         // cout << "Finished evaluating formula on trace " << i << "." << endl << endl;
         // write to output file
-        out << eval << endl;
+        out <<batch[i].name << " : " << eval << endl;
 
         // print results
         if (printing) {

@@ -8,12 +8,13 @@ Requirements: c++ compiler with make, Python 3.10+, pip
 + Go to WEST folder by running `cd WEST`
 + Build binaries by running `cd src ; make ; cd ..`
 + Create a python virtual enviroment by running 
-`python -m venv west_env`
-+ Activate the virtual envoronment by running
+`python3 -m venv west_env`
++ Activate the virtual environment by running
     + on Windows: `./west_env/Scripts/activate`
     + on Unix or MacOS: `source west_env/bin/activate`
 + Install required libraries by running `pip install -r ./requirements.txt`
-+ Launch the graphic user interface by running `python gui.py`
+    + If needed, update pip by running `python3 -m pip install --upgrade pip`
++ Launch the graphic user interface by running `python3 gui.py`
 
 To run the WEST tool from the terminal line, please refer to the document [`./Documentation/WESTREADME.md`](https://github.com/zwang271/WEST/blob/master/Documentation/WESTREADME.md).
 
