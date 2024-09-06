@@ -9,6 +9,7 @@ import time
 import os
 import sys
 from string_src.parser import *
+import pathlib
 
 # Replaces all s in the string with all permutations of 0 and 1
 def expand_string(string):
@@ -130,14 +131,13 @@ if __name__ == '__main__':
         verify(formula, skip)
         exit(0)
 
-    # iterate through all files in ./verify_formulas
-    for filename in os.listdir("./verify_formulas"):
-        with open(f"./verify_formulas/{filename}", "r") as f:
-            for line in f:
-                formula = line.strip()
-                formula = from_west(formula)
-                if not verify(formula):
-                    exit(1)
+    with open(pathlib.Path("./verify_formulas") / "formulas.txt", "r") as f:
+        for line in f:
+            formula = line.strip()
+            formula = from_west(formula)
+            print(formula)
+            if not verify(formula):
+                exit(1)
     
     # if we get here, all formulas were verified
     print("CONGRATULATIONS! ALL FORMULAS WERE VERIFIED!")
