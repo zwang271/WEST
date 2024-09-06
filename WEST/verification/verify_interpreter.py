@@ -36,7 +36,7 @@ def run_interpreter(formula, traces, verbose=False):
                 f.write(",".join(list(t)) + "\n")
     # run the interpreter
     cmd = f"{interpreter} {spec_mltl} {traces_dir} {verdicts}"
-    print(cmd)
+    # print(cmd)
     subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
 
 def get_mn():

@@ -65,4 +65,5 @@ for dir in ["m", "n", "d"]:
     ax2.tick_params(axis='both', which='major', labelsize=FONTSIZE)
     plt.title(f"Average Time and Output Length vs {parameter}", fontsize=TITLE_FONTSIZE)
     plt.savefig(f"{parameter}.png")
+    plt.show()
     print("Plot saved as", f"{parameter}.png")

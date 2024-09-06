@@ -5,7 +5,8 @@ This is meant to be an artifact for the paper "WEST: Interactive Validation of M
 This artifact requires the following
 - Linux (tested on Ubuntu 22.04.2 LTS)
 - Python 3.10+
-- c++ compiler with Make tool
+- c++ compiler with make (we use GNU Make 4.3) and cmake (cmake 3.22.1)
+- Java Runtime environment (see https://ubuntu.com/tutorials/install-jre#1-overview)
 
 ### Building all binaries and dependencies
 1. Create a python virtual enviroment by running 
@@ -17,6 +18,8 @@ This artifact requires the following
     - If needed, update pip by running `python3 -m pip install --upgrade pip`
 4. Build binaries by running `./setup.sh`
 5. You should now be able to launch the graphic user interface by running `python3 gui.py`
+    - If you encounter the following error: "This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem."
+    Please run: `sudo ln -sf /usr/lib/x86_64-linux-gnu/qt5/plugins/platforms/ /usr/bin/`
 
 ### Validation Scripts
 These scripts replicates the validation steps outlined in Section 4, Figure 6 of the tool paper. 
@@ -29,7 +32,9 @@ These scripts replicates the validation steps outlined in Section 4, Figure 6 of
 ### Plotting Scripts
 Run the following to replicate figures 7a, 7b, and 7c.
 - `cd ../benchmarking`
-- run `./runall.sh` (~1hr) to benchmark WEST on the d, m, and n formula datasets and generate the three plots presented in the paper. 
+- run `./runall.sh` (~1hr) to benchmark WEST on the d, m, and n formula datasets 
+    - it is not strictly necessary to run this in order to run the next plotting script
+- generate the three plots presented in the paper by running `python3 plot.py`
 
 ### End
 Thank you for evaluating our artifact! 
