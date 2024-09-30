@@ -161,7 +161,7 @@ int complen(string wff) {
     }
 
     if (T.type == BINARY_TEMP_CONN) {
-        return T.ub + max(complen(T.wff1_string), complen(T.wff2_string));
+        return T.ub + max(complen(T.wff1_string)-1, complen(T.wff2_string));
     }
 
     return 0;
