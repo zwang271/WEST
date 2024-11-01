@@ -16,3 +16,14 @@
 *.log
 *.bbl
 *.pdf
+
+# Others
+*.exe
+WEST/verification/__pycache__/
+WEST/verification/interpreter_output/traces/
+WEST/verification/string_src/__pycache__/
+WEST/west_env/
+tool_paper_rebuttle.txt
+WEST/output/
+WEST/src/__pycache__/
+WEST/verification/interpreter_output/
