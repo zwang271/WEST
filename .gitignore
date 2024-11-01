@@ -20,8 +20,9 @@
 # Others
 *.exe
 WEST/verification/__pycache__/
-WEST/verification/interpreter_output/traces/
+WEST_numpy/src/__pycache__/
 WEST/verification/string_src/__pycache__/
+WEST/verification/interpreter_output/traces/
 WEST/west_env/
 tool_paper_rebuttle.txt
 WEST/output/
