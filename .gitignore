@@ -28,3 +28,10 @@ tool_paper_rebuttle.txt
 WEST/output/
 WEST/src/__pycache__/
 WEST/verification/interpreter_output/
+MLTL_interpreter/interpret
+MLTL_interpreter/interpret_batch
+WEST/benchmarking/__pycache__/random_mltl_formulas.cpython-310.pyc
+WEST/verification/r2u2/
+WEST/verification/spec.bin
+WEST/verification/west_string
+WEST/west
