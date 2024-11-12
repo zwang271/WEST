@@ -134,7 +134,7 @@ if __name__ == '__main__':
     with open(pathlib.Path("./verify_formulas") / "formulas.txt", "r") as f:
         for line in f:
             formula = line.strip()
-            formula = from_west(formula)
+            # formula = from_west(formula)
             print(formula)
             if not verify(formula):
                 exit(1)

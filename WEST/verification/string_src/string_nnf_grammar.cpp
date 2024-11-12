@@ -85,6 +85,7 @@ bool Nnf_Array_entry_check(string s){
  *          | '(' Assoc_Prop_conn ‘[‘ Nnf_Array_entry ‘]’ ')'
  *          | ‘(‘ Nnf Binary_Prop_conn Nnf ‘)’
  *          | ‘(‘ Nnf Binary_Temp_conn  Interval Nnf  ‘)’
+ *          | ‘(‘ Nnf ‘)’
  * Checks that the inputted string is a WWF in NNF.
  */
 bool Nnf_check(string s){
@@ -180,6 +181,12 @@ bool Nnf_check(string s){
             string beta = Slice(s, end_interval+1, len_s-2);
             return Nnf_check(alpha) and Interval_check(interval) and Nnf_check(beta);
         }
+    }
+
+    // ‘(‘ Nnf ‘)’
+    if (Slice_char(s, 0) == "(" and Slice_char(s, len_s-1) == ")"){
+        string alpha = Slice(s, 1, len_s-2);
+        return Nnf_check(alpha);
     }
 
     return false;
@@ -410,7 +417,6 @@ string Wff_to_Nnf(string wff){
                 // Return: "(" + Wff_to_Nnf(alpha) + "&" + Wff_to_Nnf(neg_beta) + ")"
                 return "(" + Wff_to_Nnf(alpha) + "&" + Wff_to_Nnf(neg_beta) + ")";
             }
-
         }
 
 
@@ -441,10 +447,22 @@ string Wff_to_Nnf(string wff){
                     + Slice(wff, start_interval, end_interval) + Wff_to_Nnf(neg_beta) + ")";
             }
         }
+
+        // '~' '(' Wff ')'
+        if (Slice_char(wff, 1) == "(" and Slice_char(wff, len_wff-1) == ")"){
+            string alpha = Slice(wff, 2, len_wff-2);
+            return "(" + Wff_to_Nnf("~"+alpha) + ")";
+        }
+    }
+
+    // '(' Wff ')'
+    if (Slice_char(wff, 0) == "(" and Slice_char(wff, len_wff-1) == ")"){
+        string alpha = Slice(wff, 1, len_wff-2);
+        return "(" + Wff_to_Nnf(alpha) + ")";
     }
 
     else{
-        string error_string = wff + " is not a well-formed formula.\n";
+        string error_string = wff + " is not a well-formed formula, can't convert to nnf.\n";
         throw invalid_argument(error_string);
     }
     return "";
