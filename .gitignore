@@ -19,19 +19,21 @@
 
 # Others
 *.exe
-WEST/verification/__pycache__/
+verification/__pycache__/
 WEST_numpy/src/__pycache__/
-WEST/verification/string_src/__pycache__/
-WEST/verification/interpreter_output/traces/
-WEST/west_env/
+verification/string_src/__pycache__/
+src/WEST/__pycache__/
+verification/interpreter_output/traces/
+src/MLTL_brute_force/__pycache__/
+west_env/
 tool_paper_rebuttle.txt
-WEST/output/
-WEST/src/__pycache__/
-WEST/verification/interpreter_output/
-MLTL_interpreter/interpret
+output/
+src/__pycache__/
+interpreter_output/
+src/MLTL_interpreter/interpret
 MLTL_interpreter/interpret_batch
-WEST/benchmarking/__pycache__/random_mltl_formulas.cpython-310.pyc
-WEST/verification/r2u2/
-WEST/verification/spec.bin
-WEST/verification/west_string
-WEST/west
+benchmarking/__pycache__
+verification/r2u2/
+verification/spec.bin
+verification/west_string
+west
