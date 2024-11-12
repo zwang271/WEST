@@ -43,6 +43,7 @@ wff: prop_var | prop_cons
    | assoc_and
    | assoc_equiv
    | pre_assoc_expr
+   | "(" wff ")"
 
 %import common.WS
 %ignore WS

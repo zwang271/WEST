@@ -36,10 +36,10 @@ Binary_Temp_conn  ->  ‘U’ | ‘R’
 Wff ->  Prop_var | Prop_cons
                  | Unary_Prop_conn Wff
 	             | Unary_Temp_conn  Interval  Wff
-
 	             | '(' Assoc_Prop_conn ‘[‘  Array_entry  ']' ')'
                  | '(' Wff Binary_Prop_conn Wff ')'
                  | '(' Wff Binary_Temp_conn  Interval Wff ')'
+                 | '(' Wff ')'
 
 
 The Prop constants: True, False are represented by: ‘T’, ‘F’.
@@ -57,7 +57,7 @@ using namespace std;
 /*
  * Takes substring of given string from a to b.
  */
-string Slice(string s, int a, int b){
+string  Slice(string s, int a, int b){
 	int s_len = int(s.length());
   	
   	if (a < 0){
@@ -356,6 +356,12 @@ bool Wff_check(string s){
         }
     }
 
+    // '(' Wff ')'
+    if (Slice_char(s, 0) == "(" and Slice_char(s, len_s-1) == ")"){
+        string alpha = Slice(s, 1, len_s-2);
+        return Wff_check(alpha);
+    }
+
     return false;
 }
 
@@ -550,6 +556,11 @@ int Comp_len(string wff){
         return max((upper_bound-1) + Comp_alpha, upper_bound + Comp_beta);
     }
 
+    // '(' Wff ')'
+    if (Slice_char(wff, 0) == "(" and Slice_char(wff, len_wff-1) == ")"){
+        string alpha = Slice(wff, 1, len_wff-2);
+        return Comp_len(alpha);
+    }
     
     else{
         string error_string = wff + " is not a well-formed formula.\n";

@@ -588,6 +588,19 @@ vector<string> reg(string nnf, int n, bool sub, bool simp) {
 		}
 	}
 
+	// '(' Nnf ')'
+	if (Slice_char(nnf, 0) == "(" and Slice_char(nnf, len_nnf - 1) == ")") {
+		string alpha = Slice(nnf, 1, len_nnf - 2);
+
+		if (sub) {
+			vector<string> reg_nnf = reg(alpha, n, sub, simp);
+			push_back_formulas(nnf, reg_nnf, n, simp);
+			return reg_nnf;
+		}
+
+		return reg(alpha, n, sub, simp);
+	}
+
 	else {
 		string error_string = nnf + " is not in Negation-normal form.\n";
 		throw invalid_argument(error_string);
