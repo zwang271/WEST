@@ -28,3 +28,15 @@ tool_paper_rebuttle.txt
 WEST/output/
 WEST/src/__pycache__/
 WEST/verification/interpreter_output/
+MLTL_interpreter/formula.mltl
+MLTL_interpreter/interpret.exe
+MLTL_interpreter/interpret_batch.exe
+MLTL_interpreter/out.txt
+MLTL_interpreter/trace.csv
+WEST/verification/r2u2/
+WEST/verification/spec.bin
+WEST/verification/west_string
+WEST/west
+WEST/benchmarking/__pycache__
+MLTL_interpreter/interpret
+MLTL_interpreter/interpret_batch
