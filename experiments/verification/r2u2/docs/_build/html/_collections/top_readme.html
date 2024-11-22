@@ -1,0 +1,616 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>About &#8212; R2U2 Documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../_static/documentation_options.js?v=84448011"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_collections/top_readme';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/r2u2-graphic-solo.png" class="logo__image only-light" alt="R2U2 Documentation - Home"/>
+    <script>document.write(`<img src="../_static/r2u2-graphic-solo.png" class="logo__image only-dark" alt="R2U2 Documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../Overview/quick_start_guide.html">Quick-Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Overview/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Overview/project_structure.html">Project Structure</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">✏️ Specifications with MLTL</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../Preliminaries/runtime_monitoring.html">Runtime Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Preliminaries/spec_writing.html">Specification Writing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Preliminaries/mltl_monitoring.html">MLTL Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Preliminaries/r2u2_framework.html">R2U2 Framework</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">📚 Users' Guides</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="c2po_readme.html">C2PO</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="c2po_docs/user.html">C2PO Users’s Guide</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="c2po_docs/usage.html">C2PO Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="c2po_docs/language.html">C2PO Input Language</a></li>
+<li class="toctree-l2"><a class="reference internal" href="c2po_docs/options.html">C2PO CLI Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="c2po_docs/front_end.html">R2U2 Front End Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="c2po_docs/mltl_std.html">MLTL-STD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="c2po_docs/optimizations.html">MLTL Optimizations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="c2po_docs/outputs.html">C2PO Output Formats</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="r2u2_readme.html">R2U2 Static Monitor</a></li>
+
+
+
+
+<li class="toctree-l1 has-children"><a class="reference internal" href="r2u2_docs/user.html">R2U2 Static Monitor User’s Guide</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="r2u2_docs/building.html">Building</a></li>
+<li class="toctree-l2"><a class="reference internal" href="r2u2_docs/running.html">Running</a></li>
+<li class="toctree-l2"><a class="reference internal" href="r2u2_docs/embedding.html">Embedding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="r2u2_docs/output.html">Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="r2u2_docs/multi-monitor.html">Multi-monitor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="r2u2_docs/configuration.html">Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="gui_readme.html">Web MLTL Compiler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_readme.html">R2U2 Test Suite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools_readme.html">MLTL Tools</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../examples.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Examples/agc.html">Assume-Guarantee Contract Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Examples/req_arbiter.html">Request Arbiter System Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Examples/simple.html">Simple Example</a></li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🛠 Development Guides</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../Development/contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">R2U2 Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Development/ci.html">Continuous Integration &amp; Testing</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="c2po_docs/dev.html">C2PO Developer’s Guide</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="c2po_docs/internals.html">C2PO Internal Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="c2po_docs/parser.html">C2PO Parser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="c2po_docs/ast.html">C2PO AST Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="c2po_docs/assembly.html">C2PO Assembler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="c2po_docs/testing.html">C2PO Test Framework</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="r2u2_docs/dev.html">R2U2 Static Monitor Developer Guide</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="r2u2_docs/architecture.html">Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="r2u2_docs/internals.html">Internals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="r2u2_docs/memory.html">Memory Controllers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="r2u2_docs/engines.html">Execution Engines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="r2u2_docs/debug.html">Debug</a></li>
+<li class="toctree-l2"><a class="reference internal" href="r2u2_docs/testing.html">Testing</a></li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">📖 References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../References/file_formats.html">File Formats</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../References/formats/mltl_formula_files.html">MLTL Formula Files [<code class="docutils literal notranslate"><span class="pre">.mltl</span></code>]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../References/formats/r2u2_assembly_files.html">R2U2 Assembly [<code class="docutils literal notranslate"><span class="pre">.asm</span></code>]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../References/formats/r2u2_configuration_binary_files.html">R2U2 Configuration Binary Files [<code class="docutils literal notranslate"><span class="pre">.bin</span></code>]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../References/formats/signal_map_files.html">Signal Map Files [<code class="docutils literal notranslate"><span class="pre">.map</span></code>]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../References/formats/signal_trace_files.html">Signal Trace Files [<code class="docutils literal notranslate"><span class="pre">.csv</span></code>]</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../References/mltl_grammar.html">MLTL Grammar</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../References/publications.html">Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../References/glossary.html">Glossary</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://gitlab.com/bckempa/r2u2" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-gitlab"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/_collections/top_readme.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>About</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">About</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citing-r2u2">Citing R2U2</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#running-r2u2">Running R2U2</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#example-cases">Example Cases</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-gui">Running the GUI</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#support">Support</a></li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="about">
+<h1>About<a class="headerlink" href="#about" title="Link to this heading">#</a></h1>
+<p>The Realizable, Reconfigurable, Unobtrusive Unit (R2U2) is a runtime verification
+framework designed to monitor safety- or mission-critical systems with
+constrained computational resources.</p>
+<section id="citing-r2u2">
+<h2>Citing R2U2<a class="headerlink" href="#citing-r2u2" title="Link to this heading">#</a></h2>
+<p>If you would like to cite R2U2, please use our 2023 CAV paper:</p>
+<p><em>Johannsen, Chris, Jones, Phillip, Kempa, Brian, Rozier, Kristin Yvonne, &amp; Zhang, Pei. (2023). R2U2 V3 Demonstration Artifact for the 35th International Conference on Computer Aided Verification (CAV’23). International Conference on Computer Aided Verification (CAV), Paris, France. Zenodo. https://doi.org/10.5281/zenodo.7889284</em></p>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="running-r2u2">
+<h1>Running R2U2<a class="headerlink" href="#running-r2u2" title="Link to this heading">#</a></h1>
+<p>To run your own specifications and inputs with R2U2, consult the README files
+included in r2u2/ and its sub-directories. As a brief overview:</p>
+<ol class="arabic">
+<li><p>Write a MLTL specification file as described by <code class="docutils literal notranslate"><span class="pre">compiler/README.md</span></code></p></li>
+<li><p>Write a CSV file with your signal inputs and a header naming them</p></li>
+<li><p>Feed those files to the C2PO formula compiler:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span> python3 compiler/r2u2prep.py --booleanizer &quot;path/to/spec.mltl&quot; &quot;path/to signals.csv&quot;
+</pre></div>
+</div>
+</li>
+<li><p>Build R2U2 monitor (this only has to be done once, not every time you
+change the spec):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span> pushd monitor/ &amp;&amp; make clean all &amp;&amp; popd
+</pre></div>
+</div>
+</li>
+<li><p>Run R2U2:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span> ./monitor/build/r2u2 &quot;path/to/r2u2_spec.bin&quot; &quot;path/to/input.csv&quot;
+</pre></div>
+</div>
+</li>
+<li><p>Examine the output <code class="docutils literal notranslate"><span class="pre">R2U2.log</span></code> file, note that aggregated writes means some
+timestamps will appear to be “skipped” - this is normal.</p></li>
+</ol>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="requirements">
+<h1>Requirements<a class="headerlink" href="#requirements" title="Link to this heading">#</a></h1>
+<p>The following dependencies have already been installed on this
+container for use by the artifact:</p>
+<ul class="simple">
+<li><p>Make</p></li>
+<li><p>C99 compiler</p></li>
+<li><p>python 3.6 or greater</p></li>
+</ul>
+<p>The following python packages have also been installed via <code class="docutils literal notranslate"><span class="pre">pip</span></code> for testing and
+the GUI:</p>
+<ul class="simple">
+<li><p>dash</p></li>
+<li><p>dash-cytoscape</p></li>
+<li><p>dash-bootstrap-components</p></li>
+<li><p>pytest</p></li>
+<li><p>numpy</p></li>
+<li><p>matplotlib</p></li>
+</ul>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="example-cases">
+<h1>Example Cases<a class="headerlink" href="#example-cases" title="Link to this heading">#</a></h1>
+<p>Each of the following cases shows a minimal example of a feature discussed in
+the paper in the indicated section:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">agc</span></code>         Assume-Guarantee Contract: tri-state status
+output (inactive, invalid, or verified)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">arb_dataflow</span></code>    Arbitrary Data-Flow: Feeding a temporal engine
+results back to the atomic checker</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">atomic_checker</span></code>  Atomic Checker: various signal processing examples</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cav</span></code>             CAV: The example from the paper showcasing a
+realistic composition of the other features</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cse</span></code>             Common Subexpression Elimination: Removal of
+redundant work from specification</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">set_agg</span></code>          Set Aggregation: Specifications beyond binary
+inputs</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sets</span></code>            Set Types: Use of parametrized typing on a
+structure member</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simple</span></code>          Simple: A basic R2U2 V2 style specification in the
+V3 input language</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">struct</span></code>          Structure: Use of a structure to group variables</p></li>
+</ul>
+<p>Beyond these examples tailored to this paper, further examples can be found in
+the test subdirectories: <code class="docutils literal notranslate"><span class="pre">r2u2/test</span></code> and <code class="docutils literal notranslate"><span class="pre">r2u2/compiler/test</span></code></p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="running-the-gui">
+<h1>Running the GUI<a class="headerlink" href="#running-the-gui" title="Link to this heading">#</a></h1>
+<p>Run the <code class="docutils literal notranslate"><span class="pre">GUI/run.py</span></code> script to start the web server then open a web browser and navigate to
+http://127.0.0.1:8050/.</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="support">
+<h1>Support<a class="headerlink" href="#support" title="Link to this heading">#</a></h1>
+<p>If you believe you have found a case of unsound output from R2U2,
+please run the case in debug mode and provide the output to the authors for
+analysis:
+<code class="docutils literal notranslate"><span class="pre">pushd</span> <span class="pre">r2u2/monitor</span> <span class="pre">&amp;&amp;</span> <span class="pre">make</span> <span class="pre">clean</span> <span class="pre">debug</span> <span class="pre">&amp;&amp;</span> <span class="pre">popd</span></code>
+<code class="docutils literal notranslate"><span class="pre">./r2u2/monitor/build/r2u2_debug</span> <span class="pre">&quot;path/to/r2u2_spec.bin&quot;</span> <span class="pre">\</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">&quot;path/to/input.csv&quot;</span> <span class="pre">2&gt;debug.log</span></code></p>
+<p>The logs contain no identifying information, please ask the chairs to assist in
+passing along you anonymized feedback. Thank you.</p>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">About</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citing-r2u2">Citing R2U2</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#running-r2u2">Running R2U2</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#example-cases">Example Cases</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-gui">Running the GUI</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#support">Support</a></li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Laboratory for Temporal Logic
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023, Laboratory for Temporal Logic.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,580 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Embedding &#8212; R2U2 Documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../_static/documentation_options.js?v=84448011"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_collections/r2u2_docs/embedding';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Output" href="output.html" />
+    <link rel="prev" title="Running" href="running.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/r2u2-graphic-solo.png" class="logo__image only-light" alt="R2U2 Documentation - Home"/>
+    <script>document.write(`<img src="../../_static/r2u2-graphic-solo.png" class="logo__image only-dark" alt="R2U2 Documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../Overview/quick_start_guide.html">Quick-Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Overview/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Overview/project_structure.html">Project Structure</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">✏️ Specifications with MLTL</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../Preliminaries/runtime_monitoring.html">Runtime Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Preliminaries/spec_writing.html">Specification Writing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Preliminaries/mltl_monitoring.html">MLTL Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Preliminaries/r2u2_framework.html">R2U2 Framework</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">📚 Users' Guides</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../c2po_readme.html">C2PO</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c2po_docs/user.html">C2PO Users’s Guide</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c2po_docs/usage.html">C2PO Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2po_docs/language.html">C2PO Input Language</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2po_docs/options.html">C2PO CLI Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2po_docs/front_end.html">R2U2 Front End Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2po_docs/mltl_std.html">MLTL-STD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2po_docs/optimizations.html">MLTL Optimizations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2po_docs/outputs.html">C2PO Output Formats</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../r2u2_readme.html">R2U2 Static Monitor</a></li>
+
+
+
+
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="user.html">R2U2 Static Monitor User’s Guide</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="building.html">Building</a></li>
+<li class="toctree-l2"><a class="reference internal" href="running.html">Running</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Embedding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multi-monitor.html">Multi-monitor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html">Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../gui_readme.html">Web MLTL Compiler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../test_readme.html">R2U2 Test Suite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tools_readme.html">MLTL Tools</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../examples.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../Examples/agc.html">Assume-Guarantee Contract Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Examples/req_arbiter.html">Request Arbiter System Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Examples/simple.html">Simple Example</a></li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🛠 Development Guides</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../Development/contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">R2U2 Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Development/ci.html">Continuous Integration &amp; Testing</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c2po_docs/dev.html">C2PO Developer’s Guide</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c2po_docs/internals.html">C2PO Internal Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2po_docs/parser.html">C2PO Parser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2po_docs/ast.html">C2PO AST Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2po_docs/assembly.html">C2PO Assembler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2po_docs/testing.html">C2PO Test Framework</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="dev.html">R2U2 Static Monitor Developer Guide</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internals.html">Internals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="memory.html">Memory Controllers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engines.html">Execution Engines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debug.html">Debug</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html">Testing</a></li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">📖 References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../api.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../References/file_formats.html">File Formats</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../References/formats/mltl_formula_files.html">MLTL Formula Files [<code class="docutils literal notranslate"><span class="pre">.mltl</span></code>]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../References/formats/r2u2_assembly_files.html">R2U2 Assembly [<code class="docutils literal notranslate"><span class="pre">.asm</span></code>]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../References/formats/r2u2_configuration_binary_files.html">R2U2 Configuration Binary Files [<code class="docutils literal notranslate"><span class="pre">.bin</span></code>]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../References/formats/signal_map_files.html">Signal Map Files [<code class="docutils literal notranslate"><span class="pre">.map</span></code>]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../References/formats/signal_trace_files.html">Signal Trace Files [<code class="docutils literal notranslate"><span class="pre">.csv</span></code>]</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../References/mltl_grammar.html">MLTL Grammar</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../References/publications.html">Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../References/glossary.html">Glossary</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://gitlab.com/bckempa/r2u2" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-gitlab"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/_collections/r2u2_docs/embedding.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Embedding</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reserving-memory">Reserving Memory</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#signal-input">Signal Input</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#verdict-output">Verdict Output</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#initializing-and-running-the-monitor">Initializing and Running the Monitor</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#platform-constraints-and-compatibility">Platform Constraints and Compatibility</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="embedding">
+<h1>Embedding<a class="headerlink" href="#embedding" title="Link to this heading">#</a></h1>
+<p>When using R2U2 as a library within a user-provided application, configuration and execution of the monitor becomes the callers responsibility.
+The provided <code class="docutils literal notranslate"><span class="pre">main.c</span></code> that defines the R2U2 CLI also serves as a reference implementation and can be treated as an example of library use.</p>
+<section id="reserving-memory">
+<h2>Reserving Memory<a class="headerlink" href="#reserving-memory" title="Link to this heading">#</a></h2>
+<p>The “static” in the name “R2U2 static monitor” refers to the monitor not perform any memory allocation calls, it is the user’s responsibility to preallocate the required memory in arenas and array used by the monitor.
+With careful programming, this can even be done such that the monitor memory itself is encoded in the .bss segment of the application and therefore take (virtually)no space on disk until loaded.</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">r2u2_monitor_t</span></code> struct is used to represent the state and memory of an instance of R2U2.
+The <code class="docutils literal notranslate"><span class="pre">R2U2_DEFAULT_MONITOR</span></code> macro will setup a monitor with default extents, see <a class="reference internal" href="configuration.html"><span class="std std-doc">configuration</span></a> to adjust those sizes.
+Alternatively, the required memory can be set aside by the user and referenced by the monitor struct, allowing arbitrary sizes of all memory arenas and arrays to be built even at runtime.</p>
+</section>
+<section id="signal-input">
+<h2>Signal Input<a class="headerlink" href="#signal-input" title="Link to this heading">#</a></h2>
+<p>System state values, called signals, are read from the signal vector by the monitor on each tic.
+It is the user’s responsibility to set these values correctly.</p>
+<p>The signal vector itself is an array of pointers to (null-terminated) strings representing the signal values.
+Values are provided as strings to allow for type-casting of values by the front-end, for example changing the floating point type or reading a 1 or 0 as a boolean.</p>
+<p>In the R2U2 CLI, the CSV helper is used to read signal values and load them into the monitor’s signal vector.
+Consult <code class="docutils literal notranslate"><span class="pre">memory/csv_trace.c</span></code> for an example of loading the signal vector.</p>
+</section>
+<section id="verdict-output">
+<h2>Verdict Output<a class="headerlink" href="#verdict-output" title="Link to this heading">#</a></h2>
+<p>Verdict output is written to the <code class="docutils literal notranslate"><span class="pre">out_file</span></code> file pointer if set and the <code class="docutils literal notranslate"><span class="pre">out_func</span></code> callback, again if set, is fired with the result of the evaluation.
+See <a class="reference internal" href="output.html"><span class="std std-doc">Output</span></a> for more details.</p>
+</section>
+<section id="initializing-and-running-the-monitor">
+<h2>Initializing and Running the Monitor<a class="headerlink" href="#initializing-and-running-the-monitor" title="Link to this heading">#</a></h2>
+<p>As demonstrated in <code class="docutils literal notranslate"><span class="pre">main.c</span></code>, a standard life-cycle for an R2U2 monitor is:</p>
+<ol class="arabic simple">
+<li><p>The instruction memory is loaded by copying or <code class="docutils literal notranslate"><span class="pre">mmap</span></code>-ing the specification binary</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">r2u2_init</span></code> is called which resets the monitor (logical) clock and prepossesses the instructions</p></li>
+<li><p>The output file pointer is set</p></li>
+<li><p>The signal vector state is loaded</p></li>
+<li><p>An execution function is called to run the monitor, which can be one of the following:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">r2u2_step</span></code> executes a single R2U2 instruction. Good for cooperative multitasking</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">r2u2_spin</span></code> after the first spin, all signal values are latched but the time-step might not be complete. Most time-steps require two spins</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">r2u2_tic</span></code> runs until one time-step is complete. Default for most cases as it provides all verdicts available with current knowledge and ends when the signal vector should be refreshed</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">r2u2_run</span></code> runs continuously, requires external refreshing of the signal vectors such as DMA or memory-mapped registers</p></li>
+</ul>
+</li>
+<li><p>Error conditions are checked</p></li>
+<li><p>The signal vector is updated if a time-step has completed</p></li>
+<li><p>Loop back to step 5 and continue executing until monitoring is complete</p></li>
+</ol>
+</section>
+<section id="platform-constraints-and-compatibility">
+<h2>Platform Constraints and Compatibility<a class="headerlink" href="#platform-constraints-and-compatibility" title="Link to this heading">#</a></h2>
+<p>While the monitor itself is carefully constructed to ensure internal consistency, the primary source of incompatibility is the assumptions of monitor configuration made by C2PO when packaging the specification binary.
+Pay careful attention to configuration flags in C2PO used to inform the assembler of the monitor setup.</p>
+<p>The easiest way to ensure compatibility is to run the C2PO formula compiler on the same platform as you build and run R2U2, but if that isn’t possible and you suspect platform compatibility issues, compare the decoded instructions in the R2U2 debug logging to the assembly output of C2PO.</p>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="running.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Running</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="output.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Output</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reserving-memory">Reserving Memory</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#signal-input">Signal Input</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#verdict-output">Verdict Output</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#initializing-and-running-the-monitor">Initializing and Running the Monitor</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#platform-constraints-and-compatibility">Platform Constraints and Compatibility</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Laboratory for Temporal Logic
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023, Laboratory for Temporal Logic.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
