@@ -16,7 +16,7 @@ This artifact requires the following
 3. Install required libraries by running `pip install -r ./src/requirements.txt`
     - If needed, update pip by running `python3 -m pip install --upgrade pip`
 4. Build binaries by running `./setup.sh`
-5. You should now be able to launch the graphic user interface by running `python3 gui.py`
+5. You should now be able to launch the graphic user interface by running `python3 src/gui.py`
     - If you encounter the following error: "This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem."
     Please run: `sudo ln -sf /usr/lib/x86_64-linux-gnu/qt5/plugins/platforms/ /usr/bin/`
 
