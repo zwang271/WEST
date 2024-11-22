@@ -19,11 +19,11 @@
 
 # Others
 *.exe
-verification/__pycache__/
+experiments/verification/__pycache__/
 WEST_numpy/src/__pycache__/
-verification/string_src/__pycache__/
+experiments/verification/string_src/__pycache__/
 src/WEST/__pycache__/
-verification/interpreter_output/traces/
+experiments/verification/interpreter_output/traces/
 src/MLTL_brute_force/__pycache__/
 west_env/
 tool_paper_rebuttle.txt
@@ -32,8 +32,8 @@ src/__pycache__/
 interpreter_output/
 src/MLTL_interpreter/interpret
 MLTL_interpreter/interpret_batch
-benchmarking/__pycache__
-verification/r2u2/
-verification/spec.bin
-verification/west_string
+experiments/benchmarking/__pycache__
+experiments/verification/r2u2/
+experiments/verification/spec.bin
+experiments/verification/west_string
 west
