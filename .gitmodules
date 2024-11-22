@@ -1,3 +1,4 @@
-[submodule "WEST/verification/MLTLMaxSAT-FORMATS"]
-	path = WEST/verification/MLTLMaxSAT-FORMATS
-	url = https://github.com/gokulhari/MLTLMaxSAT-FORMATS
+
+[submodule "experiments/verification/MLTLMaxSAT-FORMATS"]
+	path = experiments/verification/MLTLMaxSAT-FORMATS
+	url = https://github.com/gokulhari/MLTLMaxSAT-FORMATS.git

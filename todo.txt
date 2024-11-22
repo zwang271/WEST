@@ -1,0 +1,2 @@
+Submit as a VM directly, use virtual box
+link to README from the manual.md
