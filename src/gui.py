@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import Qt
 import sys
 import subprocess
-from src.gui_utils import *
+from WEST.gui_utils import *
 import re
 from random import choice, randint
 from dd import _bdd
