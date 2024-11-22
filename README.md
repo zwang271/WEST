@@ -22,7 +22,7 @@ This artifact requires the following
 
 ### Validation Scripts
 These scripts replicates the validation steps outlined in Section 4, Figure 6 of the tool paper. 
-- `cd verification` 
+- `cd experiments/verification` 
 - Run `python3 verify_string.py` to replicate section 4.1 (~1hr)
 - Run `python3 verify_allsat.py` to replicate section 4.2 (~2min)
 - Run `python3 verify_r2u2_parallel.py` to replicate section 4.3 (~4hr)
