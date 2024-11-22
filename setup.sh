@@ -1,5 +1,6 @@
-cd src && make && cd ..
-cd ../MLTL_interpreter && make && cd ../WEST/verification
-cd r2u2/monitors/static && make && cd ../../..
+cd src 
+cd WEST && make && cd ..
+cd MLTL_interpreter && make && cd ../../experiments/verification 
 cd string_src && make && cd ..
-cd MLTLMaxSAT-FORMATS && ./installer.sh && cd ..
+cd r2u2/monitors/static && make && cd ../../..
+# cd MLTLMaxSAT-FORMATS && ./installer.sh && cd ..

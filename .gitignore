@@ -37,3 +37,4 @@ experiments/verification/r2u2/
 experiments/verification/spec.bin
 experiments/verification/west_string
 west
+src/MLTL_interpreter/interpret_batch

@@ -1,9 +1,10 @@
 # WEST Tool Paper Artifact
-This is meant to be an artifact for the paper "WEST: Interactive Validation of Mission-time Linear Temporal Logic (MLTL)" 
+This is an artifact for the paper "WEST: Interactive Validation of Mission-time Linear Temporal Logic (MLTL)" 
+For the tool manual, see [here](src/WEST_Tool_Manual.md)
 
 ### Prerequisites
 This artifact requires the following
-- Linux (tested on Ubuntu 22.04.2 LTS)
+- Linux (tested on Ubuntu 24.04.1 LTS)
 - Python 3.10+
 - c++ compiler with make (we use GNU Make 4.3) and cmake (cmake 3.22.1)
 - Java Runtime environment (see https://ubuntu.com/tutorials/install-jre#1-overview)
@@ -11,10 +12,8 @@ This artifact requires the following
 ### Building all binaries and dependencies
 1. Create a python virtual enviroment by running 
 `python3 -m venv west_env`
-2. Activate the virtual envoronment by running
-    - on Windows: `./west_env/Scripts/activate`
-    - on Unix or MacOS: `source west_env/bin/activate`
-3. Install required libraries by running `pip install -r ./requirements.txt`
+2. Activate the virtual envoronment by running `source west_env/bin/activate`
+3. Install required libraries by running `pip install -r ./src/requirements.txt`
     - If needed, update pip by running `python3 -m pip install --upgrade pip`
 4. Build binaries by running `./setup.sh`
 5. You should now be able to launch the graphic user interface by running `python3 gui.py`
