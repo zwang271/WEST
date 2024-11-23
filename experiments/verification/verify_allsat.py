@@ -17,7 +17,7 @@ from dd import autoref as _bdd
 
 def run_west(formula):
     west_exec = "./west"
-    subprocess.run(f"cd .. && {west_exec} \"{formula}\" cd ./verification", 
+    subprocess.run(f"cd ../../src && {west_exec} \"{formula}\"", 
                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
     
 def add_unary_parenthesis(formula):
@@ -233,7 +233,7 @@ def verify(formula, verbose=False):
     with open("./maxsat_output/out.txt", "w") as f:
         f.write(formula + "\n")
         f.write("\n".join(traces))
-    with open("../output/output.txt", "r") as f1:
+    with open("../../src/output/output.txt", "r") as f1:
         with open("./maxsat_output/out.txt", "r") as f2:
             if compare_files(f1, f2):
                 total = time.perf_counter() - start

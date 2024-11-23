@@ -12,7 +12,7 @@ from verify_r2u2 import compare_files, iterate_traces, get_n
 
 def run_west(formula):
     west_exec = "./west"
-    subprocess.run(f"cd .. && {west_exec} \"{formula}\" cd ./verification", 
+    subprocess.run(f"cd ../../src && {west_exec} \"{formula}\"", 
                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
 
 def run_interpreter(formula, traces, verbose=False):

@@ -17,7 +17,7 @@ NUM_CORES = multiprocessing.cpu_count()
 
 def run_west(formula):
     west_exec = "./west"
-    subprocess.run(f"cd .. && {west_exec} \"{formula}\" cd ./verification", 
+    subprocess.run(f"cd ../../src && {west_exec} \"{formula}\"", 
                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
 
 def run_c2po(formula):
@@ -129,7 +129,7 @@ def iterate_traces(m, n):
         yield t
 
 def get_mn(formula):
-    with open("../output/output.txt", "r") as f:
+    with open("../../src/output/output.txt", "r") as f:
         regex = f.readlines()
         regex = regex[1] if len(regex) > 1 else None
         if regex is not None:
@@ -167,7 +167,7 @@ def verify(formula):
                 trace = ",".join(trace)
                 f.write(trace + "\n")
 
-    with open("../output/output.txt", "r") as f1:
+    with open("../../src/output/output.txt", "r") as f1:
         with open("./r2u2_output/output.txt", "r") as f2:
             if compare_files(f1, f2):
                 total = time.perf_counter() - start
