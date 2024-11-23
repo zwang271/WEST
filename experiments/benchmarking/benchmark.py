@@ -24,7 +24,7 @@ def run_west(formula: str, timelimit: int = 120):
         west_exec = "west.exe"
     else:
         west_exec = "./west" 
-    cmd = f"cd .. && {west_exec} \"{formula}\" cd ./benchmarking"
+    cmd = f"cd ../../src && {west_exec} \"{formula}\""
     pro = subprocess.Popen(cmd, 
                            shell=True, 
                            stdout=subprocess.DEVNULL,
@@ -43,7 +43,7 @@ def runall(formulas: list[str], timelimit: int = 120):
     for formula in tqdm(formulas):
         duration = run_west(formula, timelimit)
         times.append(duration)
-        with open("../output/output.txt", "r") as f:
+        with open("../../src/output/output.txt", "r") as f:
             # skip first line
             output_lengths.append(len(f.readlines()) - 1)
     return times, output_lengths

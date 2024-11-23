@@ -15,8 +15,8 @@ def run_west(formula):
     subprocess.run(f"cd ../../src && {west_exec} \"{formula}\"", 
                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
 
-def run_interpreter(formula, traces, verbose=False):
-    interpreter = "../../MLTL_interpreter/interpret_batch"
+def run_interpreter(formula, traces, verbose=False, numbatch=10000):
+    interpreter = "../../src/MLTL_interpreter/interpret_batch"
     spec_mltl = "./interpreter_output/spec.mltl"
     traces_dir = "./interpreter_output/traces/" 
     verdicts = "./interpreter_output/verdicts.txt"
@@ -40,7 +40,7 @@ def run_interpreter(formula, traces, verbose=False):
     subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
 
 def get_mn():
-    with open("../output/output.txt", "r") as f:
+    with open("../../src/output/output.txt", "r") as f:
         regex = f.readlines()
         regex = regex[1] if len(regex) > 1 else None
         if regex is not None:
@@ -76,7 +76,7 @@ def verify(formula):
         for i in true_indices:
             f.write(",".join(traces[i]) + "\n")
     # compare the files
-    with open("../output/output.txt", "r") as f1:
+    with open("../../src/output/output.txt", "r") as f1:
         with open("./interpreter_output/output.txt", "r") as f2:
             if compare_files(f1, f2):
                 total = time.perf_counter() - start
