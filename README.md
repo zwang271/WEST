@@ -3,7 +3,7 @@ This is an artifact for the paper "WEST: Interactive Validation of Mission-time 
 For the tool manual, see [here](src/WEST_Tool_Manual.md)
 
 ### Prerequisites
-This artifact requires the following
+This artifact requires the following:
 - Linux (tested on Ubuntu 24.04.1 LTS)
 - Python 3.10+
 - Python pip
@@ -13,17 +13,21 @@ This artifact requires the following
 - cmake (cmake 3.22.1)
 - Java Runtime environment (see https://ubuntu.com/tutorials/install-jre#1-overview)
     - In short, get it with `sudo apt install default-jre`
+    
+If loading the virtual box iso image of this artifact, all of these should come readily installed already. 
 
-### Building all binaries and dependencies
-1. Create a python virtual enviroment by running 
+### Building all binaries and dependencies 
+0. Open this folder in vscode. From the terminal run: `code /home/west-tool/Desktop/WEST/`
+1. Create a python virtual environment by running 
 `python3 -m venv west_env`
-2. Activate the virtual envoronment by running `source west_env/bin/activate`
+2. Activate the virtual environment by running `source west_env/bin/activate`
 3. Install required libraries by running `pip install -r ./src/requirements.txt`
     - If needed, update pip by running `python3 -m pip install --upgrade pip`
 4. Build binaries by running `./setup.sh`
 5. You should now be able to launch the graphic user interface by running `cd src` and then `python3 gui.py`
     - If you encounter the following error: "This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem."
     Please run: `sudo ln -sf /usr/lib/x86_64-linux-gnu/qt5/plugins/platforms/ /usr/bin/`
+    - The sudo password is simply `westtool`
 
 ### Validation Scripts
 These scripts replicates the validation steps outlined in Section 4, Figure 6 of the tool paper. Starting from the root directory: 
