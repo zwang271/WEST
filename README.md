@@ -12,7 +12,7 @@ This artifact requires the following
 - make (we use GNU Make 4.3) 
 - cmake (cmake 3.22.1)
 - Java Runtime environment (see https://ubuntu.com/tutorials/install-jre#1-overview)
-    - In short, get with `sudo apt install default-jre`
+    - In short, get it with `sudo apt install default-jre`
 
 ### Building all binaries and dependencies
 1. Create a python virtual enviroment by running 
