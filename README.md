@@ -12,6 +12,7 @@ This artifact requires the following
 - make (we use GNU Make 4.3) 
 - cmake (cmake 3.22.1)
 - Java Runtime environment (see https://ubuntu.com/tutorials/install-jre#1-overview)
+    - In short, get with `sudo apt install default-jre`
 
 ### Building all binaries and dependencies
 1. Create a python virtual enviroment by running 
@@ -27,9 +28,9 @@ This artifact requires the following
 ### Validation Scripts
 These scripts replicates the validation steps outlined in Section 4, Figure 6 of the tool paper. Starting from the root directory: 
 - `cd experiments/verification` 
-- Run `python3 verify_string.py` to replicate section 4.1 (~1hr local machine)
+- Run `python3 verify_string.py` to replicate section 4.1 (~10min local machine)
 - Run `python3 verify_allsat.py` to replicate section 4.2 (~2min local machine)
-- Run `python3 verify_r2u2_parallel.py` to replicate section 4.3 (~4hr on Iowa State University's high performance computing cluster, may vary depending on number of CPU cores in the machine)
+- Run `python3 verify_r2u2_parallel.py` to replicate section 4.3 (~1hr on Iowa State University's high performance computing NOVA cluster, may vary depending on number of CPU cores in the machine)
 - Run `python3 verify_interpreter.py` to replicate section 4.4 (not including FPROGG, since this was done independently in their work) (~1hr local machine)
 
 ### Plotting Scripts
