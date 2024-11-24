@@ -29,7 +29,6 @@ west_env/
 tool_paper_rebuttle.txt
 output/
 src/__pycache__/
-interpreter_output/
 src/MLTL_interpreter/interpret
 MLTL_interpreter/interpret_batch
 experiments/benchmarking/__pycache__
