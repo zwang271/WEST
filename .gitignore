@@ -28,7 +28,6 @@ src/MLTL_brute_force/__pycache__/
 west_env/
 tool_paper_rebuttle.txt
 src/__pycache__/
-interpreter_output/
 src/MLTL_interpreter/interpret
 MLTL_interpreter/interpret_batch
 experiments/benchmarking/__pycache__
