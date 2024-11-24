@@ -27,7 +27,6 @@ experiments/verification/interpreter_output/traces/
 src/MLTL_brute_force/__pycache__/
 west_env/
 tool_paper_rebuttle.txt
-output/
 src/__pycache__/
 interpreter_output/
 src/MLTL_interpreter/interpret
