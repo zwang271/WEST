@@ -19,24 +19,15 @@
 
 # Others
 *.exe
-WEST/verification/__pycache__/
-WEST_numpy/src/__pycache__/
-WEST/verification/string_src/__pycache__/
-WEST/verification/interpreter_output/traces/
-WEST/west_env/
-tool_paper_rebuttle.txt
-WEST/output/
 WEST/src/__pycache__/
-WEST/verification/interpreter_output/
-MLTL_interpreter/formula.mltl
-MLTL_interpreter/interpret.exe
-MLTL_interpreter/interpret_batch.exe
-MLTL_interpreter/out.txt
-MLTL_interpreter/trace.csv
-WEST/verification/r2u2/
-WEST/verification/spec.bin
-WEST/verification/west_string
 WEST/west
-WEST/benchmarking/__pycache__
-MLTL_interpreter/interpret
-MLTL_interpreter/interpret_batch
+west_env/
+legacy/MLTL_brute_force/__pycache__
+legacy/MLTL_interpreter/interpret
+legacy/MLTL_interpreter/interpret_batch
+legacy/MLTL_reg/MLTL/__pycache__
+legacy/MLTL_reg/MLTL/x64
+legacy/MLTL_reg/MLTL/.idea/
+legacy/MLTL_reg/MLTL/MLTL.vcxproj
+legacy/MLTL_reg/MLTL/MLTL.vcxproj.filters
+legacy/MLTL_reg/MLTL/MLTL.vcxproj.user
