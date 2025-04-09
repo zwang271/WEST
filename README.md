@@ -1,22 +1,21 @@
 # Welcome to the WEST tool
-The WEST package provides an automated way to generate *regular expressions*[^1] describing the set of **all satisfying computations to [Mission-time Linear Temporal Logic formulas](https://link.springer.com/chapter/10.1007/978-3-030-25543-5_1#Sec2)** (i.e., that describe the valuations, or the rows of the 'truth table', of a given MLTL formula that satisfy it), as well as a GUI to visualize them and the scripts and data sets used for testing this tool during its development. For a more detailed description of how the algorithms were designed and implemented, please refer to our paper [here](https://temporallogic.org/research/WEST/WEST_extended.pdf).
+The WEST package provides an automated way to generate *regular expressions*[^1] describing the set of **all satisfying computations to [Mission-time Linear Temporal Logic formulas](https://link.springer.com/chapter/10.1007/978-3-030-25543-5_1#Sec2)** (i.e., that describe the valuations, or the rows of the 'truth table', of a given MLTL formula that satisfy it), as well as a GUI to visualize them and the scripts and data sets used for testing this tool during its development. For a more detailed description of how the algorithms were designed and implemented, please refer to our paper [here](https://temporallogic.org/research/WEST/WEST_extended.pdf). We also formally verified the correctness of the WEST algorithm in Isabelle/HOL, the details of which can be found [here](https://arxiv.org/abs/2501.17444). Check out the WEST website [here](https://west.temporallogic.org/).
 
 
 ## Build and Usage guides
 
 Requirements: c++ compiler with make, Python 3.10+, pip
-+ Go to WEST folder by running `cd WEST`
-+ Build binaries by running `cd src ; make ; cd ..`
++ Go to WEST folder and build binaries by running: `cd WEST/src ; make ; cd ../..`
 + Create a python virtual enviroment by running 
 `python3 -m venv west_env`
 + Activate the virtual environment by running
     + on Windows: `./west_env/Scripts/activate`
     + on Unix or MacOS: `source west_env/bin/activate`
-+ Install required libraries by running `pip install -r ./requirements.txt`
++ Install required libraries by running `pip install -r ./WEST/requirements.txt`
     + If needed, update pip by running `python3 -m pip install --upgrade pip`
-+ Launch the graphic user interface by running `python3 gui.py`
++ Launch the graphic user interface going to the WEST folder (run `cd WEST`) and running `python3 gui.py`
 
-To run the WEST tool from the terminal line, please refer to the document [`./Documentation/WESTREADME.md`](https://github.com/zwang271/WEST/blob/master/Documentation/WESTREADME.md).
+To run the WEST tool from the terminal line, please refer to the document [`./documentation/WESTREADME.md`](https://github.com/zwang271/WEST/blob/master/documentation/WESTREADME.md).
 
 ## A quick overview of the GUI
 Simple examples involving each of the operators are as follows:
@@ -34,7 +33,7 @@ As a more complex example, consider the formula $(p_0 \wedge G_{[0,3]}\ p_1) \to
 
 To examine this formula on the WEST-GUI tool, we need to input it as `((p0 & G[0,3]p1)->p2)`.
 
-![Input Example GUI](https://github.com/zwang271/WEST/blob/master/Documentation/west_gui.png)
+![Input Example GUI](https://github.com/zwang271/WEST/blob/master/documentation/west_gui.png)
 
 This is what the WEST tool outputs when we select this same formula from the subformulae options.
 A brief explanation for each labeled part of the user interface is detailed below: 
