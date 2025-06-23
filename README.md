@@ -114,6 +114,5 @@ Wff   ->      Prop_var | Prop_cons
 ### The Formula is not Well-Formed
 Ensure that all time intervals use ',' to separate the bounds.  <br />
 Ensure that all binary and associative connectives have parentheses surrounding them.  <br />
-Ensure that for each propositional variable, its corresponding natural number immediately follows the 'p', and that there isn't a '_' or space in between.  <br />
-Ensure that all unary connectives do NOT have parentheses surrounding them.
+Ensure that for each propositional variable, its corresponding natural number immediately follows the 'p', and that there isn't a '_' or space in between. 
 
