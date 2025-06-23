@@ -1,0 +1,692 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Implmentation &#8212; R2U2 Documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../_static/documentation_options.js?v=84448011"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_collections/r2u2_docs/impl';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/r2u2-graphic-solo.png" class="logo__image only-light" alt="R2U2 Documentation - Home"/>
+    <script>document.write(`<img src="../../_static/r2u2-graphic-solo.png" class="logo__image only-dark" alt="R2U2 Documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../Overview/quick_start_guide.html">Quick-Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Overview/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Overview/project_structure.html">Project Structure</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">✏️ Specifications with MLTL</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../Preliminaries/runtime_monitoring.html">Runtime Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Preliminaries/spec_writing.html">Specification Writing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Preliminaries/mltl_monitoring.html">MLTL Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Preliminaries/r2u2_framework.html">R2U2 Framework</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">📚 Users' Guides</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../c2po_readme.html">C2PO</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c2po_docs/user.html">C2PO Users’s Guide</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c2po_docs/usage.html">C2PO Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2po_docs/language.html">C2PO Input Language</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2po_docs/options.html">C2PO CLI Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2po_docs/front_end.html">R2U2 Front End Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2po_docs/mltl_std.html">MLTL-STD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2po_docs/optimizations.html">MLTL Optimizations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2po_docs/outputs.html">C2PO Output Formats</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../r2u2_readme.html">R2U2 Static Monitor</a></li>
+
+
+
+
+<li class="toctree-l1 has-children"><a class="reference internal" href="user.html">R2U2 Static Monitor User’s Guide</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="building.html">Building</a></li>
+<li class="toctree-l2"><a class="reference internal" href="running.html">Running</a></li>
+<li class="toctree-l2"><a class="reference internal" href="embedding.html">Embedding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multi-monitor.html">Multi-monitor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html">Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../gui_readme.html">Web MLTL Compiler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../test_readme.html">R2U2 Test Suite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tools_readme.html">MLTL Tools</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../examples.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../Examples/agc.html">Assume-Guarantee Contract Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Examples/req_arbiter.html">Request Arbiter System Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Examples/simple.html">Simple Example</a></li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🛠 Development Guides</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../Development/contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">R2U2 Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Development/ci.html">Continuous Integration &amp; Testing</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c2po_docs/dev.html">C2PO Developer’s Guide</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c2po_docs/internals.html">C2PO Internal Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2po_docs/parser.html">C2PO Parser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2po_docs/ast.html">C2PO AST Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2po_docs/assembly.html">C2PO Assembler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2po_docs/testing.html">C2PO Test Framework</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="dev.html">R2U2 Static Monitor Developer Guide</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internals.html">Internals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="memory.html">Memory Controllers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engines.html">Execution Engines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debug.html">Debug</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html">Testing</a></li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">📖 References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../api.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../References/file_formats.html">File Formats</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../References/formats/mltl_formula_files.html">MLTL Formula Files [<code class="docutils literal notranslate"><span class="pre">.mltl</span></code>]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../References/formats/r2u2_assembly_files.html">R2U2 Assembly [<code class="docutils literal notranslate"><span class="pre">.asm</span></code>]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../References/formats/r2u2_configuration_binary_files.html">R2U2 Configuration Binary Files [<code class="docutils literal notranslate"><span class="pre">.bin</span></code>]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../References/formats/signal_map_files.html">Signal Map Files [<code class="docutils literal notranslate"><span class="pre">.map</span></code>]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../References/formats/signal_trace_files.html">Signal Trace Files [<code class="docutils literal notranslate"><span class="pre">.csv</span></code>]</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../References/mltl_grammar.html">MLTL Grammar</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../References/publications.html">Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../References/glossary.html">Glossary</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://gitlab.com/bckempa/r2u2" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-gitlab"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/_collections/r2u2_docs/impl.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Implmentation</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dynamic-programming-for-mltl-verification">Dynamic Programming for MLTL Verification</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#abstract-syntax-tree">Abstract Syntax Tree</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#abstrct-syntax-tree-ast-optimization">Abstrct Syntax Tree (AST) Optimization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shared-connection-queue-scq">Shared Connection Queue (SCQ)</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#scq-algorithms">SCQ Algorithms</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#read">Read</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#scq-utilization">SCQ Utilization</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="implmentation">
+<h1>Implmentation<a class="headerlink" href="#implmentation" title="Link to this heading">#</a></h1>
+<section id="dynamic-programming-for-mltl-verification">
+<h2>Dynamic Programming for MLTL Verification<a class="headerlink" href="#dynamic-programming-for-mltl-verification" title="Link to this heading">#</a></h2>
+<section id="abstract-syntax-tree">
+<h3>Abstract Syntax Tree<a class="headerlink" href="#abstract-syntax-tree" title="Link to this heading">#</a></h3>
+<p>We use the dynamic programming proposed in [7] to compute the satisfaction of the MLTL. The first step is to break the MLTL formula into subformulas. We let the user describe their desired MLTL specification in a high-level (or assembly like) language. Then a compiler converts the formula into an Abstract Syntax Tree (AST). The AST explicitly exposes the logical connection between each observer node. We can then verify MLTL satisfaction of an input trace by checking the tree from leaf to root. For example, <span class="math notranslate nohighlight">\(\square_{[0,2]}(!a0)\)</span> can be convert into the following execution sequence ‘<span class="math notranslate nohighlight">\(s0\rightarrow s1\rightarrow s2\)</span>’ in our customized assembly language format:</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{equation*}
+\begin{split}
+ Line\, 0:\qquad &amp; s0 \leftarrow load\: (a0,time)\\
+ Line\, 1:\qquad &amp; s1 \leftarrow \neg\: s0\\
+ Line\, 2:\qquad &amp; s2 \leftarrow \square_{[0,2]}\: s1
+\end{split}
+\end{equation*}\]</div>
+<p>Where each subformula is an observer node (e.g., s0, s1, s2). The output from each node is a tuple containing a verdict and its corresponding timestamp (RTC) <span class="math notranslate nohighlight">\(\tau\)</span>. The last line <span class="math notranslate nohighlight">\(s2\)</span> is the final result.</p>
+</section>
+<section id="abstrct-syntax-tree-ast-optimization">
+<h3>Abstrct Syntax Tree (AST) Optimization<a class="headerlink" href="#abstrct-syntax-tree-ast-optimization" title="Link to this heading">#</a></h3>
+<p>For some \mltl formulas, certain sub-expressions occur more than once. An example formula is <span class="math notranslate nohighlight">\(G[2,4]a0\&amp;!a0\)</span>. The compiler will generate an extra line of assembly code to load atomic <span class="math notranslate nohighlight">\(a0\)</span> twice. Thus, it takes two separate queues for loading <span class="math notranslate nohighlight">\(a0\)</span>. There are two drawbacks of this: 1) memory resource wasting: extra queue is taken; 2) computation speed decrease: more assembly instructions to execute. Here we can do the following operations, as mentioned in~\cite{jakvsic2015signal}, to remove duplicate branches when synthesizing an \mltl formula into an AST. However, to support such optimization, the traditional hardware memory queue should be redesigned to support multiple readers. That is why we propose using an SCQ. The detailed optimization steps are described below.</p>
+<p>\begin{figure}
+\centering
+\includegraphics[width=0.65\textwidth]{fig/opt_ast.pdf}
+\caption{\label{fig:ast}Example of optimizing an AST from A to B. Both node 3 and 4 share the same key string, so we cut edge (node 1 <span class="math notranslate nohighlight">\(\rightarrow\)</span> node 3) and connect edge (node 1 <span class="math notranslate nohighlight">\(\rightarrow\)</span> node 4). The connections of SCQs and nodes are also shown in the figure.}
+\end{figure}</p>
+<ul class="simple">
+<li><p>Do an inorder traverse to the unoptimized AST. Map each node to a string which represents its traverse order. We add ‘(’ and ‘)’ to each recursive traverse thus each string is uniquely represented in the branch structure.</p></li>
+<li><p>Map each string to its root node. Whenever we traverse from a new node, we check whether the string already exists. If two strings are identical, we can reconnect the edge as shown in Figure.~\ref{fig:ast}.</p></li>
+<li><p>Search from the root node to valid nodes in the tree. Then do a topological sort from the root node to arrange the node operator execution sequence.</p></li>
+</ul>
+</section>
+<section id="shared-connection-queue-scq">
+<h3>Shared Connection Queue (SCQ)<a class="headerlink" href="#shared-connection-queue-scq" title="Link to this heading">#</a></h3>
+<p>We employ what we call SCQs to store subformula results. An SCQ is a circular buffer (CB) with one write pointer and one or more read pointers. A similar data structure is proposed in \cite{4812537} for processing network streams. Figure.~\ref{fig:scq} shows how SCQs are embedded in an \mltl abstract syntax tree. There are two reasons we use the SCQ: 1) Each subformula may produce more than one tuple; 2) more than one parent nodes may read data from a given subformula.</p>
+<p>The SCQ follows a writing rule called \textbf{Aggregation}, by which sequential input’s timestamp will be overwritten by the later timestamp value if they have the same verdict. For example, if the data content is (true, 10), (false, 15), it means that during timestamp interval [11,15], the verdicts are all false. If the next input is (false, 16), the data content becomes (true, 10), (false, 16). The SCQ write and read algorithms are shown in Algorithm. \ref{ag:wr}, \ref{ag:rd}.</p>
+<p>\begin{figure}
+\centering
+\includegraphics[width=0.6\textwidth]{fig/scq_cb.pdf}
+\caption{\label{fig:scq}Detailed implementation of SCQs between observer nodes. The component in the dashed box is the abstract representation of connected observer nodes.}
+\end{figure}</p>
+<section id="scq-algorithms">
+<h4>SCQ Algorithms<a class="headerlink" href="#scq-algorithms" title="Link to this heading">#</a></h4>
+<p>\begin{algorithm}
+\SetAlgoLined
+\SetKwInOut{Input}{input}
+\Input{<span class="math notranslate nohighlight">\(new\_data\)</span>}
+\If{<span class="math notranslate nohighlight">\(new\_data\)</span> is not Empty}{
+\If{<span class="math notranslate nohighlight">\(SCQ[SCQ.wr\_ptr].v == new\_data.v\)</span>}{<span class="math notranslate nohighlight">\(SCQ.wr\_ptr --\)</span>;}
+<span class="math notranslate nohighlight">\( SCQ[SCQ.wr\_ptr]\leftarrow new\_data\)</span>;
+<span class="math notranslate nohighlight">\(SCQ.wr\_ptr ++\)</span>;
+}
+\caption{\label{ag:wr}Function: write()}
+\end{algorithm}</p>
+</section>
+<section id="read">
+<h4>Read<a class="headerlink" href="#read" title="Link to this heading">#</a></h4>
+<p>The write operation algorithm is shown in Algorithm.~\ref{ag:rd}.
+\begin{algorithm}
+\SetAlgoLined
+\SetKwInOut{Input}{input}
+\SetKwInOut{Output}{output}
+\Input{<span class="math notranslate nohighlight">\(\&amp;rd\_ptr\)</span>, <span class="math notranslate nohighlight">\(\tau_e\)</span>}
+\Output{<span class="math notranslate nohighlight">\(Empty\)</span> or <span class="math notranslate nohighlight">\(read\_data\)</span>}
+\If{read}{
+\If{<span class="math notranslate nohighlight">\(*rd\_ptr==SCQ.wr\_ptr\)</span>}{
+\KwRet{Empty};
+}
+<span class="math notranslate nohighlight">\(read\_data\leftarrow SCQ[*rd\_ptr]\)</span>;
+\While{<span class="math notranslate nohighlight">\(read\_data.\tau &lt;\tau_e\)</span>}{
+<span class="math notranslate nohighlight">\(rd\_ptr++\)</span>;
+\If{<span class="math notranslate nohighlight">\(*rd\_ptr==SCQ.wr\_ptr\)</span>}{
+\KwRet{Empty};
+}
+<span class="math notranslate nohighlight">\(read\_data\leftarrow SCQ[*rd\_ptr]\)</span>;
+}
+\KwRet{<span class="math notranslate nohighlight">\(read\_data\)</span>};
+}
+\caption{\label{ag:rd}Function: read()}
+\end{algorithm}</p>
+</section>
+<section id="scq-utilization">
+<h4>SCQ Utilization<a class="headerlink" href="#scq-utilization" title="Link to this heading">#</a></h4>
+<p>Most of the observer processor core’s memory is used by the input SCQs for binary operators: <span class="math notranslate nohighlight">\(\wedge\)</span>, <span class="math notranslate nohighlight">\(\vee\)</span> and <span class="math notranslate nohighlight">\(\mathcal{U}\)</span>. Due to the timestamp mismatch between the two inputs, the input with a more recent timestamp has to be stalled in the SCQ. Here we define the best-case-delay (\textbf{bcd}) and worst-case-delay (\textbf{wcd}) to analyse the timestamp mismatch. The \textbf{bcd} is the earliest or best delay output time relative to the current real-time clock (RTC) and \textbf{wcd} in the latest/worst delay. The delay is produced by temporal operators like <span class="math notranslate nohighlight">\(\square\)</span>, <span class="math notranslate nohighlight">\(\Diamond\)</span> and <span class="math notranslate nohighlight">\(\mathcal{U}\)</span>. Each temporal operator adds the <span class="math notranslate nohighlight">\(lb\)</span> to \textbf{bcd} and <span class="math notranslate nohighlight">\(ub\)</span> to \textbf{wcd}. The maximum size of a given SCQ can be determined by taking its \textbf{bcd} and minus the \textbf{wcd} of the other input.\par</p>
+<p>To allocate the SCQ size for all operator nodes, we first recursively decide the \textbf{bcd} and \textbf{wcd} of each operator from the bottom to the root node. Algorithm.~\ref{ag:sq} then uses this information to compute the queue size for each node.\par</p>
+<p>\begin{algorithm}
+\SetAlgoLined
+\SetKwInput{KwData}{Var}
+\SetKwInOut{KwInit}{Init}
+\SetKwProg{Fn}{Function}{}{end}</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>% \SetKwInOut{Input}{input}
+% \SetKwInOut{Output}{output}
+% \KwData{$\tau_e$}\
+% \Input{ss}\
+
+\KwInit{assign all nodes&#39; output SCQ size $\leftarrow$ 1}
+compute \textbf{bcd} and \textbf{wcd} of each node from bottom up\;
+\For{every node $\mathcal{N}$}{
+  assign output SCQ size of $\mathcal{N}$\;
+}
+
+
+\Fn{assign output SCQ size (node $\mathcal{N}$)}{
+set $\{wcd\} \leftarrow \varnothing$ \;
+\For{$\mathcal{N}$&#39;s every binary parent node $\mathcal{N}.bp$}{
+  add \textbf{wcd} of the other child node of $\mathcal{N}.bp$ to $\{wcd\}$\;
+}
+find the maximum \textbf{wcd} of $\{wcd\}$ set: $max(wcd)$\;
+get output SCQ size of $\mathcal{N} \leftarrow max(wcd)-\mathcal{N}.bcd+1$\;
+}
+ \caption{\label{ag:sq}Determine the size of SCQ}
+</pre></div>
+</div>
+<p>\end{algorithm}</p>
+<p>Detailed implementation of Algorithm. \ref{ag:sq}.
+\begin{algorithm}
+\SetAlgoLined
+\SetKwInput{KwData}{Var}
+\SetKwProg{KwInit}{Init}{}{end}
+\SetKwProg{Fn}{Function}{}{end}</p>
+<p>\KwInit{}{
+\For{all node n in observer node set}{
+Init <span class="math notranslate nohighlight">\(n.SCQ\_size \leftarrow 1\)</span>
+\If{<span class="math notranslate nohighlight">\(n.operator = \mathcal{L}\)</span>}{
+<span class="math notranslate nohighlight">\(n.bcd, n.wcd \leftarrow 0, 0\)</span>;
+put node <span class="math notranslate nohighlight">\(n\)</span> in <span class="math notranslate nohighlight">\(visited[]\)</span>;
+}
+}
+}
+<span class="math notranslate nohighlight">\(Assign\_Queue\_Size(\)</span>root node<span class="math notranslate nohighlight">\()\)</span>;
+\Fn{Assign_Queue_Size(node n)}{
+\If{n.operator == <span class="math notranslate nohighlight">\(\wedge | \vee | \mathcal{U}\)</span>}{
+<span class="math notranslate nohighlight">\(\mu \leftarrow n.left\_child\)</span>;
+<span class="math notranslate nohighlight">\(\nu \leftarrow n.right\_child\)</span>;
+\If{<span class="math notranslate nohighlight">\(\mu\)</span> \textbf{not} in <span class="math notranslate nohighlight">\(visited[]\)</span>}{
+<span class="math notranslate nohighlight">\(Assign\_Queue\_Size(\mu)\)</span>;
+}
+\If{<span class="math notranslate nohighlight">\(\nu\)</span> \textbf{not} in <span class="math notranslate nohighlight">\(visited[]\)</span>}{
+<span class="math notranslate nohighlight">\(Assign\_Queue\_Size(\nu)\)</span>;
+}
+\uIf{n.operator == <span class="math notranslate nohighlight">\(\wedge | \vee\)</span>}{
+<span class="math notranslate nohighlight">\(n.bcd \leftarrow min(\mu.bcd, \nu.bcd)\)</span>;
+<span class="math notranslate nohighlight">\(n.wcd \leftarrow max(\mu.wcd, \nu.wcd)\)</span>;
+}\ElseIf{n.operator == <span class="math notranslate nohighlight">\(\mathcal{U}\)</span>}{
+<span class="math notranslate nohighlight">\(n.bcd \leftarrow min(\mu.bcd, \nu.bcd) + min(n.J)\)</span>;
+<span class="math notranslate nohighlight">\(n.wcd \leftarrow max(\mu.wcd, \nu.wcd) + max(n.J)\)</span>;
+}
+<span class="math notranslate nohighlight">\(\mu.SCQ\_size\leftarrow max(\mu.SCQ\_size,\nu.wcd-\mu.bcd+1)\)</span>;
+<span class="math notranslate nohighlight">\(\nu.SCQ\_size\leftarrow max(\nu.SCQ\_size,\mu.wcd-\nu.bcd+1)\)</span>;
+}
+\If{n.operator == <span class="math notranslate nohighlight">\(\square | \Diamond | \neg\)</span>}{
+<span class="math notranslate nohighlight">\(\mu \leftarrow n.child\)</span>;
+\If{<span class="math notranslate nohighlight">\(\mu\)</span> \textbf{not} in <span class="math notranslate nohighlight">\(visited[]\)</span>}{
+<span class="math notranslate nohighlight">\(Assign\_Queue\_Size(\mu)\)</span>;
+}
+\uIf{n.operator == <span class="math notranslate nohighlight">\(\square | \Diamond\)</span>}{
+<span class="math notranslate nohighlight">\(n.bcd \leftarrow \mu.bcd + min(n.J)\)</span>;
+<span class="math notranslate nohighlight">\(n.wcd \leftarrow \mu.wcd + max(n.J)\)</span>;
+}\ElseIf{n.operator == <span class="math notranslate nohighlight">\(\neg\)</span>}{
+<span class="math notranslate nohighlight">\(n.bcd \leftarrow \mu.bcd\)</span>;
+<span class="math notranslate nohighlight">\(n.wcd \leftarrow \mu.wcd\)</span>;
+}
+}
+put node <span class="math notranslate nohighlight">\(n\)</span> in <span class="math notranslate nohighlight">\(visited[]\)</span>;
+}
+\caption{\label{ag:sq_d}Determine the size of SCQ}
+\end{algorithm}</p>
+</section>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dynamic-programming-for-mltl-verification">Dynamic Programming for MLTL Verification</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#abstract-syntax-tree">Abstract Syntax Tree</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#abstrct-syntax-tree-ast-optimization">Abstrct Syntax Tree (AST) Optimization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shared-connection-queue-scq">Shared Connection Queue (SCQ)</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#scq-algorithms">SCQ Algorithms</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#read">Read</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#scq-utilization">SCQ Utilization</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Laboratory for Temporal Logic
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023, Laboratory for Temporal Logic.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,3 +1,0 @@
-traces/trace3.csv : 1
-traces/trace2.csv : 0
-traces/trace1.csv : 1
