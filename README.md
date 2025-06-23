@@ -11,7 +11,7 @@ Requirements: c++ compiler with make, Python 3.10+, pip
 + Activate the virtual environment by running
     + on Windows: `./west_env/Scripts/activate`
     + on Unix or MacOS: `source west_env/bin/activate`
-+ Install required libraries by running `pip install -r ./WEST/requirements.txt`
++ Install required libraries by running `pip install -r ./src/requirements.txt`
     + If needed, update pip by running `python3 -m pip install --upgrade pip`
 + Launch the graphic user interface by going to the src folder (run `cd src`) and running `python3 gui.py`
 
