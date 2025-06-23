@@ -13,9 +13,9 @@ Requirements: c++ compiler with make, Python 3.10+, pip
     + on Unix or MacOS: `source west_env/bin/activate`
 + Install required libraries by running `pip install -r ./src/requirements.txt`
     + If needed, update pip by running `python3 -m pip install --upgrade pip`
-+ Launch the graphic user interface by going to the src folder (run `cd src`) and running `python3 gui.py`
++ Launch the graphic user interface by going to the src folder (`cd src`) and running `python3 gui.py`
 
-To run the WEST tool from the terminal line, please refer to the document [`./documentation/WESTREADME.md`](https://github.com/zwang271/WEST/blob/master/documentation/WESTREADME.md).
+To run the WEST tool from the terminal line, go the src folder (`cd src`) and run `west \'MLTL FORMULA\'` with the desired MLTL formula (put single quotes around the formula). 
 
 ## A quick overview of the GUI
 Simple examples involving each of the operators are as follows:
