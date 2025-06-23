@@ -37,3 +37,4 @@ west
 src/MLTL_interpreter/interpret_batch
 experiments/verification/r2u2/monitors/static/build/libr2u2.a
 experiments/verification/r2u2/monitors/static/build/r2u2
+src/output/
