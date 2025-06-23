@@ -1,4 +1,4 @@
 cd src 
-cd WEST && make && cd ..
-cd MLTL_interpreter && make && cd ../../experiments/verification 
-cd string_src && make && cd ..
+cd WEST && make clean && make && cd ..
+cd MLTL_interpreter && make clean && make && cd ..
+cd MLTL_reg && make clean && make
