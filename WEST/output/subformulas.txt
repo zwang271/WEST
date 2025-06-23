@@ -1,6 +1,0 @@
-p2
-ss1,sss
-
-G[1,1]p2
-sss,ss1
-
