@@ -5,7 +5,7 @@ The WEST package provides an automated way to generate *regular expressions*[^1]
 ## Build and Usage guides
 
 Requirements: c++ compiler with make, Python 3.10+, pip
-+ Go to WEST folder and build binaries by running: `cd WEST/src ; make ; cd ../..`
++ Run `./setup.sh`
 + Create a python virtual enviroment by running 
 `python3 -m venv west_env`
 + Activate the virtual environment by running
@@ -13,7 +13,7 @@ Requirements: c++ compiler with make, Python 3.10+, pip
     + on Unix or MacOS: `source west_env/bin/activate`
 + Install required libraries by running `pip install -r ./WEST/requirements.txt`
     + If needed, update pip by running `python3 -m pip install --upgrade pip`
-+ Launch the graphic user interface going to the WEST folder (run `cd WEST`) and running `python3 gui.py`
++ Launch the graphic user interface by going to the src folder (run `cd src`) and running `python3 gui.py`
 
 To run the WEST tool from the terminal line, please refer to the document [`./documentation/WESTREADME.md`](https://github.com/zwang271/WEST/blob/master/documentation/WESTREADME.md).
 
