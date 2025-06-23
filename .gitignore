@@ -19,17 +19,21 @@
 
 # Others
 *.exe
-WEST/src/__pycache__/
-WEST/west
+experiments/verification/__pycache__/
+WEST_numpy/src/__pycache__/
+experiments/verification/string_src/__pycache__/
+src/WEST/__pycache__/
+experiments/verification/interpreter_output/traces/
+src/MLTL_brute_force/__pycache__/
 west_env/
-legacy/MLTL_brute_force/__pycache__
-legacy/MLTL_interpreter/interpret
-legacy/MLTL_interpreter/interpret_batch
-legacy/MLTL_reg/MLTL/__pycache__
-legacy/MLTL_reg/MLTL/x64
-legacy/MLTL_reg/MLTL/.idea/
-legacy/MLTL_reg/MLTL/MLTL.vcxproj
-legacy/MLTL_reg/MLTL/MLTL.vcxproj.filters
-legacy/MLTL_reg/MLTL/MLTL.vcxproj.user
-WEST/cex.csv
-WEST/counter.csv
+tool_paper_rebuttle.txt
+src/__pycache__/
+src/MLTL_interpreter/interpret
+MLTL_interpreter/interpret_batch
+experiments/benchmarking/__pycache__
+experiments/verification/spec.bin
+experiments/verification/west_string
+west
+src/MLTL_interpreter/interpret_batch
+experiments/verification/r2u2/monitors/static/build/libr2u2.a
+experiments/verification/r2u2/monitors/static/build/r2u2
