@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WEST Tool</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: left;
+      background: #deedf1;
+      height: 100vh;
+    }
+    h1 {
+      font-size: 4rem;
+      margin-bottom: 2rem;
+      color: #0d72b6;
+    }
+    #outputBox {
+      width: 90%;
+      max-width: 1000px;
+      height: 500px;
+      padding: 1rem;
+      font-family: monospace;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      background: white;
+      resize: none;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>WEST Tool</h1>
+  <textarea id="outputBox" readonly placeholder="WASM output will appear here..."></textarea>
+
+  <script>
+    // For now, just a placeholder
+    const outputBox = document.getElementById('outputBox');
+    outputBox.value = "Welcome to WEST!\nOutput will appear here once the WASM module is integrated.";
+  </script>
+</body>
+</html>

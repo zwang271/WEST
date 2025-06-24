@@ -1,0 +1,1 @@
+docker run --rm -v $(pwd)/output:/app/output west-backend 'FORMULA'
