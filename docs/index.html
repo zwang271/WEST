@@ -19,6 +19,22 @@
       margin-bottom: 2rem;
       color: #0d72b6;
     }
+    #inputSection {
+      margin-bottom: 1rem;
+    }
+    #formulaInput {
+      width: 70%;
+      padding: 0.5rem;
+      font-size: 1rem;
+    }
+    #submitBtn {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      background-color: #0d72b6;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
     #outputBox {
       width: 90%;
       max-width: 1000px;
@@ -36,12 +52,42 @@
 </head>
 <body>
   <h1>WEST Tool</h1>
+
+  <div id="inputSection">
+    <input type="text" id="formulaInput" placeholder="Enter formula here..." />
+    <button id="submitBtn">Run WEST</button>
+  </div>
+
   <textarea id="outputBox" readonly placeholder="WASM output will appear here..."></textarea>
 
   <script>
-    // For now, just a placeholder
     const outputBox = document.getElementById('outputBox');
-    outputBox.value = "Welcome to WEST!\nOutput will appear here once the WASM module is integrated.";
+    const submitBtn = document.getElementById('submitBtn');
+    const formulaInput = document.getElementById('formulaInput');
+
+    submitBtn.addEventListener('click', () => {
+      const formula = encodeURIComponent(formulaInput.value.trim());
+      if (!formula) {
+        outputBox.value = "Please enter a formula.";
+        return;
+      }
+
+      outputBox.value = "Running WEST on formula...\nPlease wait...";
+
+      fetch(`https://west-u08w.onrender.com/${formula}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Error ${response.status}: ${response.statusText}`);
+          }
+          return response.text();
+        })
+        .then(result => {
+          outputBox.value = result;
+        })
+        .catch(err => {
+          outputBox.value = `An error occurred:\n${err.message}`;
+        });
+    });
   </script>
 </body>
 </html>
