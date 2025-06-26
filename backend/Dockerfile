@@ -23,4 +23,5 @@ COPY serve.py .
 # Expose the port your app runs on
 EXPOSE 5000
 
-ENTRYPOINT ["python", "serve.py"]
+# Serve the application using Gunicorn
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "serve:app"]
