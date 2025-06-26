@@ -1,9 +1,11 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 import subprocess
 import sys
 
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/<formula>', methods=['GET'])
 def solve(formula):
