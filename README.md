@@ -1,72 +1,169 @@
-# Welcome to the WEST tool
-The WEST package provides an automated way to generate *regular expressions*[^1] describing the set of **all satisfying computations to [Mission-time Linear Temporal Logic formulas](https://link.springer.com/chapter/10.1007/978-3-030-25543-5_1#Sec2)** (i.e., that describe the valuations, or the rows of the 'truth table', of a given MLTL formula that satisfy it), as well as a GUI to visualize them and the scripts and data sets used for testing this tool during its development. For a more detailed description of how the algorithms were designed and implemented, please refer to our paper [here](https://temporallogic.org/research/WEST/WEST_extended.pdf). We also formally verified the correctness of the WEST algorithm in Isabelle/HOL, the details of which can be found [here](https://arxiv.org/abs/2501.17444). Check out the WEST website [here](https://west.temporallogic.org/).
+# WEST - Mission-time Linear Temporal Logic Tool
+
+The WEST package generates **regular expressions** describing all satisfying computations for [Mission-time Linear Temporal Logic (MLTL) formulas](https://link.springer.com/chapter/10.1007/978-3-030-25543-5_1#Sec2), with formal verification via Isabelle/HOL theorem prover.
+
+🔗 **Links:** [Paper](https://temporallogic.org/research/WEST/WEST_extended.pdf) | [Formal Verification](https://arxiv.org/abs/2501.17444) | [Website](https://west.temporallogic.org/)
+
+---
+
+## Quick Start
+
+### Command Line Tool
+
+```bash
+git clone <this-repo>
+cd WEST
+./setup.sh
+./bin/west "p0"  # Test with simple formula
+```
+
+### GUI Interface
+
+The setup script automatically prepares the Python environment with GUI dependencies:
+
+```bash
+# After running ./setup.sh above
+source west_env/bin/activate  # Activate Python environment
+python gui.py                 # Run the GUI
+```
 
 
-## Build and Usage guides
+---
 
-Requirements: c++ compiler with make, Python 3.10+, pip
-+ Run `./setup.sh`
-+ Create a python virtual enviroment by running 
-`python3 -m venv west_env`
-+ Activate the virtual environment by running
-    + on Windows: `./west_env/Scripts/activate`
-    + on Unix or MacOS: `source west_env/bin/activate`
-+ Install required libraries by running `pip install -r ./src/requirements.txt`
-    + If needed, update pip by running `python3 -m pip install --upgrade pip`
-+ Launch the graphic user interface by going to the src folder (`cd src`) and running `python3 gui.py`
+## Installation Levels
 
-To run the WEST tool from the terminal line, go the src folder (`cd src`) and run `west \'MLTL FORMULA\'` with the desired MLTL formula (put single quotes around the formula). 
+### Level 1: Core WEST Tool Only (RECOMMENDED)
+- **What you get:** Command-line WEST executable
+- **Dependencies:** Just g++ compiler  
+- **Install:** `make clean && make`
+- **Use case:** Basic MLTL formula processing
 
-## A quick overview of the GUI
-Simple examples involving each of the operators are as follows:
-+ Propositional variable: `p0`
-+ And: `p0 & p1`
-+ Or: `p0 | p1`
-+ Logical implication: `p0 -> p1`
-+ Negation: `p0 & !p1`
-+ Globally: `G[0,3] p1`
-+ Future: `F[0,3] p1`
-+ Until: `p0 U[0,3] p1`
-+ Release: `p0 R[0,3] p1`
+### Level 2: + GUI Interface
+- **What you get:** Core + graphical interface
+- **Dependencies:** Core + Python + PyQt5
+- **Install:** 
+  ```bash
+  ./setup.sh  # Automatically sets up Python environment and GUI
+  ```
+- **Usage:**
+  ```bash
+  source west_env/bin/activate
+  python gui.py
+  ```
+- **Use case:** Interactive formula editing and visualization
 
-As a more complex example, consider the formula $(p_0 \wedge G_{[0,3]}\ p_1) \to p_2$. This is saying that, *if* $p_0$ *is true at the beginning and* $p_1$ *is true during the first four time-steps, then* $p_2$ *has to be true at the beginning as well.* 
+### Level 3: + Verification Suite
+- **What you get:** Core + all verification tools (string, interpreter, AllSAT, R2U2, Isabelle)
+- **Dependencies:** Core + Python + GHC Haskell compiler
+- **Install:**
+  ```bash
+  cd experiments/verification
+  python verify_isabelle.py  # Auto-installs Python deps
+  ./setup_verification.sh    # Sets up Haskell components
+  ```
+- **Use case:** Formal verification and correctness testing
 
-To examine this formula on the WEST-GUI tool, we need to input it as `((p0 & G[0,3]p1)->p2)`.
+### Level 4: + Benchmarking & Research
+- **What you get:** Everything + performance testing and plotting
+- **Dependencies:** All previous + matplotlib, numpy
+- **Install:** See `experiments/benchmarking/requirements.txt` for dependencies
+- **Use case:** Performance analysis and research experiments
 
-![Input Example GUI](https://github.com/zwang271/WEST/blob/master/documentation/west_gui.png)
+---
 
-This is what the WEST tool outputs when we select this same formula from the subformulae options.
-A brief explanation for each labeled part of the user interface is detailed below: 
-1. Input a new MLTL formula.
-2. Option to optimize bits (not needed in most cases).
-3. Apply REST, the regular expression simplification theorem (not needed in most cases).
-4. Negation Normal Form of the formula.
-5. A list of subformulas the user can visualize.
-6. Set of trace regular expressions for the selected formula.
-7. Toggle truth values of atomic propositions at different time steps.
-8. String representation of the trace.
-9. The formula is highlighted in green if the trace satisfies the formula.
-10. The formula is highlighted in red if the trace does not satisfy the formula.
-11. Import trace from file or by manually typing in a string.
-12. Export trace to a csv file.
-13. Reset all variables to false.
-14. Randomly generate a satisfying trace.
-15. Randomly generate a randomly unsatisfying trace.
-16. Click a specific regular expression to randomly generate a satisfying trace that matches the regular expression.
-17. Backbone analysis gives the assignment of atomic propositions that must hold in every satisfying
-trace of the formula. 
+## System Requirements
 
-### Contributors
-This project began as part of the [2022 Iowa State Math REU](https://reu.math.iastate.edu/projects.html#ROZIER) with mentors [Kristin Yvonne Rozier](https://www.aere.iastate.edu/kyrozier/) and [Laura Gamboa Guzmán](https://sites.google.com/view/lpgamboa/home).
+**Minimum (Level 1):**
+- g++ with C++17 support
+- Make
 
-WEST is an acronym for the last names of the undergraduate mathematicians who collaborated on this project: Zili Wang, Jenna Elwing, Jeremy Sorkin, and Chiara Travesset.
+**Level 2-4 additions:**
+- Python 3.7+
+- pip
 
-[^1]: We use this term in a rather liberal way, since we only deal with regular languages containing strings of a fixed length and we use the character `s` as a shorthand for `0 or 1`, although it is technically not an element of the formal alphabet. 
+**Level 3-4 additions:**
+- GHC Haskell compiler (for Isabelle verification)
 
+---
 
-### The WEST MLTL syntax
+## Testing Your Installation
 
-Below is the context-free grammar that a well-formed MLTL formula must follow. This is optional reading, and only included for the interested reader.
+After installation, verify everything works:
+
+```bash
+# Test core functionality
+./bin/west "p0"
+
+# Test GUI (if installed)
+python gui.py
+
+# Test verification (if installed)
+cd experiments/verification && python verify_isabelle.py "p0"
+```
+
+---
+
+## Troubleshooting
+
+**Compilation fails?**
+- Ensure g++ supports C++17: `g++ --version`
+- Try: `sudo apt install build-essential` (Ubuntu/Debian)
+
+**Python import errors?**
+- Check Python version: `python --version` (need 3.7+)
+- Install missing packages: `pip install <package-name>`
+
+**GUI won't start?**
+- Install Qt5: `sudo apt install qt5-default` (Linux)
+- Try: `pip install --upgrade PyQt5`
+
+## What's Included
+
+- **WEST Core Tool** - Command-line MLTL to regex converter
+- **GUI Interface** - Visual formula editor and trace visualization  
+- **Verification Suite** - Formal verification with Isabelle/HOL + comprehensive testing
+- **Benchmarking Tools** - Performance analysis and experimental validation
+
+## MLTL Syntax Examples
+
+**Basic operators:**
+- Propositional variable: `p0`
+- And: `p0 & p1`
+- Or: `p0 | p1`
+- Implication: `p0 -> p1`
+- Negation: `!p0`
+
+**Temporal operators:**
+- Globally: `G[0,3] p1`
+- Future: `F[0,3] p1`
+- Until: `p0 U[0,3] p1`
+- Release: `p0 R[0,3] p1`
+
+**Complex example:** `((p0 & G[0,3]p1)->p2)`
+*"If p0 is true initially and p1 stays true for 4 time-steps, then p2 must be true initially."*
+
+---
+
+## GUI Overview
+
+![WEST GUI](./documentation/west_gui.png)
+
+The GUI provides:
+1. Formula input and validation
+2. Trace visualization and testing  
+3. Regular expression generation
+4. Interactive truth table evaluation
+5. Trace import/export capabilities
+6. Random trace generation
+7. Backbone analysis
+
+---
+
+## Contributors
+
+WEST development began as part of the [2022 Iowa State Math REU](https://reu.math.iastate.edu/projects.html#ROZIER) with mentors [Kristin Yvonne Rozier](https://www.aere.iastate.edu/kyrozier/) and [Laura Gamboa Guzmán](https://sites.google.com/view/lpgamboa/home).
+
+WEST is an acronym for the undergraduate mathematicians: **Z**ili Wang, Jenna **E**lwing, Jeremy **S**orkin, and Chiara **T**ravesset.
 ```
 Context-Free Grammar for a MLTL well-formed formula (wff).
 
@@ -108,6 +205,17 @@ Wff   ->      Prop_var | Prop_cons
                        | ‘(‘ Wff Binary_Temp_conn  Interval Wff ‘)    
 
 ```
+
+## Testing and Verification
+
+WEST includes comprehensive verification suites that test against formally verified models:
+
+- **String verification**: `cd experiments/verification && python3 verify_string.py`
+- **Interpreter verification**: `cd experiments/verification && python3 verify_interpreter.py`
+- **AllSAT verification**: `cd experiments/verification && ./setup_verification.sh --allsat`
+- **R2U2 verification**: See `experiments/verification/r2u2/README.md`
+
+The AllSAT verification uses external dependencies (Z3, MLTLMaxSAT-FORMATS) and has been streamlined with an automated setup script. All verification suites test hundreds of MLTL formulas against reference implementations to ensure mathematical correctness.
 
 ## Troubleshooting Guide
 

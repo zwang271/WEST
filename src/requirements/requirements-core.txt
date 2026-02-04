@@ -1,0 +1,5 @@
+# Core WEST dependencies - minimal requirements for basic functionality
+# No GUI, no benchmarking, no advanced verification
+
+# For command-line WEST tool only - no Python dependencies needed
+# Just compile with: make clean && make

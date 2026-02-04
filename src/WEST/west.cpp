@@ -8,6 +8,7 @@
 #include <bitset>
 #include <chrono>
 #include <fstream>
+#include <filesystem>
 #include "reg.h"
 #include "utils.h"
 #include "parser.h"
@@ -92,7 +93,14 @@ int main(int argc, char** argv) {
     cout << "\tTime taken: " << time << " milliseconds" << endl;
     cout << "\tNumber of computations: " << computations.size() << endl;
     
-    ofstream output_file("./output/output.txt");
+    // Get executable directory and construct output path
+    std::filesystem::path exe_path = std::filesystem::canonical("/proc/self/exe");
+    std::filesystem::path project_root = exe_path.parent_path().parent_path(); // bin -> project root
+    std::filesystem::path output_dir = project_root / "output";
+    std::filesystem::create_directories(output_dir);
+    
+    std::filesystem::path output_file_path = output_dir / "output.txt";
+    ofstream output_file(output_file_path);
     if (output_file.is_open()) {
         output_file << nnf << endl;
         for (int i = 0; i < computations.size(); i++) {
@@ -100,10 +108,11 @@ int main(int argc, char** argv) {
         }
     }
     output_file.close();
-    cout << "Output written to ./output/output.txt" << endl;
+    cout << "Output written to " << output_file_path << endl;
 
     auto FORMULAS = get_formulas();
-    ofstream formulas_file("./output/subformulas.txt");
+    std::filesystem::path formulas_file_path = output_dir / "subformulas.txt";
+    ofstream formulas_file(formulas_file_path);
     if (formulas_file.is_open()) {
         for (int i = 0; i < FORMULAS.size(); i++) {
             formulas_file << get<0>(FORMULAS[i]) << endl;
@@ -116,7 +125,7 @@ int main(int argc, char** argv) {
         }
     }
     formulas_file.close();
-    cout << "Subformulas written to ./output/subformulas.txt" << endl << endl;
+    cout << "Subformulas written to " << formulas_file_path << endl << endl;
 
     return 0; 
 }

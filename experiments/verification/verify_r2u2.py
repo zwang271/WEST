@@ -10,9 +10,41 @@ import sys
 from string_src.parser import from_west
 import re
 
+def check_dependencies():
+    """Check if all required dependencies are available."""
+    missing_deps = []
+    
+    # Check WEST executable
+    west_exec = "../../bin/west"
+    if not os.path.exists(west_exec):
+        missing_deps.append(f"WEST executable not found at {west_exec}")
+    
+    # Check R2U2 monitor
+    r2u2_monitor = "./r2u2/monitors/static/build/r2u2"
+    if not os.path.exists(r2u2_monitor):
+        missing_deps.append(f"R2U2 monitor not found at {r2u2_monitor}")
+    
+    # Check C2PO compiler
+    c2po_compiler = "./r2u2/compiler/c2po.py"
+    if not os.path.exists(c2po_compiler):
+        missing_deps.append(f"C2PO compiler not found at {c2po_compiler}")
+    
+    # Create required directories
+    os.makedirs("r2u2_output", exist_ok=True)
+    
+    if missing_deps:
+        print("❌ Missing dependencies:")
+        for dep in missing_deps:
+            print(f"   - {dep}")
+        print("\n💡 To set up R2U2 verification, run:")
+        print("   ./setup_verification.sh --r2u2")
+        sys.exit(1)
+    
+    return True
+
 def run_west(formula):
-    west_exec = "./west"
-    subprocess.run(f"cd ../../src && {west_exec} \"{formula}\" cd ./verification", 
+    west_exec = "../../bin/west"
+    subprocess.run(f"{west_exec} \"{formula}\" cd ./verification", 
                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
 
 def run_c2po(formula):
@@ -120,7 +152,7 @@ def iterate_traces(m, n):
         yield t
 
 def get_mn(formula):
-    with open("../../src/output/output.txt", "r") as f:
+    with open("../../output/output.txt", "r") as f:
         regex = f.readlines()
         regex = regex[1] if len(regex) > 1 else None
         if regex is not None:
@@ -149,7 +181,7 @@ def verify(formula):
             if run_r2u2(formula, trace):
                 trace = ",".join(trace)
                 f.write(trace + "\n")
-    with open("../../src/output/output.txt", "r") as f1:
+    with open("../../output/output.txt", "r") as f1:
         with open("./r2u2_output/output.txt", "r") as f2:
             if compare_files(f1, f2):
                 total = time.perf_counter() - start
@@ -166,6 +198,9 @@ def get_n(formula):
     return n+1
 
 if __name__ == '__main__':
+    # Check dependencies first
+    check_dependencies()
+    
     # if given a formula as an argument, use that as checkpoint
     checkpoint = None
     if len(sys.argv) > 1:
@@ -192,4 +227,3 @@ if __name__ == '__main__':
     
     # if we get here, all formulas were verified
     print("CONGRATULATIONS! ALL FORMULAS WERE VERIFIED!")
-        

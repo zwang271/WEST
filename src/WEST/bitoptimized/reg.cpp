@@ -1,9 +1,36 @@
 #include "reg.h"
 
+/*
+Portable implementations of MSVC's _Find_first() and _Find_next() methods
+These replicate the exact same functionality and return values as MSVC
+*/
+
+// Equivalent to MSVC's bitset._Find_first() - returns index of first set bit
+// Returns MAXBITS when no bits are set (matches MSVC behavior)
+inline int find_first(const bitset<MAXBITS>& b) {
+    for (int i = 0; i < MAXBITS; ++i) {
+        if (b[i]) {
+            return i;
+        }
+    }
+    return MAXBITS; // MSVC returns bitset.size() when no bits are set
+}
+
+// Equivalent to MSVC's bitset._Find_next(pos) - returns index of next set bit after pos
+// Returns MAXBITS when no more bits are found (matches MSVC behavior)  
+inline int find_next(const bitset<MAXBITS>& b, int pos) {
+    for (int i = pos + 1; i < MAXBITS; ++i) {
+        if (b[i]) {
+            return i;
+        }
+    }
+    return MAXBITS; // MSVC returns bitset.size() when no more bits are set
+}
 
 /*
 Checks if b1 and b2 can be simplified by bitwise or
 */
+
 bool check_simp(bitset<MAXBITS> b1, bitset<MAXBITS> b2) {
     // compute xor, return true if and only if sum of all resulting bits <= 2
     bitset<MAXBITS> b = b1 ^ b2;
@@ -12,8 +39,8 @@ bool check_simp(bitset<MAXBITS> b1, bitset<MAXBITS> b2) {
         return true;
     }
     if (count == 2) {
-        int first_set_bit = b._Find_first();
-        int second_set_bit = b._Find_next(first_set_bit);
+        int first_set_bit = find_first(b);
+        int second_set_bit = find_next(b, first_set_bit);
         if (first_set_bit % 2 == 0 && second_set_bit == first_set_bit + 1) {
             return true;
         }

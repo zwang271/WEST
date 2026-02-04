@@ -1,0 +1,4 @@
+# Requirements for WEST benchmarking scripts
+matplotlib
+numpy
+tqdm

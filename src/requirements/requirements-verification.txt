@@ -1,0 +1,3 @@
+# Verification suite dependencies - for running all verification scripts
+lark==1.2.2
+tqdm==4.66.5

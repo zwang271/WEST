@@ -2,12 +2,19 @@
 #include <vector>
 #include <tuple>
 #include <bitset>
+#include <algorithm>
+#include <cstdint>
 #define MAXBITS 168
 
 #include "utils.h"
 
 using namespace std;
 
+/*
+High-performance bitset operations
+*/
+int find_first(const bitset<MAXBITS>& b);
+int find_next(const bitset<MAXBITS>& b, int prev);
 
 /*
 Checks if b1 and b2 can be simplified by bitwise or

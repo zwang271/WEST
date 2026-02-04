@@ -1,23 +1,103 @@
-# Ignore .vs files
+# Binaries and executables
+west
+west_string
+interpret
+interpret_batch
+*.exe
+*.out
+*.bin
+
+# Object files and libraries
+*.o
+*.a
+*.so*
+*.lib
+*.dll
+
+# Build directories
+build/
+bin/
+obj/
+debug/
+release/
+
+# Output files (should not be committed)
+output.txt
+*output*.txt
+*.out
+subformulas.txt
+
+# Visual Studio files
+*.ipch
+.vs/
 *.vs
-.vs
 
-# Ignore vscode files
-*.vscode
-.vscode
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+west_env/
+env/
+*.egg-info/
+.pytest_cache/
 
-# Ignore Mac system files
-.DS_store
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
 
-# Ignore aux files
+# Compilation and build artifacts
 *.aux
 *.blg
 *.out
 *.log
 *.bbl
 *.pdf
+*.tlog
+*.recipe
+*.manifest
+*.lastbuildstate
+*.idb
+*.pdb
+*.ilk
 
-# Others
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# Output directories
+output/
+reports/
+*.gcov
+*.gcno
+*.gcda
+
+# R2U2 specific
+spec.bin
+r2u2_spec.bin
+
+# Documentation build
+docs/_build/
+_build/
+_collections/
+_doxygen/
+_api/
 *.exe
 experiments/verification/__pycache__/
 WEST_numpy/src/__pycache__/

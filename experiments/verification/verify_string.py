@@ -81,9 +81,9 @@ def compare_files(f1, f2):
 def verify(formula, skip=False):
     start = time.time()
     formula1 = formula.replace("~", "!")
-    west_exec = ".\\west.exe" if sys.platform == "win32" else "./west"
-    string_west_exec = ".\\west_string.exe" if sys.platform == "win32" else "./west_string"
-    subprocess.run(f"cd ../../src && {west_exec} \"{formula1}\"", 
+    west_exec = "..\\..\\bin\\west.exe" if sys.platform == "win32" else "../../bin/west"
+    string_west_exec = "..\\..\\bin\\west_string.exe" if sys.platform == "win32" else "../../bin/west_string"
+    subprocess.run(f"{west_exec} \"{formula1}\"", 
                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
     end = time.time()
     west_time = end - start
@@ -105,10 +105,10 @@ def verify(formula, skip=False):
         return True
 
     # verify that the two programs produce the same output, but ignore the first line
-    # west outputs to ../output/output.txt
+    # west outputs to ../../output/output.txt
     # string_west outputs to ./string_output/string_output.txt
     start = time.time()
-    with open("../../src/output/output.txt", "r") as f1, open("./string_output/string_output.txt", "r") as f2:
+    with open("../../output/output.txt", "r") as f1, open("./string_output/string_output.txt", "r") as f2:
         if not compare_files(f1, f2):
             print(f"Output files are different on formula \"{formula}\"\n")
             return False

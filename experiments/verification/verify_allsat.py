@@ -2,22 +2,50 @@
 # Created: 02/19/2024
 # Verifies that WEST and AllSAT are equivalent
 # Uses Gokul's MLTL -> Propositional logic translation (fast)
-# Please clone Gokul's repo: https://github.com/gokulhari/MLTLMaxSAT-FORMATS
-# cd into it and run ./installer.sh
+# 
+# SETUP: Run ./setup_verification.sh --allsat to automatically install all dependencies
 
 import subprocess
 import time
 import os
 import sys
 import re
-from verify_r2u2 import compare_files, get_mn
-import z3
-from pycosat import solve, itersolve
+
+# Check for dependencies and provide helpful error messages
+try:
+    from verify_r2u2 import compare_files, get_mn
+except ImportError as e:
+    print(f"❌ Import error: {e}")
+    print("Make sure verify_r2u2.py exists in the same directory")
+    sys.exit(1)
+
+try:
+    import z3
+except ImportError:
+    print("❌ Missing z3-solver package")
+    print("Run './setup_verification.sh --allsat' to automatically install dependencies")
+    print("Or manually install with: pip install z3-solver")
+    sys.exit(1)
+
+try:
+    from pycosat import solve, itersolve
+except ImportError:
+    print("❌ Missing pycosat package") 
+    print("Run './setup_verification.sh --allsat' to automatically install dependencies")
+    print("Or manually install with: pip install pycosat")
+    sys.exit(1)
+
+# Check if MLTLMaxSAT translator exists
+if not os.path.exists("./MLTLMaxSAT-FORMATS/build/main"):
+    print("❌ MLTLMaxSAT translator not found")
+    print("Run './setup_verification.sh --allsat' to automatically build dependencies")
+    print("Or manually build by running ./installer.sh in MLTLMaxSAT-FORMATS/")
+    sys.exit(1)
 from dd import autoref as _bdd
 
 def run_west(formula):
-    west_exec = "./west"
-    subprocess.run(f"cd ../../src && {west_exec} \"{formula}\"", 
+    west_exec = "../../bin/west"
+    subprocess.run(f"{west_exec} \"{formula}\"", 
                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
     
 def add_unary_parenthesis(formula):
@@ -233,7 +261,7 @@ def verify(formula, verbose=False):
     with open("./maxsat_output/out.txt", "w") as f:
         f.write(formula + "\n")
         f.write("\n".join(traces))
-    with open("../../src/output/output.txt", "r") as f1:
+    with open("../../output/output.txt", "r") as f1:
         with open("./maxsat_output/out.txt", "r") as f2:
             if compare_files(f1, f2):
                 total = time.perf_counter() - start
@@ -244,6 +272,9 @@ def verify(formula, verbose=False):
                 return False
 
 if __name__ == '__main__':
+    # Ensure output directory exists
+    os.makedirs("./maxsat_output", exist_ok=True)
+    
     if len(sys.argv) > 1:
         formula = sys.argv[1].strip()
         formula = preprocess_syntax(formula)
