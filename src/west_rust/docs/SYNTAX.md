@@ -71,13 +71,13 @@ Parentheses can be used to override precedence:
 
 All temporal operators take an interval `[lb, ub]` where `lb ≤ ub` (nonnegative integers).
 
-### Globally (G)
+### Global (G)
 Asserts that a property holds globally (throughout an interval).
 
 ```
-G[0,5](x)           # x globally in [0,5] time units
-GLOBALLY[0,5](x)    # Full keyword version
-globally[0,5](x)    # Case-insensitive keyword
+G[0,5](x)           # x global in [0,5] time units
+GLOBAL[0,5](x)      # Full keyword version
+global[0,5](x)      # Case-insensitive keyword
 ```
 
 Format: Single-letter form `G` MUST be uppercase. Keyword form is case-insensitive.

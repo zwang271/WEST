@@ -21,16 +21,17 @@ obj/
 debug/
 release/
 
-# Output files (should not be committed)
-output.txt
+# Output files (generated at runtime, never commit)
 *output*.txt
+subformulas*.txt
 *.out
-subformulas.txt
 
 # Visual Studio files
 *.ipch
 .vs/
 *.vs
+*.vcxproj
+*.vcxproj.*
 
 # Python
 __pycache__/
@@ -44,6 +45,12 @@ env/
 *.egg-info/
 .pytest_cache/
 
+# Node.js
+node_modules/
+
+# Rust
+target/
+
 # IDE and Editor files
 .vscode/
 .idea/
@@ -55,7 +62,6 @@ env/
 # Compilation and build artifacts
 *.aux
 *.blg
-*.out
 *.log
 *.bbl
 *.pdf
@@ -92,29 +98,29 @@ reports/
 spec.bin
 r2u2_spec.bin
 
-# Documentation build
-docs/_build/
-_build/
-_collections/
-_doxygen/
-_api/
-*.exe
-experiments/verification/__pycache__/
-WEST_numpy/src/__pycache__/
-experiments/verification/string_src/__pycache__/
-src/WEST/__pycache__/
+# Experiments generated data
+experiments/**/*.result
+experiments/benchmarking/cactus*.png
+experiments/benchmarking/hard/
+
+# Internal planning docs
+agent/
+
+# Web app (managed separately in west-web/)
+west-web/venv/
+west-web/output/
+west-web/bin/west_rust
+
+# Legacy (removed)
+src/MLTL_reg/legacy/
+
+# Verification generated outputs
 experiments/verification/interpreter_output/traces/
-src/MLTL_brute_force/__pycache__/
-west_env/
-tool_paper_rebuttle.txt
-src/__pycache__/
-src/MLTL_interpreter/interpret
-MLTL_interpreter/interpret_batch
-experiments/benchmarking/__pycache__
+experiments/verification/string_output/
+experiments/verification/isabelle_verification/haskell/out_*.txt
 experiments/verification/spec.bin
 experiments/verification/west_string
-west
-src/MLTL_interpreter/interpret_batch
-experiments/verification/r2u2/monitors/static/build/libr2u2.a
-experiments/verification/r2u2/monitors/static/build/r2u2
-src/output/
+experiments/verification/r2u2/monitors/static/build/
+
+# Misc
+tool_paper_rebuttle.txt

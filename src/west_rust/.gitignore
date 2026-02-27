@@ -13,5 +13,8 @@ Cargo.lock
 # Backup files
 **/*.rs.bk
 
+# Session/context tracking (not committed)
+CONTEXT.md
+
 # OS files
 Thumbs.db
