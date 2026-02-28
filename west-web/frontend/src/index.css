@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  @apply bg-slate-50 text-slate-900 min-h-screen;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-slate-100 rounded;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 rounded hover:bg-slate-400;
+}
+
+/* Formula input styling */
+.formula-input {
+  @apply font-mono text-lg;
+}
+
+/* Code block styling */
+.code-block {
+  @apply font-mono text-sm bg-slate-900 text-slate-100 p-4 rounded-lg overflow-x-auto;
+}
+
+/* Animation for loading state */
+@keyframes pulse-border {
+  0%, 100% {
+    border-color: theme('colors.west.400');
+  }
+  50% {
+    border-color: theme('colors.west.600');
+  }
+}
+
+.loading-border {
+  animation: pulse-border 1.5s ease-in-out infinite;
+}

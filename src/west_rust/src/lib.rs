@@ -11,6 +11,7 @@ pub mod mltl;      // MLTL datatype + NNF conversion
 pub mod parse;     // Parser for MLTL syntax
 pub mod regex;     // BitVecRegex operations
 pub mod west;      // MLTL → WestRegex compilation
+pub mod wasm;      // WASM bindings for browser
 
 pub use mltl::MLTL;
 pub use regex::{TraceRegex, WestRegex};

@@ -1,0 +1,74 @@
+name: Deploy WEST to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Install wasm-pack
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+
+      - name: Build WASM
+        run: |
+          cd src/west_rust
+          wasm-pack build --target web --release
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: west-web/frontend/package-lock.json
+
+      - name: Copy WASM to frontend
+        run: |
+          mkdir -p west-web/frontend/src/wasm
+          cp src/west_rust/pkg/west_rust.js west-web/frontend/src/wasm/
+          cp src/west_rust/pkg/west_rust_bg.wasm west-web/frontend/src/wasm/
+          cp src/west_rust/pkg/west_rust.d.ts west-web/frontend/src/wasm/
+
+      - name: Install dependencies
+        run: |
+          cd west-web/frontend
+          npm ci
+
+      - name: Build frontend
+        run: |
+          cd west-web/frontend
+          npm run build
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: west-web/frontend/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

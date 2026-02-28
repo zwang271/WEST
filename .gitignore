@@ -110,6 +110,11 @@ agent/
 west-web/venv/
 west-web/output/
 west-web/bin/west_rust
+west-web/frontend/dist/
+west-web/frontend/src/wasm/
+
+# Rust WASM build output
+src/west_rust/pkg/
 
 # Legacy (removed)
 src/MLTL_reg/legacy/
