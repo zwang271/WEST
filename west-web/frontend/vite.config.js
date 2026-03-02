@@ -8,7 +8,7 @@ export default defineConfig({
 
   // For GitHub Pages with custom domain (west.temporallogic.org), use '/'.
   // For github.io/WEST (no custom domain), change to '/WEST/'.
-  base: '/WEST/',
+  base: '/',
 
   server: {
     port: 5173,
