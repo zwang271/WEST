@@ -38,6 +38,7 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+west-web/DEV.md
 .Python
 venv/
 west_env/
