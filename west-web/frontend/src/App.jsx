@@ -1,10 +1,11 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
-import { Play, Loader2, AlertCircle, CheckCircle2, Copy, BookOpen, Sparkles } from 'lucide-react'
+import { Play, Loader2, AlertCircle, CheckCircle2, Copy, BookOpen, Sparkles, ExternalLink, Github } from 'lucide-react'
 
 // WASM module — lazy-loaded once
 import initWasm, { validate_formula } from './wasm/west_rust.js'
 
 function App() {
+  const [activeTab, setActiveTab] = useState('tool')
   const [formula, setFormula] = useState('')
   const [loading, setLoading] = useState(false)
   const [wasmReady, setWasmReady] = useState(false)
@@ -133,25 +134,156 @@ function App() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <img src="/west_logo.png" alt="WEST logo" className="w-10 h-10 object-contain" />
+              <img src={`${import.meta.env.BASE_URL}west_logo.png`} alt="WEST logo" className="w-10 h-10 object-contain" />
               <div>
                 <h1 className="text-xl font-bold text-slate-900">WEST</h1>
                 <p className="text-xs text-slate-500">MLTL Formula Validation</p>
               </div>
             </div>
-            <a
-              href="https://github.com/zwang271/WEST"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-slate-500 hover:text-slate-700 transition-colors"
-            >
-              <BookOpen className="w-5 h-5" />
-            </a>
+            <div className="flex items-center gap-6">
+              <nav className="flex gap-1">
+                <button
+                  onClick={() => setActiveTab('tool')}
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                    activeTab === 'tool'
+                      ? 'bg-west-100 text-west-700'
+                      : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'
+                  }`}
+                >
+                  Tool
+                </button>
+                <button
+                  onClick={() => setActiveTab('about')}
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                    activeTab === 'about'
+                      ? 'bg-west-100 text-west-700'
+                      : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'
+                  }`}
+                >
+                  About WEST
+                </button>
+              </nav>
+              <a
+                href="https://github.com/zwang271/WEST"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-slate-500 hover:text-slate-700 transition-colors"
+              >
+                <Github className="w-5 h-5" />
+              </a>
+            </div>
           </div>
         </div>
       </header>
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+      {/* ===== ABOUT TAB ===== */}
+      {activeTab === 'about' && (
+        <div className="space-y-12">
+          {/* About Section */}
+          <section className="grid md:grid-cols-5 gap-8 items-start">
+            <div className="md:col-span-3 space-y-4">
+              <h2 className="text-2xl font-bold text-slate-900">About WEST</h2>
+              <p className="text-slate-600 leading-relaxed">
+                The WEST tool provides an automated way to generate regular expressions describing the set of all satisfying traces to Mission-time Linear Temporal Logic (MLTL) formulas. The graphic interface allows users to analyze MLTL formulas by randomly generating satisfying and unsatisfying traces, see how changing the truth value of variables at different steps affects the formula, import and export traces from files, and more.
+              </p>
+              <p className="text-slate-600 leading-relaxed">
+                Please see our{' '}
+                <a href="https://github.com/zwang271/WEST" target="_blank" rel="noopener noreferrer" className="text-west-600 hover:text-west-700 underline underline-offset-2">
+                  GitHub
+                </a>{' '}
+                to install the WEST tool. We have also formally verified the algorithms in Isabelle/HOL, and our{' '}
+                <a href="https://www.isa-afp.org/entries/Mission_Time_LTL_to_Regular_Expression.html" target="_blank" rel="noopener noreferrer" className="text-west-600 hover:text-west-700 underline underline-offset-2">
+                  formalization
+                </a>{' '}
+                can be found on the Archive of Formal Proofs. We also have a software{' '}
+                <a href="https://zenodo.org/records/14649154" target="_blank" rel="noopener noreferrer" className="text-west-600 hover:text-west-700 underline underline-offset-2">
+                  artifact
+                </a>{' '}
+                available on Zenodo.
+              </p>
+            </div>
+            <div className="md:col-span-2 flex flex-col gap-3">
+              <a
+                href="https://github.com/zwang271/WEST"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 w-full px-6 py-3 rounded-full bg-slate-900 text-white font-medium hover:bg-slate-800 transition-colors"
+              >
+                <Github className="w-5 h-5" />
+                GitHub
+                <ExternalLink className="w-4 h-4 ml-1" />
+              </a>
+              <a
+                href="https://www.isa-afp.org/entries/Mission_Time_LTL_to_Regular_Expression.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 w-full px-6 py-3 rounded-full bg-west-600 text-white font-medium hover:bg-west-700 transition-colors"
+              >
+                Formalization
+                <ExternalLink className="w-4 h-4 ml-1" />
+              </a>
+              <a
+                href="https://zenodo.org/records/14649154"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 w-full px-6 py-3 rounded-full bg-west-600 text-white font-medium hover:bg-west-700 transition-colors"
+              >
+                Paper Artifact
+                <ExternalLink className="w-4 h-4 ml-1" />
+              </a>
+            </div>
+          </section>
+
+          {/* Publications */}
+          <section>
+            <h2 className="text-2xl font-bold text-slate-900 mb-6">Publications</h2>
+            <ol className="space-y-4 list-decimal list-outside ml-6">
+              <li className="text-slate-600 leading-relaxed pl-2">
+                Jenna Elwing, Laura Gamboa Guzman, Jeremy Sorkins, Chiara Travesset, Zili Wang, Kristin Rozier.{' '}
+                <em>Mission-time LTL (MLTL) Formula Validation Via Regular Expressions</em>, International Conference on integrated Formal Methods (iFM), 2023 Proceedings, available{' '}
+                <a href="https://link.springer.com/chapter/10.1007/978-3-031-47705-8_15" target="_blank" rel="noopener noreferrer" className="text-west-600 hover:text-west-700 underline underline-offset-2">
+                  here
+                </a>.
+              </li>
+              <li className="text-slate-600 leading-relaxed pl-2">
+                Zili Wang, Laura P. Gamboa Guzman, Kristin Y. Rozier.{' '}
+                <em>WEST: Interactive Validation of Mission-time Linear Temporal Logic (MLTL)</em>, to appear in Science of Computer Programming, 2025, available{' '}
+                <a href="https://research.temporallogic.org/papers/WGR25.pdf" target="_blank" rel="noopener noreferrer" className="text-west-600 hover:text-west-700 underline underline-offset-2">
+                  here
+                </a>.
+              </li>
+              <li className="text-slate-600 leading-relaxed pl-2">
+                Zili Wang, Katherine Kosaian, Kristin Rozier.{' '}
+                <em>Formally Verifying a Transformation from MLTL Formulas to Regular Expressions</em>, International Conference on Tools and Algorithms for the Construction and Analysis of Systems (TACAS), 2025, available{' '}
+                <a href="https://link.springer.com/chapter/10.1007/978-3-031-90643-5_13" target="_blank" rel="noopener noreferrer" className="text-west-600 hover:text-west-700 underline underline-offset-2">
+                  here
+                </a>.
+              </li>
+            </ol>
+          </section>
+
+          {/* Contact */}
+          <section className="bg-white rounded-xl shadow-lg shadow-slate-200/50 border border-slate-200 p-8">
+            <p className="text-slate-600 text-center">
+              Please contact{' '}
+              <a href="https://zwang271.github.io/" target="_blank" rel="noopener noreferrer" className="text-west-600 hover:text-west-700 underline underline-offset-2">
+                Zili Wang
+              </a>{' '}
+              or the team at the{' '}
+              <a href="https://laboratory.temporallogic.org/" target="_blank" rel="noopener noreferrer" className="text-west-600 hover:text-west-700 underline underline-offset-2">
+                Laboratory for Temporal Logic
+              </a>{' '}
+              for any questions regarding WEST.
+            </p>
+          </section>
+        </div>
+      )}
+
+      {/* ===== TOOL TAB ===== */}
+      {activeTab === 'tool' && (
+        <>
         {/* Formula Input Section */}
         <section className="mb-8">
           <div className="bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-200 overflow-hidden">
@@ -356,27 +488,15 @@ function App() {
               </div>
             </details>
           </section>
-        )}
-
-        {/* Empty State */}
-        {!result && !error && (
-          <section className="text-center py-16">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center mx-auto mb-4">
-              <Sparkles className="w-8 h-8 text-slate-400" />
-            </div>
-            <h2 className="text-xl font-medium text-slate-700 mb-2">Ready to validate</h2>
-            <p className="text-slate-500 max-w-md mx-auto">
-              Enter an MLTL formula above and click Run to see the satisfying computations and analysis.
-            </p>
-          </section>
-        )}
+        )}        </>
+      )}
       </main>
 
       {/* Footer */}
       <footer className="border-t border-slate-200 mt-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <p className="text-center text-sm text-slate-500">
-            WEST - Witness Extraction for Satisfying Traces • Built for the academic community
+            WEST - Visualization Engine for Mission-time Linear Temporal Logic
           </p>
         </div>
       </footer>
