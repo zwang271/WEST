@@ -4,8 +4,14 @@ import { Play, Loader2, AlertCircle, CheckCircle2, Copy, ExternalLink, Github, D
 // WASM module — lazy-loaded once
 import initWasm, { validate_formula } from './wasm/west_rust.js'
 
+function tabFromPath(path) {
+  if (path === '/tool') return 'tool'
+  if (path === '/syntax') return 'syntax'
+  return 'about'
+}
+
 function App() {
-  const [activeTab, setActiveTab] = useState('tool')
+  const [activeTab, setActiveTab] = useState(() => tabFromPath(window.location.pathname))
   const [formula, setFormula] = useState('')
   const [loading, setLoading] = useState(false)
   const [wasmReady, setWasmReady] = useState(false)
@@ -14,7 +20,7 @@ function App() {
   const [error, setError] = useState(null)
   const [copied, setCopied] = useState(false)
   const [selectedSubf, setSelectedSubf] = useState(0)
-  const [examplesOpen, setExamplesOpen] = useState(false)
+  const [examplesOpen, setExamplesOpen] = useState(true)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [nnfOpen, setNnfOpen] = useState(false)
   const [subfListOpen, setSubfListOpen] = useState(true)
@@ -33,6 +39,19 @@ function App() {
         setWasmError('Failed to load WASM module. Please refresh the page.')
       })
   }, [])
+
+  // Sync with browser back/forward
+  useEffect(() => {
+    const handlePop = () => setActiveTab(tabFromPath(window.location.pathname))
+    window.addEventListener('popstate', handlePop)
+    return () => window.removeEventListener('popstate', handlePop)
+  }, [])
+
+  function navigate(tab) {
+    const path = tab === 'about' ? '/' : `/${tab}`
+    history.pushState({}, '', path)
+    setActiveTab(tab)
+  }
 
   const compileFormula = useCallback(() => {
     if (!formula.trim()) {
@@ -166,7 +185,7 @@ function App() {
         </div>
         <nav className="flex-1 px-3 py-4 space-y-1">
           <button
-            onClick={() => { setActiveTab('about'); setSidebarOpen(false) }}
+            onClick={() => { navigate('about'); setSidebarOpen(false) }}
             className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
               activeTab === 'about'
                 ? 'bg-west-100 text-west-700'
@@ -176,7 +195,7 @@ function App() {
             About WEST
           </button>
           <button
-            onClick={() => { setActiveTab('tool'); setSidebarOpen(false) }}
+            onClick={() => { navigate('tool'); setSidebarOpen(false) }}
             className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
               activeTab === 'tool'
                 ? 'bg-west-100 text-west-700'
@@ -186,7 +205,7 @@ function App() {
             Tool
           </button>
           <button
-            onClick={() => { setActiveTab('syntax'); setSidebarOpen(false) }}
+            onClick={() => { navigate('syntax'); setSidebarOpen(false) }}
             className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
               activeTab === 'syntax'
                 ? 'bg-west-100 text-west-700'
@@ -216,7 +235,7 @@ function App() {
           <button onClick={() => setSidebarOpen(true)} className="text-slate-700 hover:text-slate-900 transition-colors">
             <Menu className="w-5 h-5" />
           </button>
-          <button onClick={() => setActiveTab('about')} className="flex items-center gap-2 hover:opacity-75 transition-opacity">
+          <button onClick={() => navigate('about')} className="flex items-center gap-2 hover:opacity-75 transition-opacity">
             <img src={`${import.meta.env.BASE_URL}west_logo.png`} alt="WEST logo" className="w-7 h-7 object-contain" />
             <h1 className="text-lg font-bold text-slate-900">WEST</h1>
           </button>
@@ -249,7 +268,7 @@ function App() {
             </div>
             <div className="md:col-span-2 flex flex-col gap-3">
               <button
-                onClick={() => setActiveTab('tool')}
+                onClick={() => navigate('tool')}
                 className="flex items-center justify-center gap-2 w-full px-6 py-3 rounded-full bg-west-600 text-white font-medium hover:bg-west-700 transition-colors"
               >
                 Try the Web Tool
@@ -328,7 +347,7 @@ function App() {
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-2xl font-bold text-slate-900">MLTL Syntax Reference</h2>
               <button
-                onClick={() => setActiveTab('tool')}
+                onClick={() => navigate('tool')}
                 className="flex items-center gap-1.5 text-sm text-west-600 hover:text-west-700 font-medium transition-colors"
               >
                 <Play className="w-3.5 h-3.5" />
@@ -498,7 +517,7 @@ function App() {
                     MLTL Formula
                   </label>
                   <button
-                    onClick={() => setActiveTab('syntax')}
+                    onClick={() => navigate('syntax')}
                     className="flex items-center gap-1 text-xs text-slate-500 hover:text-west-600 transition-colors"
                     title="View MLTL syntax reference"
                   >

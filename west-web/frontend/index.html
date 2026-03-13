@@ -10,6 +10,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   </head>
   <body>
+    <script>
+      // Restore path saved by 404.html (GitHub Pages SPA routing).
+      (function () {
+        var path = sessionStorage.getItem('spa-redirect-path')
+        if (path) {
+          sessionStorage.removeItem('spa-redirect-path')
+          window.history.replaceState(null, null, path)
+        }
+      })()
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
