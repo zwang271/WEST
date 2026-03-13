@@ -42,6 +42,7 @@ fn format_mltl<T: std::fmt::Display>(formula: &MLTL<T>) -> String {
         MLTL::Not(sub) => format!("!{}", format_mltl(sub)),
         MLTL::And(l, r) => format!("({} & {})", format_mltl(l), format_mltl(r)),
         MLTL::Or(l, r) => format!("({} | {})", format_mltl(l), format_mltl(r)),
+        MLTL::Implies(l, r) => format!("({} -> {})", format_mltl(l), format_mltl(r)),
         MLTL::Global(lb, ub, sub) => format!("G[{},{}]({})", lb, ub, format_mltl(sub)),
         MLTL::Future(lb, ub, sub) => format!("F[{},{}]({})", lb, ub, format_mltl(sub)),
         MLTL::Until(lb, ub, l, r) => format!("(({}) U[{},{}] ({}))", format_mltl(l), lb, ub, format_mltl(r)),
@@ -70,7 +71,7 @@ fn collect_subformulas_inner(formula: &MLTL<String>, acc: &mut Vec<String>) {
         MLTL::Not(sub) => {
             collect_subformulas_inner(sub, acc);
         }
-        MLTL::And(l, r) | MLTL::Or(l, r) => {
+        MLTL::And(l, r) | MLTL::Or(l, r) | MLTL::Implies(l, r) => {
             collect_subformulas_inner(l, acc);
             collect_subformulas_inner(r, acc);
         }

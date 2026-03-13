@@ -34,6 +34,10 @@ struct SubformulaResult {
     formula: String,
     computations: Vec<String>,
     count: usize,
+    unsat_computations: Vec<String>,
+    unsat_count: usize,
+    complen: usize,
+    mentioned_vars: Vec<usize>,
 }
 
 /// Format an MLTL formula to a human-readable string.
@@ -45,6 +49,7 @@ fn format_mltl<T: std::fmt::Display>(formula: &MLTL<T>) -> String {
         MLTL::Not(sub) => format!("!{}", format_mltl(sub)),
         MLTL::And(l, r) => format!("({} & {})", format_mltl(l), format_mltl(r)),
         MLTL::Or(l, r) => format!("({} | {})", format_mltl(l), format_mltl(r)),
+        MLTL::Implies(l, r) => format!("({} -> {})", format_mltl(l), format_mltl(r)),
         MLTL::Global(lb, ub, sub) => format!("G[{},{}]({})", lb, ub, format_mltl(sub)),
         MLTL::Future(lb, ub, sub) => format!("F[{},{}]({})", lb, ub, format_mltl(sub)),
         MLTL::Until(lb, ub, l, r) => {
@@ -75,7 +80,7 @@ fn collect_subformulas_inner(formula: &MLTL<String>, acc: &mut Vec<String>) {
         MLTL::Not(sub) => {
             collect_subformulas_inner(sub, acc);
         }
-        MLTL::And(l, r) | MLTL::Or(l, r) => {
+        MLTL::And(l, r) | MLTL::Or(l, r) | MLTL::Implies(l, r) => {
             collect_subformulas_inner(l, acc);
             collect_subformulas_inner(r, acc);
         }
@@ -99,6 +104,9 @@ pub fn validate_formula(formula: &str) -> Result<String, JsValue> {
     // Parse
     let parsed = MLTL::parse(formula)
         .map_err(|e| JsValue::from_str(&format!("Parse error: {}", e)))?;
+
+    // Collect subformulas from the ORIGINAL formula (before NNF conversion)
+    let subformula_strs = collect_subformulas(&parsed);
 
     // Convert to NNF
     let nnf = parsed.clone().to_nnf();
@@ -129,21 +137,47 @@ pub fn validate_formula(formula: &str) -> Result<String, JsValue> {
         .map(|t| t.to_trace_string())
         .collect();
 
-    // Compile each subformula
-    let subformula_strs = collect_subformulas(&nnf);
+    // Compile each subformula (SAT + UNSAT patterns)
     let mut subformulas = Vec::new();
     for subf_str in &subformula_strs {
         if let Ok(subf) = MLTL::parse(subf_str) {
-            let sub_regex = compile_with_context(subf, &var_map, n, cl);
+            // Use the subformula's own computation length
+            let sub_cl = subf.complen();
+
+            // Determine which parent variables this subformula mentions
+            let sub_var_set = subf.collect_vars();
+            let mut mentioned: Vec<usize> = sub_var_set.keys()
+                .filter_map(|name| var_map.get(name).copied())
+                .collect();
+            mentioned.sort();
+
+            // SAT patterns using subformula's own complen
+            let sub_regex = compile_with_context(subf, &var_map, n, sub_cl);
             let sub_computations: Vec<String> = sub_regex
                 .traces()
                 .iter()
                 .map(|t| t.to_trace_string())
                 .collect();
+
+            // UNSAT patterns: compile the negation of this subformula
+            let mut unsat_computations = Vec::new();
+            if let Ok(neg_subf) = MLTL::parse(&format!("!({})", subf_str)) {
+                let neg_regex = compile_with_context(neg_subf, &var_map, n, sub_cl);
+                unsat_computations = neg_regex
+                    .traces()
+                    .iter()
+                    .map(|t| t.to_trace_string())
+                    .collect();
+            }
+
             subformulas.push(SubformulaResult {
                 formula: subf_str.clone(),
+                complen: sub_cl,
+                mentioned_vars: mentioned,
+                unsat_count: unsat_computations.len(),
                 count: sub_computations.len(),
                 computations: sub_computations,
+                unsat_computations,
             });
         }
     }

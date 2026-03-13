@@ -10,6 +10,7 @@ pub enum MLTL<T> {
     Not(Box<MLTL<T>>),
     And(Box<MLTL<T>>, Box<MLTL<T>>),
     Or(Box<MLTL<T>>, Box<MLTL<T>>),
+    Implies(Box<MLTL<T>>, Box<MLTL<T>>),
     Global(usize, usize, Box<MLTL<T>>),
     Future(usize, usize, Box<MLTL<T>>),
     Until(usize, usize, Box<MLTL<T>>, Box<MLTL<T>>),
@@ -21,8 +22,9 @@ impl<T: Ord + std::fmt::Display + std::hash::Hash> MLTL<T> {
         match self {
             MLTL::True | MLTL::False | MLTL::Prop(_) => true,
             MLTL::Not(sub) => sub.welldef(),
-            MLTL::And(left, right) 
-            | MLTL::Or(left, right) => {
+            MLTL::And(left, right)
+            | MLTL::Or(left, right)
+            | MLTL::Implies(left, right) => {
                 left.welldef() && right.welldef()
             }
             MLTL::Global(_lb, ub, sub) 
@@ -40,8 +42,9 @@ impl<T: Ord + std::fmt::Display + std::hash::Hash> MLTL<T> {
         match self {
             MLTL::True | MLTL::False | MLTL::Prop(_) => 1,
             MLTL::Not(sub) => sub.complen(),
-            MLTL::And(left, right) 
-            | MLTL::Or(left, right) => {
+            MLTL::And(left, right)
+            | MLTL::Or(left, right)
+            | MLTL::Implies(left, right) => {
                 max(left.complen(), right.complen())
             }
             MLTL::Global(_lb, ub, sub) 
@@ -77,6 +80,10 @@ impl<T: Ord + std::fmt::Display + std::hash::Hash> MLTL<T> {
             MLTL::Or(left, right) => {
                 MLTL::Or(Box::new(left.to_nnf()), Box::new(right.to_nnf()))
             }
+            // Implies desugars to Or(Not(left), right) during NNF conversion
+            MLTL::Implies(left, right) => {
+                MLTL::Or(Box::new(MLTL::Not(left).to_nnf()), Box::new(right.to_nnf()))
+            }
             MLTL::Future(lb, ub, sub) => {
                 MLTL::Future(lb, ub, Box::new(sub.to_nnf()))
             }
@@ -106,6 +113,13 @@ impl<T: Ord + std::fmt::Display + std::hash::Hash> MLTL<T> {
                     MLTL::Or(left, right) => {
                         MLTL::And(
                             Box::new(MLTL::Not(left).to_nnf()),
+                            Box::new(MLTL::Not(right).to_nnf())
+                        )
+                    }
+                    // ¬(φ → ψ) = ¬(¬φ ∨ ψ) = φ ∧ ¬ψ
+                    MLTL::Implies(left, right) => {
+                        MLTL::And(
+                            Box::new(left.to_nnf()),
                             Box::new(MLTL::Not(right).to_nnf())
                         )
                     }
@@ -158,6 +172,9 @@ impl<T: Ord + std::fmt::Display + std::hash::Hash> MLTL<T> {
             MLTL::Or(l, r) => {
                 MLTL::Or(Box::new(l.to_indexed(var_map)), Box::new(r.to_indexed(var_map)))
             }
+            MLTL::Implies(l, r) => {
+                MLTL::Implies(Box::new(l.to_indexed(var_map)), Box::new(r.to_indexed(var_map)))
+            }
             MLTL::Global(lb, ub, sub) => {
                 MLTL::Global(lb, ub, Box::new(sub.to_indexed(var_map)))
             }
@@ -194,7 +211,7 @@ impl<T: Ord + std::fmt::Display + std::hash::Hash> MLTL<T> {
             MLTL::True | MLTL::False => {}
             MLTL::Prop(name) => vars.push(name.clone()),
             MLTL::Not(sub) => sub.collect_vars_inner(vars),
-            MLTL::And(l, r) | MLTL::Or(l, r) => {
+            MLTL::And(l, r) | MLTL::Or(l, r) | MLTL::Implies(l, r) => {
                 l.collect_vars_inner(vars);
                 r.collect_vars_inner(vars);
             }
@@ -232,6 +249,13 @@ impl<T: Ord + std::fmt::Display + std::hash::Hash> MLTL<T> {
             }
             MLTL::Or(left, right) => {
                 println!("{}├─ Or", prefix);
+                println!("{}│  Left:", prefix);
+                left.print_parsetree_indent(indent + 2);
+                println!("{}│  Right:", prefix);
+                right.print_parsetree_indent(indent + 2);
+            }
+            MLTL::Implies(left, right) => {
+                println!("{}├─ Implies", prefix);
                 println!("{}│  Left:", prefix);
                 left.print_parsetree_indent(indent + 2);
                 println!("{}│  Right:", prefix);

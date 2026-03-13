@@ -51,3 +51,23 @@ body {
 .loading-border {
   animation: pulse-border 1.5s ease-in-out infinite;
 }
+
+/* Prevent I-beam cursor on non-interactive text */
+body {
+  cursor: default;
+}
+
+/* Allow text selection on interactive/code elements */
+input, textarea, code, pre, .font-mono {
+  cursor: text;
+}
+
+/* Ensure buttons and clickable elements show pointer */
+button, a, [role="button"] {
+  cursor: pointer;
+}
+
+/* Checkboxes should show pointer */
+input[type="checkbox"] {
+  cursor: pointer;
+}

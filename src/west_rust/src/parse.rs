@@ -1,7 +1,7 @@
 use crate::MLTL;
 use nom::{
     branch::alt,
-    bytes::complete::{tag, tag_no_case, take_while1},
+    bytes::complete::{tag, tag_no_case},
     character::complete::{char, multispace0, digit1},
     combinator::map,
     IResult,
@@ -89,7 +89,31 @@ fn parse_bound(input: &str) -> IResult<&str, (usize, usize)> {
 // Forward declarations for mutual recursion
 fn parse_formula(input: &str) -> IResult<&str, MLTL<String>> {
     let (input, _) = ws(input)?;
-    parse_or(input)
+    parse_implies(input)
+}
+
+/// Parse implication: `a -> b` or `a implies b`.
+/// Implication is right-associative and has the lowest precedence among
+/// binary connectives, so `a -> b -> c` means `a -> (b -> c)`.
+fn parse_implies(input: &str) -> IResult<&str, MLTL<String>> {
+    let (input, left) = parse_or(input)?;
+    let (input, _) = ws(input)?;
+
+    // Try to parse the implication operator
+    let arrow_result: IResult<&str, &str> = alt((
+        tag_no_case("implies"),
+        tag("->"),
+    ))(input);
+
+    match arrow_result {
+        Ok((input, _)) => {
+            let (input, _) = ws(input)?;
+            // Right-associative: right side is another implies expression
+            let (input, right) = parse_implies(input)?;
+            Ok((input, MLTL::Implies(Box::new(left), Box::new(right))))
+        }
+        Err(_) => Ok((input, left)),
+    }
 }
 
 fn parse_or(input: &str) -> IResult<&str, MLTL<String>> {
@@ -467,5 +491,131 @@ mod tests {
         // Lowercase 'f' should parse as proposition, not temporal operator
         let formula = parse_and_check("f");
         assert_eq!(formula, MLTL::Prop("f".to_string()));
+    }
+
+    // -----------------------------------------------------------------------
+    // Implication tests: a -> b  produces MLTL::Implies(a, b)
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_implication_arrow() {
+        let formula = parse_and_check("a -> b");
+        assert_eq!(
+            formula,
+            MLTL::Implies(
+                Box::new(MLTL::Prop("a".to_string())),
+                Box::new(MLTL::Prop("b".to_string())),
+            )
+        );
+    }
+
+    #[test]
+    fn test_parse_implication_keyword() {
+        let formula = parse_and_check("a implies b");
+        assert_eq!(
+            formula,
+            MLTL::Implies(
+                Box::new(MLTL::Prop("a".to_string())),
+                Box::new(MLTL::Prop("b".to_string())),
+            )
+        );
+    }
+
+    #[test]
+    fn test_parse_implication_keyword_case_insensitive() {
+        let formula = parse_and_check("a IMPLIES b");
+        assert_eq!(
+            formula,
+            MLTL::Implies(
+                Box::new(MLTL::Prop("a".to_string())),
+                Box::new(MLTL::Prop("b".to_string())),
+            )
+        );
+    }
+
+    #[test]
+    fn test_parse_implication_right_associative() {
+        // "a -> b -> c" should be "a -> (b -> c)"
+        let formula = parse_and_check("a -> b -> c");
+        assert_eq!(
+            formula,
+            MLTL::Implies(
+                Box::new(MLTL::Prop("a".to_string())),
+                Box::new(MLTL::Implies(
+                    Box::new(MLTL::Prop("b".to_string())),
+                    Box::new(MLTL::Prop("c".to_string())),
+                )),
+            )
+        );
+    }
+
+    #[test]
+    fn test_parse_implication_lower_precedence_than_or() {
+        // "(p | q) -> r" should be Implies((p | q), r)
+        let formula = parse_and_check("(p | q) -> r");
+        assert_eq!(
+            formula,
+            MLTL::Implies(
+                Box::new(MLTL::Or(
+                    Box::new(MLTL::Prop("p".to_string())),
+                    Box::new(MLTL::Prop("q".to_string())),
+                )),
+                Box::new(MLTL::Prop("r".to_string())),
+            )
+        );
+    }
+
+    #[test]
+    fn test_parse_implication_lower_precedence_than_and() {
+        // "p & q -> r" means "(p & q) -> r"
+        let formula = parse_and_check("p & q -> r");
+        assert_eq!(
+            formula,
+            MLTL::Implies(
+                Box::new(MLTL::And(
+                    Box::new(MLTL::Prop("p".to_string())),
+                    Box::new(MLTL::Prop("q".to_string())),
+                )),
+                Box::new(MLTL::Prop("r".to_string())),
+            )
+        );
+    }
+
+    #[test]
+    fn test_parse_implication_with_temporal_operators() {
+        // "G[0,5](x) -> F[1,3](y)"
+        let formula = parse_and_check("G[0,5](x) -> F[1,3](y)");
+        assert_eq!(
+            formula,
+            MLTL::Implies(
+                Box::new(MLTL::Global(0, 5, Box::new(MLTL::Prop("x".to_string())))),
+                Box::new(MLTL::Future(1, 3, Box::new(MLTL::Prop("y".to_string())))),
+            )
+        );
+    }
+
+    #[test]
+    fn test_parse_implication_obstacle_evade() {
+        let formula = parse_and_check("obstacle -> evade");
+        assert_eq!(
+            formula,
+            MLTL::Implies(
+                Box::new(MLTL::Prop("obstacle".to_string())),
+                Box::new(MLTL::Prop("evade".to_string())),
+            )
+        );
+    }
+
+    #[test]
+    fn test_parse_implication_negated_antecedent() {
+        // "!a -> b"
+        let formula = parse_and_check("!a -> b");
+        assert_eq!(
+            formula,
+            MLTL::Implies(
+                Box::new(MLTL::Not(Box::new(MLTL::Prop("a".to_string())))),
+                Box::new(MLTL::Prop("b".to_string())),
+            )
+        );
     }
 }

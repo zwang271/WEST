@@ -72,9 +72,9 @@ pub fn reg(formula: &MLTL<usize>, num_vars: usize, trace_len: usize) -> WestRege
     match formula {
         // ── Base cases ───────────────────────────────────────────────────
         MLTL::True => WestRegex::all(num_vars, trace_len),
-        
+
         MLTL::False => WestRegex::empty(num_vars, trace_len),
-        
+
         MLTL::Prop(k) => {
             // Positive prop: force prop k to be true at timestep 0
             WestRegex::from_traces(
@@ -83,7 +83,7 @@ pub fn reg(formula: &MLTL<usize>, num_vars: usize, trace_len: usize) -> WestRege
                 vec![TraceRegex::prop_true(*k, num_vars, trace_len)],
             )
         }
-        
+
         // In NNF, Not only wraps Prop
         MLTL::Not(sub) => {
             match sub.as_ref() {
@@ -98,46 +98,49 @@ pub fn reg(formula: &MLTL<usize>, num_vars: usize, trace_len: usize) -> WestRege
                 _ => panic!("In NNF, Not should only wrap Prop"),
             }
         }
-        
+
         // ── Boolean connectives ──────────────────────────────────────────
         MLTL::Or(left, right) => {
             let reg_l = reg(left, num_vars, trace_len);
             let reg_r = reg(right, num_vars, trace_len);
             reg_l.or(&reg_r)
         }
-        
+
         MLTL::And(left, right) => {
             let reg_l = reg(left, num_vars, trace_len);
             let reg_r = reg(right, num_vars, trace_len);
             reg_l.and(&reg_r)
         }
-        
+
+        // Implies should have been converted to NNF (Or(Not(left), right))
+        MLTL::Implies(_, _) => panic!("Implies should not appear in NNF form"),
+
         // ── Unary temporal operators ─────────────────────────────────────
-        
+
         // F[a,b] φ: φ holds at some timestep in [a,b]
         // = OR over shift(reg(φ), i * 2 * n) for i in a..=b
         MLTL::Future(lb, ub, sub) => {
             let reg_sub = reg(sub, num_vars, trace_len);
             let bits_per_step = 2 * num_vars;
-            
+
             (*lb..=*ub).map(|i| reg_sub.shift(i * bits_per_step))
                         .reduce(|acc, x| acc.or(&x))
                         .unwrap_or_else(|| WestRegex::empty(num_vars, trace_len))
         }
-        
+
         // G[a,b] φ: φ holds at every timestep in [a,b]
         // = AND over shift(reg(φ), i * 2 * n) for i in a..=b
         MLTL::Global(lb, ub, sub) => {
             let reg_sub = reg(sub, num_vars, trace_len);
             let bits_per_step = 2 * num_vars;
-            
+
             (*lb..=*ub).map(|i| reg_sub.shift(i * bits_per_step))
                         .reduce(|acc, x| acc.and(&x))
                         .unwrap_or_else(|| WestRegex::all(num_vars, trace_len))
         }
-        
+
         // ── Binary temporal operators ────────────────────────────────────
-        
+
         // φ U[a,b] ψ: ψ holds at some i in [a,b], and φ holds at all j in [a,i)
         // Base case (i=a): shift(reg(ψ), a * 2n)
         // For i in a+1..=b: G[a,i-1]φ AND G[i,i]ψ
@@ -145,10 +148,10 @@ pub fn reg(formula: &MLTL<usize>, num_vars: usize, trace_len: usize) -> WestRege
             let bits_per_step = 2 * num_vars;
             let reg_left = reg(left, num_vars, trace_len);
             let reg_right = reg(right, num_vars, trace_len);
-            
+
             // Base case: ψ at timestep lb
             let mut result = reg_right.shift(*lb * bits_per_step);
-            
+
             // For each i in lb+1..=ub: φ at [lb, i-1] AND ψ at i
             for i in (*lb + 1)..=*ub {
                 // G[lb, i-1] φ: AND of shift(reg_left, j*2n) for j in lb..=i-1
@@ -156,15 +159,15 @@ pub fn reg(formula: &MLTL<usize>, num_vars: usize, trace_len: usize) -> WestRege
                     .map(|j| reg_left.shift(j * bits_per_step))
                     .reduce(|acc, x| acc.and(&x))
                     .unwrap_or_else(|| WestRegex::all(num_vars, trace_len));
-                
+
                 // G[i, i] ψ = shift(reg_right, i*2n)
                 let g_right = reg_right.shift(i * bits_per_step);
-                
+
                 result = result.or(&g_left.and(&g_right));
             }
             result
         }
-        
+
         // φ R[a,b] ψ: ψ holds at [a,b], OR (φ at some i in [a,b-1] AND ψ at [a,i])
         // Base case: G[a,b] ψ
         // For i in a..=b-1: G[i,i]φ AND G[a,i]ψ
@@ -172,26 +175,26 @@ pub fn reg(formula: &MLTL<usize>, num_vars: usize, trace_len: usize) -> WestRege
             let bits_per_step = 2 * num_vars;
             let reg_left = reg(left, num_vars, trace_len);
             let reg_right = reg(right, num_vars, trace_len);
-            
+
             // Base case: G[a,b] ψ = AND of shift(reg_right, i*2n) for i in lb..=ub
             let mut result = (*lb..=*ub)
                 .map(|i| reg_right.shift(i * bits_per_step))
                 .reduce(|acc, x| acc.and(&x))
                 .unwrap_or_else(|| WestRegex::all(num_vars, trace_len));
-            
+
             // For each i in lb..ub (i.e., lb..=ub-1): φ at i AND ψ at [lb, i]
             // When ub == 0 or ub <= lb, this range is empty and we skip.
             if *ub > 0 {
                 for i in *lb..(*ub) {
                     // G[i, i] φ = shift(reg_left, i*2n)
                     let g_left = reg_left.shift(i * bits_per_step);
-                    
+
                     // G[a, i] ψ: AND of shift(reg_right, j*2n) for j in lb..=i
                     let g_right = (*lb..=i)
                         .map(|j| reg_right.shift(j * bits_per_step))
                         .reduce(|acc, x| acc.and(&x))
                         .unwrap_or_else(|| WestRegex::all(num_vars, trace_len));
-                    
+
                     result = result.or(&g_left.and(&g_right));
                 }
             }
