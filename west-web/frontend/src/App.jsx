@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
-import { Play, Loader2, AlertCircle, CheckCircle2, Copy, ExternalLink, Github, Download, Shuffle, ChevronDown, ChevronUp, Menu, X, HelpCircle } from 'lucide-react'
+import { Play, Loader2, AlertCircle, CheckCircle2, Copy, ExternalLink, Github, Download, Shuffle, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Menu, X, HelpCircle } from 'lucide-react'
 
 // WASM module — lazy-loaded once
 import initWasm, { validate_formula } from './wasm/west_rust.js'
@@ -16,6 +16,8 @@ function App() {
   const [selectedSubf, setSelectedSubf] = useState(0)
   const [examplesOpen, setExamplesOpen] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [nnfOpen, setNnfOpen] = useState(false)
+  const [subfListOpen, setSubfListOpen] = useState(true)
   const wasmInitialized = useRef(false)
   const subformulasRef = useRef(null)
 
@@ -46,6 +48,7 @@ function App() {
     setError(null)
     setResult(null)
     setSelectedSubf(0)
+    setNnfOpen(false)
 
     // Run in a microtask so the UI updates before the (synchronous) WASM call
     setTimeout(() => {
@@ -209,7 +212,7 @@ function App() {
 
       {/* Top bar: just logo + hamburger */}
       <header className="sticky top-0 z-20 bg-white/80 backdrop-blur-sm border-b border-slate-200">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center gap-3">
+        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-10 py-3 flex items-center gap-3">
           <button onClick={() => setSidebarOpen(true)} className="text-slate-700 hover:text-slate-900 transition-colors">
             <Menu className="w-5 h-5" />
           </button>
@@ -220,7 +223,7 @@ function App() {
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-10 py-8">
 
       {/* ===== ABOUT TAB ===== */}
       {activeTab === 'about' && (
@@ -558,20 +561,28 @@ function App() {
                   Press <kbd className="px-1.5 py-0.5 rounded bg-slate-100 font-mono text-[10px]">Ctrl</kbd>+<kbd className="px-1.5 py-0.5 rounded bg-slate-100 font-mono text-[10px]">Enter</kbd> to run
                 </p>
 
-                {/* NNF — shown inline after run */}
+                {/* NNF — collapsible after run */}
                 {result && result.nnf && (
-                  <div className="mt-3 pt-3 border-t border-slate-100 flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="text-xs font-medium text-slate-900 uppercase tracking-wider mb-1">Negation Normal Form</p>
-                      <code className="font-mono text-sm text-west-700 break-all">{result.nnf}</code>
-                    </div>
+                  <div className="mt-3 pt-3 border-t border-slate-100">
                     <button
-                      onClick={() => copyToClipboard(result.nnf)}
-                      className="shrink-0 text-slate-700 hover:text-slate-900 transition-colors mt-0.5"
-                      title="Copy NNF"
+                      onClick={() => setNnfOpen((prev) => !prev)}
+                      className="flex items-center gap-1.5 text-xs font-medium text-slate-500 hover:text-slate-700 transition-colors"
                     >
-                      {copied ? <CheckCircle2 className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+                      {nnfOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                      Negation Normal Form
                     </button>
+                    {nnfOpen && (
+                      <div className="flex items-start justify-between gap-3 mt-2">
+                        <code className="font-mono text-sm text-west-700 break-all">{result.nnf}</code>
+                        <button
+                          onClick={() => copyToClipboard(result.nnf)}
+                          className="shrink-0 text-slate-700 hover:text-slate-900 transition-colors"
+                          title="Copy NNF"
+                        >
+                          {copied ? <CheckCircle2 className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+                        </button>
+                      </div>
+                    )}
                   </div>
                 )}
           </div>
@@ -625,9 +636,19 @@ function App() {
             {result.subformulas && result.subformulas.length > 0 && (
               <div ref={subformulasRef} className="bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-200 overflow-hidden">
                 <div className="flex min-h-0">
-                  {/* Left: vertical subformula selector */}
+                  {/* Left: vertical subformula selector (collapsible) */}
+                  {subfListOpen && (
                   <div className="w-56 shrink-0 border-r border-slate-100 bg-slate-50 flex flex-col">
-                    <p className="text-xs font-bold text-slate-900 uppercase tracking-widest px-4 pt-4 pb-2">Subformulas</p>
+                    <div className="flex items-center justify-between px-4 pt-4 pb-2">
+                      <p className="text-xs font-bold text-slate-900 uppercase tracking-widest">Subformulas</p>
+                      <button
+                        onClick={() => setSubfListOpen(false)}
+                        className="text-slate-400 hover:text-slate-600 transition-colors"
+                        title="Hide subformula list"
+                      >
+                        <ChevronLeft className="w-4 h-4" />
+                      </button>
+                    </div>
                     <div className="flex-1 overflow-y-auto px-3 pb-3 space-y-1.5" style={{ scrollbarWidth: 'thin', maxHeight: '70vh' }}>
                       {result.subformulas.map((sf, i) => (
                         <button
@@ -649,9 +670,21 @@ function App() {
                       ))}
                     </div>
                   </div>
+                  )}
 
                   {/* Right: trace table for selected subformula */}
                   <div className="flex-1 min-w-0">
+                    {!subfListOpen && (
+                      <div className="px-5 pt-4 pb-0">
+                        <button
+                          onClick={() => setSubfListOpen(true)}
+                          className="flex items-center gap-1 text-xs text-slate-500 hover:text-slate-700 font-medium transition-colors"
+                        >
+                          <ChevronRight className="w-3.5 h-3.5" />
+                          Show subformulas
+                        </button>
+                      </div>
+                    )}
                     <TraceTable
                       sf={result.subformulas[selectedSubf] ?? result.subformulas[0]}
                       n={result.prop_vars.length}
@@ -694,7 +727,7 @@ function App() {
 
       {/* Footer */}
       <footer className="border-t border-slate-200 mt-16">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-10 py-6">
           <p className="text-center text-sm text-slate-700">
             WEST - Visualization Engine for Mission-time Linear Temporal Logic
           </p>
