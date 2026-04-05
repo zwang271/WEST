@@ -4,6 +4,8 @@ import { Play, Loader2, AlertCircle, CheckCircle2, Copy, ExternalLink, Github, D
 // WASM module — lazy-loaded once
 import initWasm, { validate_formula } from './wasm/west_rust.js'
 
+const MLTL_ECOSYSTEM_URL = 'https://r2u2.github.io/mltl_site/tools'
+
 function tabFromPath(path) {
   if (path === '/tool') return 'tool'
   if (path === '/syntax') return 'syntax'
@@ -239,6 +241,15 @@ function App() {
             <img src={`${import.meta.env.BASE_URL}west_logo.png`} alt="WEST logo" className="w-7 h-7 object-contain" />
             <h1 className="text-lg font-bold text-slate-900">WEST</h1>
           </button>
+          <a
+            href={MLTL_ECOSYSTEM_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ml-auto inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-300 bg-white text-slate-700 text-sm font-medium hover:bg-slate-50 hover:text-slate-900 transition-colors"
+          >
+            See MLTL Tools Ecosystem
+            <ChevronRight className="w-4 h-4" />
+          </a>
         </div>
       </header>
 
